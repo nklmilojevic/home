@@ -7,3 +7,4 @@ resources:
   - ./metrics-server/ks.yaml
   - ./reloader/ks.yaml
   - ./csi-nfs/ks.yaml
+  - ./intel-gpu-plugin/ks.yaml
