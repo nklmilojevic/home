@@ -1,0 +1,26 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: restoretest
+  namespace: home
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: datavol-dest
+  namespace: home
+spec:
+  trigger:
+    manual: restore-once
+  restic:
+    repository: home-assistant-restic-secret
+    # Use an existing PVC, don't provision a new one
+    destinationPVC: restoretest
+    copyMethod: Direct

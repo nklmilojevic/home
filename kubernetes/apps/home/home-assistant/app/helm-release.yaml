@@ -1,0 +1,73 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: home-assistant
+  namespace: home
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
+      chart: app-template
+      version: 1.2.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  values:
+    podAnnotations:
+      backup.velero.io/backup-volumes: config
+      configmap.reloader.stakater.com/reload: "hass-config"
+    hostNetwork: true
+    dnsPolicy: ClusterFirstWithHostNet
+    image:
+      repository: homeassistant/home-assistant
+      tag: 2022.12.8
+    env:
+      TZ: "Europe/Belgrade"
+    service:
+      main:
+        type: LoadBalancer
+        loadBalancerIP: "${SVC_HASS_IP}"
+        externalTrafficPolicy: Local
+        ports:
+          http:
+            port: 8123
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: "nginx"
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+        hosts:
+          - host: "hass.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - "hass.${SECRET_DOMAIN}"
+    podSecurityContext:
+      supplementalGroups:
+        - 100
+    persistence:
+      config:
+        enabled: true
+        existingClaim: hass-data
+      media:
+        enabled: true
+        existingClaim: nfs-camera-pvc
+      hass-config:
+        enabled: true
+        type: configMap
+        name: hass-config
+        mountPath: /config/configuration.yaml
+        subPath: configuration.yaml
+      hass-secrets:
+        enabled: true
+        type: secret
+        name: homeassistant-secrets
+        mountPath: /config/secrets.yaml
+        subPath: secrets.yaml

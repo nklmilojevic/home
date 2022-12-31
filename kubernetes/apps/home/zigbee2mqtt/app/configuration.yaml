@@ -1,0 +1,26 @@
+homeassistant: true
+permit_join: true
+availability: true
+mqtt:
+  base_topic: zigbee2mqtt
+  server: "mqtt://mosquitto.home.svc"
+  include_device_information: true
+
+serial:
+  port: /dev/ttyUSB0
+
+advanced:
+  network_key: GENERATE
+  log_output:
+    - console
+  log_level: info
+
+  # channel: 15
+  last_seen: "ISO_8601"
+
+  homeassistant_discovery_topic: "homeassistant"
+  homeassistant_status_topic: "homeassistant/status"
+frontend:
+  port: 8080
+experimental:
+  new_api: true

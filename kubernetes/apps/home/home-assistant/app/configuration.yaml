@@ -1,0 +1,41 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+ffmpeg:
+
+stream:
+  ll_hls: true
+  part_duration: 0.75
+  segment_duration: 6
+
+recorder:
+  purge_keep_days: 5
+  db_url: sqlite:////config/hass.sql
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 10.0.0.0/8
+    - 127.0.0.1
+    - ::1
+
+camera:
+  - platform: xiaomi_cloud_map_extractor
+    host: 10.5.0.42
+    token: !secret roborock_token
+    username: nikola@milojevic.me
+    password: !secret roborock_xiaomi_password
+    draw: ["all"]
+    attributes:
+      - calibration_points
+    map_transformation:
+      scale: 1
+      trim:
+        top: 17
+        bottom: 20
+        left: 25
+        right: 20
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+secret: !include secrets.yaml
