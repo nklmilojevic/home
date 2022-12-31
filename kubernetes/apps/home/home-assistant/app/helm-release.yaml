@@ -56,9 +56,6 @@ spec:
       config:
         enabled: true
         existingClaim: hass-data
-      media:
-        enabled: true
-        existingClaim: nfs-camera-pvc
       hass-config:
         enabled: true
         type: configMap
