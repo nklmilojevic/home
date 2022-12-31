@@ -15,3 +15,6 @@ resources:
   - ./weave-gitops.yaml
   - ./csi-nfs.yaml
   - ./external-secrets.yaml
+  - ./pihole-chart.yaml
+  - ./vector-chart.yaml
+  - ./victoriametrics.yaml
