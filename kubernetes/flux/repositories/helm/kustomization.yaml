@@ -14,3 +14,4 @@ resources:
   - ./stakater.yaml
   - ./weave-gitops.yaml
   - ./csi-nfs.yaml
+  - ./external-secrets.yaml
