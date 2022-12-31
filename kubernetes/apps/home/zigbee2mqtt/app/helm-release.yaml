@@ -1,0 +1,61 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: zigbee2mqtt
+  namespace: home
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
+      chart: app-template
+      version: 1.2.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  values:
+    image:
+      repository: koenkk/zigbee2mqtt
+      tag: 1.28.4
+      pullPolicy: IfNotPresent
+    env:
+      ZIGBEE2MQTT_DATA: /data
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: "nginx"
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+        hosts:
+          - host: "zigbee2mqtt.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - "zigbee2mqtt.${SECRET_DOMAIN}"
+    securityContext:
+      privileged: true
+    persistence:
+      data:
+        enabled: true
+        existingClaim: zigbee2mqtt-data-pvc
+        mountPath: /data
+      usb:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/ttyUSB0
+      zigbee2mqtt-config:
+        enabled: true
+        type: configMap
+        name: zigbee2mqtt-config
+        mountPath: /app/configuration.yaml
+        subPath: configuration.yaml
