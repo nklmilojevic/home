@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-settings
+  namespace: flux-system
+data:
+  TIMEZONE: "Europe/Belgrade"
+  KUBE_VIP_ADDR: "10.5.0.201"
+  METALLB_LB_RANGE: "10.5.0.150-10.5.0.200"
+  METALLB_K8S_GATEWAY_ADDR: "10.5.0.150"
+  METALLB_INGRESS_ADDR: "10.5.0.151"
