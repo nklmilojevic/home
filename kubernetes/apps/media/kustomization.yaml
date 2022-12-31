@@ -5,3 +5,10 @@ resources:
   - ./namespace.yaml
   - ./sonarr/ks.yaml
   - ./radarr/ks.yaml
+  - ./bazarr/ks.yaml
+  - ./nzbget/ks.yaml
+  - ./overseerr/ks.yaml
+  - ./plex/ks.yaml
+  - ./prowlarr/ks.yaml
+  - ./qbittorrent/ks.yaml
+  - ./tautulli/ks.yaml
