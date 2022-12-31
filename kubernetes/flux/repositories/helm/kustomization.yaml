@@ -18,3 +18,4 @@ resources:
   - ./pihole-chart.yaml
   - ./vector-chart.yaml
   - ./victoriametrics.yaml
+  - ./backube.yaml
