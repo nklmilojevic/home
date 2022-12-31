@@ -8,3 +8,6 @@ resources:
   - ./ingress-nginx/ks.yaml
   - ./k8s-gateway/ks.yaml
   - ./metallb/ks.yaml
+  - ./omada/ks.yaml
+  - ./pihole/ks.yaml
+  - ./unbound/ks.yaml

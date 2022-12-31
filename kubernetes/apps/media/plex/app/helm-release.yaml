@@ -1,0 +1,76 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: plex
+  namespace: media
+spec:
+  # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
+  chart:
+    spec:
+      chart: app-template
+      version: 1.2.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  interval: 30m
+  values:
+    image:
+      repository: ghcr.io/linuxserver/plex
+      tag: 1.30.0.6486-629d58034-ls147
+
+    env:
+      TZ: "Europe/Belgrade"
+      ADVERTISE_IP: "http://${SVC_PLEX_IP}:32400/"
+      VERSION: "docker"
+      PUID: "1000"
+      PGID: "1000"
+    service:
+      main:
+        type: LoadBalancer
+        externalTrafficPolicy: Local
+        loadBalancerIP: "${SVC_PLEX_IP}"
+        ports:
+          http:
+            port: 32400
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: "nginx"
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+        hosts:
+          - host: "plex.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - "plex.${SECRET_DOMAIN}"
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: plex-data
+      media:
+        enabled: true
+        type: nfs
+        server: "10.5.0.10"
+        path: /mnt/user/Multimedia
+        mountPath: /media
+      transcode:
+        enabled: true
+        type: emptyDir
+        medium: Memory
+
+    resources:
+      requests:
+        gpu.intel.com/i915: 1
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        gpu.intel.com/i915: 1
+        memory: 4096Mi
