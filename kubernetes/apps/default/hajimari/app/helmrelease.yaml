@@ -36,6 +36,9 @@ spec:
       namespaceSelector:
         matchNames:
           - default
+          - home
+          - media
+          - networking
     ingress:
       main:
         enabled: true
