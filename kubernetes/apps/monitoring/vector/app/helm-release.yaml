@@ -41,7 +41,7 @@ spec:
           type: loki
           inputs:
             - syslog
-          endpoint: "http://loki-loki-distributed-gateway"
+          endpoint: "http://loki:3100"
           labels:
             forwarder: vector
           encoding:
