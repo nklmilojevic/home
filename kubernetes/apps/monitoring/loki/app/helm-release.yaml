@@ -16,3 +16,9 @@ spec:
         name: grafana-charts
         namespace: flux-system
       interval: 5m
+  values:
+    loki:
+      commonConfig:
+        replication_factor: 1
+      storage:
+        type: "filesystem"
