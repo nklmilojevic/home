@@ -20,4 +20,3 @@ resources:
   - ./victoriametrics.yaml
   - ./backube.yaml
   - ./grafana.yaml
-  - ./democratic-csi.yaml
