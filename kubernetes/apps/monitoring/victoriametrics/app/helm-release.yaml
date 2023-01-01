@@ -668,6 +668,10 @@ spec:
             gnetId: 1860
             revision: 22
             datasource: VictoriaMetrics
+          nginxingress:
+            gnetId: 14314
+            revision: 2
+            datasource: VictoriaMetrics
 
       defaultDashboardsEnabled: true
 
