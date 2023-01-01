@@ -35,13 +35,13 @@ spec:
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
         hosts:
-          - host: "zigbee2mqtt.${SECRET_DOMAIN}"
+          - host: &host zigbee2mqtt.${SECRET_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
-              - "zigbee2mqtt.${SECRET_DOMAIN}"
+              - *host
     securityContext:
       privileged: true
     persistence:

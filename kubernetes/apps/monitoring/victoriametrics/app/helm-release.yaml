@@ -692,7 +692,7 @@ spec:
         pathType: Prefix
 
         hosts:
-          - grafana.milojevic.dev
+          - &host grafana.milojevic.dev
         ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
         extraPaths: []
         # - path: /*
@@ -710,7 +710,7 @@ spec:
         tls:
           - secretName: milojevic-dev-tls
             hosts:
-              - grafana.milojevic.dev
+              - *host
 
       vmServiceScrape:
         # wheter we should create a service scrape resource for node-exporter
