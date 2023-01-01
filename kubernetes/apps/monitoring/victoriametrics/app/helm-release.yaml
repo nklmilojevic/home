@@ -646,7 +646,7 @@ spec:
         - name: loki
           orgId: 1
           type: loki
-          url: http://loki-loki-distributed-gateway
+          url: http://loki:3100
           version: 1
 
       dashboardProviders:
