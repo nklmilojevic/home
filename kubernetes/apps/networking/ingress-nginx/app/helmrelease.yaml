@@ -57,7 +57,13 @@ spec:
       extraArgs:
         default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-tls"
       metrics:
-        enabled: false
+        enabled: true
+        service:
+          servicePort: 10254
+        serviceMonitor:
+          enabled: true
+          namespaceSelector:
+            any: true
       podAnnotations:
         configmap.reloader.stakater.com/reload: "cloudflare-networks"
       resources:
