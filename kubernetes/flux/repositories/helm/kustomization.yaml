@@ -19,3 +19,4 @@ resources:
   - ./vector-chart.yaml
   - ./victoriametrics.yaml
   - ./backube.yaml
+  - ./grafana.yaml
