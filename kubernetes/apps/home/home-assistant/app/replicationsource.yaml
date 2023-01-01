@@ -32,8 +32,7 @@ metadata:
 spec:
   sourcePVC: hass-data
   trigger:
-    # schedule: "0 0 * * *"
-    manual: "test222"
+    schedule: "0 0 * * *"
   restic:
     copyMethod: Direct
     pruneIntervalDays: 7
