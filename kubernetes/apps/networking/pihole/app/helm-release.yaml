@@ -19,7 +19,7 @@ spec:
     DNS1: "${SVC_UNBOUND_IP}"
     DNS2: "${SVC_UNBOUND_IP}"
     dnsPolicy: ClusterFirstWithHostNet
-    virtualHost: "pihole.${SECRET_DOMAIN}"
+    virtualHost: &host pihole.${SECRET_DOMAIN}
     image:
       repository: pihole/pihole
       tag: 2022.12
@@ -50,10 +50,10 @@ spec:
         cert-manager.io/cluster-issuer: "letsencrypt-production"
       path: /
       hosts:
-        - "pihole.${SECRET_DOMAIN}"
+        - *host
       tls:
         - hosts:
-            - "pihole.${SECRET_DOMAIN}"
+            - *host
     persistentVolumeClaim:
       enabled: true
       existingClaim: pihole-data
