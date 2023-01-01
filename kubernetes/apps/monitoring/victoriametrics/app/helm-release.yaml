@@ -131,13 +131,6 @@ spec:
         retentionPeriod: "14"
         replicaCount: 1
         extraArgs: {}
-        storage:
-          volumeClaimTemplate:
-            spec:
-              storageClassName: "nfs-csi"
-              resources:
-                requests:
-                  storage: 10Gi
       ingress:
         enabled: false
         # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
