@@ -55,6 +55,9 @@ spec:
       config:
         enabled: true
         existingClaim: plex-data
+      test:
+        enabled: true
+        existingClaim: plex-data
       media:
         enabled: true
         type: nfs
