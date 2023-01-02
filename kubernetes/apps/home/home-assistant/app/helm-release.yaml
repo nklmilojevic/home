@@ -18,7 +18,6 @@ spec:
         namespace: flux-system
   values:
     podAnnotations:
-      backup.velero.io/backup-volumes: config
       configmap.reloader.stakater.com/reload: "hass-config"
     hostNetwork: true
     dnsPolicy: ClusterFirstWithHostNet
