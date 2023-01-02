@@ -35,7 +35,7 @@ camera:
         bottom: 20
         left: 25
         right: 20
+
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
-secret: !include secrets.yaml
