@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: qbittorrent-data
+  name: deluge-data
   namespace: media
 spec:
   accessModes:
