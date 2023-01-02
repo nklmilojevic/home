@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: ghcr.io/linuxserver/prowlarr
-      tag: 1.0.0-develop
+      tag: 1.0.1-develop
     podAnnotations:
       secret.reloader.stakater.com/reload: prowlarr-secrets
     env:
