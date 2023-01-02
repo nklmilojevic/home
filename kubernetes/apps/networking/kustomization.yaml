@@ -11,4 +11,3 @@ resources:
   - ./pihole/ks.yaml
   - ./unbound/ks.yaml
   - ./adguard/ks.yaml
-  - ./pvc
