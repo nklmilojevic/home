@@ -35,7 +35,7 @@ spec:
             enabled: true
             port: 1883
     env:
-      TZ: "Europe/Belgrade"
+      TZ: "${TIMEZONE}"
     persistence:
       data:
         enabled: true

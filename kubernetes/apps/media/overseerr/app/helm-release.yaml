@@ -21,7 +21,7 @@ spec:
       repository: ghcr.io/linuxserver/overseerr
       tag: v1.31.0-ls51
     env:
-      TZ: "Europe/Belgrade"
+      TZ: "${TIMEZONE}"
       PUID: "1000"
       PGID: "1000"
     service:

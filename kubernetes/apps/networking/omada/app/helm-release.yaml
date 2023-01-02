@@ -23,7 +23,7 @@ spec:
       repository: mbentley/omada-controller
       tag: "5.7"
     env:
-      TZ: "Europe/Belgrade"
+      TZ: "${TIMEZONE}"
     ingress:
       main:
         enabled: false

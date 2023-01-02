@@ -21,7 +21,7 @@ spec:
       repository: ghcr.io/linuxserver/nzbget
       tag: v21.1-ls136
     env:
-      TZ: "Europe/Belgrade"
+      TZ: "${TIMEZONE}"
       PUID: "1000"
       PGID: "1000"
     service:
