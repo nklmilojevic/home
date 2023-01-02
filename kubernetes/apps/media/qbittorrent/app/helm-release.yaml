@@ -35,14 +35,14 @@ spec:
             port: 8080
           bittorrent-tcp:
             enabled: true
-            port: 6881
+            port: 51413
             protocol: TCP
-            targetPort: 6881
+            targetPort: 51413
           bittorrent-udp:
             enabled: true
-            port: 6881
+            port: 51413
             protocol: UDP
-            targetPort: 6881
+            targetPort: 51413
     ingress:
       main:
         enabled: true
