@@ -10,3 +10,4 @@ resources:
   - ./omada/ks.yaml
   - ./pihole/ks.yaml
   - ./unbound/ks.yaml
+  - ./adguard/ks.yaml
