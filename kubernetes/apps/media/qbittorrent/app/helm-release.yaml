@@ -18,8 +18,8 @@ spec:
         namespace: flux-system
   values:
     image:
-      repository: ghcr.io/linuxserver/qbittorrent
-      tag: 4.5.0-r1-ls237
+      repository: ghcr.io/onedr0p/qbittorrent
+      tag: 4.5.0
     env:
       TZ: "${TIMEZONE}"
       PUID: "1000"
