@@ -55,9 +55,6 @@ spec:
       config:
         enabled: true
         existingClaim: plex-data
-      test:
-        enabled: true
-        existingClaim: plex-data-local
       media:
         enabled: true
         type: nfs
