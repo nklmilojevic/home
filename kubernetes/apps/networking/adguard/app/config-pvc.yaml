@@ -15,7 +15,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: adguard-config
+  name: adguard-conf
   namespace: networking
 spec:
   accessModes:
