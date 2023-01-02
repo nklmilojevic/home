@@ -38,11 +38,6 @@ spec:
             port: 51413
             protocol: TCP
             targetPort: 51413
-          bittorrent-udp:
-            enabled: true
-            port: 51413
-            protocol: UDP
-            targetPort: 51413
     ingress:
       main:
         enabled: true

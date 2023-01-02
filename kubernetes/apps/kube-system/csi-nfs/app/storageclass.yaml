@@ -12,11 +12,9 @@ parameters:
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
 mountOptions:
-  - hard
+  - nfsvers=4.2
   - nconnect=8
   - noatime
   - nodiratime
-  - tcp
-  - intr
-  - rsize=65536
-  - wsize=65536
+  - rsize=131072
+  - wsize=131072
