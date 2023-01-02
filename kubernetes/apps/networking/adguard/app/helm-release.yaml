@@ -55,7 +55,11 @@ spec:
       data:
         enabled: true
         existingClaim: adguard-data
-        mountPath: /opt/adguardhome
+        mountPath: /opt/adguardhome/data
+      conf:
+        enabled: true
+        existingClaim: adguard-conf
+        mountPath: /opt/adguardhome/conf
     ingress:
       main:
         enabled: true
