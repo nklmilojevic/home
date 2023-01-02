@@ -16,3 +16,8 @@ mountOptions:
   - hard
   - nconnect=8
   - noatime
+  - nodiratime
+  - tcp
+  - intr
+  - rsize=65536
+  - wsize=65536
