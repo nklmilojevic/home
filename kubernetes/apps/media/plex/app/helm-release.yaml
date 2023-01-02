@@ -22,7 +22,7 @@ spec:
       tag: 1.30.0.6486-629d58034-ls147
 
     env:
-      TZ: "Europe/Belgrade"
+      TZ: "${TIMEZONE}"
       ADVERTISE_IP: "http://${SVC_PLEX_IP}:32400/"
       VERSION: "docker"
       PUID: "1000"

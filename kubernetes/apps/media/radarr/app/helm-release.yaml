@@ -21,7 +21,7 @@ spec:
       repository: ghcr.io/linuxserver/radarr
       tag: 4.2.4.6635-ls158
     env:
-      TZ: "Europe/Belgrade"
+      TZ: "${TIMEZONE}"
       PUID: "1000"
       PGID: "1000"
     service:

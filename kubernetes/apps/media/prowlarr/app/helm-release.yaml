@@ -23,7 +23,7 @@ spec:
     podAnnotations:
       secret.reloader.stakater.com/reload: prowlarr-secrets
     env:
-      TZ: "Europe/Belgrade"
+      TZ: "${TIMEZONE}"
       PUID: "1000"
       PGID: "1000"
       PROWLARR__API_KEY:
