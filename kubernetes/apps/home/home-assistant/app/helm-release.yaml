@@ -23,7 +23,7 @@ spec:
     dnsPolicy: ClusterFirstWithHostNet
     image:
       repository: homeassistant/home-assistant
-      tag: 2022.12.8
+      tag: 2022.12.9
     env:
       TZ: "${TIMEZONE}"
     service:
