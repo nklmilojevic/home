@@ -25,8 +25,8 @@ spec:
       retries: 5
   values:
     csiDriver:
-    # should be globally unique for a given cluster
-    name: "org.democratic-csi.smb"
+      # should be globally unique for a given cluster
+      name: "org.democratic-csi.smb"
 
     storageClasses:
       - name: smb-csi
