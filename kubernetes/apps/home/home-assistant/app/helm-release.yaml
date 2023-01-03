@@ -54,7 +54,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: hass-data
+        existingClaim: hass-storage-data
       hass-config:
         enabled: true
         type: configMap
