@@ -59,7 +59,10 @@ spec:
         existingClaim: qbittorrent-data
       media:
         enabled: true
-        existingClaim: test-pvc
+        type: nfs
+        server: "10.5.0.10"
+        path: /mnt/user/Multimedia
+        mountPath: /media
       interim:
         enabled: true
         existingClaim: nzbget-pvc
