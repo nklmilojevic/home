@@ -47,7 +47,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: zwavejs-data
+        existingClaim: zwavejs-storage-data
         mountPath: /usr/src/app/store
       usb:
         enabled: true
