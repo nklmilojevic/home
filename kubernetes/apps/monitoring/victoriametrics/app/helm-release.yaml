@@ -178,7 +178,7 @@ spec:
         vmstorage:
           image:
             tag: v1.85.0-cluster
-          replicaCount: 2
+          replicaCount: 1
           storageDataPath: "/vm-data"
           storage:
             volumeClaimTemplate:
@@ -195,7 +195,7 @@ spec:
         vmselect:
           image:
             tag: v1.85.0-cluster
-          replicaCount: 2
+          replicaCount: 1
           cacheMountPath: "/select-cache"
           extraArgs: {}
           storage:
@@ -215,7 +215,7 @@ spec:
         vminsert:
           image:
             tag: v1.85.0-cluster
-          replicaCount: 2
+          replicaCount: 1
           extraArgs: {}
           resources:
             {}
