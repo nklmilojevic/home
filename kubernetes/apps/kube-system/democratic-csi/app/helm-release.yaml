@@ -36,6 +36,8 @@ spec:
         allowVolumeExpansion: false
         parameters:
           fsType: cifs
+        mountOptions:
+          - vers=1.0
     driver:
       config:
         driver: smb-client
