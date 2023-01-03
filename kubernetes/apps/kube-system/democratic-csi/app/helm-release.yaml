@@ -47,4 +47,4 @@ spec:
           controllerBasePath: "/storage"
           dirPermissionsMode: "0777"
           dirPermissionsUser: root
-          dirPermissionsGroup: wheel
+          dirPermissionsGroup: root
