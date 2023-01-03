@@ -52,5 +52,5 @@ spec:
     persistence:
       data:
         enabled: true
-        existingClaim: omada-data
+        existingClaim: omada-storage-data
         mountPath: /opt/tplink/EAPController/data

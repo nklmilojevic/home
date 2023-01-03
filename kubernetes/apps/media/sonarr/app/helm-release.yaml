@@ -47,7 +47,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: sonarr-data
+        existingClaim: sonarr-storage-data
       media:
         enabled: true
         type: nfs

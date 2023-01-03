@@ -54,7 +54,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: plex-data
+        existingClaim: plex-storage-data
       media:
         enabled: true
         type: nfs

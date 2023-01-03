@@ -56,7 +56,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: qbittorrent-data
+        existingClaim: qbittorrent-storage-data
       media:
         enabled: true
         type: nfs
