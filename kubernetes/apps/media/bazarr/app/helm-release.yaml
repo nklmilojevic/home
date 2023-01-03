@@ -46,7 +46,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: bazarr-data
+        existingClaim: bazarr-storage-data
       media:
         enabled: true
         type: nfs
