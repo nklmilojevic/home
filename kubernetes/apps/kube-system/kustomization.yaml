@@ -8,3 +8,4 @@ resources:
   - ./reloader/ks.yaml
   - ./csi-nfs/ks.yaml
   - ./intel-gpu-plugin/ks.yaml
+  - ./nfs-subdir-external-provisioner/ks.yaml
