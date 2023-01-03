@@ -21,7 +21,7 @@ metadata:
     volumeType: local
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   storageClassName: local-path
   resources:
     requests:
