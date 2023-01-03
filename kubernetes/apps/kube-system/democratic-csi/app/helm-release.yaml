@@ -24,15 +24,28 @@ spec:
     remediation:
       retries: 5
   values:
-    driver:
-      config:
-        driver: smb-client
-        instance_id:
-        smb:
-          shareHost: 10.5.0.10
-          shareBasePath: "pvc"
-          # shareHost:shareBasePath should be mounted at this location in the controller container
-          controllerBasePath: "/storage"
-          dirPermissionsMode: "0777"
-          dirPermissionsUser: root
-          dirPermissionsGroup: wheel
+    csiDriver:
+    # should be globally unique for a given cluster
+    name: "org.democratic-csi.smb"
+
+  storageClasses:
+    - name: smb-csi
+      defaultClass: false
+      reclaimPolicy: Delete
+      volumeBindingMode: Immediate
+      allowVolumeExpansion: false
+      parameters:
+        fsType: cifs
+
+      driver:
+        config:
+          driver: smb-client
+          instance_id:
+          smb:
+            shareHost: 10.5.0.10
+            shareBasePath: "pvc"
+            # shareHost:shareBasePath should be mounted at this location in the controller container
+            controllerBasePath: "/storage"
+            dirPermissionsMode: "0777"
+            dirPermissionsUser: root
+            dirPermissionsGroup: wheel
