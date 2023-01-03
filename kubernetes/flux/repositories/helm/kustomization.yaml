@@ -20,3 +20,4 @@ resources:
   - ./backube.yaml
   - ./grafana.yaml
   - ./1password-charts.yaml
+  - ./nfs-subdir-external-provisioner.yaml
