@@ -20,6 +20,14 @@ spec:
     nfs:
       server: 10.5.0.10
       path: /mnt/user/pvc
+      mountOptions:
+        - noatime
+        - nodiratime
+        - nfsvers=4.2
+        - rsize=1048576
+        - wsize=1048576
+        - hard
+        - nconnect=16
     storageClass:
       reclaimPolicy: Retain
       accessModes: ReadWriteMany
