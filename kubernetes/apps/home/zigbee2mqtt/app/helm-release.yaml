@@ -47,7 +47,7 @@ spec:
     persistence:
       data:
         enabled: true
-        existingClaim: zigbee2mqtt-data-pvc
+        existingClaim: zigbee2mqtt-storage-data
         mountPath: /data
       usb:
         enabled: true

@@ -39,7 +39,7 @@ spec:
     persistence:
       data:
         enabled: true
-        existingClaim: mosquitto-data-pvc
+        existingClaim: mosquitto-storage-data
       mosquitto-config:
         enabled: true
         type: configMap
