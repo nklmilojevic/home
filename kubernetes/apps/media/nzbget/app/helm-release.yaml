@@ -47,6 +47,9 @@ spec:
       config:
         enabled: true
         existingClaim: nzbget-storage-data
+      config2:
+        enabled: true
+        existingClaim: nzbget-smb-data
       media:
         enabled: true
         type: nfs
