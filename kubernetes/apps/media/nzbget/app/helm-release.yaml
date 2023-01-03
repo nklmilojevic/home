@@ -46,7 +46,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: nzbget-local-data
+        existingClaim: nzbget-storage-data
       media:
         enabled: true
         type: nfs
