@@ -59,7 +59,7 @@ spec:
         existingClaim: qbittorrent-data
       media:
         enabled: true
-        existingClaim: nfs-media-pvc
+        existingClaim: test-pvc
       interim:
         enabled: true
         existingClaim: nzbget-pvc
