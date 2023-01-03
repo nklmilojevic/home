@@ -8,6 +8,4 @@ resources:
   - ./k8s-gateway/ks.yaml
   - ./metallb/ks.yaml
   - ./omada/ks.yaml
-  - ./pihole/ks.yaml
-  - ./unbound/ks.yaml
   - ./adguard/ks.yaml
