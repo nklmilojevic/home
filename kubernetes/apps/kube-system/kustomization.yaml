@@ -6,7 +6,7 @@ resources:
   - ./kube-vip/ks.yaml
   - ./metrics-server/ks.yaml
   - ./reloader/ks.yaml
-  - ./csi-nfs/ks.yaml
+  # - ./csi-nfs/ks.yaml
   - ./intel-gpu-plugin/ks.yaml
   - ./nfs-subdir-external-provisioner/ks.yaml
   # - ./democratic-csi/ks.yaml
