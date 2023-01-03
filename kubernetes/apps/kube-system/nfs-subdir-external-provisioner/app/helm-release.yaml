@@ -27,6 +27,7 @@ spec:
         - rsize=1048576
         - wsize=1048576
         - hard
+        - tcp
         - nconnect=16
     storageClass:
       reclaimPolicy: Retain
