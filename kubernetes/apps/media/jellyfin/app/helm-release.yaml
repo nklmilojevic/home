@@ -1,0 +1,74 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: jellyfin
+  namespace: media
+spec:
+  # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
+  chart:
+    spec:
+      chart: app-template
+      version: 1.2.1
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  interval: 30m
+  values:
+    image:
+      repository: ghcr.io/linuxserver/jellyfin
+      tag: 10.8.8@
+
+    env:
+      TZ: "${TIMEZONE}"
+      PUID: "${PUID}"
+      PGID: "${PUID}"
+    service:
+      main:
+        type: LoadBalancer
+        externalTrafficPolicy: Local
+        loadBalancerIP: "${SVC_JELLYFIN_IP}"
+        ports:
+          http:
+            port: 8096
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: "nginx"
+        annotations:
+          hajimari.io/icon: simple-icons:jellyfin
+        hosts:
+          - host: &host jellyfin.${SECRET_DOMAIN}
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: jellyfin-local-data
+      media:
+        enabled: true
+        type: nfs
+        server: "10.5.0.10"
+        path: /mnt/user/Multimedia
+        mountPath: /media
+      transcode:
+        enabled: true
+        type: emptyDir
+        medium: Memory
+
+    resources:
+      requests:
+        gpu.intel.com/i915: 1
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        gpu.intel.com/i915: 1
+        memory: 1024i
