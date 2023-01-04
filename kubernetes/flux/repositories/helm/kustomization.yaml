@@ -22,3 +22,4 @@ resources:
   - ./1password-charts.yaml
   - ./nfs-subdir-external-provisioner.yaml
   - ./democratic-csi.yaml
+  - ./multus.yaml

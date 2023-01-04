@@ -9,3 +9,4 @@ resources:
   - ./metallb/ks.yaml
   - ./omada/ks.yaml
   - ./adguard/ks.yaml
+  - ./multus/ks.yaml
