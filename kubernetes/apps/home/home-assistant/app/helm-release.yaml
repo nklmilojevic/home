@@ -19,8 +19,8 @@ spec:
   values:
     podAnnotations:
       configmap.reloader.stakater.com/reload: "hass-config"
-    hostNetwork: true
-    dnsPolicy: ClusterFirstWithHostNet
+    # hostNetwork: true
+    # dnsPolicy: ClusterFirstWithHostNet
     image:
       repository: homeassistant/home-assistant
       tag: 2022.12.9
@@ -48,9 +48,6 @@ spec:
         tls:
           - hosts:
               - *host
-    podSecurityContext:
-      supplementalGroups:
-        - 100
     persistence:
       config:
         enabled: true
