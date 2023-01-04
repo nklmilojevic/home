@@ -40,6 +40,9 @@ spec:
       data:
         enabled: true
         existingClaim: mosquitto-storage-data
+      data2:
+        enabled: true
+        existingClaim: mosquitto-local-data
       mosquitto-config:
         enabled: true
         type: configMap
