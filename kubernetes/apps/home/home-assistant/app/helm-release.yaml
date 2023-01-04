@@ -29,9 +29,6 @@ spec:
       TZ: "${TIMEZONE}"
     service:
       main:
-        type: LoadBalancer
-        loadBalancerIP: "${SVC_HASS_IP}"
-        externalTrafficPolicy: Local
         ports:
           http:
             port: 8123
