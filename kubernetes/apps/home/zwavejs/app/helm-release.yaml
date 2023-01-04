@@ -47,12 +47,8 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: zwavejs-storage-data
-        mountPath: /usr/src/app/store
-      config2:
-        enabled: true
         existingClaim: zwavejs-local-data
-        mountPath: /usr/src/app/store2
+        mountPath: /usr/src/app/store
       usb:
         enabled: true
         type: hostPath
