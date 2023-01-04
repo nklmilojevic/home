@@ -40,6 +40,7 @@ spec:
             sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/radarr/dracula.css"></head>';
             sub_filter_once on;
           hajimari.io/enable: "true"
+          hajimari.io/icon: "television-box"
         hosts:
           - host: &host sonarr.${SECRET_DOMAIN}
             paths:
