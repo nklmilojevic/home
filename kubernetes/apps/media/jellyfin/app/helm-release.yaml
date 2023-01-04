@@ -21,7 +21,7 @@ spec:
       type: statefulset
     image:
       repository: ghcr.io/linuxserver/jellyfin
-      tag: 10.8.8@
+      tag: 10.8.8
 
     env:
       TZ: "${TIMEZONE}"
