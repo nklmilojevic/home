@@ -19,7 +19,6 @@ spec:
   values:
     podAnnotations:
       configmap.reloader.stakater.com/reload: "hass-config"
-      k8s.v1.cni.cncf.io/networks: static-iot-hass
     # hostNetwork: true
     # dnsPolicy: ClusterFirstWithHostNet
     image:
@@ -29,9 +28,9 @@ spec:
       TZ: "${TIMEZONE}"
     service:
       main:
-        # type: LoadBalancer
-        # loadBalancerIP: "${SVC_HASS_IP}"
-        # externalTrafficPolicy: Local
+        type: LoadBalancer
+        loadBalancerIP: "${SVC_HASS_IP}"
+        externalTrafficPolicy: Local
         ports:
           http:
             port: 8123
@@ -40,7 +39,6 @@ spec:
         enabled: true
         ingressClassName: "nginx"
         annotations:
-          hajimari.io/icon: "home-assistant"
           nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
         hosts:
           - host: &host hass.${SECRET_DOMAIN}
