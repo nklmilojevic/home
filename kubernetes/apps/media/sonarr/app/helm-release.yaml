@@ -48,6 +48,9 @@ spec:
       config:
         enabled: true
         existingClaim: sonarr-storage-data
+      config2:
+        enabled: true
+        existingClaim: sonarr-local-data
       media:
         enabled: true
         type: nfs

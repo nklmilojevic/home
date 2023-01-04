@@ -47,6 +47,9 @@ spec:
       config:
         enabled: true
         existingClaim: tautulli-storage-data
+      config2:
+        enabled: true
+        existingClaim: tautulli-local-data
       media:
         enabled: true
         type: nfs

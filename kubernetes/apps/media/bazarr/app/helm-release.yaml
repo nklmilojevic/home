@@ -47,6 +47,9 @@ spec:
       config:
         enabled: true
         existingClaim: bazarr-storage-data
+      config2:
+        enabled: true
+        existingClaim: bazarr-local-data
       media:
         enabled: true
         type: nfs
