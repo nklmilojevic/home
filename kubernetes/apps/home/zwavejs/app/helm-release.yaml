@@ -49,6 +49,10 @@ spec:
         enabled: true
         existingClaim: zwavejs-storage-data
         mountPath: /usr/src/app/store
+      config2:
+        enabled: true
+        existingClaim: zwavejs-local-data
+        mountPath: /usr/src/app/store2
       usb:
         enabled: true
         type: hostPath
