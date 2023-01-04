@@ -50,9 +50,6 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: radarr-storage-data
-      config2:
-        enabled: true
         existingClaim: radarr-local-data
       media:
         enabled: true

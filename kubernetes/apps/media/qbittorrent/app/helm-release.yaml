@@ -56,9 +56,6 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: qbittorrent-storage-data
-      config2:
-        enabled: true
         existingClaim: qbittorrent-local-data
       media:
         enabled: true
