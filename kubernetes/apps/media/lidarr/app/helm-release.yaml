@@ -28,7 +28,7 @@ spec:
       main:
         ports:
           http:
-            port: 6767
+            port: 8686
     ingress:
       main:
         ingressClassName: "nginx"
