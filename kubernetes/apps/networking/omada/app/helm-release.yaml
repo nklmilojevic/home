@@ -46,11 +46,12 @@ spec:
         ports:
           http:
             port: 8043
-    podSecurityContext:
-      supplementalGroups:
-        - 100
     persistence:
       data:
         enabled: true
         existingClaim: omada-storage-data
         mountPath: /opt/tplink/EAPController/data
+      data2:
+        enabled: true
+        existingClaim: omada-local-data
+        mountPath: /opt/tplink/EAPController/data2
