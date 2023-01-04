@@ -22,8 +22,8 @@ spec:
       tag: 4.5.0-r1-ls237
     env:
       TZ: "${TIMEZONE}"
-      PUID: "1000"
-      PGID: "1000"
+      PUID: "${PUID}"
+      PGID: "${PUID}"
     service:
       main:
         enabled: true

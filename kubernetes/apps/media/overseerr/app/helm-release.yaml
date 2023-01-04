@@ -22,8 +22,8 @@ spec:
       tag: v1.31.0-ls51
     env:
       TZ: "${TIMEZONE}"
-      PUID: "1000"
-      PGID: "1000"
+      PUID: "${PUID}"
+      PGID: "${PUID}"
     service:
       main:
         ports:
