@@ -17,6 +17,8 @@ spec:
         namespace: flux-system
   interval: 30m
   values:
+    controller:
+      type: statefulset
     image:
       repository: ghcr.io/linuxserver/jellyfin
       tag: 10.8.8@
