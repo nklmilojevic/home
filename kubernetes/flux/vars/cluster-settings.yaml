@@ -6,6 +6,8 @@ metadata:
   namespace: flux-system
 data:
   TIMEZONE: "Europe/Belgrade"
+  PUID: "1000"
+  PGID: "1000"
   KUBE_VIP_ADDR: "10.5.0.201"
   METALLB_LB_RANGE: "10.5.0.150-10.5.0.200"
   METALLB_K8S_GATEWAY_ADDR: "10.5.0.150"
