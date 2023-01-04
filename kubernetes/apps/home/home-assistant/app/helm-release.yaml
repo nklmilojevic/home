@@ -54,9 +54,6 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: hass-storage-data
-      config2:
-        enabled: true
         existingClaim: hass-local-data
       hass-config:
         enabled: true
