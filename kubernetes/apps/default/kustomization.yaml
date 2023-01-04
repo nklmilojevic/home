@@ -5,4 +5,4 @@ resources:
   - ./namespace.yaml
   - ./echo-server/ks.yaml
   - ./hajimari/ks.yaml
-  # - ./theme-park/ks.yaml
+  - ./theme-park/ks.yaml
