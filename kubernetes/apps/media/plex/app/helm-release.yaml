@@ -23,7 +23,6 @@ spec:
 
     env:
       TZ: "${TIMEZONE}"
-      ADVERTISE_IP: "http://${SVC_PLEX_IP}:32400/"
       VERSION: "docker"
       PUID: "${PUID}"
       PGID: "${PUID}"
