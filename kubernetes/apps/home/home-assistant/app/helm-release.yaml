@@ -19,7 +19,6 @@ spec:
   values:
     podAnnotations:
       configmap.reloader.stakater.com/reload: "hass-config"
-      k8s.v1.cni.cncf.io/networks: static-iot-hass
     # hostNetwork: true
     # dnsPolicy: ClusterFirstWithHostNet
     image:
