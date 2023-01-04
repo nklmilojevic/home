@@ -27,6 +27,13 @@ spec:
       tag: 2022.12.9
     env:
       TZ: "${TIMEZONE}"
+    probes:
+      liveness:
+        enabled: false
+      readiness:
+        enabled: false
+      startup:
+        enabled: false
     service:
       main:
         ports:
