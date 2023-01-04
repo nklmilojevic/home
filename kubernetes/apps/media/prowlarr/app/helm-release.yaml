@@ -57,6 +57,9 @@ spec:
       config:
         enabled: true
         existingClaim: prowlarr-storage-data
+      config2:
+        enabled: true
+        existingClaim: prowlarr-local-data
       media:
         enabled: true
         type: nfs
