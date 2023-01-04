@@ -14,33 +14,38 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  maxHistory: 3
   install:
     createNamespace: true
     remediation:
       retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
       retries: 3
+  uninstall:
+    keepHistory: false
   values:
     controller:
       replicas: 1
       strategy: RollingUpdate
     image:
-      repository: docker.io/gilbn/theme.park
-      tag: 1.13.3
+      repository: ghcr.io/onedr0p/theme-park
+      tag: 1.13.3@sha256:497f6d27ab4ffd23c32299334b56ad915a36137693bab5e7c0968d2210b7a42e
     service:
       main:
         ports:
           http:
-            port: &port 8080
+            port: 8080
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: "nginx"
         annotations:
           external-dns.home.arpa/enabled: "true"
+          hajimari.io/enable: "false"
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
@@ -54,3 +59,9 @@ spec:
         labelSelector:
           matchLabels:
             app.kubernetes.io/name: *app
+    resources:
+      requests:
+        cpu: 5m
+        memory: 10Mi
+      limits:
+        memory: 50Mi
