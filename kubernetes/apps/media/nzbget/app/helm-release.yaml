@@ -22,8 +22,8 @@ spec:
       tag: v21.1-ls136
     env:
       TZ: "${TIMEZONE}"
-      PUID: "1000"
-      PGID: "1000"
+      PUID: "${PUID}"
+      PGID: "${PUID}"
     service:
       main:
         ports:

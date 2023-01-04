@@ -22,8 +22,8 @@ spec:
       tag: 4.2.4.6635-ls158
     env:
       TZ: "${TIMEZONE}"
-      PUID: "1000"
-      PGID: "1000"
+      PUID: "${PUID}"
+      PGID: "${PUID}"
     service:
       main:
         ports:

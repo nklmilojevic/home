@@ -22,8 +22,8 @@ spec:
       tag: develop-4.0.0.328-ls375
     env:
       TZ: "${TIMEZONE}"
-      PUID: "1000"
-      PGID: "1000"
+      PUID: "${PUID}"
+      PGID: "${PUID}"
     service:
       main:
         ports:
