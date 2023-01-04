@@ -7,6 +7,6 @@ resources:
   - ./ingress-nginx/ks.yaml
   - ./k8s-gateway/ks.yaml
   - ./metallb/ks.yaml
-  # - ./omada/ks.yaml
+  - ./omada/ks.yaml
   - ./adguard/ks.yaml
   - ./multus/ks.yaml
