@@ -60,18 +60,12 @@ spec:
     persistence:
       data:
         enabled: true
-        existingClaim: adguard-storage-data
+        existingClaim: adguard-local-data
         mountPath: /opt/adguardhome/data
       conf:
         enabled: true
-        existingClaim: adguard-storage-conf
-        mountPath: /opt/adguardhome/conf
-      data2:
-        enabled: true
-        existingClaim: adguard-local-data
-      conf2:
-        enabled: true
         existingClaim: adguard-local-conf
+        mountPath: /opt/adguardhome/conf
     ingress:
       main:
         enabled: true
