@@ -66,6 +66,12 @@ spec:
         enabled: true
         existingClaim: adguard-storage-conf
         mountPath: /opt/adguardhome/conf
+      data2:
+        enabled: true
+        existingClaim: adguard-storage-data
+      conf2:
+        enabled: true
+        existingClaim: adguard-storage-conf
     ingress:
       main:
         enabled: true

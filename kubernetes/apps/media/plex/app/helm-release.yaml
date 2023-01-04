@@ -55,6 +55,9 @@ spec:
       config:
         enabled: true
         existingClaim: plex-storage-data
+      config2:
+        enabled: true
+        existingClaim: plex-local-data
       media:
         enabled: true
         type: nfs
