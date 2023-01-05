@@ -30,7 +30,7 @@ metadata:
   name: bazarr
   namespace: media
 spec:
-  sourcePVC: bazarr-data
+  sourcePVC: bazarr-local-data
   trigger:
     schedule: "0 0 * * *"
   restic:
