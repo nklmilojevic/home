@@ -32,4 +32,4 @@ spec:
     storageClass:
       reclaimPolicy: Retain
       accessModes: ReadWriteMany
-      defaultClass: true
+      defaultClass: false
