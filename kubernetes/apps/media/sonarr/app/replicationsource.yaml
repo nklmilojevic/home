@@ -32,7 +32,7 @@ metadata:
 spec:
   sourcePVC: sonarr-local-data
   trigger:
-    schedule: "0 0 * * *"
+    manual: "trigger"
   restic:
     copyMethod: Direct
     pruneIntervalDays: 7

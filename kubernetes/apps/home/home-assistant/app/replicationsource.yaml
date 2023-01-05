@@ -30,9 +30,9 @@ metadata:
   name: home-assistant
   namespace: home
 spec:
-  sourcePVC: hass-data
+  sourcePVC: hass-local-data
   trigger:
-    schedule: "0 0 * * *"
+    manual: "trigger"
   restic:
     copyMethod: Direct
     pruneIntervalDays: 7

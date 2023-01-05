@@ -30,9 +30,9 @@ metadata:
   name: mosquitto
   namespace: home
 spec:
-  sourcePVC: mosquitto-data-pvc
+  sourcePVC: mosquitto-local-data
   trigger:
-    schedule: "0 0 * * *"
+    manual: "trigger"
   restic:
     copyMethod: Direct
     pruneIntervalDays: 7
