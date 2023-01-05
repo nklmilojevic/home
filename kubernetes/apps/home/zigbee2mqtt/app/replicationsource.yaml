@@ -32,7 +32,7 @@ metadata:
 spec:
   sourcePVC: zigbee2mqtt-local-data
   trigger:
-    manual: "trigger2"
+    schedule: "0 0 * * *"
   restic:
     copyMethod: Direct
     pruneIntervalDays: 7
