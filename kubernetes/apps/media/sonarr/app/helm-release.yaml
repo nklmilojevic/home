@@ -57,7 +57,7 @@ spec:
         enabled: true
         type: nfs
         server: "10.5.0.10"
-        path: /mnt/user/Multimedia
+        path: /mnt/user0/Multimedia
         mountPath: /media
     prometheus:
       podMonitor:
