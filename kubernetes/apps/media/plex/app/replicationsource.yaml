@@ -3,19 +3,19 @@
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: bazarr-restic
+  name: plex-restic
   namespace: media
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
     name: onepassword-connect
   target:
-    name: bazarr-restic-secret
+    name: plex-restic-secret
     creationPolicy: Owner
     template:
       engineVersion: v2
       data:
-        RESTIC_REPOSITORY: "{{ .REPOSITORY_TEMPLATE }}/bazarr"
+        RESTIC_REPOSITORY: "{{ .REPOSITORY_TEMPLATE }}/plex"
         RESTIC_PASSWORD: "{{ .RESTIC_PASSWORD }}"
         AWS_ACCESS_KEY_ID: "{{ .AWS_ACCESS_KEY_ID }}"
         AWS_SECRET_ACCESS_KEY: "{{ .AWS_SECRET_ACCESS_KEY }}"
@@ -27,16 +27,16 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: bazarr
+  name: plex
   namespace: media
 spec:
-  sourcePVC: bazarr-local-data
+  sourcePVC: plex-local-data
   trigger:
-    schedule: "0 0 * * *"
+    manual: "trigger3"
   restic:
     copyMethod: Direct
     pruneIntervalDays: 7
-    repository: bazarr-restic-secret
+    repository: plex-restic-secret
     retain:
       hourly: 0
       daily: 7
