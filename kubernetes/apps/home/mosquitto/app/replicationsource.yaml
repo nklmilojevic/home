@@ -32,7 +32,7 @@ metadata:
 spec:
   sourcePVC: mosquitto-local-data
   trigger:
-    manual: "trigger"
+    manual: "trigger2"
   restic:
     copyMethod: Direct
     pruneIntervalDays: 7
