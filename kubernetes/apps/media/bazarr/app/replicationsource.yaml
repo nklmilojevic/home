@@ -32,7 +32,7 @@ metadata:
 spec:
   sourcePVC: bazarr-local-data
   trigger:
-    manual: "trigger"
+    manual: "trigger2"
   restic:
     copyMethod: Direct
     pruneIntervalDays: 7
