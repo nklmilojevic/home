@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
   - ./config-pvc.yaml
   - ./helm-release.yaml
-  # - ./nzbget-hostpath.yaml
+  - ./replicationsource.yaml
