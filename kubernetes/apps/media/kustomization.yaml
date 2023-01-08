@@ -14,3 +14,4 @@ resources:
   - ./qbittorrent/ks.yaml
   - ./tautulli/ks.yaml
   - ./jellyfin/ks.yaml
+  - ./sabnzbgd/ks.yaml
