@@ -18,17 +18,20 @@ spec:
         namespace: flux-system
   values:
     image:
-      repository: ghcr.io/linuxserver/nzbget
-      tag: v21.1-ls136
+      repository: ghcr.io/onedr0p/nzbget
+      tag: 21.1
+
     env:
       TZ: "${TIMEZONE}"
       PUID: "${PUID}"
       PGID: "${PUID}"
+
     service:
       main:
         ports:
           http:
             port: 6789
+
     ingress:
       main:
         enabled: true
@@ -48,6 +51,13 @@ spec:
         tls:
           - hosts:
               - *host
+
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
+
     persistence:
       config:
         enabled: true

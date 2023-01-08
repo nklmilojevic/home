@@ -18,24 +18,23 @@ spec:
         namespace: flux-system
   values:
     image:
-      repository: ghcr.io/linuxserver/prowlarr
-      tag: 1.0.1-develop
+      repository: ghcr.io/onedr0p/prowlarr-develop
+      tag: 1.0.1.2220
+
     podAnnotations:
       secret.reloader.stakater.com/reload: prowlarr-secrets
+
     env:
       TZ: "${TIMEZONE}"
       PUID: "${PUID}"
       PGID: "${PUID}"
-      PROWLARR__API_KEY:
-        valueFrom:
-          secretKeyRef:
-            name: prowlarr-secrets
-            key: api_key
+
     service:
       main:
         ports:
           http:
             port: 9696
+
     ingress:
       main:
         enabled: true
@@ -55,6 +54,13 @@ spec:
         tls:
           - hosts:
               - *host
+
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
+
     persistence:
       config:
         enabled: true

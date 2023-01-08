@@ -18,12 +18,14 @@ spec:
         namespace: flux-system
   values:
     image:
-      repository: ghcr.io/linuxserver/qbittorrent
-      tag: 4.5.0-r1-ls237
+      repository: ghcr.io/onedr0p/qbittorrent
+      tag: 4.5.0
+
     env:
       TZ: "${TIMEZONE}"
       PUID: "${PUID}"
       PGID: "${PUID}"
+
     service:
       main:
         enabled: true
@@ -38,6 +40,7 @@ spec:
             port: 51413
             protocol: TCP
             targetPort: 51413
+
     ingress:
       main:
         enabled: true
@@ -60,6 +63,13 @@ spec:
         tls:
           - hosts:
               - *host
+
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
+
     persistence:
       config:
         enabled: true

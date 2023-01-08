@@ -19,14 +19,16 @@ spec:
   values:
     controller:
       type: statefulset
+
     image:
-      repository: ghcr.io/linuxserver/jellyfin
-      tag: 10.8.8-1-ls194
+      repository: ghcr.io/onedr0p/jellyfin
+      tag: 10.8.8
 
     env:
       TZ: "${TIMEZONE}"
       PUID: "${PUID}"
       PGID: "${PUID}"
+
     service:
       main:
         type: LoadBalancer
@@ -50,6 +52,12 @@ spec:
         tls:
           - hosts:
               - *host
+
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
 
     persistence:
       config:

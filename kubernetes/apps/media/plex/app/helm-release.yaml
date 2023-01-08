@@ -18,14 +18,15 @@ spec:
   interval: 30m
   values:
     image:
-      repository: ghcr.io/linuxserver/plex
-      tag: 1.30.0.6486-629d58034-ls147
+      repository: ghcr.io/ondedr0p/plex
+      tag: 1.30.0.6486-629d58034
 
     env:
       TZ: "${TIMEZONE}"
       VERSION: "docker"
       PUID: "${PUID}"
       PGID: "${PUID}"
+
     service:
       main:
         type: LoadBalancer
@@ -56,6 +57,12 @@ spec:
         tls:
           - hosts:
               - *host
+
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
 
     persistence:
       config:

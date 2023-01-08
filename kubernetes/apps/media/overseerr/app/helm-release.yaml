@@ -20,15 +20,18 @@ spec:
     image:
       repository: ghcr.io/linuxserver/overseerr
       tag: v1.31.0-ls51
+
     env:
       TZ: "${TIMEZONE}"
       PUID: "${PUID}"
       PGID: "${PUID}"
+
     service:
       main:
         ports:
           http:
             port: 5055
+
     ingress:
       main:
         enabled: true
@@ -48,6 +51,13 @@ spec:
         tls:
           - hosts:
               - *host
+
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
+
     persistence:
       config:
         enabled: true
