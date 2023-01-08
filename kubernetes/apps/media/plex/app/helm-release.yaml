@@ -18,7 +18,7 @@ spec:
   interval: 30m
   values:
     image:
-      repository: ghcr.io/ondedr0p/plex
+      repository: ghcr.io/onedr0p/plex
       tag: 1.30.0.6486-629d58034
 
     env:
