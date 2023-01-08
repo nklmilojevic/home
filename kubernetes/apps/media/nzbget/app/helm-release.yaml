@@ -18,8 +18,8 @@ spec:
         namespace: flux-system
   values:
     image:
-      repository: ghcr.io/onedr0p/nzbget
-      tag: "21.1"
+      repository: ghcr.io/linuxserver/nzbget
+      tag: v21.1-ls136
 
     env:
       TZ: "${TIMEZONE}"
@@ -51,12 +51,6 @@ spec:
         tls:
           - hosts:
               - *host
-
-    podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
-      fsGroupChangePolicy: "OnRootMismatch"
 
     persistence:
       config:
