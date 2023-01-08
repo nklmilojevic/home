@@ -18,17 +18,20 @@ spec:
         namespace: flux-system
   values:
     image:
-      repository: ghcr.io/linuxserver/tautulli
-      tag: v2.11.1-ls61
+      repository: ghcr.io/onedr0p/tautulli
+      tag: 2.11.1
+
     env:
       TZ: "${TIMEZONE}"
       PUID: "${PUID}"
       PGID: "${PUID}"
+
     service:
       main:
         ports:
           http:
             port: 8181
+
     ingress:
       main:
         enabled: true
@@ -48,6 +51,13 @@ spec:
         tls:
           - hosts:
               - *host
+
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
+
     persistence:
       config:
         enabled: true
