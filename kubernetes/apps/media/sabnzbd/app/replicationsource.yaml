@@ -32,8 +32,7 @@ metadata:
 spec:
   sourcePVC: sabnzbd-local-data
   trigger:
-    # schedule: "0 0 * * *"
-    manual: "initialbackup"
+    schedule: "0 0 * * *"
   restic:
     copyMethod: Direct
     pruneIntervalDays: 7
