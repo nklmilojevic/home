@@ -19,6 +19,7 @@ spec:
   values:
     podAnnotations:
       configmap.reloader.stakater.com/reload: "hass-config"
+      secret.reloader.stakater.com/reload: "home-assistant-secrets"
       k8s.v1.cni.cncf.io/networks: static-iot-hass
     image:
       repository: homeassistant/home-assistant
