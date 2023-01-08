@@ -26,7 +26,7 @@ spec:
 
     env:
       TZ: "${TIMEZONE}"
-      SABNZBD__PORT: "8080"
+      SABNZBD__PORT: &port 8080
       SABNZBD__HOST_WHITELIST_ENTRIES: >-
         sabnzbd,
         sabnzbd.media,
@@ -39,7 +39,7 @@ spec:
       main:
         ports:
           http:
-            port: 8080
+            port: *port
 
     ingress:
       main:
