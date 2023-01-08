@@ -21,7 +21,7 @@ http:
 
 camera:
   - platform: xiaomi_cloud_map_extractor
-    host: 10.5.0.42
+    host: 10.3.0.5
     token: !secret roborock_token
     username: nikola@milojevic.me
     password: !secret roborock_xiaomi_password
