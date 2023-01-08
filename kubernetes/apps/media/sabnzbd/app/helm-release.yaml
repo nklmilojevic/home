@@ -26,14 +26,13 @@ spec:
 
     env:
       TZ: "${TIMEZONE}"
-      PUID: "${PUID}"
-      PGID: "${PUID}"
+      SABNZBD__PORT: "8080"
 
     service:
       main:
         ports:
           http:
-            port: 6789
+            port: 8080
 
     ingress:
       main:
