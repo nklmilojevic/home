@@ -7,7 +7,6 @@ resources:
   - ./helm-release.yaml
   - ./replicationsource.yaml
   - ./multus.yaml
-  - ./test.yaml
 configMapGenerator:
   - name: hass-config
     files:
