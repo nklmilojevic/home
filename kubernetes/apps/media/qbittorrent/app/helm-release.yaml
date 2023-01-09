@@ -79,4 +79,4 @@ spec:
         existingClaim: nfs-media-pvc
       interim:
         enabled: true
-        existingClaim: nzbget-pvc
+        existingClaim: downloads-pvc
