@@ -65,10 +65,7 @@ spec:
         existingClaim: jellyfin-local-data
       media:
         enabled: true
-        type: nfs
-        server: "10.5.0.10"
-        path: /mnt/user/Multimedia
-        mountPath: /media
+        existingClaim: nfs-media-pvc
       transcode:
         enabled: true
         type: emptyDir
