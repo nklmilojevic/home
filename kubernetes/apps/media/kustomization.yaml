@@ -8,7 +8,6 @@ resources:
   - ./radarr/ks.yaml
   - ./bazarr/ks.yaml
   - ./lidarr/ks.yaml
-  - ./nzbget/ks.yaml
   - ./overseerr/ks.yaml
   - ./plex/ks.yaml
   - ./prowlarr/ks.yaml
