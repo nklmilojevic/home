@@ -7,4 +7,4 @@ resources:
   - ./metrics-server/ks.yaml
   - ./reloader/ks.yaml
   - ./intel-gpu-plugin/ks.yaml
-  - ./nfs-subdir-external-provisioner/ks.yaml
+  # - ./nfs-subdir-external-provisioner/ks.yaml
