@@ -18,8 +18,8 @@ spec:
         namespace: flux-system
   values:
     nfs:
-      server: 10.5.0.10
-      path: /mnt/user/pvc
+      server: panopticon.${SECRET_DOMAIN}
+      path: /pvc
       mountOptions:
         - noatime
         - nodiratime
@@ -28,7 +28,7 @@ spec:
         - wsize=1048576
         - hard
         - tcp
-        - nconnect=16
+        - nconnect=8
     storageClass:
       reclaimPolicy: Retain
       accessModes: ReadWriteMany
