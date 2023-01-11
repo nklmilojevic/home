@@ -11,8 +11,8 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   nfs:
-    server: 10.5.0.10
-    path: /mnt/user/Multimedia
+    server: panopticon.${SECRET_DOMAIN}
+    path: /media
   mountOptions:
     - nfsvers=4.2
     - tcp
