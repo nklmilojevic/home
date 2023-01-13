@@ -569,13 +569,6 @@ spec:
     grafana:
       enabled: true
       ## all values for grafana helm chart can be specified here
-      sidecar:
-        datasources:
-          enabled: true
-          searchNamespace: ALL
-        dashboards:
-          enabled: true
-          searchNamespace: ALL
 
       ## ForceDeployDatasource Create datasource configmap even if grafana deployment has been disabled
       forceDeployDatasource: false
@@ -609,6 +602,13 @@ spec:
             revision: 22
             datasource: VictoriaMetrics
 
+      sidecar:
+        datasources:
+          enabled: true
+          searchNamespace: ALL
+        dashboards:
+          enabled: true
+          searchNamespace: ALL
       defaultDashboardsEnabled: true
 
       ingress:
