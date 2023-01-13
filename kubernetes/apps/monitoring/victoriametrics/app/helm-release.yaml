@@ -572,16 +572,10 @@ spec:
       sidecar:
         datasources:
           enabled: true
-          createVMReplicasDatasources: false
-          # JSON options for VM datasources
-          # See https://grafana.com/docs/grafana/latest/administration/provisioning/#json-data
-          jsonData: {}
-          #  timeInterval: "1m"
+          searchNamespace: ALL
         dashboards:
-          additionalDashboardLabels: {}
-          additionalDashboardAnnotations: {}
           enabled: true
-          multicluster: false
+          searchNamespace: ALL
 
       ## ForceDeployDatasource Create datasource configmap even if grafana deployment has been disabled
       forceDeployDatasource: false
