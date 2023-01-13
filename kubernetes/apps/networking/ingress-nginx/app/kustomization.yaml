@@ -5,6 +5,7 @@ namespace: networking
 resources:
   - ./helmrelease.yaml
   - ./certificate.yaml
+  - ./dashboard
 configMapGenerator:
   - name: cloudflare-networks
     files:
