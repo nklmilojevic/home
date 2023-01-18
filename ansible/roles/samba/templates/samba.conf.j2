@@ -1,0 +1,47 @@
+#{{ ansible_managed }}
+
+[global]
+   workgroup = WORKGROUP
+   server string = %h server (Samba, Ubuntu)
+   log file = /var/log/samba/log.%m
+   security = user
+   max log size = 1000
+   logging = file
+   panic action = /usr/share/samba/panic-action %d
+   server role = standalone server
+
+   obey pam restrictions = yes
+
+   unix password sync = yes
+
+   passwd program = /usr/bin/passwd %u
+   passwd chat = *Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .
+
+   pam password change = yes
+
+   map to guest = bad user
+   usershare allow guests = no
+[media]
+    comment = Media
+    path = /mnt/storage/Multimedia
+    browseable = yes
+    writeable = yes
+    read only = no
+    guest ok = no
+    valid users = @nkl
+[backup]
+    comment = Backup
+    path = /mnt/storage/Backup
+    browseable = yes
+    writeable = yes
+    read only = no
+    guest ok = no
+    valid users = @nkl
+[reolink]
+    comment = Reolink
+    path = /mnt/storage/reolink
+    browseable = yes
+    writeable = yes
+    read only = no
+    guest ok = no
+    valid users = @nkl

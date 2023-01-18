@@ -1,0 +1,20 @@
+# {{ ansible_managed }}
+# SnapRAID configuration file
+
+# Parity location(s)
+1-parity /mnt/parity1/snapraid.parity
+
+# Content file location(s)
+content /var/snapraid.content
+content /mnt/disk1/.snapraid.content
+content /mnt/disk2/.snapraid.content
+
+# Data disks
+data d1 /mnt/disk1
+data d2 /mnt/disk2
+
+# Excludes hidden files and directories
+exclude *.unrecoverable
+exclude /tmp/
+exclude /lost+found/
+exclude *.!sync

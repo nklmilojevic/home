@@ -1,0 +1,14 @@
+---
+- name: Set up cronjobs
+  ansible.builtin.cron:
+    name: "{{ item.name }}"
+    user: "{{ item.user | default('root') }}"
+    minute: "{{ item.minute | default('*') }}"
+    hour: "{{ item.hour | default('*') }}"
+    day: "{{ item.day | default('*') }}"
+    weekday: "{{ item.weekday | default('*') }}"
+    job: "{{ item.job }}"
+  loop: "{{ crons | flatten(levels=1) }}"
+  when: crons is defined
+  tags:
+    - cron

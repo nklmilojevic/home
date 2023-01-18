@@ -1,0 +1,17 @@
+---
+users:
+  - username: "nkl"
+    uid: "1000"
+    groups: "users"
+    primary_group: "nkl"
+    password: "{{ nkl_password }}"
+    shell: /bin/zsh
+    authorized: yes
+    home: /home/nkl
+    members:
+      - "nkl"
+
+server_groups:
+  - name: nkl
+    groupid: 1000
+    sudo: true

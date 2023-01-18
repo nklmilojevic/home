@@ -1,0 +1,27 @@
+---
+additional_mounts:
+  - path: "/mnt/disk1"
+    src: "/dev/disk/by-id/scsi-SATA_WDC_WD80EFZX-68U_R6G9JZJZ"
+    fstype: "ext4"
+    state: "mounted"
+  - path: "/mnt/disk2"
+    src: "/dev/disk/by-id/scsi-SATA_WDC_WD80EFZZ-68B_WD-CA23DV9L"
+    fstype: "ext4"
+    state: "mounted"
+  - path: "/mnt/parity1"
+    src: "/dev/disk/by-id/scsi-SATA_WDC_WD80EFAX-68K_VDGE6AAD"
+    fstype: "ext4"
+    state: "mounted"
+  - path: "/mnt/storage"
+    src: "/mnt/disk*"
+    fstype: "fuse.mergerfs"
+    opts: "defaults,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,category.create=mfs,noforget,inodecalc=path-hash,,minfreespace=200G,fsname=mergerfs"
+    state: "mounted"
+
+bind_mounts:
+  - path: "/export/media"
+    src: "/mnt/storage/Multimedia"
+    state: "mounted"
+  - path: "/export/pvc"
+    src: "/mnt/storage/kubernetes/pvc"
+    state: "mounted"

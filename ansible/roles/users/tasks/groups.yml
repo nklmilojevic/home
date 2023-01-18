@@ -1,0 +1,14 @@
+---
+- name: Create groups
+  ansible.builtin.group:
+    name: "{{ item.name }}"
+    gid: "{{ item.groupid }}"
+    state: present
+  loop: "{{ server_groups }}"
+
+- name: Allow specified groups to sudo
+  ansible.builtin.template:
+    src: sudoers.j2
+    dest: /etc/sudoers.d/sudoers
+    validate: "visudo -cf %s"
+    mode: 0440

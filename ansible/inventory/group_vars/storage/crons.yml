@@ -1,0 +1,10 @@
+---
+crons:
+  - name: "Snapraid sync"
+    minute: "0"
+    hour: "8"
+    job: "/usr/local/bin/snapraid sync -l /var/log/snapraid.sync.log && curl -fsS --retry 3 {{ healthchecks_sync_uri }}"
+  - name: "Snapraid scrub"
+    minute: "0"
+    hour: "10"
+    job: "/usr/local/bin/snapraid scrub -p 10 -l /var/log/snapraid.scrub.log && curl -fsS --retry 3 {{ healthchecks_scrub_uri }}"

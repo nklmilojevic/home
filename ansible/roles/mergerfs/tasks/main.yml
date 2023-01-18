@@ -1,0 +1,8 @@
+---
+- name: Install mergerfs
+  ansible.builtin.apt:
+    deb: "https://github.com/trapexit/mergerfs/releases/download/{{ mergerfs_version }}/mergerfs_{{ mergerfs_version }}.ubuntu-jammy_amd64.deb"
+    state: present
+    update_cache: true
+  tags:
+    - mergerfs
