@@ -13,3 +13,4 @@
     - nfs-server
     - samba
     - cron
+    - proftpd
