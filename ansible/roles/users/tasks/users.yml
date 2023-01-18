@@ -1,0 +1,27 @@
+---
+- name: Create user
+  ansible.builtin.user:
+    name: "{{ item.username }}"
+    groups: "{{ item.groups }}"
+    group: "{{ item.primary_group }}"
+    password: "{{ item.password | password_hash('sha512') }}"
+    shell: "{{ item.shell }}"
+    home: "{{ item.home }}"
+    uid: "{{ item.uid }}"
+    update_password: on_create
+  no_log: true
+  with_items:
+    - "{{ users }}"
+  tags:
+    - users-create
+
+- name: Add authorized keys
+  ansible.posix.authorized_key:
+    user: "{{ item.username }}"
+    key: "{{ lookup('file', './files/' + item.username + '.pub') }}"
+    exclusive: true
+  with_items:
+    - "{{ users }}"
+  when: "item.authorized is defined"
+  tags:
+    - users-ssh-keys

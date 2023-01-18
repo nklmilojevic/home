@@ -1,0 +1,11 @@
+---
+nfs_exports:
+  - path: "/export"
+    network: "10.0.0.0/8"
+    params: "rw,fsid=0,no_subtree_check,sync"
+  - path: "/export/media"
+    network: "10.0.0.0/8"
+    params: "rw,fsid=1,nohide,insecure,no_subtree_check,sync,no_root_squash"
+  - path: "/export/pvc"
+    network: "10.0.0.0/8"
+    params: "rw,fsid=2,nohide,insecure,no_subtree_check,sync,no_root_squash"

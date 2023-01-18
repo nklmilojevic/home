@@ -1,0 +1,15 @@
+---
+- hosts: storage
+  remote_user: nkl
+  become: true
+  name: Storage playbook
+
+  roles:
+    - packages
+    - users
+    - mergerfs
+    - snapraid
+    - fstab
+    - nfs-server
+    - samba
+    - cron

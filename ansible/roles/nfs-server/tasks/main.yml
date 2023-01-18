@@ -1,0 +1,21 @@
+---
+- name: Install NFS server
+  ansible.builtin.apt:
+    name: nfs-kernel-server
+    state: present
+    update_cache: true
+  tags:
+    - nfs-server
+    - nfs-server-package
+
+- name: Add exports
+  ansible.builtin.template:
+    src: exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: 0644
+  notify: NFS restart
+  tags:
+    - nfs-server
+    - nfs-server-package

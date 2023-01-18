@@ -1,0 +1,30 @@
+---
+- name: Install essential packages
+  ansible.builtin.apt:
+    name: "{{ essential_packages }}"
+    state: present
+    update_cache: true
+  tags:
+    - install-packages
+
+- name: Add third party repo apt keys
+  ansible.builtin.apt_key:
+    url: "{{ item }}"
+    state: present
+  loop: "{{ third_party_apt_repo_keys }}"
+  when: third_party_apt_repo_keys is defined
+
+- name: Setup third party repo
+  ansible.builtin.apt_repository:
+    repo: "{{ item.repo }}"
+    state: present
+    filename: "{{ item.filename }}"
+  loop: "{{ third_party_apt_repo_repos }}"
+  when: third_party_apt_repo_repos is defined
+
+- name: Install extra packages
+  ansible.builtin.apt:
+    name: "{{ extra_packages }}"
+    state: present
+    update_cache: true
+  when: extra_packages is defined

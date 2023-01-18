@@ -1,0 +1,28 @@
+---
+- name: Install SMB server
+  ansible.builtin.apt:
+    name: samba
+    state: present
+    update_cache: true
+  tags:
+    - samba
+
+- name: Install SMB common
+  ansible.builtin.apt:
+    name: samba-common
+    state: present
+    update_cache: true
+  tags:
+    - samba
+
+- name: Add config
+  ansible.builtin.template:
+    src: samba.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: SMB restart
+  tags:
+    - samba
+    - samba-config

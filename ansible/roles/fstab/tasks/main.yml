@@ -1,0 +1,24 @@
+---
+- name: Mount up additional devices
+  ansible.posix.mount:
+    path: "{{ item.path }}"
+    src: "{{ item.src }}"
+    fstype: "{{ item.fstype }}"
+    state: "{{ item.state }}"
+    opts: "{{ item.opts | default(omit)}}"
+  loop: "{{ additional_mounts }}"
+  when: additional_mounts is defined
+  tags:
+    - fstab
+
+- name: Mount up bind mount
+  ansible.posix.mount:
+    path: "{{ item.path }}"
+    src: "{{ item.src }}"
+    state: "{{ item.state }}"
+    opts: "bind"
+  loop: "{{ bind_mounts }}"
+  when: bind_moounts is defined
+  tags:
+    - fstab
+    - bind-mounts
