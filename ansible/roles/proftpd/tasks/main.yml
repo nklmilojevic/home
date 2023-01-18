@@ -1,0 +1,97 @@
+---
+- name: Install proftpd
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    install_recommends: false
+    update_cache: true
+    cache_valid_time: 3600
+  with_items:
+    - proftpd-basic
+  tags:
+    - proftpd-install
+
+- name: Add SSL folder
+  ansible.builtin.file:
+    path: "/etc/proftpd/ssl"
+    owner: root
+    group: root
+    mode: 0640
+    state: directory
+  notify: Restart proftpd
+  tags:
+    - proftpd-install
+    - proftpd-ssl
+
+- name: Add SSL certs
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/etc/proftpd/ssl"
+    owner: root
+    group: root
+    mode: 0640
+  with_items:
+    - proftpd.crt
+    - proftpd.key
+  notify: Restart proftpd
+  tags:
+    - proftpd-install
+    - proftpd-ssl
+
+- name: Add dhparams
+  ansible.builtin.copy:
+    src: dhparams.pem
+    dest: "/etc/proftpd/"
+    owner: root
+    group: root
+    mode: 0640
+  notify: Restart proftpd
+  tags:
+    - proftpd-install
+    - proftpd-ssl
+
+- name: Copy modules.conf
+  ansible.builtin.template:
+    src: modules.conf.j2
+    dest: /etc/proftpd/modules.conf
+    mode: 0644
+  tags:
+    - proftpd-install
+    - proftpd-config
+
+- name: Copy proftpd.conf
+  ansible.builtin.template:
+    src: proftpd.conf.j2
+    dest: /etc/proftpd/proftpd.conf
+    mode: 0644
+  tags:
+    - proftpd-install
+    - proftpd-config
+
+- name: Copy tls.conf
+  ansible.builtin.template:
+    src: tls.conf.j2
+    dest: /etc/proftpd/tls.conf
+    mode: 0644
+  tags:
+    - proftpd-install
+    - proftpd-config
+
+- name: Create users
+  ansible.builtin.template:
+    src: users.j2
+    dest: /etc/proftpd/ftpd.passwd
+    mode: 0600
+  notify: Restart proftpd
+  tags:
+    - proftpd-install
+    - proftpd-users
+
+- name: Start proftpd
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+  with_items:
+    - proftpd
+  tags:
+    - proftpd-install

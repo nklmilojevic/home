@@ -1,0 +1,13 @@
+proftpd_users:
+  - name: omada
+    password: "{{ omada_ftp_password }}"
+    home: "/mnt/storage/omada"
+    shell: "/bin/false"
+    uid: "1002"
+    gid: "1000"
+  - name: reolink
+    password: "{{ reolink_ftp_password }}"
+    home: "/mnt/storage/reolink"
+    shell: "/bin/false"
+    uid: "1002"
+    gid: "1000"

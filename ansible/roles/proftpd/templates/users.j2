@@ -1,0 +1,3 @@
+{% for user in proftpd_users %}
+{{ user.name }}:{{ user.password }}:{{ user.uid|default(33) }}:{{ user.gid|default(33) }}::{{ user.home }}:{{ user.shell|default('/bin/false') }}
+{% endfor %}

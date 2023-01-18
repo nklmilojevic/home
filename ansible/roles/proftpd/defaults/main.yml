@@ -1,0 +1,7 @@
+# proftpd_users:
+#     - name: user
+#       password: "hashed_password"
+#       home: "/var/www/dir"
+#       shell: "/bin/false"
+#       uid: "33"
+#       gid: "33"
