@@ -8,7 +8,7 @@ spec:
   summary: "flux-cluster"
   providerRef:
     name: telegram
-  eventSeverity: info
+  eventSeverity: error
   eventSources:
     - kind: GitRepository
       name: "*"
