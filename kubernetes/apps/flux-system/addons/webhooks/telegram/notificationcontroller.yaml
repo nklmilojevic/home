@@ -6,6 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   type: telegram
+  address: https://api.telegram.org
   channel: "-104243855"
   secretRef:
     name: telegram-secrets
