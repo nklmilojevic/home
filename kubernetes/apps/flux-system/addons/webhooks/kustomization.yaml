@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./github
   - ./discord
-  # - ./telegram
+  - ./telegram
