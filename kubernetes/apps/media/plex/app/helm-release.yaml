@@ -17,6 +17,9 @@ spec:
         namespace: flux-system
   interval: 30m
   values:
+    controller:
+      type: statefulset
+
     image:
       repository: ghcr.io/onedr0p/plex
       tag: 1.30.0.6486-629d58034
