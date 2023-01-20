@@ -23,3 +23,4 @@ resources:
   - ./nfs-subdir-external-provisioner.yaml
   - ./democratic-csi.yaml
   - ./multus.yaml
+  - ./gitea-charts.yaml
