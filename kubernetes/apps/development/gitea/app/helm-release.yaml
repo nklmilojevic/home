@@ -1,0 +1,84 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: gitea
+  namespace: development
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://dl.gitea.io/charts/
+      chart: gitea
+      version: 7.0.0
+      sourceRef:
+        kind: HelmRepository
+        name: gitea-charts
+        namespace: flux-system
+      interval: 5m
+  values:
+    image:
+      repository: gitea/gitea
+      tag: 1.18.2
+      pullPolicy: IfNotPresent
+
+    persistence:
+      enabled: true
+      existingClaim: gitea-local-data
+
+    ingress:
+      enabled: true
+      className: ingress-nginx
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: 128m
+      hosts:
+        - host: &host git.${SECRET_DOMAIN}
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - *host
+
+    service:
+      http:
+        port: 3000
+      ssh:
+        type: LoadBalancer
+        port: 22
+        externalTrafficPolicy: Local
+        externalIPs:
+          - "${SVC_GITEA_IP}"
+
+    gitea:
+      admin:
+        existingSecret: gitea-secrets
+      config:
+        APP_NAME: "git@milojevic"
+        server:
+          SSH_PORT: 22
+          SSH_LISTEN_PORT: 22
+          SSH_DOMAIN: ssh.git.${SECRET_DOMAIN}
+          root_url: "https://git.${SECRET_DOMAIN}"
+          MIGRATE: 1000
+          MIRROR: 1000
+        respository:
+          DEFAULT_PRIVATE: true
+        admin:
+          DISABLE_REGULAR_ORG_CREATION: true
+        security:
+          PASSWORD_COMPLEXITY: "lower,upper"
+          MIN_PASSWORD_LENGTH: 12
+        service:
+          DISABLE_REGISTRATION: true
+          REQUIRE_SIGNIN_VIEW: false
+
+    postgresql:
+      enabled: true
+      persistence:
+        existingClaim: gitea-postgresql-data
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+          namespace: development
