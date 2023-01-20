@@ -7,7 +7,7 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  path: ./kubernetes/apps/monitoring/gitea/app
+  path: ./kubernetes/apps/development/gitea/app
   prune: true
   sourceRef:
     kind: GitRepository
