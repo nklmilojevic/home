@@ -23,6 +23,9 @@ spec:
       pullPolicy: IfNotPresent
     env:
       ZIGBEE2MQTT_DATA: "/data"
+    envFrom:
+      - secretRef:
+          name: zigbee2mqtt-secret
     service:
       main:
         ports:
