@@ -6,5 +6,3 @@ resources:
   - ./helm-release.yaml
   - ./externalsecret.yaml
   - ./replicationsource.yaml
-patchesStrategicMerge:
-  - ./patches/env.yaml
