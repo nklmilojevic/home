@@ -7,7 +7,7 @@ mqtt:
   include_device_information: true
 
 serial:
-  port: /dev/ttyUSB1
+  port: /dev/ttyUSB0
 
 advanced:
   network_key: GENERATE
