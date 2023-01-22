@@ -15,7 +15,6 @@ advanced:
     - console
   log_level: info
 
-  # channel: 15
   last_seen: "ISO_8601"
 
   homeassistant_discovery_topic: "homeassistant"
