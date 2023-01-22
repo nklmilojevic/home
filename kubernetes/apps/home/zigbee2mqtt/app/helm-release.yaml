@@ -53,7 +53,7 @@ spec:
       usb:
         enabled: true
         type: hostPath
-        hostPath: /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
+        hostPath: /dev/ttyUSB1
       zigbee2mqtt-config:
         enabled: true
         type: configMap
