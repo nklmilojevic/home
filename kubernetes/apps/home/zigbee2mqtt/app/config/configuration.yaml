@@ -3,23 +3,35 @@ permit_join: true
 availability: true
 mqtt:
   base_topic: zigbee2mqtt
-  server: "mqtt://mosquitto.home.svc"
+  server: mqtt://mosquitto.home.svc
   include_device_information: true
-
 serial:
-  port: /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
-
+  port: >-
+    /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
 advanced:
-  network_key: GENERATE
+  network_key:
+    - 145
+    - 187
+    - 177
+    - 196
+    - 56
+    - 74
+    - 199
+    - 199
+    - 170
+    - 154
+    - 189
+    - 162
+    - 51
+    - 15
+    - 54
+    - 71
   log_output:
     - console
   log_level: info
-
-  # channel: 15
-  last_seen: "ISO_8601"
-
-  homeassistant_discovery_topic: "homeassistant"
-  homeassistant_status_topic: "homeassistant/status"
+  last_seen: ISO_8601
+  homeassistant_discovery_topic: homeassistant
+  homeassistant_status_topic: homeassistant/status
 frontend:
   port: 8080
 experimental:
