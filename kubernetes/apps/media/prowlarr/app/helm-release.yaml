@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: ghcr.io/onedr0p/prowlarr-develop
-      tag: 1.1.0.2322
+      tag: 1.1.1.2377
 
     podAnnotations:
       secret.reloader.stakater.com/reload: prowlarr-secrets
