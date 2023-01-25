@@ -79,7 +79,7 @@ spec:
           ups.conf: |-
             [apcupsd]
               driver = apcsmart
-              port = auto
+              port = "auto"
               desc = "APC Smart-UPS SC450 RM"
 
           upsd.users: |-
