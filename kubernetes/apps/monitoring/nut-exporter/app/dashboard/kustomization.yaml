@@ -5,7 +5,7 @@ namespace: monitoring
 configMapGenerator:
   - name: nut-dashboard
     files:
-      - nut-dashboard.json=https://raw.githubusercontent.com/DRuggeri/nut_exporter/master/dashboard/dashboard.json
+      - nut-dashboard.json=https://raw.githubusercontent.com/nklmilojevic/grafana-dashboards/main/nut-exporter.json
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
