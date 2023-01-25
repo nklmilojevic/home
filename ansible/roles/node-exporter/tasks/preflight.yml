@@ -1,0 +1,24 @@
+---
+- name: Naive assertion of proper listen address
+  ansible.builtin.assert:
+    that:
+      - "':' in node_exporter_web_listen_address"
+
+- name: Fail on unsupported init systems
+  ansible.builtin.fail:
+    msg: "This module only works with systemd"
+  when: ansible_service_mgr != 'systemd'
+
+- name: Check collectors
+  ansible.builtin.fail:
+    msg: "Collector cannot be both disabled and enabled"
+  when: item in node_exporter_enabled_collectors
+  with_items: "{{ node_exporter_disabled_collectors }}"
+
+- name: Get systemd version
+  shell: systemctl --version | awk '$1 == "systemd" {print $2}'
+  changed_when: false
+  check_mode: false
+  register: node_exporter_systemd_version
+  tags:
+    - skip_ansible_lint
