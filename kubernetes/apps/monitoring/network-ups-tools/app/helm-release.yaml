@@ -88,8 +88,9 @@ spec:
               actions = SET
               instcmds = ALL
               upsmon primary
-          upsset.conf: |-
-            I_HAVE_SECURED_MY_CGI_DIRECTORY
+
+          upsmon.conf: |-
+            MONITOR apc@localhost:3493 1 upsmon password primary
 
     podAnnotations:
       configmap.reloader.stakater.com/reload: *config
