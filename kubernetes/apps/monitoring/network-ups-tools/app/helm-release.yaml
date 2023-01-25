@@ -60,6 +60,7 @@ spec:
         enabled: true
         type: hostPath
         hostPath: /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_AECJb11A922-if00-port0
+        mountPath: /dev/ttyUSB0
 
     securityContext:
       privileged: true
@@ -79,7 +80,7 @@ spec:
           ups.conf: |-
             [apcupsd]
               driver = apcsmart
-              port = /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_AECJb11A922-if00-port0
+              port = /dev/ttyUSB0
               desc = "APC Smart-UPS SC450 RM"
 
           upsd.users: |-
