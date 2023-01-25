@@ -78,8 +78,8 @@ spec:
 
           ups.conf: |-
             [apcupsd]
-              driver = generic
-              port = /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_AECJb11A922-if00-port0
+              driver = apcsmart
+              port = auto
               desc = "APC Smart-UPS SC450 RM"
 
           upsd.users: |-
