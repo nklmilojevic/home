@@ -63,6 +63,9 @@ spec:
         type: hostPath
         hostPath: /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_AECJb11A922-if00-port0
 
+    securityContext:
+      privileged: true
+
     configMaps:
       config:
         enabled: true
