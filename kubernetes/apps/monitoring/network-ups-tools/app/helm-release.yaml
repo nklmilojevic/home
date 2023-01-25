@@ -79,15 +79,14 @@ spec:
           ups.conf: |-
             [apcupsd]
               driver = apcsmart
-              port = "auto"
+              port = /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_AECJb11A922-if00-port0
               desc = "APC Smart-UPS SC450 RM"
 
           upsd.users: |-
             [upsmon]
-              password  = "password"
+              password = "password"
               actions = SET
               instcmds = ALL
-              upsmon primary
 
           upsmon.conf: |-
             MONITOR apc@localhost:3493 1 upsmon password primary
