@@ -75,7 +75,6 @@ spec:
           upsd.conf: |-
             MAXAGE 20
             LISTEN 0.0.0.0
-            LISTEN ::
 
           ups.conf: |-
             [apcupsd]
