@@ -84,12 +84,11 @@ spec:
 
           upsd.users: |-
             [upsmon]
-              password = "password"
               actions = SET
               instcmds = ALL
 
           upsmon.conf: |-
-            MONITOR apc@localhost:3493 1 upsmon password primary
+            MONITOR apc@localhost:3493 1 upsmon primary
 
     podAnnotations:
       configmap.reloader.stakater.com/reload: *config
