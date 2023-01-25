@@ -90,6 +90,8 @@ spec:
               actions = SET
               instcmds = ALL
               upsmon primary
+          upsset.conf: |-
+            I_HAVE_SECURED_MY_CGI_DIRECTORY
 
     podAnnotations:
       configmap.reloader.stakater.com/reload: *config
