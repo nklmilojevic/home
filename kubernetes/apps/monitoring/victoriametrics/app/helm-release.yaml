@@ -334,14 +334,14 @@ spec:
 
     alertmanager:
       enabled: true
-      resources:
-        limits:
-          cpu: 200m
-          memory: 100Mi
       annotations: {}
       # spec for VMAlertmanager crd
       # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmalertmanagerspec
       spec:
+        resources:
+          limits:
+            cpu: 200m
+            memory: 100Mi
         selectAllByDefault: true
         image:
           tag: v0.24.0
