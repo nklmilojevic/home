@@ -333,7 +333,7 @@ spec:
           #      - vminsert.domain.com
 
     alertmanager:
-      enabled: false
+      enabled: true
       resources:
         limits:
           cpu: 200m
