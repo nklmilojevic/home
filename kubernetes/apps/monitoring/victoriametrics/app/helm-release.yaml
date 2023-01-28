@@ -451,6 +451,13 @@ spec:
       # spec for VMAgent crd
       # https://docs.victoriametrics.com/operator/blob/master/docs/api.MD#vmagentspec
       spec:
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 50m
+            memory: 200Mi
         inlineScrapeConfig: |
           - job_name: node-exporter
             honor_labels: true
@@ -482,13 +489,6 @@ spec:
         extraPaths: []
         tls: []
 
-      resources:
-        limits:
-          cpu: 500m
-          memory: 500Mi
-        requests:
-          cpu: 50m
-          memory: 200Mi
     #################################################
     ###              dependencies               #####
     #################################################
