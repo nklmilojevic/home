@@ -16,3 +16,4 @@ spec:
           api_url: https://api.telegram.org
           chat_id: 104243855
           parse_mode: "HTML"
+          send_resolved: true
