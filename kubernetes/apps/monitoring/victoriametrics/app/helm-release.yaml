@@ -518,6 +518,16 @@ spec:
       # spec for VMAgent crd
       # https://docs.victoriametrics.com/operator/blob/master/docs/api.MD#vmagentspec
       spec:
+        inlineScrapeConfig: |
+          - job_name: node-exporter
+            honor_labels: true
+            scrape_interval: 1m
+            scrape_timeout: 10s
+            metrics_path: /metrics
+            scheme: http
+            static_configs:
+              - targets:
+                  - "panopticon.local:9100"
         selectAllByDefault: true
         image:
           tag: v1.85.0
