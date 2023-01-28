@@ -611,6 +611,10 @@ spec:
             gnetId: 1860
             revision: 22
             datasource: VictoriaMetrics
+          smartmon:
+            gnetId: 10530
+            revision: 1
+            datasource: VictoriaMetrics
 
       sidecar:
         datasources:
