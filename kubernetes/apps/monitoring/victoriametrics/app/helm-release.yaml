@@ -344,109 +344,18 @@ spec:
         externalURL: ""
         routePrefix: /
 
-        # if this one defined, it will be used for alertmanager configuration and config parameter will be ignored
-        # configSecret: "alertmanager-config"
-
-      config:
-        global:
-          resolve_timeout: 5m
-          # slack_api_url: "http://slack:30500/"
-        templates:
-          - "/etc/vm/configs/**/*.tmpl"
-        route:
-          group_by: ["alertgroup", "job"]
-          group_wait: 30s
-          group_interval: 5m
-          repeat_interval: 12h
-          # receiver: "slack-monitoring"
-          routes:
-            ###################################################
-            ## Duplicate code_owner routes to teams
-            ## These will send alerts to team channels but continue
-            # ## processing through the rest of the tree to handled by on-call
-            # - matchers:
-            #     - code_owner_channel!=""
-            #     - severity=~"info|warning|critical"
-            #   group_by: ["code_owner_channel", "alertgroup", "job"]
-            #   receiver: slack-code-owners
-            # ###################################################
-            # ## Standard on-call routes
-            # - matchers:
-            #     - severity=~"info|warning|critical"
-            #   receiver: slack-monitoring
-            #   continue: true
-
-        inhibit_rules:
-          - target_matchers:
-              - severity=~"warning|info"
-            source_matchers:
-              - severity=critical
-            equal:
-              - cluster
-              - namespace
-              - alertname
-          - target_matchers:
-              - severity=info
-            source_matchers:
-              - severity=warning
-            equal:
-              - cluster
-              - namespace
-              - alertname
-          - target_matchers:
-              - severity=info
-            source_matchers:
-              - alertname=InfoInhibitor
-            equal:
-              - cluster
-              - namespace
-
-        # receivers:
-
-      # extra alert templates
-      templateFiles:
-        {}
-        # template_1.tmpl: |-
-        #   {{ define "hello" -}}
-        #   hello, Victoria!
-        #   {{- end }}
-        # template_2.tmpl: ""
-
       ingress:
         enabled: false
-        # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
-        # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
         # ingressClassName: nginx
-        # Values can be templated
-        annotations:
-          {}
-          # kubernetes.io/ingress.class: nginx
-          # kubernetes.io/tls-acme: "true"
+        annotations: {}
         labels: {}
         path: /
-        # pathType is only for k8s > 1.19
         pathType: Prefix
 
         hosts:
           - alertmanager.domain.com
-        ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
         extraPaths: []
-        # - path: /*
-        #   backend:
-        #     serviceName: ssl-redirect
-        #     servicePort: use-annotation
-        ## Or for k8s > 1.19
-        # - path: /*
-        #   pathType: Prefix
-        #   backend:
-        #     service:
-        #       name: ssl-redirect
-        #       port:
-        #         name: service
         tls: []
-        #  - secretName: alertmanager-ingress-tls
-        #    hosts:
-        #      - alertmanager.domain.com
 
     vmalert:
       annotations: {}
