@@ -527,7 +527,7 @@ spec:
             scheme: http
             static_configs:
               - targets:
-                  - "panopticon.local:9100"
+                  - "10.5.0.10:9100"
         selectAllByDefault: true
         image:
           tag: v1.85.0
