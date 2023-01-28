@@ -333,7 +333,7 @@ spec:
           #      - vminsert.domain.com
 
     alertmanager:
-      enabled: false
+      enabled: true
       annotations: {}
       # spec for VMAlertmanager crd
       # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmalertmanagerspec
@@ -347,6 +347,23 @@ spec:
       monzoTemplate:
         enabled: false
 
+      config:
+        global:
+          resolve_timeout: 5m
+        route:
+          group_by: ["alertname"]
+          group_wait: 1m
+          group_interval: 5m
+          repeat_interval: 3h
+          receiver: devnull
+          routes:
+            - receiver: blackhole
+              matchers:
+                - "severity=blackhole"
+              continue: false
+        receivers:
+          - name: devnull
+          - name: blackhole
       ingress:
         enabled: false
         # ingressClassName: nginx
