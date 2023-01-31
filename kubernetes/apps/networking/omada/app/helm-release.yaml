@@ -21,7 +21,7 @@ spec:
     dnsPolicy: ClusterFirstWithHostNet
     image:
       repository: mbentley/omada-controller
-      tag: "5.7"
+      tag: "5.8"
     env:
       TZ: "${TIMEZONE}"
     ingress:
