@@ -1,0 +1,41 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: rtsp-simple-server
+  namespace: home
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
+      chart: app-template
+      version: 1.3.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  values:
+    image:
+      repository: aler9/rtsp-simple-server
+      tag: v0.21.2
+    env:
+      RTSP_PROTOCOLS: "tcp"
+    probes:
+      liveness:
+        enabled: false
+      readiness:
+        enabled: false
+      startup:
+        enabled: false
+    service:
+      main:
+        ports:
+          http:
+            port: 8554
+          rtsp:
+            port: 1935
+    ingress:
+      main:
+        enabled: false
