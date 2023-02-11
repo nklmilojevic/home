@@ -22,7 +22,7 @@ spec:
 
     image:
       repository: ghcr.io/onedr0p/plex
-      tag: 1.30.0.6486-629d58034
+      tag: 1.30.2.6563-3d4dc0cce
 
     env:
       TZ: "${TIMEZONE}"
