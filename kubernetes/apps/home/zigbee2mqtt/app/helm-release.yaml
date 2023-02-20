@@ -39,6 +39,7 @@ spec:
       ZIGBEE2MQTT_CONFIG_FRONTEND_PORT: "8080"
       ZIGBEE2MQTT_CONFIG_EXPERIMENTAL_NEW_API: "true"
       ZIGBEE2MQTT_CONFIG_DEVICES: devices.yaml
+      ZIGBEE2MQTT_CONFIG_GROUPS: groups.yaml
     envFrom:
       - secretRef:
           name: zigbee2mqtt-secret
