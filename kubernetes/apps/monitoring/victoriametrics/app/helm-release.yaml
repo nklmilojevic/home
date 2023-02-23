@@ -499,6 +499,8 @@ spec:
     grafana:
       enabled: true
       ## all values for grafana helm chart can be specified here
+      plugins:
+        - marcusolsson-json-datasource
 
       ## ForceDeployDatasource Create datasource configmap even if grafana deployment has been disabled
       forceDeployDatasource: false
