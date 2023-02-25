@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: grafana/promtail
-      version: 2.7.3
+      version: 2.7.4
     serviceMonitor:
       enabled: true
     extraPorts:
