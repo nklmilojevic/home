@@ -72,10 +72,10 @@ spec:
         kubeStateMetrics: true
         network: true
         node: true
-        vmagent: true
-        vmsingle: true
-        vmhealth: true
-        alertmanager: true
+        vmagent: false
+        vmsingle: false
+        vmhealth: false
+        alertmanager: false
 
       # -- Runbook url prefix for default rules
       runbookUrl: https://runbooks.prometheus-operator.dev/runbooks
