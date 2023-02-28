@@ -55,7 +55,7 @@ spec:
       create: true
       rules:
         etcd: true
-        general: true
+        general: false
         k8s: true
         kubeApiserver: true
         kubeApiserverAvailability: true
