@@ -127,7 +127,7 @@ spec:
       # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmsinglespec
       spec:
         image:
-          tag: v1.85.0
+          tag: v1.87.3
         retentionPeriod: "14"
         replicaCount: 1
         extraArgs: {}
@@ -177,7 +177,7 @@ spec:
         replicationFactor: 2
         vmstorage:
           image:
-            tag: v1.85.0-cluster
+            tag: v1.87.3-cluster
           replicaCount: 1
           storageDataPath: "/vm-data"
           storage:
@@ -193,7 +193,7 @@ spec:
             #   memory: 1500Mi
         vmselect:
           image:
-            tag: v1.85.0-cluster
+            tag: v1.87.3-cluster
           replicaCount: 1
           cacheMountPath: "/select-cache"
           extraArgs: {}
@@ -213,7 +213,7 @@ spec:
             #   memory: "500Mi"
         vminsert:
           image:
-            tag: v1.85.0-cluster
+            tag: v1.87.3-cluster
           replicaCount: 1
           extraArgs: {}
           resources:
@@ -395,7 +395,7 @@ spec:
       spec:
         selectAllByDefault: true
         image:
-          tag: v1.85.0
+          tag: v1.87.3
         evaluationInterval: 15s
 
       # extra vmalert annotation templates
@@ -473,7 +473,7 @@ spec:
                   - "10.5.0.10:9100"
         selectAllByDefault: true
         image:
-          tag: v1.85.0
+          tag: v1.87.3
         scrapeInterval: 25s
         externalLabels:
           cluster: cluster-name
