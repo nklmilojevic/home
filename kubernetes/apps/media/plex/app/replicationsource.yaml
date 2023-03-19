@@ -31,7 +31,8 @@ metadata:
 spec:
   sourcePVC: plex-local-data
   trigger:
-    schedule: "0 0 * * *"
+    # schedule: "0 0 * * *"
+    manual: test2
   restic:
     copyMethod: Direct
     pruneIntervalDays: 7
