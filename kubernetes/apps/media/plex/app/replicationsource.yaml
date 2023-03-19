@@ -32,7 +32,7 @@ spec:
   sourcePVC: plex-local-data
   trigger:
     # schedule: "0 0 * * *"
-    manual: test2
+    manual: test23
   restic:
     copyMethod: Direct
     pruneIntervalDays: 7
