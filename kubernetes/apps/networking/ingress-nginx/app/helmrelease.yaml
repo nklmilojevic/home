@@ -1,54 +1,92 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helmrelease_v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: cloudflare-ddns
+  name: ingress-nginx
   namespace: networking
 spec:
   interval: 15m
   chart:
     spec:
-      chart: app-template
-      version: 1.3.1
+      chart: ingress-nginx
+      version: 4.6.0
       sourceRef:
         kind: HelmRepository
-        name: bjw-s
+        name: ingress-nginx
         namespace: flux-system
-  maxHistory: 3
+      interval: 15m
   install:
     createNamespace: true
     remediation:
       retries: 3
   upgrade:
-    cleanupOnFail: true
     remediation:
       retries: 3
-  uninstall:
-    keepHistory: false
+  dependsOn:
+    - name: cert-manager
+      namespace: cert-manager
   values:
     controller:
-      type: cronjob
-      cronjob:
-        concurrencyPolicy: Forbid
-        schedule: "@hourly"
-    restartPolicy: OnFailure
-    image:
-      repository: ghcr.io/onedr0p/kubernetes-kubectl
-      tag: 1.26.1@sha256:7712b186022277af86d9a8518e45a69f00961674a0b26a8b2446c3a206a710b6
-    command: ["/bin/bash", "/app/cloudflare-ddns.sh"]
-    envFrom:
-      - secretRef:
-          name: cloudflare-ddns-secret
-    service:
-      main:
-        enabled: false
-    persistence:
-      config:
+      replicaCount: 1
+      extraEnvs:
+        - name: TZ
+          value: "${TIMEZONE}"
+      service:
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: |-
+            ${METALLB_INGRESS_ADDR}
+        externalTrafficPolicy: Local
+      publishService:
         enabled: true
-        type: configMap
-        name: cloudflare-ddns-configmap
-        subPath: cloudflare-ddns.sh
-        mountPath: /app/cloudflare-ddns.sh
-        defaultMode: 0775
-        readOnly: true
+      ingressClassResource:
+        default: true
+      config:
+        client-header-timeout: 120
+        client-body-buffer-size: "100M"
+        client-body-timeout: 120
+        custom-http-errors: |-
+          401,403,404,500,501,502,503
+        enable-brotli: "true"
+        forwarded-for-header: "CF-Connecting-IP"
+        hsts-max-age: "31449600"
+        keep-alive: 120
+        keep-alive-requests: 10000
+        proxy-body-size: "100M"
+        ssl-protocols: "TLSv1.3 TLSv1.2"
+        use-forwarded-headers: "true"
+      extraArgs:
+        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-tls"
+      metrics:
+        enabled: true
+        service:
+          servicePort: 10254
+        serviceMonitor:
+          enabled: true
+          namespaceSelector:
+            any: true
+      podAnnotations:
+        configmap.reloader.stakater.com/reload: "cloudflare-networks"
+      resources:
+        requests:
+          cpu: 10m
+          memory: 250Mi
+        limits:
+          memory: 500Mi
+    defaultBackend:
+      enabled: true
+      image:
+        repository: ghcr.io/tarampampam/error-pages
+        tag: 2.21.0
+      replicaCount: 1
+      extraEnvs:
+        - name: TEMPLATE_NAME
+          value: lost-in-space
+        - name: SHOW_DETAILS
+          value: "false"
+  valuesFrom:
+    # Cloudflare Networks
+    # https://www.cloudflare.com/ips/
+    - targetPath: controller.config.proxy-real-ip-cidr
+      kind: ConfigMap
+      name: cloudflare-networks
+      valuesKey: cloudflare-networks.txt
