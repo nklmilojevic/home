@@ -6,15 +6,15 @@ set -o errexit
 current_ipv4="$(curl -s https://ipv4.icanhazip.com/)"
 zone_id=$(curl -s -X GET \
     "https://api.cloudflare.com/client/v4/zones?name=${CLOUDFLARE_RECORD_NAME#*.}&status=active" \
-    -H "X-Auth-Email: ${CLOUDFLARE_EMAIL}" \
-    -H "X-Auth-Key: ${CLOUDFLARE_APIKEY}" \
+    -H "X-Auth-Email: ${CF_API_EMAIL}" \
+    -H "X-Auth-Key: ${CF_API_KEY}" \
     -H "Content-Type: application/json" \
         | jq --raw-output ".result[0] | .id"
 )
 record_ipv4=$(curl -s -X GET \
     "https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records?name=${CLOUDFLARE_RECORD_NAME}&type=A" \
-    -H "X-Auth-Email: ${CLOUDFLARE_EMAIL}" \
-    -H "X-Auth-Key: ${CLOUDFLARE_APIKEY}" \
+    -H "X-Auth-Email: ${CF_API_EMAIL}" \
+    -H "X-Auth-Key: ${CF_API_KEY}" \
     -H "Content-Type: application/json" \
 )
 old_ip4=$(echo "$record_ipv4" | jq --raw-output '.result[0] | .content')
@@ -25,8 +25,8 @@ fi
 record_ipv4_identifier="$(echo "$record_ipv4" | jq --raw-output '.result[0] | .id')"
 update_ipv4=$(curl -s -X PUT \
     "https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${record_ipv4_identifier}" \
-    -H "X-Auth-Email: ${CLOUDFLARE_EMAIL}" \
-    -H "X-Auth-Key: ${CLOUDFLARE_APIKEY}" \
+    -H "X-Auth-Email: ${CF_API_EMAIL}" \
+    -H "X-Auth-Key: ${CF_API_KEY}" \
     -H "Content-Type: application/json" \
     --data "{\"id\":\"${zone_id}\",\"type\":\"A\",\"proxied\":true,\"name\":\"${CLOUDFLARE_RECORD_NAME}\",\"content\":\"${current_ipv4}\"}" \
 )
