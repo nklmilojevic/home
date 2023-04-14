@@ -25,13 +25,13 @@ spec:
   values:
     image:
       repository: adguard/adguardhome
-      tag: v0.107.27
-    args:
-      - "--config"
-      - "/opt/adguardhome/conf/AdGuardHome.yaml"
-      - "--work-dir"
-      - "/opt/adguardhome/data"
-      - "--no-check-update"
+      tag: v0.107.28
+    # args:
+    #   - "--config"
+    #   - "/opt/adguardhome/conf/AdGuardHome.yaml"
+    #   - "--work-dir"
+    #   - "/opt/adguardhome/data"
+    #   - "--no-check-update"
     env:
       TZ: "${TIMEZONE}"
     service:
