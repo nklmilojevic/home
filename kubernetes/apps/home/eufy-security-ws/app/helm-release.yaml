@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: bropat/eufy-security-ws
-      tag: 1.3.4
+      tag: 1.3.5
     envFrom:
       - secretRef:
           name: eufy-secrets
