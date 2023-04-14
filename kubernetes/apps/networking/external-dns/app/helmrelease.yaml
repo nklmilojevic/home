@@ -25,9 +25,17 @@ spec:
     interval: 2m
     # logLevel: debug
     provider: cloudflare
-    envFrom:
-      - secretRef:
-          name: cloudflare-secret
+    env:
+      - name: CF_API_EMAIL
+        valueFrom:
+          secretKeyRef:
+            name: cloudflare-secret
+            key: CF_API_EMAIL
+      - name: CF_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: cloudflare-secret
+            key: CF_API_KEY
     extraArgs:
       - --cloudflare-proxied
       - --annotation-filter=external-dns.home.arpa/enabled in (true)
