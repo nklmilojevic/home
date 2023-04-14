@@ -42,7 +42,7 @@ spec:
     policy: sync
     sources: ["ingress"]
     txtPrefix: k8s.
-    txtOwnerId: default
+    txtOwnerId: extdns
     domainFilters:
       - "${SECRET_DOMAIN}"
     serviceMonitor:
