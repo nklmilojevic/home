@@ -38,7 +38,7 @@ spec:
             key: CF_API_KEY
     extraArgs:
       - --cloudflare-proxied
-      - --annotation-filter=external-dns.home.arpa/enabled in (true)
+      - --annotation-filter=external-dns.alpha.kubernetes.io/target
     policy: sync
     sources: ["ingress"]
     txtPrefix: k8s.
