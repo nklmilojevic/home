@@ -45,6 +45,7 @@ spec:
         ingressClassName: "nginx"
         annotations:
           external-dns.alpha.kubernetes.io/hostname: plex
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: false
           hajimari.io/icon: "plex"
           external-dns.home.arpa/enabled: "true"
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
