@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: timberio/vector
-      tag: 0.27.1-distroless-libc
+      tag: 0.29.0-distroless-libc
     service:
       enabled: true
       type: LoadBalancer
