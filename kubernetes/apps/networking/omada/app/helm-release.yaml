@@ -26,10 +26,15 @@ spec:
       TZ: "${TIMEZONE}"
     ingress:
       main:
-        enabled: false
+        enabled: true
         ingressClassName: "nginx"
         annotations:
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+          nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
+          nginx.ingress.kubernetes.io/use-regex: "true"
+          nginx.ingress.kubernetes.io/upstream-vhost: "omada.${SECRET_DOMAIN}:8043"
+          nginx.ingress.kubernetes.io/proxy-redirect-from: "~https://(.+):8043/(.+)/login$"
+          nginx.ingress.kubernetes.io/proxy-redirect-to: "https://$1/$2/login"
         hosts:
           - host: "omada.${SECRET_DOMAIN}"
             paths:
