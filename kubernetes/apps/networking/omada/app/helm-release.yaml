@@ -17,13 +17,20 @@ spec:
         name: bjw-s
         namespace: flux-system
   values:
-    hostNetwork: true
-    dnsPolicy: ClusterFirstWithHostNet
+    # hostNetwork: true
+    # dnsPolicy: ClusterFirstWithHostNet
     image:
       repository: mbentley/omada-controller
       tag: "5.9"
     env:
       TZ: "${TIMEZONE}"
+      MANAGE_HTTP_PORT: "8088"
+      MANAGE_HTTPS_PORT: "8043"
+      PORTAL_HTTP_PORT: "8088"
+      PORTAL_HTTPS_PORT: "8843"
+      SHOW_SERVER_LOGS: "true"
+      SHOW_MONGODB_LOGS: "true"
+
     ingress:
       main:
         enabled: true
@@ -45,12 +52,88 @@ spec:
               - "omada.${SECRET_DOMAIN}"
     service:
       main:
-        type: LoadBalancer
-        externalTrafficPolicy: Cluster
-        loadBalancerIP: "${SVC_OMADA_IP}"
+        enabled: true
         ports:
           http:
+            enabled: true
             port: 8043
+            targetPort: 8043
+            protocol: TCP
+      controller:
+        enabled: true
+        type: LoadBalancer
+        loadBalancerIP: "${SVC_OMADA_IP}"
+        externalTrafficPolicy: Local
+        ports:
+          mgmt-8088-tcp:
+            enabled: true
+            port: 8088
+            targetPort: 8088
+            protocol: TCP
+          mgmt-8043-tcp:
+            enabled: true
+            port: 8043
+            protocol: TCP
+            targetPort: 8043
+          portal-8843-tcp:
+            enabled: true
+            port: 8843
+            protocol: TCP
+            targetPort: 8843
+          eap-discovery:
+            enabled: true
+            port: 29810
+            protocol: UDP
+            targetPort: 29810
+          old-eap-mgmt:
+            enabled: true
+            port: 29811
+            protocol: TCP
+            targetPort: 29811
+          old-eap-adopt:
+            enabled: true
+            port: 29812
+            protocol: TCP
+            targetPort: 29812
+          old-eap-upgrade:
+            enabled: true
+            port: 29813
+            protocol: TCP
+            targetPort: 29813
+          eap-adopt:
+            enabled: true
+            port: 29814
+            protocol: TCP
+            targetPort: 29814
+          init-check:
+            enabled: true
+            port: 27001
+            protocol: UDP
+            targetPort: 27001
+          old-init-info:
+            enabled: true
+            port: 27002
+            protocol: TCP
+            targetPort: 27002
+          old-db-access:
+            enabled: true
+            port: 27017
+            protocol: TCP
+            targetPort: 27017
+          db-access:
+            enabled: true
+            port: 27217
+            protocol: TCP
+            targetPort: 27217
+
+    # service:
+    #   main:
+    #     type: LoadBalancer
+    #     externalTrafficPolicy: Cluster
+    #     loadBalancerIP: "${SVC_OMADA_IP}"
+    #     ports:
+    #       http:
+    #         port: 8043
     persistence:
       data:
         enabled: true
