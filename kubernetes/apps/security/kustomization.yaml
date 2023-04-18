@@ -6,3 +6,4 @@ resources:
   - ./external-secrets/ks.yaml
   - ./onepassword-connect/ks.yaml
   - ./volsync/ks.yaml
+  - ./glauth/ks.yaml
