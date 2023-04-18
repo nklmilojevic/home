@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
   - ./helm-release.yaml
   - ./externalsecret.yaml
-  # - ./vmalertmanager.yaml
+  - ./vmalertmanager.yaml
