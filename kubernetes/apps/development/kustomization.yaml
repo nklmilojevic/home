@@ -5,3 +5,4 @@ resources:
   - ./namespace.yaml
   - ./gitea/ks.yaml
   - ./cloudnative-pg/ks.yaml
+  - ./redis/ks.yaml
