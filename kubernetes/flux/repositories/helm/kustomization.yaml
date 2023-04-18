@@ -24,3 +24,4 @@ resources:
   - ./democratic-csi.yaml
   - ./multus.yaml
   - ./gitea-charts.yaml
+  - ./cloudnative-pg.yaml
