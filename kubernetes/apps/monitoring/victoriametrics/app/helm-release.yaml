@@ -498,6 +498,13 @@ spec:
     # Grafana dependency chart configuration. For possible values refer to https://github.com/grafana/helm-charts/tree/main/charts/grafana#configuration
     grafana:
       enabled: true
+      extraInitContainers:
+        - name: init-db
+          image: ghcr.io/onedr0p/postgres-initdb:14.7
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: grafana-secret
       ## all values for grafana helm chart can be specified here
       plugins:
         - marcusolsson-json-datasource
