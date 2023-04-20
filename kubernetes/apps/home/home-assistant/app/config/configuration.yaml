@@ -10,7 +10,7 @@ stream:
 
 recorder:
   purge_keep_days: 5
-  db_url: !secret postgres_url
+  db_url: !env_var POSTGRES_URL
 
 http:
   use_x_forwarded_for: true
@@ -22,9 +22,9 @@ http:
 camera:
   - platform: xiaomi_cloud_map_extractor
     host: 10.3.0.2
-    token: !secret roborock_token
+    token: !env_var ROBOROCK_TOKEN
     username: nikola@milojevic.me
-    password: !secret roborock_xiaomi_password
+    password: !env_var ROBOROCK_XIAOMI_PASSWORD
     draw: ["all"]
     attributes:
       - calibration_points
@@ -38,14 +38,14 @@ camera:
 
 telegram_bot:
   - platform: polling
-    api_key: !secret telegram_api_key
+    api_key: !env_var TELEGRAM_API_KEY
     allowed_chat_ids:
-      - !secret telegram_chat_id
+      - !env_var TELEGRAM_CHAT_ID
 
 notify:
   - platform: telegram
     name: telegram
-    chat_id: !secret telegram_chat_id
+    chat_id: !env_var TELEGRAM_CHAT_ID
 
 automation: !include automations.yaml
 script: !include scripts.yaml
