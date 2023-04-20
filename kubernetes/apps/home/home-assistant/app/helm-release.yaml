@@ -33,6 +33,9 @@ spec:
       tag: 2023.4.5
     env:
       TZ: "${TIMEZONE}"
+    envFrom:
+      - secretRef:
+          name: homeassistant-secrets
     probes:
       liveness:
         enabled: false
@@ -79,9 +82,3 @@ spec:
         name: hass-config
         mountPath: /config/configuration.yaml
         subPath: configuration.yaml
-      hass-secrets:
-        enabled: true
-        type: secret
-        name: homeassistant-secrets
-        mountPath: /config/secrets.yaml
-        subPath: secrets.yaml
