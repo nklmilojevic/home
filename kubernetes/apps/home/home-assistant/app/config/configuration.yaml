@@ -10,7 +10,7 @@ stream:
 
 recorder:
   purge_keep_days: 5
-  db_url: sqlite:////config/hass.sql
+  db_url: !secret postgres_url
 
 http:
   use_x_forwarded_for: true
