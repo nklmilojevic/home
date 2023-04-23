@@ -17,13 +17,6 @@ spec:
         namespace: flux-system
       interval: 5m
   values:
-    initContainers:
-      01-init-db:
-        image: ghcr.io/onedr0p/postgres-initdb:14.7
-        imagePullPolicy: IfNotPresent
-        envFrom:
-          - secretRef:
-              name: gitea-secrets
     image:
       repository: gitea/gitea
       tag: 1.19.1
