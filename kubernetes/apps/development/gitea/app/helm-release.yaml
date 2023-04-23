@@ -62,9 +62,22 @@ spec:
             secretKeyRef:
               name: gitea-secrets
               key: POSTGRES_PASS
+        - name: ENV_TO_INI__ADMIN__USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: gitea-secrets
+              key: username
+        - name: ENV_TO_INI__ADMIN__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: gitea-secrets
+              key: password
+        - name: ENV_TO_INI__ADMIN__EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: gitea-secrets
+              key: email
       config:
-        admin:
-          existingSecret: gitea-secrets
         APP_NAME: "git@milojevic"
         server:
           SSH_PORT: 22
@@ -75,6 +88,8 @@ spec:
           MIRROR: 1000
         respository:
           DEFAULT_PRIVATE: true
+        admin:
+          DISABLE_REGULAR_ORG_CREATION: true
         security:
           PASSWORD_COMPLEXITY: "lower,upper"
           MIN_PASSWORD_LENGTH: 12
