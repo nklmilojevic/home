@@ -67,7 +67,7 @@ spec:
         - name: ENV_TO_INI__DATABASE__PASSWD
           valueFrom:
             secretKeyRef:
-              name: gitea-secerts
+              name: gitea-secrets
               key: POSTGRES_PASS
       admin:
         existingSecret: gitea-secrets
