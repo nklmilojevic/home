@@ -17,6 +17,10 @@ spec:
         namespace: flux-system
       interval: 5m
   values:
+    test_pod:
+      enabled: false
+      image: bats/bats:1.8.2
+      pullPolicy: IfNotPresent
     loki:
       structuredConfig:
         auth_enabled: false
