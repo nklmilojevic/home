@@ -63,6 +63,12 @@ spec:
           - "${SVC_GITEA_IP}"
 
     gitea:
+      additionalConfigFromEnvs:
+        - name: ENV_TO_INI__DATABASE__PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: gitea-secerts
+              key: POSTGRES_PASS
       admin:
         existingSecret: gitea-secrets
       config:
@@ -93,9 +99,3 @@ spec:
 
     postgresql:
       enabled: false
-
-    valuesFrom:
-      - targetPath: gitea.config.database.PASSWD
-        kind: Secret
-        name: gitea-config-secret
-        valuesKey: POSTGRES_PASSWORD
