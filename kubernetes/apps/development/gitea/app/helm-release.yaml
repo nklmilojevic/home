@@ -95,7 +95,7 @@ spec:
           HOST: postgres-rw.development.svc.cluster.local:5432
           NAME: gitea
           USER: gitea
-          SCHEMA: gitea
+          SCHEMA: public
 
     postgresql:
       enabled: false
