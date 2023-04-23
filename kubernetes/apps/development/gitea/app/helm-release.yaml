@@ -85,7 +85,7 @@ spec:
           DISABLE_REGISTRATION: true
           REQUIRE_SIGNIN_VIEW: false
         database:
-          DB_TYPE: postgresql
+          DB_TYPE: postgres
           HOST: postgres-rw.development.svc.cluster.local:5432
           NAME: gitea
           USER: gitea
