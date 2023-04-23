@@ -32,7 +32,7 @@ spec:
           port: 1514
     config:
       clients:
-        - url: http://loki:3100/loki/api/v1/push
+        - url: http://loki-gateway:80/loki/api/v1/push
       snippets:
         extraScrapeConfigs: |
           - job_name: syslog
