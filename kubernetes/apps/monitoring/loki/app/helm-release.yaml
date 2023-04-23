@@ -18,6 +18,7 @@ spec:
       interval: 5m
   values:
     loki:
+      auth_enabled: false
       commonConfig:
         replication_factor: 1
       storage:
