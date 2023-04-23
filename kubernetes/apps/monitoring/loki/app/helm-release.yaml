@@ -18,27 +18,9 @@ spec:
       interval: 5m
   values:
     loki:
-      structuredConfig:
-        auth_enabled: false
-        commonConfig:
-          replication_factor: 1
-        storage:
-          type: "filesystem"
-    monitoring:
-      dashboards:
-        annotations:
-          kustomize.toolkit.fluxcd.io/substitute: disabled
-        labels:
-          grafana_dashboard: "true"
-      serviceMonitor:
-        enabled: false
-        metricsInstance:
-          enabled: false
-      selfMonitoring:
-        enabled: false
-        grafanaAgent:
-          installOperator: false
-      lokiCanary:
-        enabled: false
-    test:
-      enabled: false
+      commonConfig:
+        replication_factor: 1
+      storage:
+        type: "filesystem"
+    singleBinary:
+      replicas: 1
