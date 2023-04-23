@@ -95,8 +95,6 @@ spec:
           MIRROR: 1000
         respository:
           DEFAULT_PRIVATE: true
-        admin:
-          DISABLE_REGULAR_ORG_CREATION: true
         security:
           PASSWORD_COMPLEXITY: "lower,upper"
           MIN_PASSWORD_LENGTH: 12
