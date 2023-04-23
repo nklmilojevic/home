@@ -63,7 +63,7 @@ spec:
               name: gitea-secrets
               key: POSTGRES_PASS
       admin:
-        existingSecret: gitea-admin-secret
+        existingSecret: gitea-secrets
       config:
         APP_NAME: "git@milojevic"
         server:
