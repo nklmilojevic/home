@@ -26,7 +26,7 @@ spec:
   values:
     image:
       repository: ghcr.io/jr0dd/network-ups-tools
-      tag: v2.8.0@sha256:e6d73e52916f821a51870e09b5e5e799862565e0721ec5fc02991c746557dcf7
+      tag: v2.8.0@sha256:8878ab0f9420801f110ba1f173c97ad056cd9a6f56b181e1b39add1d91dc9626
 
     env:
       TZ: "${TIMEZONE}"
