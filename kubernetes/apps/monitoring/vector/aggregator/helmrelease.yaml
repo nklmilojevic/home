@@ -52,7 +52,7 @@ spec:
     service:
       main:
         type: LoadBalancer
-        externalIPs: ${SVC_VECTOR_IP}
+        externalIPs: ["${SVC_VECTOR_IP}"]
         externalTrafficPolicy: Local
         ports:
           http:
