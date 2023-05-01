@@ -53,7 +53,7 @@ spec:
       main:
         type: LoadBalancer
         externalIPs:
-          - "${SVC_VECTOR_IP}"
+          - 10.2.0.20
         externalTrafficPolicy: Local
         ports:
           http:
