@@ -6,3 +6,4 @@ resources:
   - ./gitea/ks.yaml
   - ./cloudnative-pg/ks.yaml
   - ./redis/ks.yaml
+  - ./minio/ks.yaml

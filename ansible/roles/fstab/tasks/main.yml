@@ -16,9 +16,10 @@
     path: "{{ item.path }}"
     src: "{{ item.src }}"
     state: "{{ item.state }}"
+    fstype: "none"
     opts: "bind"
   loop: "{{ bind_mounts }}"
-  when: bind_moounts is defined
+  when: bind_mounts is defined
   tags:
     - fstab
     - bind-mounts
