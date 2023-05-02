@@ -31,13 +31,13 @@ spec:
         reloader.stakater.com/auto: "true"
     image:
       repository: quay.io/minio/minio
-      tag: RELEASE.2023-01-25T00-19-54Z
+      tag: RELEASE.2023-04-28T18-11-17Z
     env:
       TZ: Europe/Belgrade
       MINIO_UPDATE: "off"
       MINIO_PROMETHEUS_URL: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
       MINIO_PROMETHEUS_JOB_ID: minio
-      MINIO_BROWSER_REDIRECT_URL: https://minio.milojevic.me
+      MINIO_BROWSER_REDIRECT_URL: https://minio.milojevic.dev
       MINIO_SERVER_URL: https://s3.milojevic.dev
       MINIO_API_CORS_ALLOW_ORIGIN: https://minio.milojevic.dev,https://s3.milojevic.dev
     envFrom:
