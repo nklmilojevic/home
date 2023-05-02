@@ -10,7 +10,7 @@ spec:
   storageClassName: minio-nfs
   persistentVolumeReclaimPolicy: Retain
   nfs:
-    server: panopticon.${SECRET_DOMAIN}
+    server: panopticon.milojevic.dev
     path: /minio
   mountOptions:
     - nfsvers=4.2
