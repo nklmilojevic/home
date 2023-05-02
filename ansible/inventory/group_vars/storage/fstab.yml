@@ -25,3 +25,6 @@ bind_mounts:
   - path: "/export/pvc"
     src: "/mnt/storage/kubernetes/pvc"
     state: "mounted"
+  - path: "/export/minio"
+    src: "/mnt/storage/minio"
+    state: "mounted"
