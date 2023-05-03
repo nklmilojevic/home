@@ -498,6 +498,9 @@ spec:
     # Grafana dependency chart configuration. For possible values refer to https://github.com/grafana/helm-charts/tree/main/charts/grafana#configuration
     grafana:
       enabled: true
+      image:
+        repository: docker.io/grafana/grafana
+        tag: 9.5.1
       extraInitContainers:
         - name: init-db
           image: ghcr.io/onedr0p/postgres-initdb:14.7
