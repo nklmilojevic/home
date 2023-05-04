@@ -177,6 +177,7 @@ spec:
         replicationFactor: 2
         vmstorage:
           image:
+            # renovate: datasource=docker depName=victoriametrics/vmstorage
             tag: v1.87.3-cluster
           replicaCount: 1
           storageDataPath: "/vm-data"
@@ -193,6 +194,7 @@ spec:
             #   memory: 1500Mi
         vmselect:
           image:
+            # renovate: datasource=docker depName=victoriametrics/vmselect
             tag: v1.87.3-cluster
           replicaCount: 1
           cacheMountPath: "/select-cache"
@@ -213,6 +215,7 @@ spec:
             #   memory: "500Mi"
         vminsert:
           image:
+            # renovate: datasource=docker depName=victoriametrics/vminsert
             tag: v1.87.3-cluster
           replicaCount: 1
           extraArgs: {}
@@ -395,6 +398,7 @@ spec:
       spec:
         selectAllByDefault: true
         image:
+          # renovate: datasource=docker depName=victoriametrics/vmalert
           tag: v1.87.3
         evaluationInterval: 15s
 
@@ -454,6 +458,9 @@ spec:
       # spec for VMAgent crd
       # https://docs.victoriametrics.com/operator/blob/master/docs/api.MD#vmagentspec
       spec:
+        image:
+          # renovate: datasource=docker depName=victoriametrics/vmagent
+          tag: v1.87.3
         resources:
           limits:
             cpu: 2000m
@@ -472,8 +479,6 @@ spec:
               - targets:
                   - "10.5.0.10:9100"
         selectAllByDefault: true
-        image:
-          tag: v1.87.3
         scrapeInterval: 25s
         externalLabels:
           cluster: cluster-name
@@ -500,6 +505,7 @@ spec:
       enabled: true
       image:
         repository: docker.io/grafana/grafana
+        # renovate: datasource=docker depName=grafana/grafana
         tag: 9.5.1
       extraInitContainers:
         - name: init-db
