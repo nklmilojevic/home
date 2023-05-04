@@ -76,7 +76,7 @@ spec:
       # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmsinglespec
       spec:
         image:
-          # renovate: datasource=docker depName=victoriametrics/vmsingle
+          # renovate: datasource=docker depName=victoriametrics/victoria-metrics
           tag: v1.87.3
         retentionPeriod: "14"
         replicaCount: 1
