@@ -131,7 +131,7 @@ spec:
         selectAllByDefault: true
         image:
           # renovate: datasource=docker depName=victoriametrics/vmalert
-          tag: v1.87.3
+          tag: v1.90.0
         evaluationInterval: 15s
 
     vmagent:
@@ -141,7 +141,7 @@ spec:
       spec:
         image:
           # renovate: datasource=docker depName=victoriametrics/vmagent
-          tag: v1.87.3
+          tag: v1.90.0
         resources:
           limits:
             cpu: 2000m
