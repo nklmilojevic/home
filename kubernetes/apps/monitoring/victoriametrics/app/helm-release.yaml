@@ -174,7 +174,7 @@ spec:
         tag: 9.5.2
       extraInitContainers:
         - name: init-db
-          image: ghcr.io/onedr0p/postgres-initdb:14.7
+          image: ghcr.io/onedr0p/postgres-initdb:14.8
           imagePullPolicy: IfNotPresent
           envFrom:
             - secretRef:
