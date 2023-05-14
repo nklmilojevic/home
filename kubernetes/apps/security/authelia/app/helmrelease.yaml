@@ -41,8 +41,14 @@ spec:
         reloader.stakater.com/auto: "true"
     image:
       repository: ghcr.io/authelia/authelia
-      tag: 4.37.5
-    args: ["--config", "/config/configuration.yml"]
+      tag: v4.38.0-beta2
+    args:
+      [
+        "--config",
+        "/config/configuration.yml",
+        "--config.experimental.filters",
+        "expand-env",
+      ]
     envFrom:
       - secretRef:
           name: authelia-secret
