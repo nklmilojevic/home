@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: aler9/rtsp-simple-server
-      tag: v0.23.3
+      tag: v0.23.4
     env:
       RTSP_PROTOCOLS: "tcp"
     probes:
