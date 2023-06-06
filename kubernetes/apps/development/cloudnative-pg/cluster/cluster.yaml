@@ -41,3 +41,19 @@ spec:
         secretAccessKey:
           name: cloudnative-pg-secret
           key: aws-secret-access-key
+  # # Note: externalClusters is needed when recovering from an existing cnpg cluster
+  externalClusters:
+    - name: postgres
+      barmanObjectStore:
+        wal:
+          compression: bzip2
+          maxParallel: 8
+        destinationPath: s3://k3s-cloudnative-pg/
+        endpointURL: https://s3.us-west-002.backblazeb2.com
+        s3Credentials:
+          accessKeyId:
+            name: cloudnative-pg-secret
+            key: aws-access-key-id
+          secretAccessKey:
+            name: cloudnative-pg-secret
+            key: aws-secret-access-key
