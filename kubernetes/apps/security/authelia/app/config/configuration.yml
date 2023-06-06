@@ -2,7 +2,7 @@
 ---
 session:
   redis:
-    host: redis-headless.development.svc.cluster.local
+    host: "redis-headless.development.svc.cluster.local"
     port: 6379
 
 access_control:
