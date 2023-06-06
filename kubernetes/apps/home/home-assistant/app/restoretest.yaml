@@ -14,7 +14,7 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: datavol-dest
+  name: hass-restore-dest
   namespace: home
 spec:
   trigger:
@@ -22,5 +22,5 @@ spec:
   restic:
     repository: home-assistant-restic-secret
     # Use an existing PVC, don't provision a new one
-    destinationPVC: restoretest
+    destinationPVC: hass-local-data
     copyMethod: Direct
