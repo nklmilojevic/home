@@ -26,6 +26,7 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    architecture: standalone
     auth:
       enabled: false
       sentinel: false
