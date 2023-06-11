@@ -3,6 +3,8 @@ default_config:
 
 ffmpeg:
 
+prometheus:
+
 stream:
   ll_hls: true
   part_duration: 0.75
