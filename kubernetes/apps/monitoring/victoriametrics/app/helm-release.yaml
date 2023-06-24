@@ -171,7 +171,7 @@ spec:
       image:
         repository: docker.io/grafana/grafana
         # renovate: datasource=docker depName=grafana/grafana
-        tag: 9.5.3
+        tag: 9.5.5
       extraInitContainers:
         - name: init-db
           image: ghcr.io/onedr0p/postgres-initdb:14.8
