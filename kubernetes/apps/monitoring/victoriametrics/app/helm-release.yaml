@@ -131,7 +131,7 @@ spec:
         selectAllByDefault: true
         image:
           # renovate: datasource=docker depName=victoriametrics/vmalert
-          tag: v1.91.2
+          tag: v1.91.3
         evaluationInterval: 15s
 
     vmagent:
