@@ -12,7 +12,7 @@ spec:
   secretRef:
     name: github-webhook-secret
   resources:
-    - apiVersion: source.toolkit.fluxcd.io/v1
+    - apiVersion: source.toolkit.fluxcd.io/v1beta1
       kind: GitRepository
       name: home-kubernetes
       namespace: flux-system
