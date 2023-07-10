@@ -6,7 +6,7 @@ namespace: security
 resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
-patchesStrategicMerge:
+patches:
   - ./patches/env.yaml
 configMapGenerator:
   - name: authelia-configmap
