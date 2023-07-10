@@ -9,7 +9,7 @@ resources:
 images:
   - name: rancher/system-upgrade-controller
     newTag: v0.11.0
-patchesStrategicMerge:
+patches:
   - |
     $patch: delete
     apiVersion: v1
