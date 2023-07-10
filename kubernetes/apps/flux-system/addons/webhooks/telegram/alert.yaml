@@ -1,5 +1,5 @@
 ---
-apiVersion: beta2
+apiVersion: notification.toolkit.fluxcd.io/v1
 kind: Alert
 metadata:
   name: telegram-notifications
