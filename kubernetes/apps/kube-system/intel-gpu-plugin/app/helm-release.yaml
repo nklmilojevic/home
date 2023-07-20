@@ -29,7 +29,7 @@ spec:
         enabled: false
     args:
       - -shared-dev-num
-      - "1"
+      - "2"
     persistence:
       devfs:
         enabled: true
