@@ -21,7 +21,7 @@ spec:
       type: statefulset
 
     image:
-      repository: jellyfin/jellyfin
+      repository: linuxserver/jellyfin
       tag: 10.8.10
 
     env:
