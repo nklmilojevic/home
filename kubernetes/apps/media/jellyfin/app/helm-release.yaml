@@ -21,7 +21,7 @@ spec:
       type: statefulset
 
     image:
-      repository: linuxserver/jellyfin
+      repository: jellyfin/jellyfin
       tag: 10.8.10
 
     env:
@@ -59,6 +59,9 @@ spec:
       runAsGroup: 1000
       fsGroup: 1000
       fsGroupChangePolicy: "OnRootMismatch"
+      supplementalGroups:
+        - 44
+        - 109
 
     persistence:
       config:
