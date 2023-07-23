@@ -30,7 +30,7 @@ spec:
       k8s.v1.cni.cncf.io/networks: static-iot-hass
     image:
       repository: homeassistant/home-assistant
-      tag: 2023.7.2
+      tag: 2023.7.3
     env:
       TZ: "${TIMEZONE}"
     envFrom:
