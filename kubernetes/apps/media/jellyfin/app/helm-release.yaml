@@ -22,7 +22,7 @@ spec:
 
     image:
       repository: jellyfin/jellyfin
-      tag: 20230721.7-unstable
+      tag: 20230728.2-unstable
 
     env:
       TZ: "${TIMEZONE}"
