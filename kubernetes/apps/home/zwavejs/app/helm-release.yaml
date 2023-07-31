@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: zwavejs/zwavejs2mqtt
-      tag: 8.21.0
+      tag: 8.21.2
     securityContext:
       privileged: true
     service:
