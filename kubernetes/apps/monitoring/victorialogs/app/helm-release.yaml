@@ -77,6 +77,7 @@ spec:
         enabled: true
         podManagementPolicy: OrderedReady
         service:
+          enabled: true
           # -- Headless service annotations
           annotations: {}
           # -- Headless service labels
@@ -84,7 +85,6 @@ spec:
           # -- Headless service port
           servicePort: 9428
           # Ref: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
-          externalTrafficPolicy: "local"
 
     fluent-bit:
       enabled: true
