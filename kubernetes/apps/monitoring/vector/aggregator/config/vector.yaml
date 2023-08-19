@@ -49,7 +49,8 @@ sinks:
     endpoint: http://vm-logs-victoria-logs-single-server.monitoring.svc.cluster.local:9428
     mode: bulk
     api_version: "v8"
-    healthcheck.enabled: false
+    healthcheck:
+      enabled: false
     labels:
       hostname: "{{ host }}"
 
@@ -59,7 +60,8 @@ sinks:
     endpoint: http://vm-logs-victoria-logs-single-server.monitoring.svc.cluster.local:9428
     mode: bulk
     api_version: "v8"
-    healthcheck.enabled: false
+    healthcheck:
+      enabled: false
     labels:
       app: "{{ custom_app_name }}"
       namespace: "{{ kubernetes.pod_namespace }}"
