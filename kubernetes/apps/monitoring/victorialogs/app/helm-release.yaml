@@ -46,6 +46,7 @@ spec:
         hosts:
           - name: vmlogs.${SECRET_DOMAIN}
             path: /select
+            port: http
         tls:
           - hosts:
               - vmlogs.${SECRET_DOMAIN}
