@@ -32,7 +32,7 @@ spec:
           port: 1514
     config:
       clients:
-        - url: http://vm-logs-victoria-logs-single-server.monitoring.svc.cluster.local:9428/insert/loki/api/v1/push?_stream_fields=instance,job,host,app&debug=1
+        - url: http://vm-logs-victoria-logs-single-server.monitoring.svc.cluster.local:9428/insert/loki/api/v1/push?_stream_fields=instance,job,host,app&ignore_fields=filename,stream&debug=1
       snippets:
         extraScrapeConfigs: |
           - job_name: syslog
