@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./victoriametrics/ks.yaml
+  - ./victorialogs/ks.yaml
   - ./loki/ks.yaml
   - ./vector/ks.yaml
   - ./promtail/ks.yaml
