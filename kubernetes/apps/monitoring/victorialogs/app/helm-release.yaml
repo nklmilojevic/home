@@ -65,6 +65,7 @@ spec:
         pathType: Prefix
 
       service:
+        enabled: true
         externalIPs: []
         loadBalancerIP: ""
         loadBalancerSourceRanges: []
