@@ -5,7 +5,7 @@ resources:
   - ./namespace.yaml
   - ./victoriametrics/ks.yaml
   - ./victorialogs/ks.yaml
-  - ./loki/ks.yaml
+  # - ./loki/ks.yaml
   # - ./vector/ks.yaml
   - ./promtail/ks.yaml
   - ./network-ups-tools/ks.yaml
