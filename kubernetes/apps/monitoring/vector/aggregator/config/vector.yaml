@@ -51,8 +51,6 @@ sinks:
     api_version: "v8"
     healthcheck:
       enabled: false
-    labels:
-      hostname: "{{ host }}"
 
   kubernetes:
     inputs: ["kubernetes_remap"]
@@ -62,10 +60,6 @@ sinks:
     api_version: "v8"
     healthcheck:
       enabled: false
-    labels:
-      app: "{{ custom_app_name }}"
-      namespace: "{{ kubernetes.pod_namespace }}"
-      node: "{{ kubernetes.pod_node_name }}"
   # journald:
   #   inputs: ["journald_source"]
   #   type: loki
