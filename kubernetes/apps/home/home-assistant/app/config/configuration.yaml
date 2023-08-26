@@ -5,16 +5,6 @@ ffmpeg:
 
 prometheus:
 
-homeassistant:
-  auth_providers:
-    - type: trusted_networks
-      trusted_networks:
-        - 10.0.0.0/8
-        - 127.0.0.1
-        - ::1
-      allow_bypass_login: true
-    - type: homeassistant
-
 stream:
   ll_hls: true
   part_duration: 0.75
