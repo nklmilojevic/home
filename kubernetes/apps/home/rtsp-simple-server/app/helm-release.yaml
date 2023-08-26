@@ -21,7 +21,7 @@ spec:
       repository: bluenviron/mediamtx
       tag: latest-ffmpeg
     env:
-      RTSP_PROTOCOLS: "tcp"
+      MTX_PROTOCOLS: "tcp"
     probes:
       liveness:
         enabled: false
