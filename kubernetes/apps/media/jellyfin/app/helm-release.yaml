@@ -21,8 +21,8 @@ spec:
       type: statefulset
 
     image:
-      repository: jellyfin/jellyfin
-      tag: 20230913.11-unstable
+      repository: ghcr.io/onedr0p/jellyfin
+      tag: 10.8.10
 
     env:
       TZ: "${TIMEZONE}"
