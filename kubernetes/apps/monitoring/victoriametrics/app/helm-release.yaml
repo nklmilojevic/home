@@ -77,7 +77,7 @@ spec:
       spec:
         image:
           # renovate: datasource=docker depName=victoriametrics/victoria-metrics
-          tag: v1.93.5
+          tag: v1.94.0
         retentionPeriod: "14"
         replicaCount: 1
         extraArgs: {}
