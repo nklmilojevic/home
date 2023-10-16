@@ -66,6 +66,9 @@ spec:
       media:
         enabled: true
         existingClaim: nfs-media-pvc
+      interim:
+        enabled: true
+        existingClaim: downloads-pvc
 
     prometheus:
       podMonitor:
