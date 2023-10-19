@@ -22,9 +22,14 @@ spec:
     remediation:
       retries: 3
   values:
+    service:
+      main:
+        ports:
+          http:
+            port: &port 8080
+
     controllers:
       main:
-        enabled: true
         replicas: 1
         strategy: RollingUpdate
         containers:
@@ -32,11 +37,6 @@ spec:
             image:
               repository: docker.io/jmalloc/echo-server
               tag: 0.3.5
-            service:
-              main:
-                ports:
-                  http:
-                    port: &port 8080
             probes:
               liveness: &probes
                 enabled: true
@@ -52,6 +52,7 @@ spec:
               readiness: *probes
               startup:
                 enabled: false
+
     ingress:
       main:
         enabled: true
