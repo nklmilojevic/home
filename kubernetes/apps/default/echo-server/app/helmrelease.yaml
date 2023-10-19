@@ -22,36 +22,24 @@ spec:
     remediation:
       retries: 3
   values:
-    service:
-      main:
-        ports:
-          http:
-            port: &port 8080
-
     controllers:
       main:
         replicas: 1
         strategy: RollingUpdate
+
         containers:
           main:
             image:
               repository: docker.io/jmalloc/echo-server
               tag: 0.3.5
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /health
-                    port: *port
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
-              startup:
-                enabled: false
+            env:
+              HTTP_PORT: &port 8080
+
+    service:
+      main:
+        ports:
+          http:
+            port: *port
 
     ingress:
       main:
@@ -68,6 +56,7 @@ spec:
         tls:
           - hosts:
               - *host
+
     topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: kubernetes.io/hostname
@@ -75,6 +64,7 @@ spec:
         labelSelector:
           matchLabels:
             app.kubernetes.io/name: *app
+
     resources:
       requests:
         cpu: 5m
