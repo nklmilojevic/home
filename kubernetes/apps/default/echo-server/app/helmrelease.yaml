@@ -27,29 +27,29 @@ spec:
         enabled: true
         replicas: 1
         strategy: RollingUpdate
-    image:
-      repository: docker.io/jmalloc/echo-server
-      tag: 0.3.5
-    service:
-      main:
-        ports:
-          http:
-            port: &port 8080
-    probes:
-      liveness: &probes
-        enabled: true
-        custom: true
-        spec:
-          httpGet:
-            path: /health
-            port: *port
-          initialDelaySeconds: 0
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-      readiness: *probes
-      startup:
-        enabled: false
+      image:
+        repository: docker.io/jmalloc/echo-server
+        tag: 0.3.5
+      service:
+        main:
+          ports:
+            http:
+              port: &port 8080
+      probes:
+        liveness: &probes
+          enabled: true
+          custom: true
+          spec:
+            httpGet:
+              path: /health
+              port: *port
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+        readiness: *probes
+        startup:
+          enabled: false
     ingress:
       main:
         enabled: true
