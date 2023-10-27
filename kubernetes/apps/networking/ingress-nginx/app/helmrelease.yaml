@@ -40,7 +40,7 @@ spec:
         enabled: true
       ingressClassResource:
         default: true
-      enableSnippets: true
+      allowSnippetAnnotations: true
       config:
         client-header-timeout: 120
         client-body-buffer-size: "100M"
