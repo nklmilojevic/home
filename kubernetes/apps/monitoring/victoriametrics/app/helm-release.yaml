@@ -141,7 +141,7 @@ spec:
       spec:
         image:
           # renovate: datasource=docker depName=victoriametrics/vmagent
-          tag: v1.94.0
+          tag: v1.95.1
         resources:
           limits:
             cpu: 2000m
