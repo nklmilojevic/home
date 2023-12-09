@@ -34,7 +34,7 @@ spec:
     restartPolicy: OnFailure
     image:
       repository: ghcr.io/onedr0p/kubernetes-kubectl
-      tag: 1.28.4@sha256:7039783f8ecb83acf0f5359ec7aa901f6e73af1c76470e7317caf19f7514fedd
+      tag: 1.28.4@sha256:6de857bec9429c3f9fb94fe17bfa8008f7b2d26fc08d671b64e63bff6905c6f8
     command: ["/bin/bash", "/app/cloudflare-ddns.sh"]
     envFrom:
       - secretRef:
