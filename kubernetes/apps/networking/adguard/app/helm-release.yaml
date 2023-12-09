@@ -25,7 +25,7 @@ spec:
   values:
     image:
       repository: adguard/adguardhome
-      tag: v0.107.41
+      tag: v0.107.42
     # args:
     #   - "--config"
     #   - "/opt/adguardhome/conf/AdGuardHome.yaml"
