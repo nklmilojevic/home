@@ -38,7 +38,7 @@ spec:
               tag: 14.8
             envFrom: &envFrom
               - secretRef:
-                  name: atuin-secret
+                  name: atuin-secrets
 
         containers:
           main:
