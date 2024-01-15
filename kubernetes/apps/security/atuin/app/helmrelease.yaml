@@ -88,7 +88,7 @@ spec:
         enabled: true
         className: nginx
         hosts:
-          - host: &host atuin.${SECRET_DOMAIN}
+          - host: &host atuin.milojevic.dev
             paths:
               - path: /
                 service:
