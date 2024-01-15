@@ -8,3 +8,4 @@ resources:
   - ./volsync/ks.yaml
   - ./glauth/ks.yaml
   - ./authelia/ks.yaml
+  - ./atiun/ks.yaml
