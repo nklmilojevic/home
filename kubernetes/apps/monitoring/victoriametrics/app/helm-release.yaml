@@ -224,6 +224,8 @@ spec:
         auth.basic:
           enabled: false
           # disable_login_form: false
+        plugins:
+          allow_loading_unsigned_plugins: "victorialogs-datasource"
       ## ForceDeployDatasource Create datasource configmap even if grafana deployment has been disabled
       forceDeployDatasource: false
 
