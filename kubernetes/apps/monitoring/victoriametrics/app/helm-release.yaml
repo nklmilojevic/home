@@ -183,10 +183,6 @@ spec:
           image: "curlimages/curl:7.85.0"
           command: ["/bin/sh"]
           workingDir: "/var/lib/grafana"
-          # securityContext:
-          #   runAsUser: 1000
-          #   runAsNonRoot: true
-          #   runAsGroup: 1000
           args:
             - "-c"
             - |
@@ -197,7 +193,6 @@ spec:
               tar -xf /var/lib/grafana/plugins/plugin.tar.gz -C /var/lib/grafana/plugins/
               rm /var/lib/grafana/plugins/plugin.tar.gz
           volumeMounts:
-            # For grafana-operator users, change `name: storage` to `name: grafana-data`
             - name: storage
               mountPath: /var/lib/grafana
       plugins:
@@ -257,6 +252,11 @@ spec:
           orgId: 1
           type: loki
           url: http://loki:3100
+          version: 1
+        - name: vmlogs
+          orgId: 1
+          type: loki
+          url: http://vm-logs-victoria-logs-single-server.monitoring.svc:9428
           version: 1
 
       dashboardProviders:
