@@ -255,7 +255,7 @@ spec:
           version: 1
         - name: vmlogs
           orgId: 1
-          type: VictoriaLogs
+          type: victorialogs
           url: http://vm-logs-victoria-logs-single-server.monitoring.svc:9428
           version: 1
 
