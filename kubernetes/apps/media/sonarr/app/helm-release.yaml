@@ -45,8 +45,8 @@ spec:
               runAsGroup: 1000
 
     service:
-      controller: main
       main:
+        controller: main
         ports:
           http:
             port: 8989
