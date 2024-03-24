@@ -28,8 +28,9 @@ spec:
   values:
     controllers:
       main:
-        hostNetwork: true
-        dnsPolicy: ClusterFirstWithHostNet
+        pod:
+          hostNetwork: true
+          dnsPolicy: ClusterFirstWithHostNet
         containers:
           main:
             image:
