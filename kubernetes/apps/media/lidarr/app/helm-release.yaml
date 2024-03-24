@@ -32,8 +32,8 @@ spec:
               PGID: "${PUID}"
 
     service:
-      controller: main
       main:
+        controller: main
         ports:
           http:
             port: 8686
