@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.4
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -24,7 +24,7 @@ spec:
   values:
     controllers:
       main:
-        replicas: 3
+        replicas: 1
         strategy: RollingUpdate
 
         containers:
