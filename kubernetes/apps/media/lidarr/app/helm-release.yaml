@@ -10,21 +10,26 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.0.4
       interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
   values:
-    image:
-      repository: ghcr.io/onedr0p/lidarr
-      tag: 2.1.7.4030
-
-    env:
-      TZ: "${TIMEZONE}"
-      PUID: "${PUID}"
-      PGID: "${PUID}"
+    controllers:
+      main:
+        replicas: 1
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/lidarr
+              tag: 2.1.7.4030
+            env:
+              TZ: "${TIMEZONE}"
+              PUID: "${PUID}"
+              PGID: "${PUID}"
 
     service:
       main:
@@ -34,7 +39,8 @@ spec:
 
     ingress:
       main:
-        ingressClassName: "nginx"
+        enabled: true
+        classname: "nginx"
         annotations:
           external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN}"
           nginx.ingress.kubernetes.io/auth-method: GET
@@ -49,7 +55,6 @@ spec:
             proxy_set_header Accept-Encoding "";
             sub_filter '</body>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/lidarr/dracula.css"></body>';
             sub_filter_once on;
-        enabled: true
         hosts:
           - host: &host lidarr.${SECRET_DOMAIN}
             paths:
