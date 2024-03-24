@@ -37,8 +37,9 @@ spec:
 
         initContainers:
           01-init-db:
-            image: ghcr.io/onedr0p/postgres-initdb
-            tag: 14.8
+            image:
+              repository: ghcr.io/onedr0p/postgres-initdb
+              tag: 14.8
             envFrom:
               - secretRef:
                   name: homeassistant-secrets
@@ -109,7 +110,7 @@ spec:
 
     serviceMonitor:
       main:
-        enabled: true
+        serviceName: main
         endpoints:
           - port: http
             scheme: http
