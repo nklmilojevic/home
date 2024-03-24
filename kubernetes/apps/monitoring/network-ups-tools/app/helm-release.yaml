@@ -47,11 +47,11 @@ spec:
         controller: main
         type: LoadBalancer
         externalTrafficPolicy: Cluster
+        loadBalancerIP: ${SVC_NUT_IP}
         ports:
           http:
             port: 3493
             protocol: TCP
-        loadBalancerIP: ${SVC_NUT_IP}
 
       metrics:
         controller: main
