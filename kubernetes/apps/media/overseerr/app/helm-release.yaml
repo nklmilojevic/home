@@ -10,24 +10,43 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.0.4
       interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: uninstall
+      retries: 3
   values:
-    image:
-      repository: ghcr.io/linuxserver/overseerr
-      tag: v1.31.0-ls51
-
-    env:
-      TZ: "${TIMEZONE}"
-      PUID: "${PUID}"
-      PGID: "${PUID}"
+    controllers:
+      main:
+        replicas: 1
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/linuxserver/overseerr
+              tag: v1.31.0-ls51
+            env:
+              TZ: "${TIMEZONE}"
+              PUID: "${PUID}"
+              PGID: "${PUID}"
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
+              fsGroup: 1000
+              fsGroupChangePolicy: "OnRootMismatch"
 
     service:
       main:
+        controller: main
         ports:
           http:
             port: 5055
@@ -35,7 +54,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "nginx"
+        className: "nginx"
         annotations:
           hajimari.io/icon: "eye-circle"
           nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
@@ -48,6 +67,9 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  identifier: main
+                  port: http
         tls:
           - hosts:
               - *host
