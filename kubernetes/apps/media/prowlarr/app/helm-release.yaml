@@ -85,8 +85,3 @@ spec:
       media:
         enabled: true
         existingClaim: nfs-media-pvc
-
-    serviceMonitor:
-      main:
-        serviceName: main
-        enabled: true
