@@ -29,13 +29,13 @@ spec:
       main:
         annotations:
           configmap.reloader.stakater.com/reload: "mosqutto-config"
-          containers:
-            main:
-              image:
-                repository: eclipse-mosquitto
-                tag: 2.0.18
-              env:
-                TZ: "${TIMEZONE}"
+        containers:
+          main:
+            image:
+              repository: eclipse-mosquitto
+              tag: 2.0.18
+            env:
+              TZ: "${TIMEZONE}"
     service:
       main:
         controller: main
