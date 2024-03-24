@@ -4,7 +4,7 @@ namespace: home
 resources:
   - ./externalsecret.yaml
   - ./config-pvc.yaml
-  - ./helm-release.yaml
+  # - ./helm-release.yaml
   - ./replicationsource.yaml
   - ./multus.yaml
   # - ./restoretest.yaml
