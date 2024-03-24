@@ -180,7 +180,7 @@ spec:
             - secretRef:
                 name: grafana-secret
         - name: "load-vm-ds-plugin"
-          image: "curlimages/curl:7.85.0"
+          image: "curlimages/curl:8.6.0"
           command: ["/bin/sh"]
           workingDir: "/var/lib/grafana"
           args:
