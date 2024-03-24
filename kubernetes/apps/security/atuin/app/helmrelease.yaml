@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.4
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -67,6 +67,7 @@ spec:
 
     service:
       main:
+        controller: main
         ports:
           http:
             port: *port
@@ -75,6 +76,7 @@ spec:
 
     serviceMonitor:
       main:
+        serviceName: main
         enabled: true
         endpoints:
           - port: metrics
