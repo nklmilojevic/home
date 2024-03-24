@@ -27,7 +27,7 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    controller:
+    controllers:
       main:
         replicas: 1
         strategy: RollingUpdate
