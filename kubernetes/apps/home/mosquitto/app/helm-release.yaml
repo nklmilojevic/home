@@ -10,21 +10,35 @@ spec:
     spec:
       # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 1.5.1
+      version: 3.0.4
       interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: uninstall
+      retries: 3
   values:
-    podAnnotations:
-      configmap.reloader.stakater.com/reload: "mosqutto-config"
-    image:
-      repository: eclipse-mosquitto
-      tag: 2.0.18
-
+    controllers:
+      main:
+        annotations:
+          configmap.reloader.stakater.com/reload: "mosqutto-config"
+          containers:
+            main:
+              image:
+                repository: eclipse-mosquitto
+                tag: 2.0.18
+              env:
+                TZ: "${TIMEZONE}"
     service:
       main:
+        controller: main
         type: LoadBalancer
         loadBalancerIP: "${SVC_MQTT_IP}"
         externalTrafficPolicy: Local
@@ -34,8 +48,7 @@ spec:
           mqtt:
             enabled: true
             port: 1883
-    env:
-      TZ: "${TIMEZONE}"
+
     persistence:
       data:
         enabled: true
@@ -44,5 +57,8 @@ spec:
         enabled: true
         type: configMap
         name: mosquitto-config
-        mountPath: /mosquitto/config/mosquitto.conf
-        subPath: mosquitto.conf
+        advancedMounts:
+          main:
+            main:
+              - path: /mosquitto/config/mosquitto.conf
+                subPath: mosquitto.conf
