@@ -88,7 +88,7 @@ spec:
       data:
         enabled: true
         existingClaim: zigbee2mqtt-local-data
-        mountPath: /data
+
       usb:
         enabled: true
         type: hostPath
