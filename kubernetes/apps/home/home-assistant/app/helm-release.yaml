@@ -99,10 +99,6 @@ spec:
       config:
         enabled: true
         existingClaim: hass-local-data
-        advancedMounts:
-          main:
-            main:
-              - path: /config
 
       hass-config:
         enabled: true
