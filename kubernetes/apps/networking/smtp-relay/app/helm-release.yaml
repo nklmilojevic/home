@@ -33,17 +33,17 @@ spec:
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
-      containers:
-        main:
-          image:
-            repository: ghcr.io/foxcpp/maddy
-            tag: 0.7.1
-          env:
-            DEBUG: "false"
-            SMTP_PORT: "587"
-          envFrom:
-            - secretRef:
-                name: smtp-relay-secrets
+        containers:
+          main:
+            image:
+              repository: ghcr.io/foxcpp/maddy
+              tag: 0.7.1
+            env:
+              DEBUG: "false"
+              SMTP_PORT: "587"
+            envFrom:
+              - secretRef:
+                  name: smtp-relay-secrets
 
     service:
       main:
