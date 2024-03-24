@@ -8,3 +8,4 @@ resources:
   - ./reloader/ks.yaml
   - ./intel-device-plugin/ks.yaml
   - ./nfs-subdir-external-provisioner/ks.yaml
+  - ./node-feature-discovery/ks.yaml

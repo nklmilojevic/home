@@ -26,3 +26,4 @@ resources:
   - ./cloudnative-pg.yaml
   - ./dragonfly.yaml
   - ./intel.yaml
+  - ./node-feature-discovery.yaml
