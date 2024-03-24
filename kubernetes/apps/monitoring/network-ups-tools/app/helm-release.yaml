@@ -54,6 +54,7 @@ spec:
         loadBalancerIP: ${SVC_NUT_IP}
 
       metrics:
+        controller: main
         enabled: true
         ports:
           metrics:
