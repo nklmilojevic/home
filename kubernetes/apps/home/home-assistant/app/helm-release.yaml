@@ -105,7 +105,7 @@ spec:
         name: hass-config
         advancedMounts:
           main:
-            init-configuration:
+            main:
               - path: /config/configuration.yaml
 
     serviceMonitor:
