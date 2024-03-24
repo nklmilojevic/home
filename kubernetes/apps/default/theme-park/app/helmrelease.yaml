@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.0.4
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -22,25 +22,31 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: uninstall
       retries: 3
   uninstall:
     keepHistory: false
   values:
     controller:
-      replicas: 1
-      strategy: RollingUpdate
-    image:
-      repository: ghcr.io/onedr0p/theme-park
-      tag: 1.16.0@sha256:ea7df908833d0aa7b9b68dd74708d48ce4aef4e03b79ef32946e2188eecd6fc6
+      main:
+        replicas: 1
+        strategy: RollingUpdate
+
+      containers:
+        main:
+          image:
+            repository: ghcr.io/onedr0p/theme-park
+            tag: 1.16.0@sha256:ea7df908833d0aa7b9b68dd74708d48ce4aef4e03b79ef32946e2188eecd6fc6
     service:
       main:
+        controller: main
         ports:
           http:
             port: 8080
     ingress:
       main:
         enabled: true
-        ingressClassName: "nginx"
+        className: "nginx"
         annotations:
           hajimari.io/enable: "false"
           external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN}"
@@ -49,19 +55,9 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  identifier: main
+                  port: http
         tls:
           - hosts:
               - *host
-    topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app.kubernetes.io/name: *app
-    resources:
-      requests:
-        cpu: 5m
-        memory: 10Mi
-      limits:
-        memory: 50Mi

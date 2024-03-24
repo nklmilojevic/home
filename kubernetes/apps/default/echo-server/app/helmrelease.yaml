@@ -33,14 +33,14 @@ spec:
               repository: docker.io/jmalloc/echo-server
               tag: 0.3.6
             env:
-              HTTP_PORT: &port 8080
+              HTTP_PORT: 8080
 
     service:
       main:
         controller: main
         ports:
           http:
-            port: *port
+            port: 8080
 
     ingress:
       main:
