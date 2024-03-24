@@ -10,21 +10,39 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.0.4
       interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: uninstall
+      retries: 3
   values:
-    image:
-      repository: ghcr.io/onedr0p/sonarr-develop
-      tag: 4.0.2.1367
+    controllers:
+      main:
+        replicas: 1
+        strategy: RollingUpdate
 
-    env:
-      TZ: "${TIMEZONE}"
-      PUID: "${PUID}"
-      PGID: "${PUID}"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/sonarr-develop
+              tag: 4.0.2.1367
+
+            env:
+              TZ: "${TIMEZONE}"
+              PUID: "${PUID}"
+              PGID: "${PUID}"
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
 
     service:
       main:
@@ -35,7 +53,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "nginx"
+        className: "nginx"
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
           nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -49,15 +67,12 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  identifier: main
+                  port: http
         tls:
           - hosts:
               - *host
-
-    podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
-      fsGroupChangePolicy: "OnRootMismatch"
 
     persistence:
       config:
@@ -69,9 +84,3 @@ spec:
       interim:
         enabled: true
         existingClaim: downloads-pvc
-
-    prometheus:
-      podMonitor:
-        enabled: true
-        interval: 10m
-        scrapeTimeout: 2s
