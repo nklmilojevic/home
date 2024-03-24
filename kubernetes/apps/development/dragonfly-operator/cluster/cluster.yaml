@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://lds-schemas.pages.dev/dragonflydb.io/dragonfly_v1alpha1.json
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  name: dragonfly
+  namespace: development
+spec:
+  image: docker.dragonflydb.io/dragonflydb/dragonfly:v1.15.1
+  replicas: 3
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  args:
+    - "--maxmemory=1128Mi"
+    - "--proactor_threads=4"
+    - "--cluster_mode=emulated"
