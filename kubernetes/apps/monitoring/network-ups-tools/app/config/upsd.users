@@ -1,0 +1,3 @@
+[upsmon]
+  actions = SET
+  instcmds = ALL

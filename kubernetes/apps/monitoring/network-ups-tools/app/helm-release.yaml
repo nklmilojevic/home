@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.0.4
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -20,19 +20,31 @@ spec:
       retries: 3
 
   upgrade:
+    cleanupOnFail: true
     remediation:
+      strategy: uninstall
       retries: 3
 
   values:
-    image:
-      repository: ghcr.io/jr0dd/network-ups-tools
-      tag: v2.8.1@sha256:7999ff0ed6f4e31d64f8a6afc66dce26e147608c9d595f4f4fb7b4a6e442ae00
-
-    env:
-      TZ: "${TIMEZONE}"
+    controllers:
+      main:
+        annotations:
+          configmap.reloader.stakater.com/reload: &config network-ups-tools-config
+        replicas: 1
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/jr0dd/network-ups-tools
+              tag: v2.8.1@sha256:7999ff0ed6f4e31d64f8a6afc66dce26e147608c9d595f4f4fb7b4a6e442ae00
+            env:
+              TZ: "${TIMEZONE}"
+            securityContext:
+              privileged: true
 
     service:
       main:
+        controller: main
         type: LoadBalancer
         externalTrafficPolicy: Cluster
         ports:
@@ -53,42 +65,15 @@ spec:
       config:
         enabled: true
         type: configMap
-        name: &config network-ups-tools-config
-        mountPath: /etc/nut
-        defaultMode: 256
+        name: *config
+        globalMounts:
+          - path: /etc/nut
+            readOnly: true
       usb:
         enabled: true
         type: hostPath
         hostPath: /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_AECJb11A922-if00-port0
-        mountPath: /dev/ttyUSB0
-
-    securityContext:
-      privileged: true
-
-    configMaps:
-      config:
-        enabled: true
-        data:
-          nut.conf: |-
-            MODE=netserver
-
-          upsd.conf: |-
-            MAXAGE 20
-            LISTEN 0.0.0.0
-
-          ups.conf: |-
-            [apcupsd]
-              driver = apcsmart
-              port = /dev/ttyUSB0
-              desc = "APC Smart-UPS SC450 RM"
-
-          upsd.users: |-
-            [upsmon]
-              actions = SET
-              instcmds = ALL
-
-          upsmon.conf: |-
-            MONITOR apc@localhost:3493 1 upsmon primary
-
-    podAnnotations:
-      configmap.reloader.stakater.com/reload: *config
+        advancedMounts:
+          main:
+            main:
+              - path: /dev/ttyUSB0
