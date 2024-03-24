@@ -1,61 +1,72 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: &app echo-server
-  namespace: default
+  name: echo-server
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
       version: 3.0.4
+      interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  install:
-    createNamespace: true
-    remediation:
-      retries: 3
-  upgrade:
-    remediation:
-      retries: 3
+
   values:
     controllers:
-      main:
-        replicas: 1
-        strategy: RollingUpdate
+      echo-server:
+        annotations:
+          reloader.stakater.com/auto: "true"
 
         containers:
-          main:
+          app:
             image:
-              repository: docker.io/jmalloc/echo-server
-              tag: 0.3.6
+              repository: ghcr.io/mendhak/http-https-echo
+              tag: 31
             env:
-              HTTP_PORT: 8080
+              HTTP_PORT: &port 8080
+              LOG_WITHOUT_NEWLINE: "true"
+              LOG_IGNORE_PATH: "/healthz"
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 5m
+                memory: 30M
+              limits:
+                memory: 30M
 
     service:
-      main:
-        controller: main
+      app:
+        controller: echo-server
         ports:
           http:
-            port: 8080
+            port: *port
 
     ingress:
-      main:
-        enabled: true
-        className: nginx
+      app:
+        className: "nginx"
         annotations:
-          external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN}"
-          hajimari.io/icon: video-input-antenna
+          nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
+          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "echo-server.milojevic.dev"
             paths:
               - path: /
-                pathType: Prefix
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
