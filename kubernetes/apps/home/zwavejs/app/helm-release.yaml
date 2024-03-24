@@ -10,20 +10,35 @@ spec:
     spec:
       # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 1.5.1
+      version: 3.0.4
       interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: uninstall
+      retries: 3
   values:
-    image:
-      repository: zwavejs/zwavejs2mqtt
-      tag: 9.9.1
-    securityContext:
-      privileged: true
+    controllers:
+      main:
+        replicas: 1
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: zwavejs/zwavejs2mqtt
+              tag: 9.9.1
+            securityContext:
+              privileged: true
     service:
       main:
+        controller: main
         ports:
           http:
             port: 8091
@@ -33,7 +48,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "nginx"
+        className: "nginx"
         annotations:
           hajimari.io/icon: "z-wave"
           nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
@@ -42,6 +57,9 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  identifier: main
+                  port: http
         tls:
           - hosts:
               - *host
@@ -49,9 +67,15 @@ spec:
       config:
         enabled: true
         existingClaim: zwavejs-local-data
-        mountPath: /usr/src/app/store
+        advancedMounts:
+          main:
+            main:
+              - path: /usr/src/app/store
       usb:
         enabled: true
         type: hostPath
         hostPath: /dev/serial/by-id/usb-0658_0200-if00
-        mountPath: /dev/ttyACM0
+        advancedMounts:
+          main:
+            main:
+              - path: /dev/ttyACM0
