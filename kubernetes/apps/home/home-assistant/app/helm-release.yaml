@@ -112,6 +112,7 @@ spec:
           main:
             main:
               - path: /config/configuration.yaml
+                subPath: configuration.yaml
 
     serviceMonitor:
       main:
