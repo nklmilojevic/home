@@ -48,11 +48,6 @@ spec:
               TZ: "${TIMEZONE}"
               PUID: "${PUID}"
               PGID: "${PUID}"
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities:
-                drop:
-                  - ALL
 
     service:
       main:
