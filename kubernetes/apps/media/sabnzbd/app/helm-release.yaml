@@ -10,30 +10,41 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.0.4
       interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
   values:
-    image:
-      repository: ghcr.io/onedr0p/sabnzbd
-      tag: "4.2.3"
+    controllers:
+      main:
+        replicas: 1
+        strategy: RollingUpdate
 
-    env:
-      TZ: "${TIMEZONE}"
-      SABNZBD__PORT: &port 8080
-      SABNZBD__HOST_WHITELIST_ENTRIES: >-
-        sabnzbd,
-        sabnzbd.media,
-        sabnzbd.media.svc,
-        sabnzbd.media.svc.cluster,
-        sabnzbd.media.svc.cluster.local,
-        sabnzbd.${SECRET_DOMAIN}
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/sabnzbd
+              tag: "4.2.3"
+
+            env:
+              TZ: "${TIMEZONE}"
+              SABNZBD__PORT: &port 8080
+              SABNZBD__HOST_WHITELIST_ENTRIES: >-
+                sabnzbd,
+                sabnzbd.media,
+                sabnzbd.media.svc,
+                sabnzbd.media.svc.cluster,
+                sabnzbd.media.svc.cluster.local,
+                sabnzbd.${SECRET_DOMAIN}
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
 
     service:
       main:
+        controller: main
         ports:
           http:
             port: *port
@@ -41,7 +52,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "nginx"
+        className: "nginx"
         annotations:
           hajimari.io/icon: "download-box"
           nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
@@ -54,15 +65,12 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  identifier: main
+                  port: http
         tls:
           - hosts:
               - *host
-
-    podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
-      fsGroupChangePolicy: "OnRootMismatch"
 
     persistence:
       config:
