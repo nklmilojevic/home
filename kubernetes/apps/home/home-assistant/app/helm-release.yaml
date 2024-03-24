@@ -10,41 +10,59 @@ spec:
     spec:
       # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 1.5.1
+      version: 3.0.4
       interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: uninstall
+      retries: 3
   values:
-    initContainers:
-      01-init-db:
-        image: ghcr.io/onedr0p/postgres-initdb:14.8
-        imagePullPolicy: IfNotPresent
-        envFrom:
-          - secretRef:
-              name: homeassistant-secrets
-    podAnnotations:
-      configmap.reloader.stakater.com/reload: "hass-config"
-      secret.reloader.stakater.com/reload: "homeassistant-secrets"
-      k8s.v1.cni.cncf.io/networks: static-iot-hass
-    image:
-      repository: homeassistant/home-assistant
-      tag: 2024.3.3
-    env:
-      TZ: "${TIMEZONE}"
-    envFrom:
-      - secretRef:
-          name: homeassistant-secrets
-    probes:
-      liveness:
-        enabled: false
-      readiness:
-        enabled: false
-      startup:
-        enabled: false
+    controllers:
+      main:
+        annotations:
+          configmap.reloader.stakater.com/reload: "hass-config"
+          secret.reloader.stakater.com/reload: "homeassistant-secrets"
+          k8s.v1.cni.cncf.io/networks: static-iot-hass
+
+        replicas: 1
+        strategy: RollingUpdate
+
+        initContainers:
+          01-init-db:
+            image: ghcr.io/onedr0p/postgres-initdb:14.8
+            imagePullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: homeassistant-secrets
+
+        containers:
+          main:
+            image:
+              repository: homeassistant/home-assistant
+              tag: 2024.3.3
+            env:
+              TZ: "${TIMEZONE}"
+            envFrom:
+              - secretRef:
+                  name: homeassistant-secrets
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
     service:
       main:
+        controller: main
         ports:
           http:
             port: 8123
@@ -58,10 +76,11 @@ spec:
             port: 5353
             protocol: UDP
             targetPort: 5353
+
     ingress:
       main:
         enabled: true
-        ingressClassName: "nginx"
+        className: "nginx"
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
         hosts:
@@ -69,6 +88,9 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  identifier: main
+                  port: http
         tls:
           - hosts:
               - *host
@@ -82,6 +104,7 @@ spec:
         name: hass-config
         mountPath: /config/configuration.yaml
         subPath: configuration.yaml
+
     serviceMonitor:
       main:
         enabled: true
