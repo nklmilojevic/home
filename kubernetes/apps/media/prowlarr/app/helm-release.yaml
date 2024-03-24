@@ -88,5 +88,5 @@ spec:
 
     serviceMonitor:
       main:
-        serviceName: '{{ include "bjw-s.common.lib.chart.names.fullname" $ }}'
+        serviceName: main
         enabled: true
