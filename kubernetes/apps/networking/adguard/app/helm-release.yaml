@@ -39,26 +39,20 @@ spec:
     service:
       main:
         controller: main
+        type: LoadBalancer
+        externalTrafficPolicy: Local
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "${SVC_ADGUARD_IP}"
         ports:
           http:
+            primary: true
             port: 3000
           dns-tcp:
-            enabled: true
-            type: LoadBalancer
-            externalTrafficPolicy: Local
-            annotations:
-              metallb.universe.tf/loadBalancerIPs: "${SVC_ADGUARD_IP}"
-            ports:
-              dns-tcp:
-                enabled: true
-                port: 53
-                protocol: TCP
-                targetPort: 53
-              dns-udp:
-                enabled: true
-                port: 53
-                protocol: UDP
-                targetPort: 53
+            port: 53
+            protocol: TCP
+          dns-udp:
+            port: 53
+            protocol: UDP
 
     persistence:
       data:
