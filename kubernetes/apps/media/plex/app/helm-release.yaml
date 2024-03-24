@@ -5,6 +5,7 @@ metadata:
   name: plex
   namespace: media
 spec:
+  interval: 5m
   # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
   chart:
     spec:
