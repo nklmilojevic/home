@@ -25,3 +25,4 @@ resources:
   - ./gitea-charts.yaml
   - ./cloudnative-pg.yaml
   - ./dragonfly.yaml
+  - ./intel.yaml
