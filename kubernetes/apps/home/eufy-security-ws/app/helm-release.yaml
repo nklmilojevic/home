@@ -10,28 +10,44 @@ spec:
     spec:
       # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 1.5.1
+      version: 3.0.4
       interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: uninstall
+      retries: 3
   values:
-    image:
-      repository: bropat/eufy-security-ws
-      tag: 1.8.0
-    envFrom:
-      - secretRef:
-          name: eufy-secrets
-    probes:
-      liveness:
-        enabled: false
-      readiness:
-        enabled: false
-      startup:
-        enabled: false
+    controllers:
+      main:
+        replicas: 1
+        strategy: RollingUpdate
+
+        containers:
+          main:
+            image:
+              repository: bropat/eufy-security-ws
+              tag: 1.8.0
+            envFrom:
+              - secretRef:
+                  name: eufy-secrets
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
     service:
       main:
+        controller: main
         ports:
           http:
             port: 3000
