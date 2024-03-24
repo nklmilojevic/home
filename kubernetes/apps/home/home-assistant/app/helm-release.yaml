@@ -37,8 +37,8 @@ spec:
 
         initContainers:
           01-init-db:
-            image: ghcr.io/onedr0p/postgres-initdb:14.8
-            imagePullPolicy: IfNotPresent
+            image: ghcr.io/onedr0p/postgres-initdb
+            tag: 14.8
             envFrom:
               - secretRef:
                   name: homeassistant-secrets
@@ -102,8 +102,10 @@ spec:
         enabled: true
         type: configMap
         name: hass-config
-        mountPath: /config/configuration.yaml
-        subPath: configuration.yaml
+        advancedMounts:
+          main:
+            init-configuration:
+              - path: /config/configuration.yaml
 
     serviceMonitor:
       main:
