@@ -8,47 +8,50 @@ spec:
   interval: 15m
   chart:
     spec:
+      # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 1.5.1
+      version: 3.0.4
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  maxHistory: 3
   install:
     createNamespace: true
     remediation:
-      retries: 3
+      retries: 5
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: uninstall
       retries: 3
   uninstall:
     keepHistory: false
   values:
     controller:
-      replicas: 1
-      strategy: RollingUpdate
-      annotations:
-        reloader.stakater.com/auto: "true"
-
-    image:
-      repository: ghcr.io/foxcpp/maddy
-      tag: 0.7.1
-
-    env:
-      DEBUG: "false"
-      SMTP_PORT: "587"
-
-    envFrom:
-      - secretRef:
-          name: smtp-relay-secrets
+      main:
+        replicas: 1
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+      containers:
+        main:
+          image:
+            repository: ghcr.io/foxcpp/maddy
+            tag: 0.7.1
+          env:
+            DEBUG: "false"
+            SMTP_PORT: "587"
+          envFrom:
+            - secretRef:
+                name: smtp-relay-secrets
 
     service:
       main:
+        controller: main
         type: LoadBalancer
-        loadBalancerIP: "${SVC_SMTP_RELAY}"
         externalTrafficPolicy: Local
+        loadBalancerIP: "${SVC_SMTP_RELAY}"
+
         ports:
           http:
             port: 2525
@@ -58,6 +61,7 @@ spec:
 
     serviceMonitor:
       main:
+        serviceName: main
         enabled: true
         endpoints:
           - port: metrics
@@ -68,30 +72,19 @@ spec:
 
     persistence:
       config:
-        enabled: true
         type: configMap
         name: smtp-relay-configmap
-        subPath: maddy.conf
-        mountPath: /data/maddy.conf
-        readOnly: true
+        advancedMounts:
+          main:
+            main:
+              - path: /data/maddy.conf
+                subPath: maddy.conf
       data:
-        enabled: true
         type: emptyDir
         medium: Memory
         sizeLimit: 1Gi
-        mountPath: /dev/shm
-
-    topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app.kubernetes.io/name: *app
-
-    resources:
-      requests:
-        cpu: 10m
-        memory: 10Mi
-      limits:
-        memory: 50Mi
+        advancedMounts:
+          main:
+            main:
+              - path: /dev/shm
+                subPath: shm
