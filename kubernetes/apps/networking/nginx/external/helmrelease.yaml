@@ -59,7 +59,7 @@ spec:
       ingressClass: external
       ingressClassResource:
         name: external
-        default: true
+        default: false
         controllerValue: k8s.io/external
       metrics:
         enabled: true
