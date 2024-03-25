@@ -1,10 +1,10 @@
 ---
 originRequest:
-  originServerName: external.${SECRET_DOMAIN}
+  originServerName: external.milojevic.dev
 
 ingress:
-  - hostname: ${SECRET_DOMAIN}
+  - hostname: milojevic.dev
     service: https://nginx-external-controller.networking.svc.cluster.local:443
-  - hostname: "*.${SECRET_DOMAIN}"
+  - hostname: ".milojevic.dev"
     service: https://nginx-external-controller.networking.svc.cluster.local:443
   - service: http_status:404
