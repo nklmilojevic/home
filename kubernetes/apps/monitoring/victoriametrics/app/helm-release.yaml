@@ -217,29 +217,30 @@ spec:
         - name: grafana-secret
       grafana.ini:
         auth:
-          signout_redirect_url: https://auth.milojevic.dev/logout
-          oauth_auto_login: false
+          oauth_auto_login: true
+          oauth_allow_insecure_email_lookup: true
         auth.generic_oauth:
           enabled: true
           name: Authelia
-          client_id: # Set by env vars
-          client_secret: # Set by env vars secret
-          auth_url: # Set by env vars
-          token_url: # Set by env vars
-          api_url: # Set by env vars
-          scopes: "openid profile email groups"
+          icon: signin
+          scopes: openid profile email groups
           empty_scopes: false
           login_attribute_path: preferred_username
           groups_attribute_path: groups
           name_attribute_path: name
           use_pkce: true
         auth.generic_oauth.group_mapping:
+          org_id: 1
           role_attribute_path: |
             contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'people') && 'Viewer'
-          org_id: 1
         auth.basic:
           enabled: false
-          # disable_login_form: false
+        auth.anonymous:
+          enabled: false
+          # org_id: 1
+          # org_role: Viewer
+        news:
+          news_feed_enabled: false
         plugins:
           allow_loading_unsigned_plugins: "victorialogs-datasource"
       ## ForceDeployDatasource Create datasource configmap even if grafana deployment has been disabled
