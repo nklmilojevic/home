@@ -5,6 +5,7 @@ resources:
   - ./namespace.yaml
   - ./external-dns/ks.yaml
   - ./nginx/ks.yaml
+  - ./cloudflared/ks.yaml
   - ./k8s-gateway/ks.yaml
   - ./metallb/ks.yaml
   - ./omada/ks.yaml
