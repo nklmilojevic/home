@@ -28,6 +28,9 @@ spec:
   #     shared_buffers: 512MB
   monitoring:
     enablePodMonitor: true
+    podMonitorMetricRelabelings:
+      - { sourceLabels: ["cluster"], targetLabel: cnpg_cluster, action: replace }
+      - { regex: cluster, action: labeldrop }
   backup:
     retentionPolicy: 7d
     barmanObjectStore:
