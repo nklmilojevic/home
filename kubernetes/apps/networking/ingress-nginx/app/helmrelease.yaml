@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: ingress-nginx
+  name: ingress-nginx-internal
   namespace: networking
 spec:
   interval: 15m
@@ -33,13 +33,12 @@ spec:
           value: "${TIMEZONE}"
       service:
         annotations:
+          external-dns.alpha.kubernetes.io/hostname: internal.${SECRET_DOMAIN}
           metallb.universe.tf/loadBalancerIPs: |-
             ${METALLB_INGRESS_ADDR}
         externalTrafficPolicy: Local
       publishService:
         enabled: true
-      ingressClassResource:
-        default: true
       allowSnippetAnnotations: true
       config:
         client-header-timeout: 120
@@ -56,7 +55,12 @@ spec:
         ssl-protocols: "TLSv1.3 TLSv1.2"
         use-forwarded-headers: "true"
       extraArgs:
-        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-tls"
+        default-ssl-certificate: networking/wildcard-tls
+      ingressClass: internal
+      ingressClassResource:
+        name: internal
+        default: true
+        controllerValue: k8s.io/internal
       metrics:
         enabled: true
         service:
@@ -74,16 +78,8 @@ spec:
         limits:
           memory: 500Mi
     defaultBackend:
-      enabled: true
-      image:
-        repository: ghcr.io/tarampampam/error-pages
-        tag: 2.27.0
-      replicaCount: 1
-      extraEnvs:
-        - name: TEMPLATE_NAME
-          value: lost-in-space
-        - name: SHOW_DETAILS
-          value: "false"
+      enabled: false
+
   valuesFrom:
     # Cloudflare Networks
     # https://www.cloudflare.com/ips/
