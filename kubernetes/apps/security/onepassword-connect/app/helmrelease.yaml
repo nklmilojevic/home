@@ -21,7 +21,7 @@ spec:
       enabled: true
       labels: {}
       annotations: {}
-      ingressClassName: "nginx"
+      ingressclassName: "internal"
       pathType: Prefix
       hosts:
         - host: &host "onepassword-connect.${SECRET_DOMAIN}"

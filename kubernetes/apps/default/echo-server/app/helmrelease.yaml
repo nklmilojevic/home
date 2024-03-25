@@ -58,7 +58,7 @@ spec:
 
     ingress:
       app:
-        className: "nginx"
+        className: "internal"
         annotations:
           nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
           nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
