@@ -113,7 +113,23 @@ spec:
               path: /var/lib/grafana/dashboards/nginx-folder
 
     defaultDashboardsEnabled: true
-
+    datasources:
+      datasources.yaml:
+        apiVersion: 1
+        deleteDatasources:
+          - { name: Alertmanager, orgId: 1 }
+          - { name: Loki, orgId: 1 }
+          - { name: Prometheus, orgId: 1 }
+        datasources:
+          - name: Prometheus
+            type: prometheus
+            uid: prometheus
+            access: proxy
+            url: http://vmsingle-vmetrics-victoria-metrics-k8s-stack.monitoring.svc.cluster.local:8429
+            jsonData:
+              prometheusType: Prometheus
+              timeInterval: 1m
+            isDefault: true
     dashboards:
       default:
         cloudflared:
