@@ -295,7 +295,7 @@ spec:
 
       ingress:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: internal
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
         path: /
