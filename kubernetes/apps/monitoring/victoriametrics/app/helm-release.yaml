@@ -75,9 +75,6 @@ spec:
       # spec for VMSingle crd
       # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmsinglespec
       spec:
-        image:
-          # renovate: datasource=docker depName=victoriametrics/victoria-metrics
-          tag: v1.99.0
         retentionPeriod: "14"
         replicaCount: 1
         extraArgs: {}
@@ -129,9 +126,7 @@ spec:
       # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmalertspec
       spec:
         selectAllByDefault: true
-        image:
-          # renovate: datasource=docker depName=victoriametrics/vmalert
-          tag: v1.99.0
+
         evaluationInterval: 15s
 
     vmagent:
@@ -139,9 +134,6 @@ spec:
       # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec
       # defined spec will be added to the remoteWrite configuration of VMAgent
       spec:
-        image:
-          # renovate: datasource=docker depName=victoriametrics/vmagent
-          tag: v1.99.0
         resources:
           limits:
             cpu: 2000m
@@ -284,24 +276,6 @@ spec:
     # -Component scraping kubeDns. Use either this or coreDns
     kubeDns:
       enabled: false
-      service:
-        enabled: false
-        dnsmasq:
-          port: 10054
-          targetPort: 10054
-        skydns:
-          port: 10055
-          targetPort: 10055
-        selector:
-          k8s-app: kube-dns
-      # spec for VMServiceScrape crd
-      # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmservicescrapespec
-      spec:
-        endpoints:
-          - port: http-metrics-dnsmasq
-            bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-          - port: http-metrics-skydns
-            bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
 
     # -- Component scraping coreDns. Use either this or kubeDns
     coreDns:
