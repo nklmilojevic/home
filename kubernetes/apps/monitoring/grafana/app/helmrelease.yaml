@@ -135,6 +135,9 @@ spec:
         nut-exporter:
           url: https://raw.githubusercontent.com/nklmilojevic/grafana-dashboards/main/nut-exporter.json
           datasource: VictoriaMetrics
+        cloudnative-pg:
+          url: https://raw.githubusercontent.com/cloudnative-pg/grafana-dashboards/main/charts/cluster/grafana-dashboard.json
+          datasource: VictoriaMetrics
         cert-manager:
           url: https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/cert-manager/dashboards/cert-manager.json
           datasource: VictoriaMetrics
