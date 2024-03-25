@@ -21,6 +21,9 @@ spec:
     tenant: "0"
     argocdReleaseOverride: ""
 
+    grafana:
+      enabled: false
+
     victoria-metrics-operator:
       enabled: true
       cleanupCRD: true
