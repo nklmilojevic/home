@@ -29,7 +29,7 @@ spec:
         envFrom:
           - secretRef:
               name: &secret grafana-secret
-    replicas: 2
+    replicas: 1
     env:
       GF_AUTH_GENERIC_OAUTH_API_URL: https://auth.milojevic.dev/api/oidc/userinfo
       GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://auth.milojevic.dev/api/oidc/authorization
@@ -74,24 +74,6 @@ spec:
         # org_role: Viewer
       news:
         news_feed_enabled: false
-
-    datasources:
-      datasources.yaml:
-        apiVersion: 1
-        deleteDatasources:
-          - { name: Alertmanager, orgId: 1 }
-          - { name: Loki, orgId: 1 }
-          - { name: Prometheus, orgId: 1 }
-        datasources:
-          - name: Prometheus
-            type: prometheus
-            uid: prometheus
-            access: proxy
-            url: http://vmsingle-vmetrics-victoria-metrics-k8s-stack.monitoring.svc:8429/select/0/prometheus
-            jsonData:
-              prometheusType: Prometheus
-              timeInterval: 1m
-            isDefault: true
 
     dashboardProviders:
       dashboardproviders.yaml:
@@ -139,85 +121,85 @@ spec:
           gnetId: 17457
           revision: 6
           datasource:
-            - { name: DS_PROMETHEUS, value: Prometheus }
+            - { name: DS_PROMETHEUS, value: VictoriaMetrics }
         external-dns:
           # renovate: depName="External-dns"
           gnetId: 15038
           revision: 3
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         minio:
           # renovate: depName="MinIO Dashboard"
           gnetId: 13502
           revision: 26
           datasource:
-            - { name: DS_PROMETHEUS, value: Prometheus }
+            - { name: DS_PROMETHEUS, value: VictoriaMetrics }
         node-exporter-full:
           # renovate: depName="Node Exporter Full"
           gnetId: 1860
           revision: 36
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         cert-manager:
           url: https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/cert-manager/dashboards/cert-manager.json
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         external-secrets:
           url: https://raw.githubusercontent.com/external-secrets/external-secrets/main/docs/snippets/dashboard.json
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         node-feature-discovery:
           url: https://raw.githubusercontent.com/kubernetes-sigs/node-feature-discovery/master/examples/grafana-dashboard.json
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         miniflux:
           url: https://raw.githubusercontent.com/miniflux/v2/main/contrib/grafana/dashboard.json
-          datasource: Prometheus
+          datasource: VictoriaMetrics
       flux:
         flux-cluster:
           url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/cluster.json
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         flux-control-plane:
           url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/control-plane.json
-          datasource: Prometheus
+          datasource: VictoriaMetrics
       kubernetes:
         kubernetes-api-server:
           # renovate: depName="Kubernetes / System / API Server"
           gnetId: 15761
           revision: 16
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         kubernetes-coredns:
           # renovate: depName="Kubernetes / System / CoreDNS"
           gnetId: 15762
           revision: 17
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         kubernetes-global:
           # renovate: depName="Kubernetes / Views / Global"
           gnetId: 15757
           revision: 37
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         kubernetes-namespaces:
           # renovate: depName="Kubernetes / Views / Namespaces"
           gnetId: 15758
           revision: 34
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         kubernetes-nodes:
           # renovate: depName="Kubernetes / Views / Nodes"
           gnetId: 15759
           revision: 29
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         kubernetes-pods:
           # renovate: depName="Kubernetes / Views / Pods"
           gNetId: 15760
           revision: 21
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         kubernetes-volumes:
           # renovate: depName="K8s / Storage / Volumes / Cluster"
           gnetId: 11454
           revision: 14
-          datasource: Prometheus
+          datasource: VictoriaMetrics
       nginx:
         nginx:
           url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/nginx.json
-          datasource: Prometheus
+          datasource: VictoriaMetrics
         nginx-request-handling-performance:
           url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/request-handling-performance.json
-          datasource: Prometheus
+          datasource: VictoriaMetrics
 
     sidecar:
       dashboards:
