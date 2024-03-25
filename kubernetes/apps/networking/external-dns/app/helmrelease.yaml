@@ -39,6 +39,7 @@ spec:
     extraArgs:
       - --cloudflare-proxied
       - --annotation-filter=external-dns.alpha.kubernetes.io/target
+      - --ingress-class=external
     policy: sync
     sources: ["ingress"]
     txtPrefix: k8s.
