@@ -51,7 +51,7 @@ spec:
     ingress:
       main:
         enabled: true
-        className: "nginx"
+        className: "internal"
         annotations:
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
           nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
