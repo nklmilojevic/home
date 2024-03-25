@@ -24,6 +24,20 @@ authentication_backend:
       member_of: memberOf
       group_name: cn
 
+session:
+  same_site: lax
+  inactivity: 5m
+  expiration: 1h
+  remember_me: 1M
+  cookies:
+    - name: milojevicdev_session
+      domain: milojevic.dev
+      authelia_url: https://auth.milojevic.dev
+      default_redirection_url: https://milojevic.dev
+  redis:
+    host: dragonfly.development.svc.cluster.local
+    database_index: 15
+
 notifier:
   disable_startup_check: true
   smtp:
