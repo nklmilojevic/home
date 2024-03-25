@@ -41,3 +41,26 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 3m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-nginx-external
+  namespace: flux-system
+  labels:
+    substitution.flux.home.arpa/enabled: "true"
+spec:
+  dependsOn:
+    - name: cluster-apps-cert-manager
+    - name: cluster-apps-cert-manager-issuers
+    - name: cluster-apps-nginx-certificates
+    - name: cluster-apps-metallb
+    - name: cluster-apps-metallb-config
+  path: ./kubernetes/apps/networking/nginx/external
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  interval: 30m
+  retryInterval: 1m
+  timeout: 3m
