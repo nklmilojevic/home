@@ -26,13 +26,14 @@ spec:
   #   parameters:
   #     max_connections: "600"
   #     shared_buffers: 512MB
-  monitoring:
-    enabled: true
-    podMonitor:
+  cluster:
+    monitoring:
       enabled: true
-    podMonitorMetricRelabelings:
-      - { sourceLabels: ["cluster"], targetLabel: cnpg_cluster, action: replace }
-      - { regex: cluster, action: labeldrop }
+      podMonitor:
+        enabled: true
+      podMonitorMetricRelabelings:
+        - { sourceLabels: ["cluster"], targetLabel: cnpg_cluster, action: replace }
+        - { regex: cluster, action: labeldrop }
   backup:
     retentionPolicy: 7d
     barmanObjectStore:
