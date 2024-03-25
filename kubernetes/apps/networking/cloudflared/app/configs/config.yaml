@@ -4,7 +4,7 @@ originRequest:
 
 ingress:
   - hostname: milojevic.dev
-    service: https://nginx-external-controller.networking.svc.cluster.local:443
+    service: https://ingress-nginx-external-controller.networking.svc.cluster.local:443
   - hostname: ".milojevic.dev"
-    service: https://nginx-external-controller.networking.svc.cluster.local:443
+    service: https://ingress-nginx-external-controller.networking.svc.cluster.local:443
   - service: http_status:404
