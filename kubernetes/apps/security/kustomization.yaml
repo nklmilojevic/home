@@ -9,4 +9,4 @@ resources:
   - ./glauth/ks.yaml
   - ./authelia/ks.yaml
   - ./atuin/ks.yaml
-  - ./lldap/ks.yaml
+  # - ./lldap/ks.yaml
