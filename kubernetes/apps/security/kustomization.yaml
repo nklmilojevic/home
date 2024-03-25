@@ -7,6 +7,6 @@ resources:
   - ./onepassword-connect/ks.yaml
   - ./volsync/ks.yaml
   - ./glauth/ks.yaml
-  - ./authelia/ks.yaml
+  # - ./authelia/ks.yaml
   - ./atuin/ks.yaml
   - ./lldap/ks.yaml
