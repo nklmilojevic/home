@@ -27,7 +27,7 @@ spec:
   #     max_connections: "600"
   #     shared_buffers: 512MB
   monitoring:
-    enablePodMonitor: false
+    enablePodMonitor: true
     podMonitorMetricRelabelings:
       - { sourceLabels: ["cluster"], targetLabel: cnpg_cluster, action: replace }
       - { regex: cluster, action: labeldrop }
