@@ -91,7 +91,7 @@ spec:
             jsonData:
               prometheusType: Prometheus
               timeInterval: 1m
-            isDefault: false
+            isDefault: true
 
     dashboardProviders:
       dashboardproviders.yaml:
