@@ -25,7 +25,7 @@ spec:
   values:
     controllers:
       lldap:
-        replicas: 2
+        replicas: 1
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
@@ -45,7 +45,7 @@ spec:
             env:
               TZ: America/New_York
               LLDAP_HTTP_PORT: &port 80
-              LLDAP_HTTP_URL: https://lldap.devbu.io
+              LLDAP_HTTP_URL: https://lldap.milojevic.dev
               LLDAP_LDAP_PORT: &ldapPort 389
               LLDAP_LDAP_BASE_DN: dc=home,dc=arpa
             envFrom: *envFrom
