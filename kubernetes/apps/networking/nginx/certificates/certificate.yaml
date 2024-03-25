@@ -9,7 +9,7 @@ spec:
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: ${SECRET_DOMAIN}
+  commonName: milojevic.dev
   dnsNames:
-    - "${SECRET_DOMAIN}"
-    - "*.${SECRET_DOMAIN}"
+    - "milojevic.dev"
+    - "*.milojevic.dev"
