@@ -32,15 +32,15 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/hotio/bazarr
-              tag: release-1.4.2
+              repository: ghcr.io/onedr0p/bazarr
+              tag: 1.4.2
             env:
               TZ: "${TIMEZONE}"
               PUID: "${PUID}"
               PGID: "${PUID}"
-            # securityContext:
-            #   runAsUser: 1000
-            #   runAsGroup: 1000
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
 
     service:
       main:
