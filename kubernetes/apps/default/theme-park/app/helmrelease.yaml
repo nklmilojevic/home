@@ -37,6 +37,9 @@ spec:
             image:
               repository: ghcr.io/themepark-dev/theme.park
               tag: 1.16.0
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
 
     service:
       main:
