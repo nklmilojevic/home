@@ -32,8 +32,8 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/onedr0p/bazarr
-              tag: 1.4.2
+              repository: ghcr.io/hotio/bazarr
+              tag: release-1.4.2
             env:
               TZ: "${TIMEZONE}"
               PUID: "${PUID}"
@@ -41,8 +41,6 @@ spec:
             securityContext:
               runAsUser: 1000
               runAsGroup: 1000
-              fsGroup: 1000
-              fsGroupChangePolicy: "OnRootMismatch"
 
     service:
       main:
