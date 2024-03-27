@@ -56,7 +56,7 @@ spec:
               tag: v1.1.1
             args:
               - "--health-probe-bind-address=:8081"
-              - "--metrics-bind-address=127.0.0.1:8080"
+              - "--metrics-bind-address=:8080"
               - "--leader-elect"
             command:
               - "/manager"
@@ -112,3 +112,12 @@ spec:
         ports:
           http:
             port: *port
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
