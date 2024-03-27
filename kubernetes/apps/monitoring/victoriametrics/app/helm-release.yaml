@@ -144,7 +144,5 @@ spec:
                   - "10.5.0.10:9100"
         selectAllByDefault: true
         scrapeInterval: 25s
-        externalLabels:
-          cluster: cluster-name
         extraArgs:
           promscrape.streamParse: "true"
