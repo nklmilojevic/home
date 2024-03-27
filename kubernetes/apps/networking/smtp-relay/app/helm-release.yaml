@@ -61,7 +61,7 @@ spec:
 
     serviceMonitor:
       app:
-        enabled: false
+        enabled: true
         serviceName: smtp-relay
         endpoints:
           - port: metrics
