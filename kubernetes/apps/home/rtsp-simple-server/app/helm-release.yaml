@@ -22,16 +22,16 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      rtsp-simple-server:
         replicas: 1
         strategy: RollingUpdate
 
         containers:
-          main:
+          app:
             image:
               repository: bluenviron/mediamtx
               tag: latest-ffmpeg
@@ -46,8 +46,8 @@ spec:
                 enabled: false
 
     service:
-      main:
-        controller: main
+      app:
+        controller: rtsp-simple-server
         ports:
           http:
             port: 8554

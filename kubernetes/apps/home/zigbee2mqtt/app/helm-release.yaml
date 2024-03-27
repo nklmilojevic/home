@@ -22,15 +22,15 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      zigbee2mqtt:
         replicas: 1
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: koenkk/zigbee2mqtt
               tag: 1.36.0
@@ -60,13 +60,13 @@ spec:
             securityContext:
               privileged: true
     service:
-      main:
-        controller: main
+      app:
+        controller: zigbee2mqtt
         ports:
           http:
             port: 8080
     ingress:
-      main:
+      app:
         enabled: true
         className: "internal"
         annotations:
@@ -78,7 +78,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
