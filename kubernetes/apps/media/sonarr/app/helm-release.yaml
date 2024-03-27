@@ -22,16 +22,16 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      sonarr:
         replicas: 1
         strategy: RollingUpdate
 
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/sonarr-develop
               tag: 4.0.2.1367
@@ -45,15 +45,14 @@ spec:
               runAsGroup: 1000
 
     service:
-      main:
-        controller: main
+      app:
+        controller: sonarr
         ports:
           http:
             port: 8989
 
     ingress:
-      main:
-        enabled: true
+      app:
         className: "internal"
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
@@ -69,7 +68,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
@@ -77,11 +76,8 @@ spec:
 
     persistence:
       config:
-        enabled: true
         existingClaim: sonarr-local-data
       media:
-        enabled: true
         existingClaim: nfs-media-pvc
       interim:
-        enabled: true
         existingClaim: downloads-pvc
