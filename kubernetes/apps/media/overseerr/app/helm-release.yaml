@@ -22,15 +22,16 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      overseerr:
         replicas: 1
         strategy: RollingUpdate
+
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/linuxserver/overseerr
               tag: v1.31.0-ls51
@@ -41,19 +42,16 @@ spec:
             securityContext:
               runAsUser: 1000
               runAsGroup: 1000
-              fsGroup: 1000
-              fsGroupChangePolicy: "OnRootMismatch"
 
     service:
-      main:
-        controller: main
+      app:
+        controller: overseerr
         ports:
           http:
             port: 5055
 
     ingress:
-      main:
-        enabled: true
+      app:
         className: "internal"
         annotations:
           hajimari.io/icon: "eye-circle"
@@ -68,7 +66,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
@@ -76,8 +74,6 @@ spec:
 
     persistence:
       config:
-        enabled: true
         existingClaim: overseerr-local-data
       media:
-        enabled: true
         existingClaim: nfs-media-pvc
