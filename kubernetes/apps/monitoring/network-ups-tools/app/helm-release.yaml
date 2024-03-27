@@ -53,15 +53,6 @@ spec:
             port: 3493
             protocol: TCP
 
-      metrics:
-        controller: main
-        enabled: true
-        ports:
-          metrics:
-            enabled: true
-            port: 9199
-            protocol: TCP
-
     persistence:
       config:
         enabled: true
