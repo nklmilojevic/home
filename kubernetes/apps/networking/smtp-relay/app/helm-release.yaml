@@ -73,17 +73,11 @@ spec:
       config:
         type: configMap
         name: smtp-relay-configmap
-        advancedMounts:
-          main:
-            main:
-              - path: /data/maddy.conf
-                subPath: maddy.conf
-      data:
+        globalMounts:
+          - path: /data/maddy.conf
+            subPath: maddy.conf
+            readOnly: true
+      cache:
         type: emptyDir
-        medium: Memory
-        sizeLimit: 1Gi
-        advancedMounts:
-          main:
-            main:
-              - path: /dev/shm
-                subPath: shm
+        globalMounts:
+          - path: /cache
