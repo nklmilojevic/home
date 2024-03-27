@@ -22,16 +22,16 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: uninstall
+      strategy: rollback
       retries: 3
   values:
-    controller:
-      eufy:
+    controllers:
+      main:
         replicas: 1
         strategy: RollingUpdate
 
         containers:
-          app:
+          main:
             image:
               repository: bropat/eufy-security-ws
               tag: 1.8.0
@@ -46,8 +46,8 @@ spec:
               startup:
                 enabled: false
     service:
-      app:
-        controller: eufy
+      main:
+        controller: main
         ports:
           http:
             port: 3000
