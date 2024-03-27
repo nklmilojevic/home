@@ -22,11 +22,11 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      home-assistant:
         annotations:
           configmap.reloader.stakater.com/reload: "hass-config"
           secret.reloader.stakater.com/reload: "homeassistant-secrets"
@@ -45,7 +45,7 @@ spec:
                   name: homeassistant-secrets
 
         containers:
-          main:
+          app:
             image:
               repository: homeassistant/home-assistant
               tag: 2024.3.3
@@ -62,8 +62,8 @@ spec:
               startup:
                 enabled: false
     service:
-      main:
-        controller: main
+      app:
+        controller: home-assistant
         ports:
           http:
             port: 8123
@@ -79,7 +79,7 @@ spec:
             targetPort: 5353
 
     ingress:
-      main:
+      app:
         enabled: true
         className: "internal"
         annotations:
@@ -90,7 +90,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
@@ -104,15 +104,14 @@ spec:
         enabled: true
         type: configMap
         name: hass-config
-        advancedMounts:
-          main:
-            main:
-              - path: /config/configuration.yaml
-                subPath: configuration.yaml
+        globalMounts:
+          - path: /config/configuration.yaml
+            subPath: configuration.yaml
+            readOnly: true
 
     serviceMonitor:
-      main:
-        serviceName: main
+      home-assistant:
+        serviceName: home-assistant
         endpoints:
           - port: http
             scheme: http
