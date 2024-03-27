@@ -26,7 +26,7 @@ spec:
       retries: 3
   values:
     controllers:
-      tauulli:
+      tautulli:
         replicas: 1
         strategy: RollingUpdate
 
@@ -45,7 +45,7 @@ spec:
               runAsGroup: 1000
     service:
       app:
-        controller: sonarr
+        controller: tautulli
         ports:
           http:
             port: 8181
