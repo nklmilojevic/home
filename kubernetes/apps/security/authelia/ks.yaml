@@ -8,7 +8,7 @@ metadata:
 spec:
   dependsOn:
     - name: cluster-apps-cloudnative-pg
-    - name: cluster-apps-glauth
+    - name: cluster-apps-lldap
     - name: cluster-apps-dragonfly-operator-cluster
   path: ./kubernetes/apps/security/authelia/app
   prune: true
