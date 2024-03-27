@@ -50,7 +50,7 @@ spec:
 
     serviceMonitor:
       nut-exporter:
-        serviceName: app
+        serviceName: nut-exporter
         endpoints:
           - port: metrics
             scheme: http
