@@ -17,4 +17,4 @@ spec:
         namespace: flux-system
   values:
     remoteWriteUrls:
-      - https://vmsingle-victoria-metrics-single-server.monitoring.svc:8428/api/v1/write
+      - http://vmsingle-victoria-metrics-single-server.monitoring.svc:8428/api/v1/write
