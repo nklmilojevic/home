@@ -6,6 +6,7 @@ resources:
   # - ./victoriametrics/ks.yaml
   - ./vmsingle/ks.yaml
   - ./vmoperator/ks.yaml
+  - ./vmagent/ks.yaml
   - ./grafana/ks.yaml
   - ./victorialogs/ks.yaml
   # - ./vector/ks.yaml
