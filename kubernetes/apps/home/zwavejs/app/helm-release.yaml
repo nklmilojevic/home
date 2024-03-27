@@ -22,23 +22,23 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      zwavejs:
         replicas: 1
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: zwavejs/zwavejs2mqtt
               tag: 9.9.1
             securityContext:
               privileged: true
     service:
-      main:
-        controller: main
+      app:
+        controller: zwavejs
         ports:
           http:
             port: 8091
@@ -46,7 +46,7 @@ spec:
             enabled: true
             port: 3000
     ingress:
-      main:
+      app:
         enabled: true
         className: "internal"
         annotations:
@@ -58,7 +58,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
@@ -67,15 +67,12 @@ spec:
       config:
         enabled: true
         existingClaim: zwavejs-local-data
-        advancedMounts:
-          main:
-            main:
-              - path: /usr/src/app/store
+        globalMounts:
+          - path: /usr/src/app/store
+
       usb:
         enabled: true
         type: hostPath
         hostPath: /dev/serial/by-id/usb-0658_0200-if00
-        advancedMounts:
-          main:
-            main:
-              - path: /dev/ttyACM0
+        globalMounts:
+          - path: /dev/ttyACM0
