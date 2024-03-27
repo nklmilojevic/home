@@ -21,11 +21,12 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
+      strategy: uninstall
   uninstall:
     keepHistory: false
   values:
     controllers:
-      main:
+      atuin:
         replicas: 1
         strategy: RollingUpdate
         annotations:
@@ -41,7 +42,7 @@ spec:
                   name: atuin-secrets
 
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/atuinsh/atuin
               tag: v18.1.0
@@ -66,8 +67,8 @@ spec:
                 memory: 256Mi
 
     service:
-      main:
-        controller: main
+      app:
+        controller: atuin
         ports:
           http:
             port: *port
@@ -75,8 +76,8 @@ spec:
             port: *metricsPort
 
     serviceMonitor:
-      main:
-        serviceName: main
+      atuin:
+        serviceName: atuin
         enabled: true
         endpoints:
           - port: metrics
@@ -95,7 +96,7 @@ spec:
               - path: /
                 service:
                   identifier: main
-                  port: http
+                  port: app
         tls:
           - hosts:
               - *host
