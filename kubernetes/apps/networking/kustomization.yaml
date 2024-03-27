@@ -11,5 +11,5 @@ resources:
   - ./omada/ks.yaml
   - ./adguard/ks.yaml
   - ./multus/ks.yaml
-  - ./smtp-relay/ks.yaml
+  # - ./smtp-relay/ks.yaml
   # - ./cloudflare-ddns/ks.yaml
