@@ -22,16 +22,16 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      qbittorrent:
         replicas: 1
         strategy: RollingUpdate
 
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/qbittorrent
               tag: 4.6.4
@@ -45,9 +45,8 @@ spec:
               runAsGroup: 1000
 
     service:
-      main:
-        controller: main
-        enabled: true
+      app:
+        controller: qbittorrent
         type: LoadBalancer
         loadBalancerIP: ${SVC_QBIT_IP}
         externalTrafficPolicy: Local
@@ -55,14 +54,12 @@ spec:
           http:
             port: 8080
           bittorrent-tcp:
-            enabled: true
             port: 51413
             protocol: TCP
             targetPort: 51413
 
     ingress:
-      main:
-        enabled: true
+      app:
         className: "internal"
         annotations:
           hajimari.io/icon: "mdi:download"
@@ -80,7 +77,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
@@ -88,11 +85,8 @@ spec:
 
     persistence:
       config:
-        enabled: true
         existingClaim: qbittorrent-local-data
       media:
-        enabled: true
         existingClaim: nfs-media-pvc
       interim:
-        enabled: true
         existingClaim: downloads-pvc

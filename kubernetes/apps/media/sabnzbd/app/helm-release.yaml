@@ -22,16 +22,16 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      sabnzbd:
         replicas: 1
         strategy: RollingUpdate
 
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/sabnzbd
               tag: "4.2.3"
@@ -51,15 +51,14 @@ spec:
               runAsGroup: 1000
 
     service:
-      main:
-        controller: main
+      app:
+        controller: sabnzbd
         ports:
           http:
             port: *port
 
     ingress:
-      main:
-        enabled: true
+      app:
         className: "internal"
         annotations:
           hajimari.io/icon: "download-box"
@@ -74,7 +73,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
@@ -82,11 +81,8 @@ spec:
 
     persistence:
       config:
-        enabled: true
         existingClaim: sabnzbd-local-data
       media:
-        enabled: true
         existingClaim: nfs-media-pvc
       interim:
-        enabled: true
         existingClaim: downloads-pvc

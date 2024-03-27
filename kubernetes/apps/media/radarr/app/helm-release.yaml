@@ -22,16 +22,16 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      radarr:
         replicas: 1
         strategy: RollingUpdate
 
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/radarr
               tag: 5.3.6.8612
@@ -44,15 +44,14 @@ spec:
               runAsGroup: 1000
 
     service:
-      main:
-        controller: main
+      app:
+        controller: radarr
         ports:
           http:
             port: 7878
 
     ingress:
-      main:
-        enabled: true
+      app:
         className: "internal"
         annotations:
           hajimari.io/icon: mdi:filmstrip
@@ -68,7 +67,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
@@ -76,8 +75,6 @@ spec:
 
     persistence:
       config:
-        enabled: true
         existingClaim: radarr-local-data
       media:
-        enabled: true
         existingClaim: nfs-media-pvc
