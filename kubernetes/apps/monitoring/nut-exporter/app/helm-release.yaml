@@ -42,7 +42,7 @@ spec:
                 cpu: 15m
                 memory: 30Mi
     service:
-      main:
+      metrics:
         controller: main
         ports:
           http:
@@ -56,4 +56,8 @@ spec:
           - port: http
             scheme: http
             path: /ups_metrics
-            scrapeTimeout: 10s
+            interval: 10s
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
