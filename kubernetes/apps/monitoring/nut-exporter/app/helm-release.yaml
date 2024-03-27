@@ -51,13 +51,14 @@ spec:
     serviceMonitor:
       main:
         serviceName: main
-        enabled: true
         endpoints:
           - port: http
             scheme: http
             path: /ups_metrics
-            interval: 10s
+            interval: 1m
+            scrapeTimeout: 30s
           - port: http
             scheme: http
             path: /metrics
             interval: 1m
+            scrapeTimeout: 30s
