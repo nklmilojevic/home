@@ -22,15 +22,16 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      lidarr:
         replicas: 1
         strategy: RollingUpdate
+
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/lidarr
               tag: 2.1.7.4030
@@ -41,19 +42,16 @@ spec:
             securityContext:
               runAsUser: 1000
               runAsGroup: 1000
-              fsGroup: 1000
-              fsGroupChangePolicy: "OnRootMismatch"
 
     service:
-      main:
-        controller: main
+      app:
+        controller: lidarr
         ports:
           http:
             port: 80
 
     ingress:
-      main:
-        enabled: true
+      app:
         className: "external"
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
@@ -75,7 +73,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
@@ -83,8 +81,6 @@ spec:
 
     persistence:
       config:
-        enabled: true
         existingClaim: lidarr-local-data
       media:
-        enabled: true
         existingClaim: nfs-media-pvc
