@@ -87,7 +87,7 @@ spec:
             scrapeTimeout: 10s
 
     ingress:
-      main:
+      app:
         enabled: true
         className: internal
         hosts:
@@ -95,8 +95,8 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
-                  port: app
+                  identifier: app
+                  port: http
         tls:
           - hosts:
               - *host
