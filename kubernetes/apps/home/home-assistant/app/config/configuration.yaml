@@ -4,6 +4,7 @@ default_config:
 ffmpeg:
 
 prometheus:
+  namespace: hass
 
 stream:
   ll_hls: true
