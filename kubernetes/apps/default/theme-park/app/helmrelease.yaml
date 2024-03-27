@@ -22,18 +22,18 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   uninstall:
     keepHistory: false
   values:
     controllers:
-      main:
+      theme-park:
         replicas: 1
         strategy: RollingUpdate
 
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/themepark-dev/theme.park
               tag: 1.16.0
@@ -42,8 +42,8 @@ spec:
               PGID: 1000
 
     service:
-      main:
-        controller: main
+      app:
+        controller: theme-park
         ports:
           http:
             port: 80
@@ -61,7 +61,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
