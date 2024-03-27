@@ -112,6 +112,8 @@ spec:
         ports:
           http:
             port: *port
+          metrics:
+            port: 8080
     serviceMonitor:
       app:
         serviceName: *app
