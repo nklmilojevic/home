@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   # - ./victoriametrics/ks.yaml
-  - ./vmsingle/ks.yaml
+  # - ./vmsingle/ks.yaml
   - ./vmoperator/ks.yaml
   - ./vmagent/ks.yaml
   - ./grafana/ks.yaml
