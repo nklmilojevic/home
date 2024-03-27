@@ -150,7 +150,7 @@ spec:
             scheme: http
             static_configs:
               - targets:
-                  - "nut-exporter:9199"
+                  - "http://nut-exporter.monitoring.svc:9199"
         selectAllByDefault: true
         scrapeInterval: 25s
         externalLabels:
