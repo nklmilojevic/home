@@ -22,7 +22,7 @@ spec:
     victoria-metrics-operator:
       enabled: true
       cleanupCRD: true
-      createCRD: false # we disable crd creation by operator chart as we create them in this chart
+      createCRD: false
       operator:
         disable_prometheus_converter: false
 
