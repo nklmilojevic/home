@@ -23,16 +23,16 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      omada:
         pod:
           hostNetwork: true
           dnsPolicy: ClusterFirstWithHostNet
         containers:
-          main:
+          app:
             image:
               repository: mbentley/omada-controller
               tag: "5.13"
@@ -40,8 +40,8 @@ spec:
               TZ: "${TIMEZONE}"
 
     service:
-      main:
-        controller: main
+      app:
+        controller: omada
         type: LoadBalancer
         externalTrafficPolicy: Cluster
         loadBalancerIP: "${SVC_OMADA_IP}"
@@ -49,8 +49,7 @@ spec:
           http:
             port: 8043
     ingress:
-      main:
-        enabled: true
+      app:
         className: "internal"
         annotations:
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
@@ -65,7 +64,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
@@ -73,9 +72,6 @@ spec:
 
     persistence:
       data:
-        enabled: true
         existingClaim: omada-local-data
-        advancedMounts:
-          main:
-            main:
-              - path: /opt/tplink/EAPController/data
+        globalMounts:
+          - path: /opt/tplink/EAPController/data

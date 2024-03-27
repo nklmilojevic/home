@@ -22,12 +22,12 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
 
   values:
     controllers:
-      main:
+      network-ups-tools:
         annotations:
           configmap.reloader.stakater.com/reload: &config network-ups-tools-config
         replicas: 1
@@ -43,8 +43,8 @@ spec:
               privileged: true
 
     service:
-      main:
-        controller: main
+      app:
+        controller: network-ups-tools
         type: LoadBalancer
         externalTrafficPolicy: Cluster
         loadBalancerIP: ${SVC_NUT_IP}
@@ -55,17 +55,13 @@ spec:
 
     persistence:
       config:
-        enabled: true
         type: configMap
         name: *config
         globalMounts:
           - path: /etc/nut
             readOnly: true
       usb:
-        enabled: true
         type: hostPath
         hostPath: /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_AECJb11A922-if00-port0
-        advancedMounts:
-          main:
-            main:
-              - path: /dev/ttyUSB0
+        globalMounts:
+          - path: /dev/ttyUSB0

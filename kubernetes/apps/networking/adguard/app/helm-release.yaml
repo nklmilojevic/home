@@ -22,23 +22,25 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      adguard:
         replicas: 1
         strategy: RollingUpdate
+
         containers:
-          main:
+          app:
             image:
               repository: adguard/adguardhome
               tag: v0.107.46
             env:
               TZ: "${TIMEZONE}"
+
     service:
-      main:
-        controller: main
+      app:
+        controller: adguard
         type: LoadBalancer
         externalTrafficPolicy: Local
         annotations:
@@ -56,23 +58,17 @@ spec:
 
     persistence:
       data:
-        enabled: true
         existingClaim: adguard-local-data
-        advancedMounts:
-          main:
-            main:
-              - path: /opt/adguardhome/data
+        globalMounts:
+          - path: /opt/adguardhome/data
+
       conf:
-        enabled: true
         existingClaim: adguard-local-conf
-        advancedMounts:
-          main:
-            main:
-              - path: /opt/adguardhome/conf
+        globalMounts:
+          - path: /opt/adguardhome/conf
 
     ingress:
-      main:
-        enabled: true
+      app:
         className: "internal"
         annotations:
           hajimari.io/icon: "shield-check"
@@ -87,7 +83,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
