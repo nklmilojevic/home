@@ -28,13 +28,13 @@ spec:
     keepHistory: false
   values:
     controllers:
-      main:
+      smtp-relay:
         replicas: 1
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/foxcpp/maddy
               tag: 0.7.1
@@ -46,8 +46,8 @@ spec:
                   name: smtp-relay-secrets
 
     service:
-      main:
-        controller: main
+      app:
+        controller: smtp-relay
         type: LoadBalancer
         externalTrafficPolicy: Local
         loadBalancerIP: "${SVC_SMTP_RELAY}"
@@ -60,11 +60,10 @@ spec:
             port: 9749
 
     serviceMonitor:
-      main:
-        serviceName: main
-        enabled: true
+      app:
+        serviceName: smtp-relay
         endpoints:
-          - port: metrics
+          - port: 9749
             scheme: http
             path: /metrics
             interval: 1m
