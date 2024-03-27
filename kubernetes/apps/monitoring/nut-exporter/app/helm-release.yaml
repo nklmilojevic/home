@@ -35,7 +35,7 @@ spec:
 
             env:
               TZ: "${TIMEZONE}"
-              NUT_EXPORTER_SERVER: "network-ups-tools-main.monitoring.svc"
+              NUT_EXPORTER_SERVER: "network-ups-tools.monitoring.svc"
               NUT_EXPORTER_VARIABLES: "battery.charge,battery.charge,battery.runtime,battery.voltage,battery.voltage.nominal,input.voltage,input.voltage.nominal,ups.load,ups.status,ups.status"
             resources:
               requests:
