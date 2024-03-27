@@ -7,5 +7,5 @@ resources:
   - ./mosquitto/ks.yaml
   - ./zigbee2mqtt/ks.yaml
   - ./zwavejs/ks.yaml
-  - ./eufy-security-ws/ks.yaml
+  # - ./eufy-security-ws/ks.yaml
   - ./rtsp-simple-server/ks.yaml
