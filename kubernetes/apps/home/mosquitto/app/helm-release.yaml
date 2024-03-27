@@ -22,29 +22,29 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
+      strategy: uninstall
       retries: 3
   values:
     controllers:
-      main:
+      mosquitto:
         annotations:
           configmap.reloader.stakater.com/reload: "mosqutto-config"
         containers:
-          main:
+          app:
             image:
               repository: eclipse-mosquitto
               tag: 2.0.18
             env:
               TZ: "${TIMEZONE}"
+
     service:
-      main:
-        controller: main
+      app:
+        controller: mosquitto
         type: LoadBalancer
         loadBalancerIP: "${SVC_MQTT_IP}"
         externalTrafficPolicy: Local
         ports:
           http:
-            enabled: true
             port: 1883
 
     persistence:
@@ -55,8 +55,7 @@ spec:
         enabled: true
         type: configMap
         name: mosquitto-config
-        advancedMounts:
-          main:
-            main:
-              - path: /mosquitto/config/mosquitto.conf
-                subPath: mosquitto.conf
+        globalMounts:
+          - path: /mosquitto/config/mosquitto.conf
+            subPath: mosquitto.conf
+            readOnly: true
