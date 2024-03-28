@@ -34,10 +34,13 @@ transforms:
     inputs: ["kubernetes_source"]
     source: |
       # Standardize 'app' index
-      .custom_app_name = .pod_labels."app.kubernetes.io/name" || .pod_labels.app || .pod_labels."k8s-app" || "unknown"
+      .app = .pod_labels."app.kubernetes.io/name" || .pod_labels.app || .pod_labels."k8s-app" || "unknown"
       # Drop pod_labels
       del(.pod_labels)
       .namespace = .kubernetes.pod_namespace
+      del(.kubernetes.pod_namespace)
+      .node = .kubernetes.pod_node_name
+      del(.kubernetes.pod_node_name)
 
 #
 # Sinks
@@ -67,5 +70,5 @@ sinks:
     query:
       _msg_field: "message"
       _time_field: "ts"
-      _stream_fields: "host,container_name,custom_app_name,namespace"
+      _stream_fields: "node,container_name,app,namespace"
       # debug: "1"
