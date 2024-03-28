@@ -108,4 +108,4 @@ sinks:
       _msg_field: "message"
       _time_field: "time"
       _stream_fields: "remote_addr,user_agent,vhost"
-      # debug: "1"
+      debug: "1"
