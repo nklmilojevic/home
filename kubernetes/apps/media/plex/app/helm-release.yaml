@@ -58,7 +58,7 @@ spec:
       app:
         controller: plex
         type: LoadBalancer
-        externalTrafficPolicy: Local
+        externalTrafficPolicy: Cluster
         loadBalancerIP: "${SVC_PLEX_IP}"
         ports:
           http:
