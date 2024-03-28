@@ -5,8 +5,7 @@ api:
   address: 0.0.0.0:8686
 
 enrichment_tables:
-  geoip_table:
-    type: mmdb
+  mmdb:
     path: /usr/share/GeoIP/db.mmdb
 
 #
