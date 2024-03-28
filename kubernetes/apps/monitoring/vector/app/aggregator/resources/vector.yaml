@@ -59,6 +59,7 @@ sinks:
     endpoints:
       - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
     mode: "bulk"
+    compression: gzip
     api_version: "v8"
     healthcheck:
       enabled: false
