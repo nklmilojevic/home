@@ -50,7 +50,6 @@ sinks:
   #   encoding: { codec: json }
   #   mode: "bulk"
   #   api_version: "v8"
-  #   healthcheck.enabled: false
   #   labels:
   #     hostname: "{{ host }}"
 
@@ -60,7 +59,6 @@ sinks:
     endpoint: http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
     mode: "bulk"
     api_version: "v8"
-    healthcheck.enabled: false
     labels:
       app: "{{ custom_app_name }}"
       namespace: "{{ kubernetes.pod_namespace }}"
