@@ -29,6 +29,24 @@ spec:
         envFrom:
           - secretRef:
               name: &secret grafana-secret
+      - name: 02-load-vm-ds-plugin
+        image: "curlimages/curl:7.85.0"
+        command: ["/bin/sh"]
+        workingDir: "/var/lib/grafana"
+        securityContext:
+          runAsUser: 472
+          runAsNonRoot: true
+          runAsGroup: 472
+        args:
+          - "-c"
+          - |
+            set -ex
+            mkdir -p /var/lib/grafana/plugins/
+            ver=$(curl -s https://api.github.com/repos/VictoriaMetrics/victorialogs-datasource/releases/latest | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+            curl -L https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/$ver/victorialogs-datasource-$ver.tar.gz -o /var/lib/grafana/plugins/plugin.tar.gz
+            tar -xf /var/lib/grafana/plugins/plugin.tar.gz -C /var/lib/grafana/plugins/
+            rm /var/lib/grafana/plugins/plugin.tar.gz
+
     replicas: 1
     env:
       GF_AUTH_GENERIC_OAUTH_API_URL: https://auth.milojevic.dev/api/oidc/userinfo
@@ -130,6 +148,11 @@ spec:
               prometheusType: Prometheus
               timeInterval: 1m
             isDefault: true
+          - name: VictoriaLogs
+            type: victorialogs-datasource
+            access: proxy
+            url: http://vm-logs-victoria-logs-single-server.monitoring.svc.cluster.local:9428
+            isDefault: false
     dashboards:
       default:
         cloudflared:
@@ -226,6 +249,7 @@ spec:
           foldersFromFilesStructure: true
       datasources:
         enabled: true
+        initDatasources: true
         searchNamespace: ALL
         labelValue: ""
 
