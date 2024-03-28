@@ -33,10 +33,6 @@ spec:
         image: "curlimages/curl:7.85.0"
         command: ["/bin/sh"]
         workingDir: "/var/lib/grafana"
-        securityContext:
-          runAsUser: 472
-          runAsNonRoot: true
-          runAsGroup: 472
         args:
           - "-c"
           - |
