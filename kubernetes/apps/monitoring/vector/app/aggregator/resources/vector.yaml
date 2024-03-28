@@ -107,5 +107,5 @@ sinks:
     query:
       _msg_field: "message"
       _time_field: "time"
-      _stream_fields: "remote_addr,user_agent,vhost"
-      debug: "1"
+      _stream_fields: "hostname,status_code,remote_addr"
+      # debug: "1"
