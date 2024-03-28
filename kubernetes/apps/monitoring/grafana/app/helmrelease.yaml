@@ -42,6 +42,9 @@ spec:
             curl -L https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/$ver/victorialogs-datasource-$ver.tar.gz -o /var/lib/grafana/plugins/plugin.tar.gz
             tar -xf /var/lib/grafana/plugins/plugin.tar.gz -C /var/lib/grafana/plugins/
             rm /var/lib/grafana/plugins/plugin.tar.gz
+        volumeMounts:
+          - name: storage
+            mountPath: /var/lib/grafana
 
     replicas: 1
     env:
