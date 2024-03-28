@@ -15,7 +15,11 @@ sources:
       namespace_labels: ""
     node_annotation_fields:
       node_labels: ""
-
+  kubernetes_source_ingress_logs:
+    type: kubernetes_logs
+    extra_field_selector: "metadata.namespace=networking"
+    extra_label_selector: "app.kubernetes.io/name=ingress-nginx"
+    ingestion_timestamp_field: ".ingest_timestamp"
 sinks:
   kubernetes:
     type: vector
@@ -23,3 +27,9 @@ sinks:
     version: "2"
     address: vector-aggregator.monitoring.svc.cluster.local:6010
     inputs: ["kubernetes_source"]
+  kubernetes_sink_ingress_logs:
+    type: vector
+    compression: true
+    version: "2"
+    address: vector-aggregator.monitoring.svc.cluster.local:6013
+    inputs: ["kubernetes_source_ingress_logs"]
