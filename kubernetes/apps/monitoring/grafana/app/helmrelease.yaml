@@ -246,6 +246,7 @@ spec:
       - natel-discrete-panel
       - pr0ps-trackmap-panel
       - vonage-status-panel
+      - victorialogs-datasource
 
     serviceMonitor:
       enabled: true
