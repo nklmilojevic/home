@@ -60,5 +60,7 @@ sinks:
       - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
     mode: "bulk"
     api_version: "v8"
+    healthcheck:
+      enabled: false
     query:
       debug: "1"
