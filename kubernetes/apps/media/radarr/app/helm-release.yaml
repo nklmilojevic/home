@@ -33,14 +33,6 @@ spec:
         replicas: 1
         strategy: RollingUpdate
 
-        pod:
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            runAsNonRoot: true
-            fsGroup: 1000
-            fsGroupChangePolicy: "OnRootMismatch"
-
         containers:
           app:
             image:
@@ -51,11 +43,8 @@ spec:
               PUID: "${PUID}"
               PGID: "${PUID}"
             securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities:
-                drop:
-                  - ALL
+              runAsUser: 1000
+              runAsGroup: 1000
 
     service:
       app:
