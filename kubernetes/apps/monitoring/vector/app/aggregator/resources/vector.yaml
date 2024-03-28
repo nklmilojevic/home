@@ -59,9 +59,5 @@ sinks:
     endpoint: http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
     mode: "bulk"
     api_version: "v8"
-    labels:
-      app: "{{ custom_app_name }}"
-      namespace: "{{ kubernetes.pod_namespace }}"
-      node: "{{ kubernetes.pod_node_name }}"
     query:
       debug: "1"
