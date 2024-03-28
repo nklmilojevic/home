@@ -56,7 +56,8 @@ sinks:
   kubernetes:
     inputs: ["kubernetes_remap"]
     type: elasticsearch
-    endpoint: http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
+    endpoints:
+      - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
     mode: "bulk"
     api_version: "v8"
     query:
