@@ -135,10 +135,6 @@ spec:
     datasources:
       datasources.yaml:
         apiVersion: 1
-        deleteDatasources:
-          - { name: Alertmanager, orgId: 1 }
-          - { name: Loki, orgId: 1 }
-          - { name: Prometheus, orgId: 1 }
         datasources:
           - name: VictoriaMetrics
             type: prometheus
@@ -149,11 +145,14 @@ spec:
               prometheusType: Prometheus
               timeInterval: 1m
             isDefault: true
-          - name: VictoriaLogs
-            type: victorialogs-datasource
-            access: proxy
-            url: http://vm-logs-victoria-logs-single-server.monitoring.svc.cluster.local:9428
-            isDefault: false
+
+    additionalDataSources:
+      - name: vmlogs
+        orgId: 1
+        type: victorialogs
+        url: http://vm-logs-victoria-logs-single-server.monitoring.svc:9428
+        version: 1
+
     dashboards:
       default:
         cloudflared:
