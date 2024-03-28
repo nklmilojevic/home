@@ -62,9 +62,7 @@ transforms:
       .raw_user_agent = string!(.http_user_agent)
 
       # Remove unnecessary fields
-      del(.message)
       del(.kubernetes)
-      .message, err = .request_uri + " " + .request.query
 #
 # Sinks
 #
