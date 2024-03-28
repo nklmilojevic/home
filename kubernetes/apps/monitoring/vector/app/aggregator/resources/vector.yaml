@@ -94,7 +94,7 @@ sinks:
       _time_field: "ts"
       _stream_fields: "node,container_name,app,namespace"
       # debug: "1"
-  ignress:
+  ingress:
     inputs: ["kubernetes_ingress_remap"]
     type: elasticsearch
     endpoints:
