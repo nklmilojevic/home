@@ -251,7 +251,6 @@ spec:
         enabled: true
         initDatasources: true
         searchNamespace: ALL
-        labelValue: ""
 
     plugins:
       - grafana-clock-panel
