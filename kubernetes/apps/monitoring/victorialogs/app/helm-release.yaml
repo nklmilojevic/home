@@ -40,7 +40,8 @@ spec:
 
       ingress:
         enabled: true
-        ingressclassName: "internal"
+        annotations:
+          kubernetes.io/ingress.class: internal
         hosts:
           - name: vmlogs.${SECRET_DOMAIN}
             path: /
