@@ -40,6 +40,8 @@ spec:
               VERSION: "docker"
               PUID: "${PUID}"
               PGID: "${PUID}"
+              PLEX_ADVERTISE_URL: https://10.2.0.6:32400,https://plex.milojevic.dev:443
+              PLEX_NO_AUTH_NETWORKS: 10.0.0.0/8
             securityContext:
               runAsUser: 1000
               runAsGroup: 1000
