@@ -62,5 +62,5 @@ sinks:
     api_version: "v8"
     healthcheck:
       enabled: false
-    query:
-      debug: "1"
+    # query:
+    #   debug: "1"
