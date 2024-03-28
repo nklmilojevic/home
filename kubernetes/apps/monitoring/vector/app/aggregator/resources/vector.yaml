@@ -6,7 +6,7 @@ api:
 
 enrichment_tables:
   geoip_table:
-    type: geoip
+    type: mmdb
     path: /usr/share/GeoIP/db.mmdb
 
 #
