@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
+  - ./geoip-pvc.yaml
 configMapGenerator:
   - name: vector-aggregator-configmap
     files:
