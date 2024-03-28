@@ -64,6 +64,7 @@ transforms:
       # Remove unnecessary fields
       del(.message)
       del(.kubernetes)
+      .message = .request_uri + " " + .request.query
 #
 # Sinks
 #
