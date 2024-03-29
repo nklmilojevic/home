@@ -43,11 +43,9 @@ spec:
           http:
             port: 8091
           websocket:
-            enabled: true
             port: 3000
     ingress:
       app:
-        enabled: true
         className: "internal"
         annotations:
           hajimari.io/icon: "z-wave"
@@ -65,13 +63,14 @@ spec:
               - *host
     persistence:
       config:
-        enabled: true
         existingClaim: zwavejs-local-data
         globalMounts:
           - path: /usr/src/app/store
-
+      config2:
+        existingClaim: zwavejs-data
+        globalMounts:
+          - path: /usr/src/app/store2
       usb:
-        enabled: true
         type: hostPath
         hostPath: /dev/serial/by-id/usb-0658_0200-if00
         globalMounts:
