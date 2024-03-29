@@ -29,7 +29,7 @@ metadata:
   name: plex
   namespace: media
 spec:
-  sourcePVC: plex-local-data
+  sourcePVC: plex-data
   trigger:
     schedule: "0 0 * * *"
   restic:
