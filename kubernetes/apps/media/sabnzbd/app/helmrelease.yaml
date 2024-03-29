@@ -82,6 +82,8 @@ spec:
     persistence:
       config:
         existingClaim: sabnzbd-local-data
+      config2:
+        existingClaim: sabnzbd-data
       media:
         existingClaim: nfs-media-pvc
       interim:
