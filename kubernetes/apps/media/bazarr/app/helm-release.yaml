@@ -74,8 +74,6 @@ spec:
 
     persistence:
       config:
-        existingClaim: bazarr-local-data
-      config2:
         existingClaim: bazarr-data
       media:
         existingClaim: nfs-media-pvc
