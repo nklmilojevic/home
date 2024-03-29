@@ -75,5 +75,7 @@ spec:
     persistence:
       config:
         existingClaim: overseerr-local-data
+      config2:
+        existingClaim: overseerr-data
       media:
         existingClaim: nfs-media-pvc
