@@ -79,5 +79,7 @@ spec:
     persistence:
       config:
         existingClaim: radarr-local-data
+      config2:
+        existingClaim: radarr-data
       media:
         existingClaim: nfs-media-pvc
