@@ -77,8 +77,6 @@ spec:
 
     persistence:
       config:
-        existingClaim: prowlarr-local-data
-      config2:
         existingClaim: prowlarr-data
       media:
         existingClaim: nfs-media-pvc
