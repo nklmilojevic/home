@@ -58,23 +58,13 @@ spec:
 
     persistence:
       data:
-        existingClaim: adguard-local-data
-        globalMounts:
-          - path: /opt/adguardhome/data
-
-      conf:
-        existingClaim: adguard-local-conf
-        globalMounts:
-          - path: /opt/adguardhome/conf
-      data2:
         existingClaim: adguard-data
         globalMounts:
-          - path: /opt/adguardhome/data2
-
-      conf2:
+          - path: /opt/adguardhome/data
+      conf:
         existingClaim: adguard-conf
         globalMounts:
-          - path: /opt/adguardhome/conf2
+          - path: /opt/adguardhome/conf
 
     ingress:
       app:
