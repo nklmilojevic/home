@@ -5,6 +5,6 @@ kind: Kustomization
 namespace: development
 resources:
   - ./cluster.yaml
-  # - ./cluster16.yaml
+  - ./cluster16.yaml
   - ./scheduledbackup.yaml
   - ./service.yaml
