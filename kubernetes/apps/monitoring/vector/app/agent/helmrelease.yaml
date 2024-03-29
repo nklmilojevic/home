@@ -59,6 +59,16 @@ spec:
             args: ["--config", "/etc/vector/vector.yaml"]
             securityContext:
               privileged: true
+
+    service:
+      app:
+        controller: vector-agent
+        type: LoadBalancer
+        annotations: {}
+        ports:
+          syslog:
+            port: 1514
+            protocol: UDP
     serviceAccount:
       create: true
       name: vector-agent
