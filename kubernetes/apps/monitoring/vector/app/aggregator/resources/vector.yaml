@@ -9,7 +9,7 @@ api:
 #
 
 sources:
-  syslog_source:
+  mikrotik_source:
     type: vector
     version: "2"
     address: 0.0.0.0:6000
@@ -63,8 +63,8 @@ transforms:
 #
 
 sinks:
-  syslog:
-    inputs: ["syslog_source"]
+  mikrotik:
+    inputs: ["mikrotik_source"]
     type: elasticsearch
     endpoints:
       - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
@@ -74,7 +74,8 @@ sinks:
     healthcheck:
       enabled: false
     query:
-      debug: "1"
+      _msg_field: "message"
+      _stream_fields: "hostname,source_ip"
   kubernetes:
     inputs: ["kubernetes_remap"]
     type: elasticsearch
@@ -89,7 +90,6 @@ sinks:
       _msg_field: "message"
       _time_field: "ts"
       _stream_fields: "node,container_name,app,namespace"
-      # debug: "1"
   ingress:
     inputs: ["kubernetes_ingress_remap"]
     type: elasticsearch
@@ -104,4 +104,3 @@ sinks:
       _msg_field: "message"
       _time_field: "time"
       _stream_fields: "hostname,status_code,remote_addr"
-      # debug: "1"
