@@ -4,7 +4,7 @@ data_dir: /vector-data-dir
 sources:
   syslog_source:
     type: syslog
-    address: 0.0.0.0:6000
+    address: 0.0.0.0:1514
     max_length: 102400
     mode: udp
     permit_origin:
