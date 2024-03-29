@@ -90,6 +90,8 @@ spec:
     persistence:
       config:
         existingClaim: plex-local-data
+      config2:
+        existingClaim: plex-data
       media:
         existingClaim: nfs-media-pvc
       transcode:
