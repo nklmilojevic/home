@@ -3,4 +3,4 @@ kind: Kustomization
 namespace: home
 resources:
   - ./externalsecret.yaml
-  - ./helm-release.yaml
+  - ./helmrelease.yaml

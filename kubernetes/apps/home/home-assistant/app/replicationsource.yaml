@@ -28,7 +28,7 @@ metadata:
   name: home-assistant
   namespace: home
 spec:
-  sourcePVC: hass-local-data
+  sourcePVC: hass-data
   trigger:
     schedule: "0 0 * * *"
   restic:
