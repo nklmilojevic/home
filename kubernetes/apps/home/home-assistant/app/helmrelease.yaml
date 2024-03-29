@@ -80,7 +80,6 @@ spec:
 
     ingress:
       app:
-        enabled: true
         className: "internal"
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
@@ -97,14 +96,9 @@ spec:
               - *host
     persistence:
       config:
-        enabled: true
-        existingClaim: hass-local-data
-      config2:
-        enabled: true
         existingClaim: hass-data
 
       hass-config:
-        enabled: true
         type: configMap
         name: hass-config
         globalMounts:
