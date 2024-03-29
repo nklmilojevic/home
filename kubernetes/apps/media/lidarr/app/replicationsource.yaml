@@ -28,9 +28,10 @@ metadata:
   name: lidarr
   namespace: media
 spec:
-  sourcePVC: lidarr-local-data
+  sourcePVC: lidarr-config
   trigger:
-    schedule: "0 0 * * *"
+    # schedule: "0 0 * * *"
+    manual: blahblah
   restic:
     copyMethod: Direct
     pruneIntervalDays: 7
