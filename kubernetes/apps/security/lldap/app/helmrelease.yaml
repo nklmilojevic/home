@@ -32,8 +32,8 @@ spec:
         initContainers:
           init-db:
             image:
-              repository: ghcr.io/onedr0p/postgres-initdb
-              tag: 14.8
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
             envFrom: &envFrom
               - secretRef:
                   name: lldap-secret
