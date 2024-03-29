@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: home
 resources:
   - ./config-pvc.yaml
+  - ./pvc.yaml
   - ./helm-release.yaml
 commonLabels:
   app.kubernetes.io/name: mosquitto

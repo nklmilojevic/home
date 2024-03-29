@@ -49,10 +49,10 @@ spec:
 
     persistence:
       data:
-        enabled: true
         existingClaim: mosquitto-local-data
+      data2:
+        existingClaim: mosquitto-data
       mosquitto-config:
-        enabled: true
         type: configMap
         name: mosquitto-config
         globalMounts:
