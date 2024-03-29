@@ -86,6 +86,8 @@ spec:
     persistence:
       config:
         existingClaim: qbittorrent-local-data
+      config2:
+        existingClaim: qbittorrent-data
       media:
         existingClaim: nfs-media-pvc
       interim:
