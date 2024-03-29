@@ -63,13 +63,9 @@ spec:
               - *host
     persistence:
       config:
-        existingClaim: zwavejs-local-data
-        globalMounts:
-          - path: /usr/src/app/store
-      config2:
         existingClaim: zwavejs-data
         globalMounts:
-          - path: /usr/src/app/store2
+          - path: /usr/src/app/store
       usb:
         type: hostPath
         hostPath: /dev/serial/by-id/usb-0658_0200-if00
