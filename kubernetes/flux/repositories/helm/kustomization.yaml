@@ -27,3 +27,4 @@ resources:
   - ./dragonfly.yaml
   - ./intel.yaml
   - ./node-feature-discovery.yaml
+  - ./openebs.yaml
