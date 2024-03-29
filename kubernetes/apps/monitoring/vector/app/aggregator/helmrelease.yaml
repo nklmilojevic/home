@@ -58,9 +58,6 @@ spec:
           http:
             primary: true
             port: 8686
-          syslog:
-            port: 1514
-            protocol: UDP
           syslog-vector:
             port: 6000
           kubernetes:
