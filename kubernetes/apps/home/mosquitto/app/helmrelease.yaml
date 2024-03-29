@@ -49,8 +49,6 @@ spec:
 
     persistence:
       data:
-        existingClaim: mosquitto-local-data
-      data2:
         existingClaim: mosquitto-data
       mosquitto-config:
         type: configMap
