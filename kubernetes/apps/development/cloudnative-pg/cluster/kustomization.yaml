@@ -6,4 +6,4 @@ namespace: development
 resources:
   - ./cluster.yaml
   - ./scheduledbackup.yaml
-  - ./service.yaml
+  # - ./service.yaml
