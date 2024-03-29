@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: home
 resources:
   - ./config-pvc.yaml
-  - ./helm-release.yaml
+  - ./pvc.yaml
+  - ./helmrelease.yaml
   - ./externalsecret.yaml
   - ./replicationsource.yaml

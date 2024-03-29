@@ -67,7 +67,6 @@ spec:
             port: 8080
     ingress:
       app:
-        enabled: true
         className: "internal"
         annotations:
           hajimari.io/icon: "mdi:zigbee"
@@ -86,10 +85,9 @@ spec:
 
     persistence:
       data:
-        enabled: true
         existingClaim: zigbee2mqtt-local-data
-
+      data2:
+        existingClaim: zigbee2mqtt-data
       usb:
-        enabled: true
         type: hostPath
         hostPath: /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
