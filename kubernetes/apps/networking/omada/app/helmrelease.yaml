@@ -72,10 +72,6 @@ spec:
 
     persistence:
       data:
-        existingClaim: omada-local-data
-        globalMounts:
-          - path: /opt/tplink/EAPController/data
-      data2:
         existingClaim: omada-data
         globalMounts:
-          - path: /opt/tplink/EAPController/data2
+          - path: /opt/tplink/EAPController/data
