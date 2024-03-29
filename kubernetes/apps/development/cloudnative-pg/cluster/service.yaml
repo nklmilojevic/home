@@ -3,16 +3,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-lb
-  namespace: development
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 10.2.0.21
 spec:
   type: LoadBalancer
-  externalTrafficPolicy: Local
-  loadBalancerIP: 10.2.0.21
   ports:
     - name: postgres
       port: 5432
       protocol: TCP
       targetPort: 5432
   selector:
-    postgresql: postgres16
+    cnpg.io/cluster: postgres16
     role: primary
