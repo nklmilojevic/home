@@ -76,8 +76,6 @@ spec:
 
     persistence:
       config:
-        existingClaim: sonarr-local-data
-      config2:
         existingClaim: sonarr-data
       media:
         existingClaim: nfs-media-pvc
