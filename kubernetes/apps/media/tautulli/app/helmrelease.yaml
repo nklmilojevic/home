@@ -75,5 +75,7 @@ spec:
     persistence:
       config:
         existingClaim: tautulli-local-data
+      config2:
+        existingClaim: tautulli-data
       media:
         existingClaim: nfs-media-pvc
