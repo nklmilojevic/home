@@ -67,12 +67,12 @@ spec:
         globalMounts:
           - path: /opt/adguardhome/conf
       data2:
-        existingClaim: adguard-local-data
+        existingClaim: adguard-data
         globalMounts:
           - path: /opt/adguardhome/data2
 
       conf2:
-        existingClaim: adguard-local-conf
+        existingClaim: adguard-conf
         globalMounts:
           - path: /opt/adguardhome/conf2
 
