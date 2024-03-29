@@ -28,7 +28,7 @@ metadata:
   name: sabnzbd
   namespace: media
 spec:
-  sourcePVC: sabnzbd-local-data
+  sourcePVC: sabnzbd-data
   trigger:
     schedule: "0 0 * * *"
   restic:
