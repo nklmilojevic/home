@@ -1,5 +1,6 @@
 ---
-name: "Meta Sync labels"
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: "Label Sync"
 
 on:
   workflow_dispatch:
@@ -8,16 +9,15 @@ on:
     paths: [".github/labels.yaml"]
 
 jobs:
-  labels:
-    name: Sync Labels
+  label-sync:
+    name: Label Sync
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@v4
 
       - name: Sync Labels
-        uses: EndBug/label-sync@52074158190acb45f3077f9099fea818aa43f97a # v2.3.3
+        uses: EndBug/label-sync@v2
         with:
           config-file: .github/labels.yaml
-          token: "${{ secrets.GITHUB_TOKEN }}"
           delete-other-labels: true
