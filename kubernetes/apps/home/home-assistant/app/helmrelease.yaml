@@ -99,6 +99,9 @@ spec:
       config:
         enabled: true
         existingClaim: hass-local-data
+      config2:
+        enabled: true
+        existingClaim: hass-data
 
       hass-config:
         enabled: true
