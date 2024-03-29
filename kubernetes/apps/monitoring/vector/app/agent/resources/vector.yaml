@@ -2,6 +2,13 @@
 data_dir: /vector-data-dir
 
 sources:
+  syslog_source:
+    type: syslog
+    address: 0.0.0.0:6000
+    max_length: 102400
+    mode: udp
+    permit_origin:
+      - 10.0.0.0/8
   kubernetes_source:
     type: kubernetes_logs
     use_apiserver_cache: true
@@ -21,6 +28,12 @@ sources:
     extra_label_selector: "app.kubernetes.io/name=ingress-nginx"
     ingestion_timestamp_field: ".ingest_timestamp"
 sinks:
+  syslog:
+    type: vector
+    compression: true
+    version: "2"
+    address: vector-aggregator.monitoring.svc.cluster.local:6000
+    inputs: ["syslog_source"]
   kubernetes:
     type: vector
     compression: true

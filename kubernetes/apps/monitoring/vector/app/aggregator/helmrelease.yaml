@@ -58,8 +58,9 @@ spec:
           http:
             primary: true
             port: 8686
-          journald:
+          syslog:
             port: 6000
+            protocol: UDP
           kubernetes:
             port: 6010
           ingress:

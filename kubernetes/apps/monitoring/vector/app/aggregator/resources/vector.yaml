@@ -9,7 +9,7 @@ api:
 #
 
 sources:
-  journald_source:
+  syslog_source:
     type: vector
     version: "2"
     address: 0.0.0.0:6000
@@ -63,16 +63,18 @@ transforms:
 #
 
 sinks:
-  # journald:
-  #   inputs: ["journald_source"]
-  #   type: elasticsearch
-  #   endpoint: http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
-  #   encoding: { codec: json }
-  #   mode: "bulk"
-  #   api_version: "v8"
-  #   labels:
-  #     hostname: "{{ host }}"
-
+  syslog:
+    inputs: ["syslog_source"]
+    type: elasticsearch
+    endpoints:
+      - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
+    mode: "bulk"
+    compression: gzip
+    api_version: "v8"
+    healthcheck:
+      enabled: false
+    query:
+      debug: "1"
   kubernetes:
     inputs: ["kubernetes_remap"]
     type: elasticsearch
