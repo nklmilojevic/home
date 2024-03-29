@@ -66,6 +66,15 @@ spec:
         existingClaim: adguard-local-conf
         globalMounts:
           - path: /opt/adguardhome/conf
+      data2:
+        existingClaim: adguard-local-data
+        globalMounts:
+          - path: /opt/adguardhome/data2
+
+      conf2:
+        existingClaim: adguard-local-conf
+        globalMounts:
+          - path: /opt/adguardhome/conf2
 
     ingress:
       app:
