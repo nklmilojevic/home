@@ -63,10 +63,6 @@ spec:
           nginx.ingress.kubernetes.io/auth-snippet: |
             proxy_set_header X-Forwarded-Method $request_method;
           hajimari.io/icon: mdi:headphones
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            proxy_set_header Accept-Encoding "";
-            sub_filter '</body>' '<link rel="stylesheet" type="text/css" href="https://theme-park.milojevic.dev/css/base/lidarr/dracula.css"></body>';
-            sub_filter_once on;
         hosts:
           - host: &host lidarr.milojevic.dev
             paths:

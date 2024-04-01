@@ -58,10 +58,6 @@ spec:
         className: "internal"
         annotations:
           hajimari.io/icon: mdi:filmstrip
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            proxy_set_header Accept-Encoding "";
-            sub_filter '</body>' '<link rel="stylesheet" type="text/css" href="https://theme-park.milojevic.dev/css/base/radarr/dracula.css"></body>';
-            sub_filter_once on;
           hajimari.io/enable: "true"
         hosts:
           - host: &host radarr.milojevic.dev
