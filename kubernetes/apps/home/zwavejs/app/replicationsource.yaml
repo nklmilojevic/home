@@ -28,7 +28,7 @@ metadata:
   name: zwavejs
   namespace: home
 spec:
-  sourcePVC: zwavejs-local-data
+  sourcePVC: zwavejs-data
   trigger:
     schedule: "0 0 * * *"
   restic:
