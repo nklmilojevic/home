@@ -40,8 +40,8 @@ spec:
               tag: 1.15.0.4361
             env:
               TZ: "Europe/Belgrade"
-              PUID: "${PUID}"
-              PGID: "${PUID}"
+              PUID: "1000"
+              PGID: "1000"
             securityContext:
               runAsUser: 1000
               runAsGroup: 1000

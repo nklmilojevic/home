@@ -37,8 +37,8 @@ spec:
               tag: 2.1.7.4030
             env:
               TZ: "Europe/Belgrade"
-              PUID: "${PUID}"
-              PGID: "${PUID}"
+              PUID: "1000"
+              PGID: "1000"
               LIDARR__PORT: &port 8080
             securityContext:
               runAsUser: 1000
