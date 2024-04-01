@@ -41,7 +41,8 @@ spec:
       app:
         controller: mosquitto
         type: LoadBalancer
-        loadBalancerIP: "${SVC_MQTT_IP}"
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "10.2.0.8"
         externalTrafficPolicy: Local
         ports:
           http:
