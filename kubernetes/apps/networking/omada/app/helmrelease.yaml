@@ -42,8 +42,8 @@ spec:
               - "/usr/bin/java"
               - "-server"
             args:
-              - |
-                -Xms128m -Xmx1024m
+              - >
+                -Xms128M -Xmx1024M
                 -XX:MaxHeapFreeRatio=60
                 -XX:MinHeapFreeRatio=30
                 -XX:+HeapDumpOnOutOfMemoryError
