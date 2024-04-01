@@ -1,0 +1,27 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: restorezw
+  namespace: home
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: zwavejs-restore-dest
+  namespace: home
+spec:
+  trigger:
+    manual: restore-once
+  restic:
+    repository: zwavejs-restic-secret
+    # Use an existing PVC, don't provision a new one
+    destinationPVC: zwavejs-data
+    copyMethod: Direct
+    previous: 3
