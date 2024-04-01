@@ -7,7 +7,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: cluster-apps-cloudnative-pg
+    - name: cloudnative-pg
   path: ./kubernetes/apps/security/atuin/app
   prune: true
   sourceRef:
