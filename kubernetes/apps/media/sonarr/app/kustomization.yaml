@@ -4,3 +4,4 @@ resources:
   - ./pvc.yaml
   # - ./helmrelease.yaml
   - ./replicationsource.yaml
+  - ./restore.yaml
