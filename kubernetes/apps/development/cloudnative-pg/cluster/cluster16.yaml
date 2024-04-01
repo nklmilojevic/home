@@ -20,30 +20,41 @@ spec:
       shared_buffers: 512MB
   monitoring:
     enablePodMonitor: true
-  backup:
-    retentionPolicy: 7d
-    barmanObjectStore: &barmanObjectStore
-      wal:
-        compression: bzip2
-        maxParallel: 30
-      destinationPath: s3://k3s-cloudnative-pg/
-      endpointURL: https://s3.us-west-002.backblazeb2.com
-      serverName: postgres
-      s3Credentials:
-        accessKeyId:
-          name: cloudnative-pg-secret
-          key: aws-access-key-id
-        secretAccessKey:
-          name: cloudnative-pg-secret
-          key: aws-secret-access-key
+  # backup:
+  #   retentionPolicy: 7d
+  #   barmanObjectStore: &barmanObjectStore
+  #     wal:
+  #       compression: bzip2
+  #       maxParallel: 30
+  #     destinationPath: s3://k3s-cloudnative-pg/
+  #     endpointURL: https://s3.us-west-002.backblazeb2.com
+  #     serverName: postgres
+  #     s3Credentials:
+  #       accessKeyId:
+  #         name: cloudnative-pg-secret
+  #         key: aws-access-key-id
+  #       secretAccessKey:
+  #         name: cloudnative-pg-secret
+  #         key: aws-secret-access-key
   # Note: previousCluster needs to be set to the name of the previous
   # cluster when recovering from an existing cnpg cluster
   bootstrap:
     recovery:
-      source: &previousCluster postgres16
+      source: postgres16
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
+  # # Note: externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
-    - name: *previousCluster
+    - name: postgres16
       barmanObjectStore:
-        <<: *barmanObjectStore
-        serverName: *previousCluster
+        wal:
+          compression: bzip2
+          maxParallel: 8
+        destinationPath: s3://k3s-cloudnative-pg/
+        endpointURL: https://s3.us-west-002.backblazeb2.com
+        s3Credentials:
+          accessKeyId:
+            name: cloudnative-pg-secret
+            key: aws-access-key-id
+          secretAccessKey:
+            name: cloudnative-pg-secret
+            key: aws-secret-access-key
