@@ -1,10 +1,8 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app onepassword-connect
-  namespace: security
 spec:
   interval: 30m
   chart:
@@ -13,11 +11,9 @@ spec:
       version: 3.0.4
       sourceRef:
         kind: HelmRepository
-        name: bjw-s
+        name: bjw-s-charts
         namespace: flux-system
-  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -25,26 +21,22 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
     controllers:
       onepassword-connect:
+        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
-        pod:
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
         containers:
-          app:
+          api:
             image:
               repository: docker.io/1password/connect-api
-              tag: 1.7.2
+              tag: 1.7.2@sha256:0c5ae74396e3c18c3b65acb89cb76d31088968cf0c25deca3818c72b01586606
             env:
-              OP_BUS_PORT: "11220"
-              OP_BUS_PEERS: "localhost:11221"
-              OP_HTTP_PORT: &port 8080
+              XDG_DATA_HOME: &configDir /config
+              OP_HTTP_PORT: &apiPort 80
+              OP_BUS_PORT: 11220
+              OP_BUS_PEERS: localhost:11221
               OP_SESSION:
                 valueFrom:
                   secretKeyRef:
@@ -57,7 +49,7 @@ spec:
                 spec:
                   httpGet:
                     path: /heartbeat
-                    port: *port
+                    port: *apiPort
                   initialDelaySeconds: 15
                   periodSeconds: 30
                   failureThreshold: 3
@@ -67,57 +59,63 @@ spec:
                 spec:
                   httpGet:
                     path: /health
-                    port: *port
+                    port: *apiPort
                   initialDelaySeconds: 15
-              startup:
-                enabled: false
-            resources:
+            resources: &resources
               requests:
-                cpu: 5m
-                memory: 10Mi
+                cpu: 10m
               limits:
-                memory: 100Mi
+                memory: 256M
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
           sync:
             image:
               repository: docker.io/1password/connect-sync
-              tag: 1.7.2
+              tag: 1.7.2@sha256:ff5bf86187ac4da88224e63a5896b393b5a53f81434e8dbc5314e406a0f1db89
             env:
-              - { name: OP_HTTP_PORT, value: &sport 8081 }
-              - { name: OP_BUS_PORT, value: "11221" }
-              - { name: OP_BUS_PEERS, value: "localhost:11220" }
-              - name: OP_SESSION
+              XDG_DATA_HOME: *configDir
+              OP_HTTP_PORT: &syncPort 8081
+              OP_BUS_PORT: 11221
+              OP_BUS_PEERS: localhost:11220
+              OP_SESSION:
                 valueFrom:
                   secretKeyRef:
-                    name: op-credentials
+                    name: op-credential
                     key: 1password-credentials.json
             probes:
-              readiness:
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /health
-                    port: *sport
-                  initialDelaySeconds: 15
               liveness:
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
                     path: /heartbeat
-                    port: *sport
-                  failureThreshold: 3
-                  periodSeconds: 30
+                    port: *syncPort
                   initialDelaySeconds: 15
-    service:
-      app:
-        controller: *app
-        ports:
-          http:
-            port: *port
+                  periodSeconds: 30
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *syncPort
+                  initialDelaySeconds: 15
+            resources: *resources
+            securityContext: *securityContext
+        pod:
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
+            runAsNonRoot: true
+            fsGroup: 999
+            fsGroupChangePolicy: OnRootMismatch
     ingress:
       app:
-        enabled: true
         className: internal
         annotations:
           hajimari.io/enable: "false"
@@ -132,7 +130,13 @@ spec:
           - hosts:
               - *host
     persistence:
-      shared:
+      config:
         type: emptyDir
         globalMounts:
-          - path: /home/opuser/.op/data
+          - path: *configDir
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *apiPort
