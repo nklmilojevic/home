@@ -4,6 +4,7 @@ namespace: home
 resources:
   - ./pvc.yaml
   - ./helmrelease.yaml
+  - ../../../../templates/volsync
 commonLabels:
   app.kubernetes.io/name: mosquitto
   app.kubernetes.io/instance: mosquitto
