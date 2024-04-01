@@ -26,8 +26,6 @@ spec:
       retries: 3
   values:
     global:
-      annotations:
-        secret.reloader.stakater.com/reload: prowlarr-secrets
 
     controllers:
       prowlarr:
