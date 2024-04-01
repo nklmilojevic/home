@@ -15,4 +15,4 @@ metadata:
   namespace: networking
 spec:
   addresses:
-    - "${METALLB_LB_RANGE}"
+    - "10.2.0.4-10.2.0.200"
