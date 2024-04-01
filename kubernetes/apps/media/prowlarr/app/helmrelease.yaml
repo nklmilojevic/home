@@ -39,7 +39,7 @@ spec:
               repository: ghcr.io/onedr0p/prowlarr-develop
               tag: 1.15.0.4361
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Belgrade"
               PUID: "${PUID}"
               PGID: "${PUID}"
             securityContext:

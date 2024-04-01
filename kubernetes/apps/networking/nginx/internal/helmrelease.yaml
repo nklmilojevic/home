@@ -30,7 +30,7 @@ spec:
       replicaCount: 1
       extraEnvs:
         - name: TZ
-          value: "${TIMEZONE}"
+          value: "Europe/Belgrade"
       service:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: internal.milojevic.dev

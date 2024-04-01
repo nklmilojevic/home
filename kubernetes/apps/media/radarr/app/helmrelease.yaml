@@ -39,7 +39,7 @@ spec:
               repository: ghcr.io/onedr0p/radarr
               tag: 5.3.6.8612
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Belgrade"
               PUID: "${PUID}"
               PGID: "${PUID}"
             securityContext:
