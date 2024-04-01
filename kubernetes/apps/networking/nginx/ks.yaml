@@ -23,9 +23,8 @@ kind: Kustomization
 metadata:
   name: nginx-internal
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
+  targetNamespace: networking
   dependsOn:
     - name: cert-manager
     - name: cert-manager-issuers
@@ -46,9 +45,8 @@ kind: Kustomization
 metadata:
   name: nginx-external
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
+  targetNamespace: networking
   dependsOn:
     - name: cert-manager
     - name: cert-manager-issuers

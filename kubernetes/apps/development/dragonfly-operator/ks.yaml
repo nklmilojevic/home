@@ -6,6 +6,7 @@ metadata:
   name: dragonfly-operator
   namespace: flux-system
 spec:
+  targetNamespace: development
   path: ./kubernetes/apps/development/dragonfly-operator/app
   prune: true
   sourceRef:
@@ -27,6 +28,7 @@ metadata:
   name: dragonfly-operator-cluster
   namespace: flux-system
 spec:
+  targetNamespace: development
   dependsOn:
     - name: dragonfly-operator
   path: ./kubernetes/apps/development/dragonfly-operator/cluster

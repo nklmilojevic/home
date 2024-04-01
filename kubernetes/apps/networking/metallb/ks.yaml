@@ -4,9 +4,9 @@ kind: Kustomization
 metadata:
   name: metallb
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
+  targetNamespace: networking
+
   path: ./kubernetes/apps/networking/metallb/app
   prune: true
   sourceRef:
@@ -21,9 +21,8 @@ kind: Kustomization
 metadata:
   name: metallb-config
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
+  targetNamespace: networking
   dependsOn:
     - name: metallb
   path: ./kubernetes/apps/networking/metallb/config
