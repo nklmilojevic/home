@@ -22,10 +22,10 @@ spec:
     enablePodMonitor: true
   backup:
     retentionPolicy: 7d
-    barmanObjectStore:
+    barmanObjectStore: &barmanObjectStore
       wal:
         compression: bzip2
-        maxParallel: 8
+        maxParallel: 30
       destinationPath: s3://k3s-cloudnative-pg/
       endpointURL: https://s3.us-west-002.backblazeb2.com
       serverName: postgres
@@ -36,3 +36,14 @@ spec:
         secretAccessKey:
           name: cloudnative-pg-secret
           key: aws-secret-access-key
+  # Note: previousCluster needs to be set to the name of the previous
+  # cluster when recovering from an existing cnpg cluster
+  bootstrap:
+    recovery:
+      source: &previousCluster postgres16
+  # Note: externalClusters is needed when recovering from an existing cnpg cluster
+  externalClusters:
+    - name: *previousCluster
+      barmanObjectStore:
+        <<: *barmanObjectStore
+        serverName: *previousCluster
