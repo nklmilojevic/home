@@ -18,7 +18,7 @@ metadata:
   namespace: media
 spec:
   trigger:
-    manual: restore-once-prowlarrr
+    manual: restore-once-prowlarrrr
   restic:
     repository: prowlarr-restic-secret
     # Use an existing PVC, don't provision a new one
