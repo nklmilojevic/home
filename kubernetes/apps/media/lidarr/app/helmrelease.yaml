@@ -80,8 +80,6 @@ spec:
               - *host
 
     persistence:
-      # config:
-      #   existingClaim: lidarr-config
       config:
         existingClaim: lidarr-data
       media:
