@@ -38,20 +38,11 @@ spec:
               tag: "5.13"
             env:
               TZ: "Europe/Belgrade"
-            # command:
-            #   - "/usr/bin/java"
-            #   - "-server"
-            # args:
-            #   - >
-            #     -Xms128M -Xmx1024M
-            #     -XX:MaxHeapFreeRatio=60
-            #     -XX:MinHeapFreeRatio=30
-            #     -XX:+HeapDumpOnOutOfMemoryError
-            #     -XX:HeapDumpPath=/opt/tplink/EAPController/logs/java_heapdump.hprof
-            #     -Djava.awt.headless=true
-            #     --add-opens java.base/java.util=ALL-UNNAMED
-            #     -cp /opt/tplink/EAPController/lib/*::/opt/tplink/EAPController/properties:
-            #     com.tplink.smb.omada.starter.OmadaLinuxMain
+            command:
+              - "/usr/bin/java"
+              - "-server "
+            args:
+              - "-Xms128m -Xmx1024m -XX:MaxHeapFreeRatio=60 -XX:MinHeapFreeRatio=30 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/tplink/EAPController/logs/java_heapdump.hprof -Djava.awt.headless=true -cp /opt/tplink/EAPController/lib/*::/opt/tplink/EAPController/properties: com.tplink.smb.omada.starter.OmadaLinuxMain"
 
     service:
       app:
