@@ -82,7 +82,7 @@ spec:
       app:
         className: "internal"
         hosts:
-          - host: &host hass.${SECRET_DOMAIN}
+          - host: &host hass.milojevic.dev
             paths:
               - path: /
                 pathType: Prefix

@@ -50,7 +50,7 @@ spec:
         annotations:
           hajimari.io/icon: "z-wave"
         hosts:
-          - host: &host zwavejs.${SECRET_DOMAIN}
+          - host: &host zwavejs.milojevic.dev
             paths:
               - path: /
                 pathType: Prefix

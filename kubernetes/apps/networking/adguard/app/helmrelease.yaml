@@ -73,10 +73,10 @@ spec:
           hajimari.io/icon: "shield-check"
           nginx.ingress.kubernetes.io/configuration-snippet: |
             proxy_set_header Accept-Encoding "";
-            sub_filter '</body>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/adguard/dracula.css"></body>';
+            sub_filter '</body>' '<link rel="stylesheet" type="text/css" href="https://theme-park.milojevic.dev/css/base/adguard/dracula.css"></body>';
             sub_filter_once on;
         hosts:
-          - host: &host adguard.${SECRET_DOMAIN}
+          - host: &host adguard.milojevic.dev
             paths:
               - path: /
                 pathType: Prefix

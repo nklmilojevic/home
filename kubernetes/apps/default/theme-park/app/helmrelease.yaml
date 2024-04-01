@@ -54,9 +54,9 @@ spec:
         className: "external"
         annotations:
           hajimari.io/enable: "false"
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          external-dns.alpha.kubernetes.io/target: "external.milojevic.dev"
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.milojevic.dev"
             paths:
               - path: /
                 pathType: Prefix

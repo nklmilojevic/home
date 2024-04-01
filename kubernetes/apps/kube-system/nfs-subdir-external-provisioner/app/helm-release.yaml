@@ -18,7 +18,7 @@ spec:
         namespace: flux-system
   values:
     nfs:
-      server: panopticon.${SECRET_DOMAIN}
+      server: panopticon.milojevic.dev
       path: /pvc
       mountOptions:
         - noatime
