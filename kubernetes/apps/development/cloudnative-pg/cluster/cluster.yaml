@@ -48,7 +48,7 @@ spec:
       barmanObjectStore:
         wal:
           compression: bzip2
-          maxParallel: 8
+          maxParallel: 30
         destinationPath: s3://k3s-cloudnative-pg/
         endpointURL: https://s3.us-west-002.backblazeb2.com
         s3Credentials:
