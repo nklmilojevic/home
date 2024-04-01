@@ -43,8 +43,8 @@ spec:
               - "-server"
             args:
               - |
-                -Xms1024m
-                -Xmx1024m
+                -Xms128M
+                -Xmx1024M
                 -XX:MaxHeapFreeRatio=60
                 -XX:MinHeapFreeRatio=30
                 -XX:+HeapDumpOnOutOfMemoryError
