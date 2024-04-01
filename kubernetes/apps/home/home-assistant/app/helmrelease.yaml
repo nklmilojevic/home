@@ -50,7 +50,7 @@ spec:
               repository: homeassistant/home-assistant
               tag: 2024.3.3
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Belgrade"
             envFrom:
               - secretRef:
                   name: homeassistant-secrets

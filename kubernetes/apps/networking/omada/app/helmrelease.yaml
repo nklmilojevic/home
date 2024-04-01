@@ -37,7 +37,7 @@ spec:
               repository: mbentley/omada-controller
               tag: "5.13"
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Belgrade"
 
     service:
       app:

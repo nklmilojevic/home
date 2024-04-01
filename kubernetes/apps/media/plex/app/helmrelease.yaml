@@ -36,7 +36,7 @@ spec:
               repository: ghcr.io/onedr0p/plex
               tag: 1.40.1.8227-c0dd5a73e
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Belgrade"
               VERSION: "docker"
               PUID: "${PUID}"
               PGID: "${PUID}"

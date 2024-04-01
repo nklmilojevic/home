@@ -37,7 +37,7 @@ spec:
               tag: 4.0.2.1408
 
             env:
-              TZ: "${TIMEZONE}"
+              TZ: "Europe/Belgrade"
               PUID: "${PUID}"
               PGID: "${PUID}"
             securityContext:
