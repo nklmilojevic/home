@@ -5,4 +5,4 @@ resources:
   - ./pvc.yaml
   - ./helmrelease.yaml
   - ./restoretest.yaml
-  - ../../../../templates/volsync
+  # - ../../../../templates/volsync

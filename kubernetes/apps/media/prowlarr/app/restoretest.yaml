@@ -18,9 +18,10 @@ metadata:
   namespace: media
 spec:
   trigger:
-    manual: restore-once-prowlarr
+    manual: restore-once-prowlarrr
   restic:
     repository: prowlarr-restic-secret
     # Use an existing PVC, don't provision a new one
     destinationPVC: prowlarr-data
     copyMethod: Direct
+    previous: 3
