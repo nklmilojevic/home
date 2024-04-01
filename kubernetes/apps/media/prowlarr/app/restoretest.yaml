@@ -1,0 +1,26 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: restoreprowlarr
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: prowlarr-restore-dest
+  namespace: media
+spec:
+  trigger:
+    manual: restore-once-prowlarr
+  restic:
+    repository: prowlarr-restic-secret
+    # Use an existing PVC, don't provision a new one
+    destinationPVC: prowlarr-data
+    copyMethod: Direct
