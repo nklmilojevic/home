@@ -64,13 +64,6 @@ spec:
         className: "internal"
         annotations:
           hajimari.io/icon: "mdi:download"
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            proxy_set_header Accept-Encoding "";
-            sub_filter '</body>' '<link rel="stylesheet" type="text/css" href="https://theme-park.milojevic.dev/css/base/qbittorrent/dracula.css"></body>';
-            sub_filter_once on;
-            proxy_hide_header "x-webkit-csp";
-            proxy_hide_header "content-security-policy";
-            proxy_hide_header "X-Frame-Options";
         hosts:
           - host: &host qbittorrent.milojevic.dev
             paths:
