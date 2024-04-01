@@ -66,27 +66,27 @@ spec:
         ports:
           http:
             port: 8043
-    # ingress:
-    #   app:
-    #     className: "internal"
-    #     annotations:
-    #       nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    #       nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
-    #       nginx.ingress.kubernetes.io/use-regex: "true"
-    #       nginx.ingress.kubernetes.io/upstream-vhost: "omada.milojevic.dev:8043"
-    #       nginx.ingress.kubernetes.io/proxy-redirect-from: "~https://(.+):8043/(.+)/login$"
-    #       nginx.ingress.kubernetes.io/proxy-redirect-to: "https://$1/$2/login"
-    #     hosts:
-    #       - host: "omada.milojevic.dev"
-    #         paths:
-    #           - path: /
-    #             pathType: Prefix
-    #             service:
-    #               identifier: app
-    #               port: http
-    #     tls:
-    #       - hosts:
-    #           - "omada.milojevic.dev"
+    ingress:
+      app:
+        className: "internal"
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+          nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
+          nginx.ingress.kubernetes.io/use-regex: "true"
+          nginx.ingress.kubernetes.io/upstream-vhost: "omada.milojevic.dev:8043"
+          nginx.ingress.kubernetes.io/proxy-redirect-from: "~https://(.+):8043/(.+)/login$"
+          nginx.ingress.kubernetes.io/proxy-redirect-to: "https://$1/$2/login"
+        hosts:
+          - host: "omada.milojevic.dev"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - "omada.milojevic.dev"
 
     persistence:
       data:
