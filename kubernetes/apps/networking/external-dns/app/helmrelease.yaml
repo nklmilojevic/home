@@ -45,7 +45,7 @@ spec:
     txtPrefix: k8s.
     txtOwnerId: extdns
     domainFilters:
-      - "${SECRET_DOMAIN}"
+      - "milojevic.dev"
     serviceMonitor:
       enabled: true
     podAnnotations:

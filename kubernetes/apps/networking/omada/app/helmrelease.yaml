@@ -55,11 +55,11 @@ spec:
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
           nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
           nginx.ingress.kubernetes.io/use-regex: "true"
-          nginx.ingress.kubernetes.io/upstream-vhost: "omada.${SECRET_DOMAIN}:8043"
+          nginx.ingress.kubernetes.io/upstream-vhost: "omada.milojevic.dev:8043"
           nginx.ingress.kubernetes.io/proxy-redirect-from: "~https://(.+):8043/(.+)/login$"
           nginx.ingress.kubernetes.io/proxy-redirect-to: "https://$1/$2/login"
         hosts:
-          - host: "omada.${SECRET_DOMAIN}"
+          - host: "omada.milojevic.dev"
             paths:
               - path: /
                 pathType: Prefix
@@ -68,7 +68,7 @@ spec:
                   port: http
         tls:
           - hosts:
-              - "omada.${SECRET_DOMAIN}"
+              - "omada.milojevic.dev"
 
     persistence:
       data:

@@ -71,7 +71,7 @@ spec:
         annotations:
           hajimari.io/icon: "mdi:zigbee"
         hosts:
-          - host: &host zigbee2mqtt.${SECRET_DOMAIN}
+          - host: &host zigbee2mqtt.milojevic.dev
             paths:
               - path: /
                 pathType: Prefix

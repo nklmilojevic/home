@@ -46,7 +46,7 @@ spec:
         annotations:
           hajimari.io/enable: "false"
         hosts:
-          - host: &host "hajimari.${SECRET_DOMAIN}"
+          - host: &host "hajimari.milojevic.dev"
             paths:
               - path: /
                 pathType: Prefix

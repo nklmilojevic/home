@@ -45,7 +45,7 @@ spec:
                 sabnzbd.media.svc,
                 sabnzbd.media.svc.cluster,
                 sabnzbd.media.svc.cluster.local,
-                sabnzbd.${SECRET_DOMAIN}
+                sabnzbd.milojevic.dev
             securityContext:
               runAsUser: 1000
               runAsGroup: 1000
@@ -64,10 +64,10 @@ spec:
           hajimari.io/icon: "download-box"
           nginx.ingress.kubernetes.io/configuration-snippet: |
             proxy_set_header Accept-Encoding "";
-            sub_filter '</body>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/sabnzbd/dracula.css"></body>';
+            sub_filter '</body>' '<link rel="stylesheet" type="text/css" href="https://theme-park.milojevic.dev/css/base/sabnzbd/dracula.css"></body>';
             sub_filter_once on;
         hosts:
-          - host: &host sabnzbd.${SECRET_DOMAIN}
+          - host: &host sabnzbd.milojevic.dev
             paths:
               - path: /
                 pathType: Prefix

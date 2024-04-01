@@ -11,7 +11,7 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   nfs:
-    server: panopticon.${SECRET_DOMAIN}
+    server: panopticon.milojevic.dev
     path: /media
   mountOptions:
     - nfsvers=4.2

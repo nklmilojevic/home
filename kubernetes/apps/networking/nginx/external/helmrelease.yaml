@@ -33,7 +33,7 @@ spec:
           value: "${TIMEZONE}"
       service:
         annotations:
-          external-dns.alpha.kubernetes.io/hostname: external.${SECRET_DOMAIN}
+          external-dns.alpha.kubernetes.io/hostname: external.milojevic.dev
           metallb.universe.tf/loadBalancerIPs: |-
             ${METALLB_INGRESS_EXT_ADDR}
         externalTrafficPolicy: Local

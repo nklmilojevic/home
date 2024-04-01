@@ -42,12 +42,12 @@ spec:
         enabled: true
         ingressClassName: "internal"
         hosts:
-          - name: vmlogs.${SECRET_DOMAIN}
+          - name: vmlogs.milojevic.dev
             path: /
             port: 9428
         tls:
           - hosts:
-              - vmlogs.${SECRET_DOMAIN}
+              - vmlogs.milojevic.dev
 
       service:
         enabled: true
