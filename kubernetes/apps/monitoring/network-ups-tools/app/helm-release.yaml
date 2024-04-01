@@ -47,7 +47,8 @@ spec:
         controller: network-ups-tools
         type: LoadBalancer
         externalTrafficPolicy: Cluster
-        loadBalancerIP: ${SVC_NUT_IP}
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "10.2.0.16"
         ports:
           http:
             port: 3493
