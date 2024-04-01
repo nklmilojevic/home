@@ -25,7 +25,7 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: restoreprowlarr
+  name: restoreprowlarrr
   namespace: media
 spec:
   accessModes:
@@ -37,11 +37,11 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: prowlarr-restore-dest
+  name: prowlarr-restoree-dest
   namespace: media
 spec:
   trigger:
-    manual: restore-once-prowlarrrr
+    manual: restore-once-prowlarrrrr
   restic:
     repository: prowlarr-restic-secret
     # Use an existing PVC, don't provision a new one
