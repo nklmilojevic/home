@@ -45,7 +45,7 @@ spec:
             - name: vip_retryperiod
               value: "2"
             - name: address
-              value: "${KUBE_VIP_ADDR}"
+              value: "10.2.0.3"
           securityContext:
             capabilities:
               add: ["NET_ADMIN", "NET_RAW"]
