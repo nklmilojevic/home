@@ -59,7 +59,7 @@ spec:
             sub_filter '</body>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/tautulli/dracula.css"></body>';
             sub_filter_once on;
         hosts:
-          - host: &host tautulli.${SECRET_DOMAIN}
+          - host: &host tautulli.milojevic.dev
             paths:
               - path: /
                 pathType: Prefix
