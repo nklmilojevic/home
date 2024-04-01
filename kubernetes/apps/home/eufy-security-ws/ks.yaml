@@ -1,23 +1,26 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-eufy-security-ws
+  name: &app eufy-security-ws
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   targetNamespace: home
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: cluster-apps-onepassword-connect
   path: ./kubernetes/apps/home/eufy-security-ws/app
   prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
-      kind: HelmRelease
-      name: eufy-security-ws
-      namespace: home
+  wait: false
   interval: 30m
   retryInterval: 1m
-  timeout: 3m
+  timeout: 5m
+  postBuild:
+    substitute:
+      APP: *app
