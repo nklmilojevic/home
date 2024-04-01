@@ -40,11 +40,11 @@ spec:
   # cluster when recovering from an existing cnpg cluster
   bootstrap:
     recovery:
-      source: postgres16
+      source: postgres
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
   # # Note: externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
-    - name: postgres16
+    - name: postgres
       barmanObjectStore:
         wal:
           compression: bzip2
