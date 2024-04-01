@@ -59,7 +59,8 @@ spec:
         controller: plex
         type: LoadBalancer
         externalTrafficPolicy: Cluster
-        loadBalancerIP: "${SVC_PLEX_IP}"
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "10.2.0.6"
         ports:
           http:
             port: 32400
