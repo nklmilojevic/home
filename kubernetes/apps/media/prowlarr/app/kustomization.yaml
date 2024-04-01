@@ -4,4 +4,5 @@ resources:
   - ./externalsecret.yaml
   - ./pvc.yaml
   - ./helmrelease.yaml
+  - ./restoretest.yaml
   - ../../../../templates/volsync
