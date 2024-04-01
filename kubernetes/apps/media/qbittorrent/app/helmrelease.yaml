@@ -38,8 +38,8 @@ spec:
 
             env:
               TZ: "Europe/Belgrade"
-              PUID: "${PUID}"
-              PGID: "${PUID}"
+              PUID: "1000"
+              PGID: "1000"
             securityContext:
               runAsUser: 1000
               runAsGroup: 1000
@@ -48,7 +48,8 @@ spec:
       app:
         controller: qbittorrent
         type: LoadBalancer
-        loadBalancerIP: ${SVC_QBIT_IP}
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "10.2.0.9"
         externalTrafficPolicy: Local
         ports:
           http:
