@@ -4,7 +4,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app onepassword-connect
-  namespace: kube-system
+  namespace: security
 spec:
   interval: 30m
   chart:
@@ -39,8 +39,7 @@ spec:
         containers:
           app:
             image:
-              # repository: docker.io/1password/connect-api
-              repository: ghcr.io/haraldkoch/onepassword-connect-api
+              repository: docker.io/1password/connect-api
               tag: 1.7.2
             env:
               OP_BUS_PORT: "11220"
@@ -80,7 +79,7 @@ spec:
                 memory: 100Mi
           sync:
             image:
-              repository: docker.io/1password/connect-sync:1.7.0
+              repository: docker.io/1password/connect-sync
               tag: 1.7.2
             env:
               - { name: OP_HTTP_PORT, value: &sport 8081 }
