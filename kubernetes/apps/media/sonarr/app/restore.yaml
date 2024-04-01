@@ -1,0 +1,26 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: restoretestttttttt
+  namespace: home
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: sonarr-restore-dest
+  namespace: media
+spec:
+  trigger:
+    manual: restore-once
+  restic:
+    repository: sonarr-restic-secret
+    # Use an existing PVC, don't provision a new one
+    destinationPVC: sonarr-data
+    copyMethod: Direct
