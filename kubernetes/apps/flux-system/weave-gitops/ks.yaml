@@ -8,6 +8,11 @@ spec:
   targetNamespace: flux-system
   path: ./kubernetes/apps/flux-system/weave-gitops/app
   prune: true
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  dependsOn:
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
