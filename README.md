@@ -38,6 +38,7 @@ NAS is running Ubuntu 22.04. [Snapraid](https://www.snapraid.it/) is used for so
 * [external-dns](https://github.com/kubernetes-sigs/external-dns) - Operator to publish DNS records to Cloudflare (and other providers) based on Kubernetes ingresses
 * [k8s_gateway](https://github.com/ori-edge/k8s_gateway) - DNS resolver that provides local DNS to your Kubernetes ingresses
 * [ingress-nginx](https://kubernetes.github.io/ingress-nginx/) - Kubernetes ingress controller used for a HTTP reverse proxy of Kubernetes ingresses
+* [cloudflared](https://github.com/cloudflare/cloudflared) - Secure access without port forwarding on router
 * [local-path-provisioner](https://github.com/rancher/local-path-provisioner) - provision persistent local storage with Kubernetes
 * [onepassword-connect](https://github.com/1Password/connect) - access secrets for cluster apps
 * [external-secrets](https://github.com/external-secrets/external-secrets) - connects to onepassword-connect and provisions k8s secrets
