@@ -12,7 +12,7 @@ spec:
   path: ./kubernetes/apps/security/external-secrets/app
   prune: true
   sourceRef:
-    kind: gitrepository
+    kind: GitRepository
     name: home-kubernetes
   wait: true
   interval: 30m
