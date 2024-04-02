@@ -1,26 +1,3 @@
----
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiversion: kustomize.toolkit.fluxcd.io/v1
-kind: kustomization
-metadata:
-  name: &app external-secretz
-  namespace: flux-system
-spec:
-  targetnamespace: security
-  commonmetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/security/external-secrets/app
-  prune: true
-  sourceRef:
-    kind: gitrepository
-    name: home-kubernetes
-  wait: true
-  interval: 30m
-  retryinterval: 1m
-  timeout: 5m
----
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiversion: kustomize.toolkit.fluxcd.io/v1
 kind: kustomization
 metadata:
@@ -57,7 +34,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: external-secretz
+    - name: external-secrets
   path: ./kubernetes/apps/security/external-secrets/stores
   prune: true
   sourceRef:
