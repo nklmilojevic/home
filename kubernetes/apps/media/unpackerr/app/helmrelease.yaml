@@ -76,6 +76,21 @@ spec:
           http:
             port: 5656
 
+    ingress:
+      app:
+        className: "internal"
+        hosts:
+          - host: &host unpackerr.milojevic.dev
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+
     serviceMonitor:
       app:
         serviceName: *app
