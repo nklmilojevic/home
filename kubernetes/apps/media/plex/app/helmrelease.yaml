@@ -38,13 +38,13 @@ spec:
             env:
               TZ: "Europe/Belgrade"
               VERSION: "docker"
-              PUID: "1000"
-              PGID: "1000"
               PLEX_ADVERTISE_URL: https://10.2.0.6:32400,https://plex.milojevic.dev:443
               PLEX_NO_AUTH_NETWORKS: 10.0.0.0/8
             securityContext:
-              runAsUser: 1000
-              runAsGroup: 1000
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
             resources:
               requests:
                 gpu.intel.com/i915: 1
@@ -53,6 +53,14 @@ spec:
               limits:
                 gpu.intel.com/i915: 1
                 memory: 4096Mi
+
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
 
     service:
       app:

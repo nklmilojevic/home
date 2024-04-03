@@ -38,8 +38,6 @@ spec:
 
             env:
               TZ: "Europe/Belgrade"
-              # PUID: "1000"
-              # PGID: "1000"
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
