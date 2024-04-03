@@ -42,7 +42,6 @@ spec:
               # PGID: "1000"
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
               capabilities:
                 drop:
                   - ALL
