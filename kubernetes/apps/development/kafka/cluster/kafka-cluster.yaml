@@ -57,7 +57,7 @@ spec:
       default.replication.factor: 3
       min.insync.replicas: 2
     storage:
-      type: persistent-claim
+      type: existing-claim
       size: 10Gi
   zookeeper:
     replicas: 3
