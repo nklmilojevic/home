@@ -11,6 +11,7 @@ spec:
     - broker
     - controller
   storage:
+    type: existing-claim
     size: 10Gi
 ---
 apiVersion: kafka.strimzi.io/v1beta2
@@ -39,7 +40,7 @@ spec:
         type: ingress
         tls: true
         configuration:
-          class: internal
+          class: internal # nginx-internal
           bootstrap:
             host: kafka-bootstrap.milojevic.dev
           brokers:
@@ -55,12 +56,9 @@ spec:
       transaction.state.log.min.isr: 2
       default.replication.factor: 3
       min.insync.replicas: 2
-    # The storage field is required by the Kafka CRD schema while the KafkaNodePools feature gate is in alpha phase.
-    # But it will be ignored when Kafka Node Pools are used
     storage:
+      type: persistent-claim
       size: 10Gi
-  # The ZooKeeper section is required by the Kafka CRD schema while the UseKRaft feature gate is in alpha phase.
-  # But it will be ignored when running in KRaft mode
   zookeeper:
     replicas: 3
     storage:
