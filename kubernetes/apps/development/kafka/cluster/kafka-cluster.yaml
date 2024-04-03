@@ -11,7 +11,7 @@ spec:
     - broker
     - controller
   storage:
-    type: existing-claim
+    type: persistent-claim
     size: 10Gi
 ---
 apiVersion: kafka.strimzi.io/v1beta2
@@ -57,7 +57,7 @@ spec:
       default.replication.factor: 3
       min.insync.replicas: 2
     storage:
-      type: existing-claim
+      type: persistent-claim
       size: 10Gi
   zookeeper:
     replicas: 3
