@@ -103,3 +103,4 @@ sinks:
       _msg_field: "message"
       _time_field: "time"
       _stream_fields: "hostname,status_code"
+      debug: "1"
