@@ -27,28 +27,6 @@ sources:
 # Transforms
 #
 
-transforms:
-  kubernetes_remap:
-    type: remap
-    inputs: ["kubernetes_source"]
-    source: |
-      # Standardize 'app' index
-      .app = .pod_labels."app.kubernetes.io/name" || .pod_labels.app || .pod_labels."k8s-app" || "unknown"
-      # Drop pod_labels
-      del(.pod_labels)
-      .namespace = .kubernetes.pod_namespace
-      del(.kubernetes.pod_namespace)
-      .node = .kubernetes.pod_node_name
-      del(.kubernetes.pod_node_name)
-  kubernetes_ingress_remap:
-    type: remap
-    inputs: ["kubernetes_ingress_source"]
-    source: |
-      rawMessages, err = parse_json(.message)
-      if err != null {
-        log(.message)
-      abort
-      }
 #
 # Sinks
 #
@@ -67,22 +45,8 @@ sinks:
     query:
       _msg_field: "message"
       _stream_fields: "hostname"
-  # kubernetes:
-  #   inputs: ["kubernetes_source"]
-  #   type: elasticsearch
-  #   endpoints:
-  #     - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
-  #   mode: "bulk"
-  #   compression: gzip
-  #   api_version: "v8"
-  #   healthcheck:
-  #     enabled: false
-  #   query:
-  #     _msg_field: "message"
-  #     _stream_fields: "level,kubernetes.pod_namespace"
-  #     debug: "1"
-  ingress:
-    inputs: ["kubernetes_ingress_remap"]
+  kubernetes:
+    inputs: ["kubernetes_source"]
     type: elasticsearch
     endpoints:
       - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
@@ -93,4 +57,18 @@ sinks:
       enabled: false
     query:
       _msg_field: "message"
-      _stream_fields: "vhost"
+      _stream_fields: ",kubernetes.pod_namespace"
+  #     debug: "1"
+  # ingress:
+  #   inputs: ["kubernetes_ingress_remap"]
+  #   type: elasticsearch
+  #   endpoints:
+  #     - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
+  #   mode: "bulk"
+  #   compression: gzip
+  #   api_version: "v8"
+  #   healthcheck:
+  #     enabled: false
+  #   query:
+  #     _msg_field: "message"
+  #     _stream_fields: "vhost"
