@@ -74,7 +74,7 @@ sinks:
     healthcheck:
       enabled: false
     query:
-      _msg_field: "message"
+      _msg_field: "_msg"
       _stream_fields: "hostname,source_ip"
   kubernetes:
     inputs: ["kubernetes_source"]
@@ -87,7 +87,7 @@ sinks:
     healthcheck:
       enabled: false
     query:
-      _msg_field: "message"
+      _msg_field: "_msg"
       _stream_fields: "node,container_name,app,namespace"
   ingress:
     inputs: ["kubernetes_ingress_source"]
@@ -100,7 +100,7 @@ sinks:
     healthcheck:
       enabled: false
     query:
-      _msg_field: "message"
+      _msg_field: "_msg"
       _time_field: "time"
       _stream_fields: "hostname,status_code"
       debug: "1"
