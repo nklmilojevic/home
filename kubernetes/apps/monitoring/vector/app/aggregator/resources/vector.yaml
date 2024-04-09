@@ -87,8 +87,8 @@ sinks:
     healthcheck:
       enabled: false
     query:
-      _msg_field: "message"
-      debug: "1"
+      _msg_field: "_msg"
+      _stream_fields: "level,kubernetes.pod_namespace"
   ingress:
     inputs: ["kubernetes_ingress_source"]
     type: elasticsearch
@@ -100,6 +100,6 @@ sinks:
     healthcheck:
       enabled: false
     query:
-      _msg_field: "message"
-      _time_field: "time"
+      _msg_field: "_msg"
+      _stream_fields: "hostname"
       debug: "1"
