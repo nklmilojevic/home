@@ -25,3 +25,15 @@ sinks:
     version: "2"
     address: vector-aggregator.monitoring.svc.cluster.local:6000
     inputs: ["mikrotik_source"]
+  kubernetes:
+    type: vector
+    compression: true
+    version: "2"
+    address: vector-aggregator.monitoring.svc.cluster.local:6010
+    inputs: ["kubernetes_source"]
+  kubernetes_sink_ingress_logs:
+    type: vector
+    compression: true
+    version: "2"
+    address: vector-aggregator.monitoring.svc.cluster.local:6013
+    inputs: ["kubernetes_source_ingress_logs"]
