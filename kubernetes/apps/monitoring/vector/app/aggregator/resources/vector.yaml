@@ -44,8 +44,8 @@ sinks:
     healthcheck:
       enabled: false
     query:
-      # _msg_field: "_msg"
-      debug: "1"
+      _msg_field: "msg"
+      # debug: "1"
       # _stream_fields: "hostname,source_ip"
   kubernetes:
     inputs: ["kubernetes_source"]
