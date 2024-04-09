@@ -4,32 +4,11 @@ api:
   enabled: true
   address: 0.0.0.0:8686
 
-#
-# Sources
-#
-
 sources:
   mikrotik_source:
     type: vector
     version: "2"
     address: 0.0.0.0:6000
-
-  kubernetes_source:
-    type: vector
-    version: "2"
-    address: 0.0.0.0:6010
-
-  kubernetes_ingress_source:
-    type: vector
-    version: "2"
-    address: 0.0.0.0:6013
-#
-# Transforms
-#
-
-#
-# Sinks
-#
 
 sinks:
   mikrotik:
@@ -45,30 +24,3 @@ sinks:
     query:
       _msg_field: "message"
       _stream_fields: "hostname"
-  # kubernetes:
-  #   inputs: ["kubernetes_source"]
-  #   type: elasticsearch
-  #   endpoints:
-  #     - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
-  #   mode: "bulk"
-  #   compression: gzip
-  #   api_version: "v8"
-  #   healthcheck:
-  #     enabled: false
-  #   query:
-  #     _msg_field: "message"
-  #     _stream_fields: "kubernetes.pod_namespace"
-  #     debug: "1"
-  # ingress:
-  #   inputs: ["kubernetes_ingress_remap"]
-  #   type: elasticsearch
-  #   endpoints:
-  #     - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
-  #   mode: "bulk"
-  #   compression: gzip
-  #   api_version: "v8"
-  #   healthcheck:
-  #     enabled: false
-  #   query:
-  #     _msg_field: "message"
-  #     _stream_fields: "vhost"
