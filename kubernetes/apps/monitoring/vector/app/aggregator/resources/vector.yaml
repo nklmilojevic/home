@@ -13,27 +13,10 @@ sources:
     type: vector
     version: "2"
     address: 0.0.0.0:6000
-
-  kubernetes_source:
-    type: vector
-    version: "2"
-    address: 0.0.0.0:6010
-
-  kubernetes_ingress_source:
-    type: vector
-    version: "2"
-    address: 0.0.0.0:6013
 #
 # Transforms
 #
 
-transforms:
-  kubernetes_ingress_remap:
-    type: remap
-    inputs: ["kubernetes_ingress_source"]
-    source: |
-      .log = parse_json!(.message)
-      del(.message)
 #
 # Sinks
 #
@@ -52,17 +35,3 @@ sinks:
     query:
       _msg_field: "message"
       _stream_fields: "hostname"
-
-  ingress:
-    inputs: ["kubernetes_ingress_remap"]
-    type: elasticsearch
-    endpoints:
-      - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
-    mode: "bulk"
-    compression: gzip
-    api_version: "v8"
-    healthcheck:
-      enabled: false
-    query:
-      _msg_field: "log.msg"
-      _stream_fields: "container_name"

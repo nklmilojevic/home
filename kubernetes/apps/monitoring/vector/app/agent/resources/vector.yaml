@@ -9,24 +9,6 @@ sources:
     mode: udp
     permit_origin:
       - 10.0.0.0/8
-  kubernetes_source:
-    type: kubernetes_logs
-    use_apiserver_cache: true
-    pod_annotation_fields:
-      container_image: container_image
-      container_name: container_name
-      pod_labels: pod_labels
-      pod_name: pod_name
-      pod_annotations: ""
-    namespace_annotation_fields:
-      namespace_labels: ""
-    node_annotation_fields:
-      node_labels: ""
-  kubernetes_source_ingress_logs:
-    type: kubernetes_logs
-    extra_field_selector: "metadata.namespace=networking"
-    extra_label_selector: "app.kubernetes.io/name=ingress-nginx"
-    ingestion_timestamp_field: ".ingest_timestamp"
 sinks:
   mikrotik:
     type: vector
@@ -34,15 +16,3 @@ sinks:
     version: "2"
     address: vector-aggregator.monitoring.svc.cluster.local:6000
     inputs: ["mikrotik_source"]
-  kubernetes:
-    type: vector
-    compression: true
-    version: "2"
-    address: vector-aggregator.monitoring.svc.cluster.local:6010
-    inputs: ["kubernetes_source"]
-  kubernetes_sink_ingress_logs:
-    type: vector
-    compression: true
-    version: "2"
-    address: vector-aggregator.monitoring.svc.cluster.local:6013
-    inputs: ["kubernetes_source_ingress_logs"]
