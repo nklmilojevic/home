@@ -44,7 +44,7 @@ transforms:
     type: remap
     inputs: ["kubernetes_ingress_source"]
     source: |
-      log(.)
+      log(.kubernetes.message)
 #
 # Sinks
 #
