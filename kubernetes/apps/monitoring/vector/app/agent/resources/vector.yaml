@@ -11,12 +11,12 @@ sources:
       - 10.0.0.0/8
   kubernetes_source:
     type: kubernetes_logs
-    extra_field_selector: "metadata.namespace!=ingress-nginx"
-    ingestion_timestamp_field: ".ingest_timestamp"
+    # extra_field_selector: "metadata.namespace!=ingress-nginx"
+    # ingestion_timestamp_field: ".ingest_timestamp"
   kubernetes_source_ingress_logs:
     type: kubernetes_logs
     extra_field_selector: "metadata.namespace=networking"
-    extra_label_selector: "app.kubernetes.io/name=ingress-nginx"
+    extra_label_selector: "app.kubernetes.io/name=ingress-nginx-external"
     ingestion_timestamp_field: ".ingest_timestamp"
 sinks:
   mikrotik:
