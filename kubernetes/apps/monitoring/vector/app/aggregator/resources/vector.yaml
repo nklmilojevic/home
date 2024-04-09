@@ -87,7 +87,7 @@ sinks:
     healthcheck:
       enabled: false
     query:
-      _msg_field: "message"
+      _msg_field: "log_message"
       _stream_fields: "node,container_name,app,namespace"
   ingress:
     inputs: ["kubernetes_ingress_remap"]
