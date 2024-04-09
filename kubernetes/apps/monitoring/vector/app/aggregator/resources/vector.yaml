@@ -87,7 +87,7 @@ sinks:
       enabled: false
     query:
       _msg_field: "message"
-      _stream_fields: "node,container_name,app,namespace"
+      debug: "1"
   ingress:
     inputs: ["kubernetes_ingress_source"]
     type: elasticsearch
@@ -101,5 +101,4 @@ sinks:
     query:
       _msg_field: "message"
       _time_field: "time"
-      _stream_fields: "hostname,status_code"
       debug: "1"
