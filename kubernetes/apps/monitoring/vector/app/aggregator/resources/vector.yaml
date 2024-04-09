@@ -65,4 +65,4 @@ sinks:
       enabled: false
     query:
       _msg_field: "log.msg"
-      _stream_fields: "log.vhost"
+      _stream_fields: "container_name"
