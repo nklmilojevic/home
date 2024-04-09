@@ -57,7 +57,7 @@ sinks:
       enabled: false
     query:
       _msg_field: "message"
-      _stream_fields: ",kubernetes.pod_namespace"
+      _stream_fields: "kubernetes.pod_namespace"
   #     debug: "1"
   # ingress:
   #   inputs: ["kubernetes_ingress_remap"]
