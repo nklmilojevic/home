@@ -45,10 +45,6 @@ transforms:
     inputs: ["kubernetes_ingress_source"]
     source: |
       . = parse_json!(.message)
-
-      # Coerce parsed fields
-      .pod_name = string!(.kubernetes.pod_name)
-      .component = string!(.kubernetes.pod_labels."app.kubernetes.io/component")
 #
 # Sinks
 #
@@ -82,7 +78,7 @@ sinks:
   #     _stream_fields: "level,kubernetes.pod_namespace"
   #     debug: "1"
   ingress:
-    inputs: ["kubernetes_ingress_source"]
+    inputs: ["kubernetes_ingress_remap"]
     type: elasticsearch
     endpoints:
       - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
