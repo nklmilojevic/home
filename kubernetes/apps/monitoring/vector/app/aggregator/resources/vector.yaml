@@ -75,7 +75,6 @@ sinks:
       enabled: false
     query:
       _msg_field: "message"
-      debug: "1"
   kubernetes:
     inputs: ["kubernetes_source"]
     type: elasticsearch
