@@ -100,6 +100,6 @@ sinks:
     healthcheck:
       enabled: false
     query:
-      _msg_field: "_msg"
-      _stream_fields: "hostname"
+      _msg_field: "path"
+      _stream_fields: "vhost"
       debug: "1"
