@@ -44,10 +44,10 @@ sinks:
     api_version: "v8"
     healthcheck:
       enabled: false
-    query:
-      _msg_field: "_msg"
-      debug: "1"
-      # _stream_fields: "hostname,source_ip"
+    # query:
+    # _msg_field: "_msg"
+    # debug: "1"
+    # _stream_fields: "hostname,source_ip"
   kubernetes:
     inputs: ["kubernetes_source"]
     type: elasticsearch
