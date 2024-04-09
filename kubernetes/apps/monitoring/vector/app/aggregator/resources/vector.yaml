@@ -23,41 +23,7 @@ sources:
     type: vector
     version: "2"
     address: 0.0.0.0:6013
-#
-# Transforms
-#
 
-transforms:
-  kubernetes_remap:
-    type: remap
-    inputs: ["kubernetes_source"]
-    source: |
-      # Standardize 'app' index
-      .app = .pod_labels."app.kubernetes.io/name" || .pod_labels.app || .pod_labels."k8s-app" || "unknown"
-      # Drop pod_labels
-      del(.pod_labels)
-      .namespace = .kubernetes.pod_namespace
-      del(.kubernetes.pod_namespace)
-      .node = .kubernetes.pod_node_name
-      del(.kubernetes.pod_node_name)
-  kubernetes_ingress_remap:
-    type: remap
-    inputs: ["kubernetes_ingress_source"]
-    source: |
-      ., err |= parse_regex(.message, r'\{"time": "(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2})", "remote_addr": "(?P<client_ip>[^"]+)", "x_forwarded_for": "(?P<ip_address>[^"]+)", "request_id": "(?P<request_id>[^"]+)", "remote_user": "(?P<remote_user>[^"]+)", "bytes_sent": (?P<response_size>\d+), "request_time": (?P<request_time>\d+\.\d+), "status": (?P<status_code>\d+), "vhost": "(?P<hostname>[^"]+)", "request_proto": "(?P<http_version>[^"]+)", "path": "(?P<request_uri>[^"]+)", "request_query": "(?P<request_query>[^"]+)", "request_length": (?P<request_length>\d+), "duration": (?P<processing_time>\d+\.\d+),"method": "(?P<request_method>[^"]+)", "http_referrer": "(?P<referer>[^"]+)", "http_user_agent": "(?P<http_user_agent>[^"]+)", "cf_ray": "(?P<cf_ray>[^"]+)" \}')
-
-      if err != null {
-          abort
-      }
-
-      # Coerce parsed fields
-      .user_agent = parse_user_agent(string!(.http_user_agent))
-      .pod_name = string!(.kubernetes.pod_name)
-      .component = string!(.kubernetes.pod_labels."app.kubernetes.io/component")
-      .raw_user_agent = string!(.http_user_agent)
-
-      # Remove unnecessary fields
-      del(.kubernetes)
 #
 # Sinks
 #
@@ -101,5 +67,5 @@ sinks:
     healthcheck:
       enabled: false
     query:
-      _msg_field: "path"
+      _msg_field: "message"
       _stream_fields: "vhost"
