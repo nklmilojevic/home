@@ -82,7 +82,7 @@ sinks:
   #     _stream_fields: "level,kubernetes.pod_namespace"
   #     debug: "1"
   ingress:
-    inputs: ["kubernetes_ingress_remap"]
+    inputs: ["kubernetes_ingress_source"]
     type: elasticsearch
     endpoints:
       - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
