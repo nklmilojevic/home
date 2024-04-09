@@ -89,6 +89,7 @@ sinks:
     query:
       _msg_field: "_msg"
       _stream_fields: "level,kubernetes.pod_namespace"
+      debug: "1"
   ingress:
     inputs: ["kubernetes_ingress_source"]
     type: elasticsearch
@@ -102,4 +103,3 @@ sinks:
     query:
       _msg_field: "path"
       _stream_fields: "vhost"
-      debug: "1"
