@@ -75,6 +75,7 @@ sinks:
       enabled: false
     query:
       _msg_field: "message"
+      _stream_fields: "hostname"
   kubernetes:
     inputs: ["kubernetes_source"]
     type: elasticsearch
