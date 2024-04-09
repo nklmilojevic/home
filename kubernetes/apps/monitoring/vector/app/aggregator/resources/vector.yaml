@@ -77,7 +77,7 @@ sinks:
       _msg_field: "message"
       _stream_fields: "hostname,source_ip"
   kubernetes:
-    inputs: ["kubernetes_remap"]
+    inputs: ["kubernetes_source"]
     type: elasticsearch
     endpoints:
       - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
