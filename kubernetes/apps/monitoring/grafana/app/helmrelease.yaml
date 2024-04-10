@@ -29,22 +29,6 @@ spec:
         envFrom:
           - secretRef:
               name: &secret grafana-secret
-      # - name: 02-load-vm-ds-plugin
-      #   image: "curlimages/curl:8.7.1"
-      #   command: ["/bin/sh"]
-      #   workingDir: "/var/lib/grafana"
-      #   args:
-      #     - "-c"
-      #     - |
-      #       set -ex
-      #       mkdir -p /var/lib/grafana/plugins/
-      #       ver=$(curl -s https://api.github.com/repos/VictoriaMetrics/victorialogs-datasource/releases/latest | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1)
-      #       curl -L https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/$ver/victorialogs-datasource-$ver.tar.gz -o /var/lib/grafana/plugins/plugin.tar.gz
-      #       tar -xf /var/lib/grafana/plugins/plugin.tar.gz -C /var/lib/grafana/plugins/
-      #       rm /var/lib/grafana/plugins/plugin.tar.gz
-      #   volumeMounts:
-      #     - name: storage
-      #       mountPath: /var/lib/grafana
 
     replicas: 1
     env:
@@ -59,7 +43,8 @@ spec:
       GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
       GF_SECURITY_COOKIE_SAMESITE: grafana
       GF_SERVER_ROOT_URL: https://grafana.milojevic.dev
-      GF_INSTALL_PLUGINS: https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.2.1/victorialogs-datasource-v0.2.1.zip;victorialogs-datasource
+      GF_INSTALL_PLUGINS: https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.2.1/victorialogs-datasource-v0.2.1.zip;victorialogs-datasource,grafana-clock-panel,grafana-piechart-panel,grafana-worldmap-panel,natel-discrete-panel,pr0ps-trackmap-panel,vonage-status-panel
+
     envFromSecrets:
       - name: *secret
     grafana.ini:
@@ -250,14 +235,6 @@ spec:
         enabled: true
         initDatasources: true
         searchNamespace: ALL
-
-    # plugins:
-    #   - grafana-clock-panel
-    #   - grafana-piechart-panel
-    #   - grafana-worldmap-panel
-    #   - natel-discrete-panel
-    #   - pr0ps-trackmap-panel
-    #   - vonage-status-panel
 
     serviceMonitor:
       enabled: true
