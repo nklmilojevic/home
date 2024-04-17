@@ -57,6 +57,7 @@ spec:
             runAsNonRoot: true
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups: [44, 105, 100]
           nodeSelector:
             intel.feature.node.kubernetes.io/gpu: "true"
 
