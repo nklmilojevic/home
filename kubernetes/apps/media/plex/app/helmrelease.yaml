@@ -50,7 +50,7 @@ spec:
                 gpu.intel.com/i915: 1
                 cpu: 200m
 
-        defaultPodOptions:
+        pod:
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
