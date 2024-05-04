@@ -1,0 +1,100 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: scrypted
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.1.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+
+  values:
+    controllers:
+      scrypted:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        pod:
+          annotations:
+          nodeSelector:
+            # google.feature.node.kubernetes.io/coral: "true"
+            intel.feature.node.kubernetes.io/gpu: "true"
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/koush/scrypted
+              tag: v0.100.2-jammy-full
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                gpu.intel.com/i915: 1
+                cpu: 136m
+                memory: 1024Mi
+              limits:
+                gpu.intel.com/i915: 1
+                memory: 8192Mi
+            securityContext:
+              privileged: true
+
+    service:
+      app:
+        controller: scrypted
+        ports:
+          http:
+            port: 11080
+          rebroadcast:
+            port: 34135
+
+    ingress:
+      app:
+        className: "internal"
+        hosts:
+          - host: &hostName scrypted.milojevic.dev
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *hostName
+
+    persistence:
+      config:
+        existingClaim: scrypted-data
+        advancedMounts:
+          scrypted:
+            app:
+              - path: /server/volume
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /.cache
+      cache-npm:
+        type: emptyDir
+        globalMounts:
+          - path: /.npm
+      recs:
+        type: nfs
+        server: panopticon.milojevic.dev
+        path: /cameras
+        globalMounts:
+          - path: /recs
