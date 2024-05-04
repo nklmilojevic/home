@@ -9,3 +9,4 @@ resources:
   - ./zwavejs/ks.yaml
   - ./eufy-security-ws/ks.yaml
   - ./rtsp-simple-server/ks.yaml
+  - ./scrypted/ks.yaml
