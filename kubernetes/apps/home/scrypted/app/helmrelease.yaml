@@ -36,14 +36,11 @@ spec:
               tag: v0.100.2-jammy-full
             probes:
               liveness:
-                enabled: true
+                enabled: false
               readiness:
-                enabled: true
+                enabled: false
               startup:
-                enabled: true
-                spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
+                enabled: false
             resources:
               requests:
                 gpu.intel.com/i915: 1
