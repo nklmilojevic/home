@@ -3,4 +3,5 @@ kind: Kustomization
 namespace: home
 resources:
   - ./pvc.yaml
+  - ./multus.yaml
   - ./helmrelease.yaml

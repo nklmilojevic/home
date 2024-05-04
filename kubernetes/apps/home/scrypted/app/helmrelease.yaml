@@ -24,6 +24,7 @@ spec:
 
         pod:
           annotations:
+            k8s.v1.cni.cncf.io/networks: static-iot-scrypted
           nodeSelector:
             # google.feature.node.kubernetes.io/coral: "true"
             intel.feature.node.kubernetes.io/gpu: "true"
