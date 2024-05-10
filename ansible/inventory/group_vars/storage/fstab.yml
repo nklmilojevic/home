@@ -28,3 +28,6 @@ bind_mounts:
   - path: "/export/minio"
     src: "/mnt/storage/minio"
     state: "mounted"
+  - path: "/export/cameras"
+    src: "/mnt/storage/cameras"
+    state: "mounted"

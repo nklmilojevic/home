@@ -1,0 +1,91 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: esphome
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.1.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+
+  values:
+    controllers:
+      esphome:
+        annotations:
+          secret.reloader.stakater.com/reload: esphome-secrets,esphome-deploykey
+
+        pod:
+          annotations:
+            k8s.v1.cni.cncf.io/networks: static-iot-esphome
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/esphome/esphome
+              tag: 2024.4.2
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 5m
+                memory: 1374M
+              limits:
+                memory: 2048M
+
+    service:
+      app:
+        controller: esphome
+        ports:
+          http:
+            port: 6052
+
+    ingress:
+      app:
+        className: "internal"
+        hosts:
+          - host: &hostName esphome.milojevic.dev
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *hostName
+
+    persistence:
+      config:
+        existingClaim: esphome-data
+        advancedMounts:
+          esphome:
+            app:
+              - path: /config
+      # secrets:
+      #   type: secret
+      #   name: esphome-secrets
+      #   globalMounts:
+      #     - path: /config/secrets.yaml
+      #       subPath: secrets.yaml
+      esphome-cache:
+        type: emptyDir
+        globalMounts:
+          - path: /config/.esphome
+      # deploy-key:
+      #   type: secret
+      #   name: esphome-deploykey
+      #   defaultMode: 256
+      #   globalMounts:
+      #     - path: /root/.ssh/id_ed25519
+      #       subPath: id_ed25519
