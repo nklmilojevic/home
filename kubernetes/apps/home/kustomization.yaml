@@ -10,3 +10,4 @@ resources:
   - ./eufy-security-ws/ks.yaml
   - ./rtsp-simple-server/ks.yaml
   - ./scrypted/ks.yaml
+  - ./esphome/ks.yaml
