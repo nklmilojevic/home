@@ -38,10 +38,6 @@ spec:
             env:
               TZ: "Europe/Belgrade"
 
-    service:
-      app:
-        enabled: false
-
     persistence:
       config:
         enabled: true
