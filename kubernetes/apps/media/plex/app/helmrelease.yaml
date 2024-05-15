@@ -95,8 +95,12 @@ spec:
     persistence:
       config:
         existingClaim: plex-data
-      media:
-        existingClaim: nfs-media-pvc
       transcode:
         type: emptyDir
         medium: Memory
+      media:
+        type: nfs
+        server: panopticon.milojevic.dev
+        path: /media
+        globalMounts:
+          - path: /media
