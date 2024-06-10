@@ -40,12 +40,12 @@ spec:
                 cpu: 15m
               limits:
                 memory: 120M
-            service:
-              app:
-                controller: omada-exporter
-                ports:
-                  http:
-                    port: 9202
+    service:
+      app:
+        controller: omada-exporter
+        ports:
+          http:
+            port: 9202
     serviceMonitor:
       app:
         serviceName: omada-exporter
