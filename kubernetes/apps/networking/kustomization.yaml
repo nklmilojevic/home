@@ -9,6 +9,7 @@ resources:
   - ./k8s-gateway/ks.yaml
   - ./metallb/ks.yaml
   - ./omada/ks.yaml
+  - ./omada-exporter/ks.yaml
   - ./adguard/ks.yaml
   - ./multus/ks.yaml
   - ./smtp-relay/ks.yaml
