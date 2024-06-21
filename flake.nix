@@ -21,6 +21,7 @@
           home = mkPoetryApplication {
             projectDir = self;
             preferWheels = true;
+            python = pkgs.python312;
             };
           default = self.packages.${system}.home;
         };
@@ -49,7 +50,7 @@
         #
         # Use this shell for changes to pyproject.toml and poetry.lock.
         devShells.poetry = pkgs.mkShell {
-          packages = [ pkgs.poetry ];
+          packages = [ pkgs.python312 pkgs.poetry ];
         };
       });
 }
