@@ -23,7 +23,7 @@ spec:
       name: server
       image:
         repository: victoriametrics/victoria-logs
-        tag: "v0.25.0-victorialogs"
+        tag: "v0.27.0-victorialogs"
         pullPolicy: IfNotPresent
       extraArgs:
         envflag.enable: "true"
