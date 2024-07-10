@@ -39,6 +39,14 @@ camera:
         left: 25
         right: 20
 
+climate:
+  - platform: gree
+    name: Bedroom
+    host: 10.3.0.14
+    port: 7000
+    mac: "F4:91:1E:8B:81:29"
+    target_temp_step: 1
+
 telegram_bot:
   - platform: polling
     api_key: !env_var TELEGRAM_API_KEY
