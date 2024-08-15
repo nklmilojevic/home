@@ -30,48 +30,17 @@ spec:
       create: true
       annotations: {}
 
+    ## -- Create default rules for monitoring the cluster
     defaultRules:
-      create: true
-      rules:
-        etcd: true
-        general: false
-        k8s: true
-        kubeApiserver: true
-        kubeApiserverAvailability: true
-        kubeApiserverBurnrate: true
-        kubeApiserverSlos: true
-        kubelet: true
-        kubePrometheusGeneral: true
-        kubePrometheusNodeRecording: true
-        kubernetesApps: true
-        kubernetesResources: false
-        kubernetesStorage: true
-        kubernetesSystem: true
-        kubeScheduler: true
-        kubeStateMetrics: true
-        network: true
-        node: true
-        vmagent: false
-        vmsingle: false
-        vmhealth: false
-        alertmanager: false
+      create: false
 
+      # -- Runbook url prefix for default rules
       runbookUrl: https://runbooks.prometheus-operator.dev/runbooks
-      appNamespacesTarget: ".*"
 
-    defaultDashboardsEnabled: true
-    experimentalDashboardsEnabled: true
-
-    vmsingle:
+      # -- Labels for default rules
+      labels: {}
+      # -- Annotations for default rules
       annotations: {}
-      enabled: true
-      # spec for VMSingle crd
-      # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmsinglespec
-      spec:
-        retentionPeriod: "14"
-        replicaCount: 1
-        extraArgs:
-          maxLabelsPerTimeseries: "80"
 
     alertmanager:
       enabled: true
