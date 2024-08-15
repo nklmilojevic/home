@@ -79,13 +79,6 @@ spec:
       # spec for VMAlertmanager crd
       # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmalertmanagerspec
       spec:
-        resources:
-          limits:
-            cpu: 200m
-            memory: 200Mi
-          requests:
-            cpu: 200m
-            memory: 100Mi
         selectAllByDefault: true
         externalURL: ""
         routePrefix: /
@@ -126,13 +119,6 @@ spec:
       # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec
       # defined spec will be added to the remoteWrite configuration of VMAgent
       spec:
-        resources:
-          limits:
-            cpu: 2000m
-            memory: 500Mi
-          requests:
-            cpu: 50m
-            memory: 200Mi
         inlineScrapeConfig: |
           - job_name: node-exporter
             honor_labels: true
