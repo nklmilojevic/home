@@ -16,17 +16,18 @@
   ],
   "rebaseWhen": "conflicted",
   "schedule": [
-    "on saturday"
+    "every weekend"
+  ],
+  "ignorePaths": [
+    "**/*.sops.*"
   ],
   "flux": {
     "fileMatch": [
-      "(^|/)ansible/.+\\.ya?ml(?:\\.j2)?$",
       "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
     ]
   },
   "helm-values": {
     "fileMatch": [
-      "(^|/)ansible/.+\\.ya?ml(?:\\.j2)?$",
       "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
     ]
   },
@@ -37,7 +38,6 @@
   },
   "kubernetes": {
     "fileMatch": [
-      "(^|/)ansible/.+\\.ya?ml(?:\\.j2)?$",
       "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
     ]
   },
@@ -49,11 +49,6 @@
   "pip_requirements": {
     "fileMatch": [
       "(^|/)[\\w-]*requirements(-\\w+)?\\.(txt|pip)(?:\\.j2)?$"
-    ]
-  },
-  "ansible-galaxy": {
-    "fileMatch": [
-      "(^|/)(galaxy|requirements)(\\.ansible)?\\.ya?ml(?:\\.j2)?$"
     ]
   },
   // commit message topics
@@ -85,7 +80,7 @@
       ],
       "groupName": "Flux",
       "matchPackagePatterns": [
-        "flux"
+        "fluxcd"
       ],
       "matchDatasources": [
         "docker",
@@ -99,33 +94,20 @@
     },
     {
       "description": [
-        "System Upgrade Controller Group"
+        "Talos Group"
       ],
-      "groupName": "System Upgrade Controller",
+      "groupName": "Talos",
       "matchPackagePatterns": [
-        "system-upgrade-controller"
+        "siderolabs/talosctl",
+        "siderolabs/installer"
       ],
       "matchDatasources": [
-        "docker",
-        "github-releases"
+        "docker"
       ],
       "group": {
         "commitMessageTopic": "{{{groupName}}} group"
       },
       "separateMinorPatch": true
-    },
-    // custom versioning
-    {
-      "description": [
-        "Use custom versioning for k3s"
-      ],
-      "matchDatasources": [
-        "github-releases"
-      ],
-      "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?<compatibility>\\+k.s)\\.?(?<build>\\d+)$",
-      "matchPackagePatterns": [
-        "k3s"
-      ]
     },
     // commit message topics
     {
@@ -208,38 +190,6 @@
       ],
       "semanticCommitType": "fix",
       "semanticCommitScope": "helm"
-    },
-    {
-      "matchDatasources": [
-        "galaxy",
-        "galaxy-collection"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "commitMessagePrefix": "feat(ansible)!: "
-    },
-    {
-      "matchDatasources": [
-        "galaxy",
-        "galaxy-collection"
-      ],
-      "matchUpdateTypes": [
-        "minor"
-      ],
-      "semanticCommitType": "feat",
-      "semanticCommitScope": "ansible"
-    },
-    {
-      "matchDatasources": [
-        "galaxy",
-        "galaxy-collection"
-      ],
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "semanticCommitType": "fix",
-      "semanticCommitScope": "ansible"
     },
     {
       "matchDatasources": [
@@ -345,15 +295,6 @@
     },
     {
       "matchDatasources": [
-        "galaxy",
-        "galaxy-collection"
-      ],
-      "addLabels": [
-        "renovate/ansible"
-      ]
-    },
-    {
-      "matchDatasources": [
         "github-releases",
         "github-tags"
       ],
@@ -378,19 +319,12 @@
         "Process custom dependencies"
       ],
       "fileMatch": [
-        "(^|/).taskfiles/.+\\.ya?ml$",
-        "(^|/)ansible/.+\\.ya?ml(?:\\.j2)?$",
         "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
       ],
       "matchStrings": [
-        // # renovate: datasource=github-releases depName=k3s-io/k3s
-        // k3s_release_version: &version v1.29.0+k3s1
         // # renovate: datasource=helm depName=cilium repository=https://helm.cilium.io
         // version: 1.15.1
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( repository=(?<registryUrl>\\S+))?\\n.+: (&\\S+\\s)?(?<currentValue>\\S+)",
-        // # renovate: datasource=github-releases depName=rancher/system-upgrade-controller
-        // https://github.com/rancher/system-upgrade-controller/releases/download/v0.13.2/crd.yaml
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n.+/(?<currentValue>(v|\\d)[^/]+)"
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( repository=(?<registryUrl>\\S+))?\\n.+: (&\\S+\\s)?(?<currentValue>\\S+)"
       ],
       "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}"
     }
