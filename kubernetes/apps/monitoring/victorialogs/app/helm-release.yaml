@@ -56,7 +56,6 @@ spec:
         loadBalancerSourceRanges: []
         servicePort: 9428
         type: ClusterIP
-        externalTrafficPolicy: "local"
 
       statefulSet:
         enabled: true
