@@ -16,9 +16,11 @@ recorder:
   db_url: !env_var POSTGRES_URL
 
 http:
-  use_x_forwarded_for: true
+  use_x_forwarded_for: True
+  server_host: "0.0.0.0"
   trusted_proxies:
-    - ::1
+    - "10.0.0.0/8"
+    - "::1"
 
 camera:
   - platform: xiaomi_cloud_map_extractor
