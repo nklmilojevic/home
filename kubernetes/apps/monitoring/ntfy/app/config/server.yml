@@ -12,3 +12,5 @@ attachment-expiry-duration: "6h"
 
 auth-file: "/data/user.db"
 auth-default-access: "deny-all"
+
+upstream-base-url: "https://ntfy.sh"
