@@ -8,3 +8,5 @@ configMapGenerator:
   - name: ntfy-server-config
     files:
       - server.yml=./config/server.yml
+generatorOptions:
+  disableNameSuffixHash: true
