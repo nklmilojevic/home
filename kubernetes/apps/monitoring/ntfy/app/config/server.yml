@@ -9,3 +9,5 @@ attachment-cache-dir: "/var/cache/ntfy/attachments"
 attachment-total-size-limit: "5G"
 attachment-file-size-limit: "50M"
 attachment-expiry-duration: "6h"
+
+auth-file: "/data/user.db"
