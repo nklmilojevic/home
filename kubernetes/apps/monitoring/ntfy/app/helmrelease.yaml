@@ -83,3 +83,10 @@ spec:
           - path: /etc/ntfy/server.yml
             subPath: server.yml
             readOnly: true
+      data:
+        enabled: true
+        existingClaim: ntfy-data
+        advancedMounts:
+          ntfy:
+            app:
+              - path: /data
