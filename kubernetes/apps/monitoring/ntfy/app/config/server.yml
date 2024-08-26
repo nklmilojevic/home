@@ -11,3 +11,4 @@ attachment-file-size-limit: "50M"
 attachment-expiry-duration: "6h"
 
 auth-file: "/data/user.db"
+auth-default-access: "deny-all"
