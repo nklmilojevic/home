@@ -10,3 +10,4 @@ resources:
   - ./network-ups-tools/ks.yaml
   - ./nut-exporter/ks.yaml
   - ./changedetection/ks.yaml
+  - ./ntfy/ks.yaml
