@@ -59,10 +59,10 @@ notify:
     chat_id: !env_var TELEGRAM_CHAT_ID
   - name: ntfy_general_message
     platform: apprise
-    url: !env_var ntfy_gen
+    url: !env_var NTFY_GEN
   - name: ntfy_sos_message
     platform: apprise
-    url: !env_var ntfy_sos
+    url: !env_var NTFY_SOS
 
 automation: !include automations.yaml
 script: !include scripts.yaml
