@@ -16,11 +16,11 @@ recorder:
   db_url: !env_var POSTGRES_URL
 
 http:
-  use_x_forwarded_for: True
-  server_host: "0.0.0.0"
+  use_x_forwarded_for: true
   trusted_proxies:
-    - "10.0.0.0/8"
-    - "::1"
+    - 10.0.0.0/8
+    - 127.0.0.1
+    - ::1
 
 camera:
   - platform: xiaomi_cloud_map_extractor
@@ -59,10 +59,10 @@ notify:
     chat_id: !env_var TELEGRAM_CHAT_ID
   - name: ntfy_general_message
     platform: apprise
-    url: !env_var ntfy_gen_uri
+    url: !env_var ntfy_gen
   - name: ntfy_sos_message
     platform: apprise
-    url: !env_var ntfy_sos_uri
+    url: !env_var ntfy_sos
 
 automation: !include automations.yaml
 script: !include scripts.yaml
