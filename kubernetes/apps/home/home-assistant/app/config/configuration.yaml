@@ -57,6 +57,12 @@ notify:
   - platform: telegram
     name: telegram
     chat_id: !env_var TELEGRAM_CHAT_ID
+  - name: ntfy_general_message
+    platform: apprise
+    url: !env_var ntfy_gen_uri
+  - name: ntfy_sos_message
+    platform: apprise
+    url: !env_var ntfy_sos_uri
 
 automation: !include automations.yaml
 script: !include scripts.yaml
