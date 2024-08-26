@@ -1,6 +1,6 @@
 # ntfy server config file
 #
-base-url: https://ntfy.${DOMAIN}.sh
+base-url: https://ntfy.milojevic.dev
 
 listen-http: ":8080"
 behind-proxy: true
