@@ -1,18 +1,40 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: multus
+  name: &appname multus
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
-  targetNamespace: networking
-  path: ./kubernetes/apps/networking/multus/app
+  targetNamespace: network
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *appname
+  interval: 10m
+  path: "./kubernetes/main/apps/network/multus/app"
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
-  interval: 30m
-  retryInterval: 1m
-  timeout: 3m
+    name: home-ops-kubernetes
+  wait: true
+# ---
+# # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: &appname multus-config
+#   namespace: flux-system
+# spec:
+#   targetNamespace: network
+#   commonMetadata:
+#     labels:
+#       app.kubernetes.io/name: *appname
+#   interval: 10m
+#   path: "./kubernetes/main/apps/network/multus/config"
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: home-ops-kubernetes
+#   wait: true
+#   dependsOn:
+#     - name: multus
