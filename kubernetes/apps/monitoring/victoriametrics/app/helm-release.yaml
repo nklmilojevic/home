@@ -21,7 +21,6 @@ spec:
 
     victoria-metrics-operator:
       enabled: true
-      cleanupCRD: true
       createCRD: false
       operator:
         disable_prometheus_converter: false
