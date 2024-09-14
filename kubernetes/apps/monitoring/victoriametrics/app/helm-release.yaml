@@ -9,8 +9,8 @@ spec:
   chart:
     spec:
       chart: victoria-metrics-k8s-stack
-      # renovate: registryUrl=https://victoriametrics.github.io/helm-charts chart=victoria-metrics-single
-      version: 0.25.3
+      # renovate: registryUrl=https://victoriametrics.github.io/helm-charts chart=victoria-metrics-k8s-stack
+      version: 0.25.16
       sourceRef:
         kind: HelmRepository
         name: victoriametrics
