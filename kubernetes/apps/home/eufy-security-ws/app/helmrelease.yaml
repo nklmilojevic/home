@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 3.3.2
+      version: 3.4.0
       interval: 30m
       sourceRef:
         kind: HelmRepository
@@ -34,7 +34,7 @@ spec:
           app:
             image:
               repository: bropat/eufy-security-ws
-              tag: 1.8.0
+              tag: 1.9.0
             envFrom:
               - secretRef:
                   name: eufy-secrets

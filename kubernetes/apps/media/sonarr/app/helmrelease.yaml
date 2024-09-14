@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.3.2
+      version: 3.4.0
       interval: 30m
       sourceRef:
         kind: HelmRepository
@@ -34,7 +34,7 @@ spec:
           app:
             image:
               repository: ghcr.io/onedr0p/sonarr-develop
-              tag: 4.0.8.2223
+              tag: 4.0.9.2342
 
             env:
               TZ: "Europe/Belgrade"

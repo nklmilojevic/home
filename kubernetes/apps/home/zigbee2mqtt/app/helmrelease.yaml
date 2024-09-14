@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 3.3.2
+      version: 3.4.0
       interval: 30m
       sourceRef:
         kind: HelmRepository
@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: koenkk/zigbee2mqtt
-              tag: 1.39.1
+              tag: 1.40.1
               pullPolicy: IfNotPresent
             env:
               ZIGBEE2MQTT_DATA: "/data"

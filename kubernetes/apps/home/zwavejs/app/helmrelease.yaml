@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 3.3.2
+      version: 3.4.0
       interval: 30m
       sourceRef:
         kind: HelmRepository
@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: zwavejs/zwavejs2mqtt
-              tag: 9.17.0
+              tag: 9.18.1
             securityContext:
               privileged: true
     service:

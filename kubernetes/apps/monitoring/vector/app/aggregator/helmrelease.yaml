@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.3.2
+      version: 3.4.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -34,7 +34,7 @@ spec:
           app:
             image:
               repository: docker.io/timberio/vector
-              tag: 0.40.0-alpine
+              tag: 0.41.1-alpine
             args: ["--config", "/etc/vector/vector.yaml"]
             probes:
               liveness:
