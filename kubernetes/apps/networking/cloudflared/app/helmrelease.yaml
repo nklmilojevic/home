@@ -25,7 +25,6 @@ spec:
     controllers:
       cloudflared:
         replicas:
-        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
