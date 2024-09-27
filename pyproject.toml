@@ -1,16 +1,14 @@
-[tool.poetry]
-name = "home-ansible"
+[project]
+name = "home"
 version = "0.1.0"
-description = ""
-authors = ["Nikola Milojević <nikola@milojevic.me>"]
+description = "Add your description here"
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.11"
-ansible = "^10.0.0"
-passlib = "^1.7.4"
-
+requires-python = ">=3.11"
+dependencies = [
+    "ansible>=10.3.0",
+    "passlib>=1.7.4",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
