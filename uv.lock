@@ -106,7 +106,7 @@ wheels = [
 [[package]]
 name = "home"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "ansible" },
     { name = "passlib" },
