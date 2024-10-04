@@ -34,7 +34,7 @@ spec:
           app:
             image:
               repository: adguard/adguardhome
-              tag: v0.107.52
+              tag: v0.107.53
             env:
               TZ: "Europe/Belgrade"
 
