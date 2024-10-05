@@ -37,7 +37,6 @@ spec:
             k8s.v1.cni.cncf.io/networks: static-iot-hass
 
         replicas: 1
-        strategy: RollingUpdate
 
         initContainers:
           01-init-db:
