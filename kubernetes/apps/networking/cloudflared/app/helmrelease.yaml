@@ -24,6 +24,7 @@ spec:
   values:
     controllers:
       cloudflared:
+        strategy: Recreate
         replicas:
         annotations:
           reloader.stakater.com/auto: "true"
