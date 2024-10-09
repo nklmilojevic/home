@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Scan for broken links
-        uses: lycheeverse/lychee-action@v1
+        uses: lycheeverse/lychee-action@v2
         id: lychee
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
