@@ -51,7 +51,7 @@ spec:
           app:
             image:
               repository: homeassistant/home-assistant
-              tag: 2024.10.1
+              tag: 2024.10.2
             env:
               TZ: "Europe/Belgrade"
             envFrom:
