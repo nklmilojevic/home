@@ -6,6 +6,7 @@ resources:
   - ./home-assistant/ks.yaml
   - ./mosquitto/ks.yaml
   - ./zigbee2mqtt/ks.yaml
+  - ./govee2mqtt/ks.yaml
   - ./zwavejs/ks.yaml
   - ./eufy-security-ws/ks.yaml
   - ./rtsp-simple-server/ks.yaml
