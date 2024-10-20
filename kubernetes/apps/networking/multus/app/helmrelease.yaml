@@ -15,14 +15,7 @@ spec:
         name: angelnu
         namespace: flux-system
       interval: 5m
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
+
   values:
     image:
       repository: ghcr.io/k8snetworkplumbingwg/multus-cni
