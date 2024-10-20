@@ -1,0 +1,49 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: govee2mqtt
+  namespace: home
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
+      chart: app-template
+      version: 3.5.1
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      govee2mqtt:
+        replicas: 1
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: wez/govee2mqtt
+              tag: 2024.07.13-82ddc6e9
+              pullPolicy: IfNotPresent
+            env:
+              GOVEE_MQTT_HOST: "mosquitto.home.svc"
+              GOVEE_LAN_SCAN: "10.5.0.114"
+            envFrom:
+              - secretRef:
+                  name: govee2mqtt-secret
+            securityContext:
+              privileged: true
+
+    persistence:
+      data:
+        existingClaim: govee2mqtt-data
