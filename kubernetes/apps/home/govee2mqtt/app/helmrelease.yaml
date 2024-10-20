@@ -29,6 +29,10 @@ spec:
       govee2mqtt:
         replicas: 1
         strategy: RollingUpdate
+
+        pod:
+          annotations:
+            k8s.v1.cni.cncf.io/networks: static-iot-govee
         containers:
           app:
             image:
