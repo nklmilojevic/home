@@ -16,15 +16,8 @@ spec:
         name: victoriametrics
         namespace: flux-system
   values:
-    printNotes: true
-
     server:
       enabled: true
-      name: server
-      image:
-        repository: victoriametrics/victoria-logs
-        tag: "v0.28.0"
-        pullPolicy: IfNotPresent
       extraArgs:
         envflag.enable: "true"
         envflag.prefix: VM_
