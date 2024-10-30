@@ -15,6 +15,98 @@ spec:
         kind: HelmRepository
         name: victoriametrics
         namespace: flux-system
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
   values:
     grafana:
       enabled: false
+
+    victoria-metrics-operator:
+      enabled: true
+      operator:
+        disable_prometheus_converter: false
+
+    serviceAccount:
+      create: true
+      annotations: {}
+
+    ## -- Create default rules for monitoring the cluster
+    defaultRules:
+      create: false
+
+      # -- Runbook url prefix for default rules
+      runbookUrl: https://runbooks.prometheus-operator.dev/runbooks
+
+      # -- Labels for default rules
+      labels: {}
+      # -- Annotations for default rules
+      annotations: {}
+
+    alertmanager:
+      enabled: true
+      annotations: {}
+      # spec for VMAlertmanager crd
+      # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmalertmanagerspec
+      spec:
+        selectAllByDefault: true
+        externalURL: ""
+        routePrefix: /
+
+      monzoTemplate:
+        enabled: false
+
+      config:
+        global:
+          resolve_timeout: 5m
+        route:
+          group_by: ["alertname"]
+          group_wait: 1m
+          group_interval: 5m
+          repeat_interval: 3h
+          receiver: devnull
+          routes:
+            - receiver: blackhole
+              matchers:
+                - "severity=blackhole"
+              continue: false
+        receivers:
+          - name: devnull
+          - name: blackhole
+
+    vmalert:
+      enabled: true
+      remoteWriteVMAgent: false
+      # spec for VMAlert crd
+      # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmalertspec
+      spec:
+        selectAllByDefault: true
+
+        evaluationInterval: 15s
+
+    vmagent:
+      enabled: true
+      # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec
+      # defined spec will be added to the remoteWrite configuration of VMAgent
+      spec:
+        inlineScrapeConfig: |
+          - job_name: node-exporter
+            honor_labels: true
+            scrape_interval: 1m
+            scrape_timeout: 10s
+            metrics_path: /metrics
+            scheme: http
+            static_configs:
+              - targets:
+                  - "10.5.0.10:9100"
+        selectAllByDefault: true
+        scrapeInterval: 25s
+        extraArgs:
+          promscrape.streamParse: "true"
