@@ -24,6 +24,11 @@ spec:
         pod:
           annotations:
             k8s.v1.cni.cncf.io/networks: static-iot-esphome
+          dnsConfig:
+            nameservers:
+              - 10.3.0.1 # Your local DNS server
+            searches:
+              - local
 
         containers:
           app:
