@@ -22,6 +22,88 @@ http:
     - 127.0.0.1
     - ::1
 
+rest:
+  # Klimerko
+  - resource: https://api.allthingstalk.io/device/MzceoBK2IQPDcMqUGRnDVUcQ
+    method: GET
+    headers:
+      Authorization: !env_var MAKER_API_TOKEN
+      Content-Type: application/json
+    scan_interval: 60
+    sensor:
+      # PM1 sensor
+      - name: Klimerko PM1
+        unique_id: klimerko_pm1
+        device_class: pm1
+        unit_of_measurement: "µg/m³"
+        icon: mdi:molecule
+        json_attributes_path: "$.assets[?(@.name=='pm1')].state"
+        json_attributes:
+          - at
+        value_template: |
+          {% set sensor = value_json.assets | selectattr("name", "eq", "pm1") | first | default %}
+          {{- sensor.state.value }}
+      # PM2.5 sensor
+      - name: Klimerko PM2.5
+        unique_id: klimerko_pm2_5
+        device_class: pm25
+        unit_of_measurement: "µg/m³"
+        icon: mdi:molecule
+        json_attributes_path: "$.assets[?(@.name=='pm2-5')].state"
+        json_attributes:
+          - at
+        value_template: |
+          {% set sensor = value_json.assets | selectattr("name", "eq", "pm2-5") | first | default %}
+          {{- sensor.state.value }}
+      # PM10 sensor
+      - name: Klimerko PM10
+        unique_id: klimerko_pm10
+        device_class: pm10
+        unit_of_measurement: "µg/m³"
+        icon: mdi:molecule
+        json_attributes_path: "$.assets[?(@.name=='pm10')].state"
+        json_attributes:
+          - at
+        value_template: |
+          {% set sensor = value_json.assets | selectattr("name", "eq", "pm10") | first | default %}
+          {{- sensor.state.value }}
+      # Temperature sensor
+      - name: Klimerko Temperature
+        unique_id: klimerko_temperature
+        device_class: temperature
+        unit_of_measurement: "°C"
+        icon: mdi:thermometer
+        json_attributes_path: "$.assets[?(@.name=='temperature')].state"
+        json_attributes:
+          - at
+        value_template: |
+          {% set sensor = value_json.assets | selectattr("name", "eq", "temperature") | first | default %}
+          {{- sensor.state.value }}
+      # Humidity sensor
+      - name: Klimerko Humidity
+        unique_id: klimerko_humidity
+        device_class: humidity
+        unit_of_measurement: "%"
+        icon: mdi:water-percent
+        json_attributes_path: "$.assets[?(@.name=='humidity')].state"
+        json_attributes:
+          - at
+        value_template: |
+          {% set sensor = value_json.assets | selectattr("name", "eq", "humidity") | first | default %}
+          {{- sensor.state.value }}
+      # Atmospheric Pressure sensor
+      - name: Klimerko Atmospheric Pressure
+        unique_id: klimerko_atmospheric_pressure
+        device_class: atmospheric_pressure
+        unit_of_measurement: "mbar"
+        icon: mdi:gauge
+        json_attributes_path: "$.assets[?(@.name=='pressure')].state"
+        json_attributes:
+          - at
+        value_template: |
+          {% set sensor = value_json.assets | selectattr("name", "eq", "pressure") | first | default %}
+          {{- sensor.state.value }}
+
 camera:
   - platform: xiaomi_cloud_map_extractor
     host: 10.3.0.2
