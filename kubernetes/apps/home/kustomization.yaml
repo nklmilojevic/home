@@ -5,7 +5,6 @@ resources:
   - ./namespace.yaml
   - ./home-assistant/ks.yaml
   - ./mosquitto/ks.yaml
-  - ./zigbee2mqtt/ks.yaml
   - ./z2mqtt/ks.yaml
   - ./govee2mqtt/ks.yaml
   - ./zwavejs/ks.yaml
