@@ -121,6 +121,8 @@ camera:
         left: 25
         right: 20
 
+smartir:
+
 climate:
   - platform: gree
     name: Bedroom
@@ -128,6 +130,14 @@ climate:
     port: 7000
     mac: "F4:91:1E:8B:81:29"
     target_temp_step: 1
+
+  - platform: smartir
+    name: Livingroom AC
+    unique_id: livingroom_ac
+    device_code: 1394
+    controller_data: remote.universal_remote
+    temperature_sensor: sensor.universal_remote_temperature
+    humidity_sensor: sensor.universal_remote_humidity
 
 telegram_bot:
   - platform: polling
