@@ -89,8 +89,6 @@ spec:
               requests:
                 cpu: "5m"
                 memory: "96Mi"
-              limits:
-                memory: "512Mi"
             securityContext:
               privileged: true
 
