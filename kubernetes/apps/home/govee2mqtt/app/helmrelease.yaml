@@ -42,7 +42,6 @@ spec:
             env:
               GOVEE_MQTT_HOST: "mosquitto.home.svc"
               GOVEE_LAN_BROADCAST_ALL: "true"
-              # GOVEE_LAN_BROADCAST_GLOBAL: "true"
             envFrom:
               - secretRef:
                   name: govee2mqtt-secret
