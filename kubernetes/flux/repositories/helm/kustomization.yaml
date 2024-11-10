@@ -29,3 +29,4 @@ resources:
   - ./node-feature-discovery.yaml
   - ./openebs.yaml
   - ./strimzi.yaml
+  - ./k8tz.yaml

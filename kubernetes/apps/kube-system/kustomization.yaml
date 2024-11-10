@@ -9,3 +9,4 @@ resources:
   - ./intel-device-plugin/ks.yaml
   - ./nfs-subdir-external-provisioner/ks.yaml
   - ./node-feature-discovery/ks.yaml
+  - ./k8tz/ks.yaml
