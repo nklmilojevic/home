@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: zwavejs/zwavejs2mqtt
-              tag: 9.26.0
+              tag: 9.27.2
             securityContext:
               privileged: true
     service:
