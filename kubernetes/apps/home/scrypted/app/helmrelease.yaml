@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/koush/scrypted
-              tag: v0.123.23-jammy-full
+              tag: v0.123.25-jammy-full
             probes:
               liveness:
                 enabled: false
