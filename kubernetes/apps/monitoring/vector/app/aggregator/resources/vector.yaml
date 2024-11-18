@@ -23,7 +23,7 @@ sources:
 transforms:
   k8s_transform:
     type: remap
-    inputs: [k8s]
+    inputs: [k8s_source]
     source: |
       .log = parse_json(.message) ?? .message
       del(.message)
