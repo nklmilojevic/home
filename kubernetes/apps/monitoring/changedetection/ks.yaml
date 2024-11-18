@@ -32,7 +32,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/monitoring/changedetection-browser/app
+  path: ./kubernetes/apps/monitoring/changedetection/browser
   prune: true
   sourceRef:
     kind: GitRepository
