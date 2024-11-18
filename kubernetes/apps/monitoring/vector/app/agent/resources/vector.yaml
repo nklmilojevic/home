@@ -9,6 +9,8 @@ sources:
     mode: udp
     permit_origin:
       - 10.0.0.0/8
+  k8s_source:
+    type: kubernetes_logs
 sinks:
   mikrotik:
     type: vector
@@ -16,3 +18,9 @@ sinks:
     version: "2"
     address: vector-aggregator.monitoring.svc.cluster.local:6000
     inputs: ["mikrotik_source"]
+  k8s:
+    type: vector
+    compression: true
+    version: "2"
+    address: vector-aggregator.monitoring.svc.cluster.local:6001
+    inputs: ["k8s_source"]

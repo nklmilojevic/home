@@ -7,20 +7,30 @@ api:
 #
 # Sources
 #
-
 sources:
   mikrotik_source:
     type: vector
     version: "2"
     address: 0.0.0.0:6000
+  k8s_source:
+    type: vector
+    version: "2"
+    address: 0.0.0.0:6001
+
 #
 # Transforms
 #
+transforms:
+  k8s_transform:
+    type: remap
+    inputs: [k8s]
+    source: |
+      .log = parse_json(.message) ?? .message
+      del(.message)
 
 #
 # Sinks
 #
-
 sinks:
   mikrotik:
     inputs: ["mikrotik_source"]
@@ -35,3 +45,21 @@ sinks:
     query:
       _msg_field: "message"
       _stream_fields: "hostname"
+  vlogs:
+    type: elasticsearch
+    inputs: [k8s_transform]
+    endpoints:
+      - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
+    mode: bulk
+    api_version: v8
+    compression: gzip
+    healthcheck:
+      enabled: false
+    request:
+      headers:
+        VL-Time-Field: timestamp
+        VL-Stream-Fields: stream,kubernetes.pod_name,kubernetes.container_name,kubernetes.pod_namespace
+        VL-Msg-Field: message,msg,_msg,log.msg,log.message,log
+        AccountID: "0"
+        ProjectID: "0"
+        Region: "0"

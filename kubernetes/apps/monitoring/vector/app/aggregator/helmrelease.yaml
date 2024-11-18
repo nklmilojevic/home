@@ -60,6 +60,8 @@ spec:
             port: 8686
           mikrotik:
             port: 6000
+          k8s:
+            port: 6001
     persistence:
       config:
         type: configMap
