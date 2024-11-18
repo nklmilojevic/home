@@ -42,9 +42,14 @@ sinks:
     api_version: "v8"
     healthcheck:
       enabled: false
-    query:
-      _msg_field: "message"
-      _stream_fields: "hostname"
+    request:
+      headers:
+        VL-Time-Field: timestamp
+        VL-Stream-Fields: hostname
+        VL-Msg-Field: message,msg,_msg,log.msg,log.message,log
+        AccountID: "0"
+        ProjectID: "1"
+        Region: "0"
   vlogs:
     type: elasticsearch
     inputs: [k8s_transform]
