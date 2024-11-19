@@ -1,0 +1,6 @@
+---
+log:
+  output: "stdout"
+
+streams:
+  reolink: rtsp://scrypted.home.svc.cluster.local:34135/ab35380836407d32
