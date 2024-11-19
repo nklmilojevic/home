@@ -62,6 +62,8 @@ spec:
             port: 10443
           rebroadcast:
             port: 34135
+          rebroadcast2:
+            port: 36585
 
     ingress:
       app:
