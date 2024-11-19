@@ -6,15 +6,15 @@ metadata:
   name: &appname go2rtc
   namespace: flux-system
 spec:
-  targetNamespace: home-automation
+  targetNamespace: home
   commonMetadata:
     labels:
       app.kubernetes.io/name: *appname
   interval: 30m
   timeout: 5m
-  path: "./kubernetes/main/apps/home-automation/go2rtc/app"
+  path: "./kubernetes/apps/home/go2rtc/app"
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-ops-kubernetes
+    name: home-kubernetes
   wait: false
