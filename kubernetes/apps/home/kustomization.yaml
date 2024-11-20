@@ -9,7 +9,6 @@ resources:
   - ./govee2mqtt/ks.yaml
   - ./zwavejs/ks.yaml
   - ./eufy-security-ws/ks.yaml
-  - ./rtsp-simple-server/ks.yaml
   - ./scrypted/ks.yaml
   - ./esphome/ks.yaml
   - ./go2rtc/ks.yaml
