@@ -30,8 +30,8 @@ spec:
               repository: ghcr.io/charlie-haley/omada_exporter
               tag: 0.13.1
             env:
-              insecure: true
-              timeout: 60
+              OMADA_INSECURE: "true"
+              OMADA_REQUEST_TIMEOUT: "60"
             envFrom:
               - secretRef:
                   name: omada-exporter-secret
