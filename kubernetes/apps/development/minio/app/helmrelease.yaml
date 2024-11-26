@@ -47,9 +47,9 @@ spec:
 
             env:
               MINIO_UPDATE: "off"
-              MINIO_BROWSER_REDIRECT_URL: "https://minio.${SECRET_DOMAIN}"
-              MINIO_SERVER_URL: "https://s3.${SECRET_DOMAIN}"
-              MINIO_API_CORS_ALLOW_ORIGIN: https://minio.${SECRET_DOMAIN},https://s3.${SECRET_DOMAIN}
+              MINIO_BROWSER_REDIRECT_URL: "https://minio.milojevic.dev"
+              MINIO_SERVER_URL: "https://s3.milojevic.dev"
+              MINIO_API_CORS_ALLOW_ORIGIN: https://minio.milojevic.dev,https://s3.milojevic.dev
 
             envFrom:
               - secretRef:
@@ -101,7 +101,7 @@ spec:
       app:
         className: internal
         hosts:
-          - host: &console-host minio.${SECRET_DOMAIN}
+          - host: &console-host minio.milojevic.dev
             paths:
               - path: /
                 service:
@@ -113,7 +113,7 @@ spec:
       s3:
         className: internal
         hosts:
-          - host: &api-host s3.${SECRET_DOMAIN}
+          - host: &api-host s3.milojevic.dev
             paths:
               - path: /
                 service:
