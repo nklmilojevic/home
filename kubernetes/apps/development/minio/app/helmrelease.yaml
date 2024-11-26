@@ -124,8 +124,5 @@ spec:
               - *api-host
 
     persistence:
-      minio:
-        type: hostPath
-        hostPath: /mnt/minio
-        globalMounts:
-          - path: /data
+      data:
+        existingClaim: minio-data
