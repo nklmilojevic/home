@@ -4,8 +4,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: minio-data
 spec:
-  accessModes: ["ReadWriteMany"]
+  accessModes: ["ReadWriteOnce"]
   resources:
     requests:
-      storage: 100Gi
-  storageClassName: nfs-client
+      storage: 20Gi
+  storageClassName: openebs-hostpath
