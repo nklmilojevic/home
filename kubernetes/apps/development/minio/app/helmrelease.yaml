@@ -125,8 +125,7 @@ spec:
 
     persistence:
       minio:
-        type: nfs
-        server: panopticon.milojevic.dev
-        path: /minio
+        type: hostPath
+        hostPath: /mnt/minio
         globalMounts:
           - path: /data
