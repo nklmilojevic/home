@@ -1,0 +1,48 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+tasks:
+  cleanup-pods:
+    desc: Clean up pods with a Failed/Pending/Succeeded phase
+    preconditions:
+      - which kubectl
+    requires:
+    cmds:
+      - for:
+          matrix:
+            PHASE:
+              - Failed
+              - Pending
+              - Succeeded
+        cmd: kubectl delete pods --field-selector status.phase={{.ITEM.PHASE}} -A --ignore-not-found=true
+
+  sync-externalsecrets:
+    desc: Force sync all ExternalSecret resources
+    preconditions:
+      - which kubectl
+    vars:
+      SECRETS:
+        sh: kubectl get externalsecret --all-namespaces --no-headers --output=jsonpath='{range .items[*]}{.metadata.namespace},{.metadata.name}{"\n"}{end}'
+    cmds:
+      - for:
+          var: SECRETS
+          split: "\n"
+        cmd: kubectl --namespace {{splitList "," .ITEM | first}} annotate externalsecret {{splitList "," .ITEM | last}} force-sync="{{now | unixEpoch}}" --overwrite
+
+  sync-externalsecret:
+    desc: Force sync specific ExternalSecret resource
+    preconditions:
+      - which kubectl
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task sync-externalsecret -- <namespace/secret-name>"
+          echo "Available externalsecrets:"
+          kubectl get externalsecret --all-namespaces
+          exit 1
+        fi
+        NAMESPACE=$(echo {{.CLI_ARGS}} | cut -d'/' -f1)
+        SECRET=$(echo {{.CLI_ARGS}} | cut -d'/' -f2)
+        kubectl -n $NAMESPACE annotate externalsecret $SECRET force-sync="$(date +%s)" --overwrite
+    silent: true
