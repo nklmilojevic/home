@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: backup-test
+  namespace: development
+spec:
+  method: barmanObjectStore
+  cluster:
+    name: pg16
