@@ -106,6 +106,8 @@ spec:
     persistence:
       config:
         existingClaim: hass-data
+      config2:
+        existingClaim: home-assistant-data
 
       hass-config:
         type: configMap
