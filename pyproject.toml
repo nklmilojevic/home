@@ -6,7 +6,7 @@ readme = "README.md"
 version = "0.1.0"
 
 [tool.poetry.dependencies]
-ansible = "^10.0.0"
+ansible = "^11.0.0"
 passlib = "^1.7.4"
 python = "^3.11"
 
