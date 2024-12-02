@@ -80,4 +80,8 @@ spec:
       config:
         existingClaim: sonarr-data
       media:
-        existingClaim: nfs-media-pvc
+        type: nfs
+        server: panopticon.milojevic.dev
+        path: /media
+        globalMounts:
+          - path: /media

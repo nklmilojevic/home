@@ -87,6 +87,8 @@ spec:
       config:
         existingClaim: qbittorrent-data
       media:
-        existingClaim: nfs-media-pvc
-      interim:
-        existingClaim: qbittorrent-interim
+        type: nfs
+        server: panopticon.milojevic.dev
+        path: /media
+        globalMounts:
+          - path: /media
