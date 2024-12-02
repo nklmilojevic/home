@@ -81,5 +81,3 @@ spec:
         existingClaim: sonarr-data
       media:
         existingClaim: nfs-media-pvc
-      interim:
-        existingClaim: downloads-pvc

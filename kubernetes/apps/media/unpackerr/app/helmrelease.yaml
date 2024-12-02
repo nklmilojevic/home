@@ -66,8 +66,6 @@ spec:
         existingClaim: unpackerr-data
       media:
         existingClaim: nfs-media-pvc
-      interim:
-        existingClaim: downloads-pvc
 
     service:
       app:
