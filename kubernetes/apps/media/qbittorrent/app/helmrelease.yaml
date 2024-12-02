@@ -89,4 +89,4 @@ spec:
       media:
         existingClaim: nfs-media-pvc
       interim:
-        existingClaim: downloads-pvc
+        existingClaim: qbittorrent-interim
