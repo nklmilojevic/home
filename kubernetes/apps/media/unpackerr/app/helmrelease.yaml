@@ -61,12 +61,6 @@ spec:
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
 
-    persistence:
-      config:
-        existingClaim: unpackerr-data
-      media:
-        existingClaim: nfs-media-pvc
-
     service:
       app:
         controller: *app
@@ -98,3 +92,13 @@ spec:
             path: /metrics
             interval: 1m
             scrapeTimeout: 10s
+
+    persistence:
+      config:
+        existingClaim: unpackerr-data
+      media:
+        type: nfs
+        server: panopticon.milojevic.dev
+        path: /media
+        globalMounts:
+          - path: /media
