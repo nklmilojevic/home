@@ -106,7 +106,7 @@ rest:
 
 camera:
   - platform: xiaomi_cloud_map_extractor
-    host: 10.3.0.2
+    host: 10.50.0.6
     token: !env_var ROBOROCK_TOKEN
     username: nikola@milojevic.me
     password: !env_var ROBOROCK_XIAOMI_PASSWORD
@@ -124,12 +124,12 @@ camera:
 smartir:
 
 climate:
-  - platform: gree
-    name: Bedroom
-    host: 10.3.0.14
-    port: 7000
-    mac: "F4:91:1E:8B:81:29"
-    target_temp_step: 1
+  # - platform: gree
+  #   name: Bedroom
+  #   host: 10.3.0.14
+  #   port: 7000
+  #   mac: "F4:91:1E:8B:81:29"
+  #   target_temp_step: 1
 
   - platform: smartir
     name: Livingroom AC
