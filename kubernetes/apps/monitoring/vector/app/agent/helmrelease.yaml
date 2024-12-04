@@ -64,7 +64,8 @@ spec:
       app:
         controller: vector-agent
         type: LoadBalancer
-        annotations: {}
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "10.40.0.31"
         ports:
           mikrotik:
             port: 1514
