@@ -34,8 +34,7 @@ spec:
       service:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: internal.milojevic.dev
-          metallb.universe.tf/loadBalancerIPs: |-
-            ${METALLB_INGRESS_ADDR}
+          metallb.universe.tf/loadBalancerIPs: "10.40.0.5"
         externalTrafficPolicy: Local
       publishService:
         enabled: true
