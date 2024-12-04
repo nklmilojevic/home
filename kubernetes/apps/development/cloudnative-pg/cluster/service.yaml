@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: postgres-lb
   annotations:
-    metallb.universe.tf/loadBalancerIPs: 10.2.0.21
+    metallb.universe.tf/loadBalancerIPs: 10.40.0.21
 spec:
   type: LoadBalancer
   ports:

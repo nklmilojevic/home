@@ -32,5 +32,5 @@ spec:
       type: LoadBalancer
       port: 53
       annotations:
-        metallb.universe.tf/loadBalancerIPs: "10.2.0.4"
+        metallb.universe.tf/loadBalancerIPs: "10.40.0.4"
       externalTrafficPolicy: Local

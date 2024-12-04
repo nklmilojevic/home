@@ -15,4 +15,4 @@ metadata:
   namespace: networking
 spec:
   addresses:
-    - "10.2.0.4-10.2.0.200"
+    - "10.40.0.4-10.40.0.200"
