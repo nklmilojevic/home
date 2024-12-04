@@ -53,7 +53,8 @@ spec:
       app:
         controller: vector-aggregator
         type: LoadBalancer
-        annotations: {}
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "10.40.0.30"
         ports:
           http:
             primary: true
