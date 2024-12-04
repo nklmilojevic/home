@@ -2,6 +2,7 @@
 
 {% if nfs_exports is defined %}
 {% for export in nfs_exports %}
-{{ export.path }}   {{ export.network }}({{ export.params }})
+{{ export.path }}   {% for network in export.networks %}{{ network }}({{ export.params }}){% if not loop.last %} {% endif %}{% endfor %}
+
 {% endfor %}
 {% endif %}

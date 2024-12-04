@@ -1,17 +1,27 @@
 ---
 nfs_exports:
   - path: "/export"
-    network: "10.0.0.0/8"
+    networks:
+      - "10.5.0.0/24"
+      - "10.40.0.0/24"
     params: "rw,fsid=0,no_subtree_check,sync"
   - path: "/export/media"
-    network: "10.0.0.0/8"
+    networks:
+      - "10.5.0.0/24"
+      - "10.40.0.0/24"
     params: "rw,fsid=1,nohide,insecure,no_subtree_check,sync,no_root_squash"
   - path: "/export/pvc"
-    network: "10.0.0.0/8"
+    networks:
+      - "10.5.0.0/24"
+      - "10.40.0.0/24"
     params: "rw,fsid=2,nohide,insecure,no_subtree_check,sync,no_root_squash"
   - path: "/export/minio"
-    network: "10.0.0.0/8"
+    networks:
+      - "10.5.0.0/24"
+      - "10.40.0.0/24"
     params: "rw,fsid=3,nohide,insecure,no_subtree_check,sync,no_root_squash"
   - path: "/export/cameras"
-    network: "10.0.0.0/8"
+    networks:
+      - "10.5.0.0/24"
+      - "10.40.0.0/24"
     params: "rw,fsid=4,nohide,insecure,no_subtree_check,sync,no_root_squash"
