@@ -125,10 +125,10 @@ smartir:
 
 climate:
   - platform: gree
-    name: Test
+    name: Bedroom
     host: 10.50.0.5
     port: 7000
-    mac: "F4-91-1E-8D-91-C8"
+    mac: "F4:91:1E:8D:91:C8"
     target_temp_step: 1
 
   - platform: smartir
