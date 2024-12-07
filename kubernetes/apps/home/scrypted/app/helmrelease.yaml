@@ -96,7 +96,7 @@ spec:
           - path: /.npm
       recs:
         type: nfs
-        server: panopticon.milojevic.dev
+        server: 10.5.0.10
         path: /cameras
         globalMounts:
           - path: /recs

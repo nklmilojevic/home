@@ -100,7 +100,7 @@ spec:
         medium: Memory
       media:
         type: nfs
-        server: panopticon.milojevic.dev
+        server: 10.5.0.10
         path: /media
         globalMounts:
           - path: /media
