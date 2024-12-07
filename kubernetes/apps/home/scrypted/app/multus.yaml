@@ -9,12 +9,12 @@ spec:
     {
       "cniVersion": "0.3.1",
       "type": "macvlan",
-      "master": "vlan40",
+      "master": "eth0",
       "mode": "bridge",
       "ipam": {
         "type": "static",
         "addresses": [
-          { "address": "10.40.0.250/24" }
+          { "address": "10.5.0.207/24" }
         ]
       }
     }
