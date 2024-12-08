@@ -14,4 +14,4 @@ crons:
     job: "/usr/bin/snapraid scrub -p 10 -l /var/log/snapraid.scrub.log && curl -fsS --retry 3 {{ healthchecks_scrub_uri }}"
   - name: "Smartmon Prometheus"
     minute: "*/5"
-    job: "bash /opt/scripts/smartmon.sh > /opt/node_exporter/smart_metrics.prom"
+    job: "bash /opt/scripts/smartmon.sh | /usr/bin/sponge /opt/node_exporter/smart_metrics.prom"

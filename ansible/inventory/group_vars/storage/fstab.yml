@@ -15,7 +15,7 @@ additional_mounts:
   - path: "/mnt/storage"
     src: "/mnt/disk*"
     fstype: "fuse.mergerfs"
-    opts: "defaults,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,category.create=mfs,noforget,inodecalc=path-hash,,minfreespace=200G,fsname=mergerfs"
+    opts: "defaults,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,category.create=mfs,security_capability=false,xattr=nosys,noforget,cache.writeback=true,cache.symlinks=true,cache.readdir=true,cache.statfs=true,cache.attr=1000,cache.entry=1000,cache.negative_entry=100,async_read=false,fsname=mergerfs"
     state: "mounted"
 
 bind_mounts:
