@@ -7,6 +7,9 @@ homeassistant:
 
 ffmpeg:
 
+frontend:
+  themes: !include_dir_merge_named themes
+
 prometheus:
   namespace: hass
 
