@@ -1,6 +1,10 @@
 # Loads default set of integrations. Do not remove.
 default_config:
 
+homeassistant:
+  auth_mfa_modules:
+    - type: totp
+
 ffmpeg:
 
 prometheus:
