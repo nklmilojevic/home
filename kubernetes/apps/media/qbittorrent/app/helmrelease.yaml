@@ -62,9 +62,9 @@ spec:
           http:
             port: 8080
           bittorrent-tcp:
-            port: 51413
+            port: 50413
             protocol: TCP
-            targetPort: 51413
+            targetPort: 50413
 
     ingress:
       app:
