@@ -26,7 +26,7 @@ spec:
           annotations:
             k8s.v1.cni.cncf.io/networks: static-iot-scrypted
           nodeSelector:
-            # google.feature.node.kubernetes.io/coral: "true"
+            google.feature.node.kubernetes.io/coral: "true"
             intel.feature.node.kubernetes.io/gpu: "true"
 
         containers:
@@ -100,3 +100,10 @@ spec:
         path: /cameras
         globalMounts:
           - path: /recs
+      usb:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/bus/usb
+        hostPathType: Directory
+        globalMounts:
+          - path: /dev/bus/usb
