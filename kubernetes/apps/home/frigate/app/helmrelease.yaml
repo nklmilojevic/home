@@ -23,7 +23,9 @@ spec:
         # pod:
         #   nodeSelector:
         #     google.feature.node.kubernetes.io/coral: "true"
-
+        pod:
+          securityContext:
+            supplementalGroups: [44, 105, 100, 109]
         containers:
           app:
             image:
