@@ -108,6 +108,6 @@ spec:
         volumeSpec:
           nfs:
             server: "10.5.0.10"
-            path: /recs
+            path: /cameras
         globalMounts:
           - path: /media
