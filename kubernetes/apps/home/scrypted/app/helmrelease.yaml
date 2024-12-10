@@ -41,16 +41,11 @@ spec:
                 enabled: false
               startup:
                 enabled: false
-            resources:
-              requests:
-                gpu.intel.com/i915: 1
-                cpu: 136m
-                memory: 1024Mi
-              limits:
-                gpu.intel.com/i915: 1
-                memory: 8192Mi
             securityContext:
-              privileged: true
+              runAsUser: 1000
+              runAsGroup: 1000
+              fsGroup: 1000
+              fsGroupChangePolicy: "OnRootMismatch"
 
     service:
       app:
