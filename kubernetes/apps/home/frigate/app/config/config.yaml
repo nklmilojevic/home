@@ -36,11 +36,8 @@ record:
     days: 5
     mode: motion
   events:
-    retain:
-      default: 15
-      mode: motion
-      objects:
-        person: 30
+    pre_capture: 2
+    post_capture: 2
 
 objects:
   track:
