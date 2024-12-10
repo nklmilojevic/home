@@ -20,9 +20,9 @@ spec:
       frigate:
         annotations:
           configmap.reloader.stakater.com/reload: frigate-configmap
-        pod:
-          # nodeSelector:
-          #   google.feature.node.kubernetes.io/coral: "true"
+        # pod:
+        # nodeSelector:
+        #   google.feature.node.kubernetes.io/coral: "true"
 
         containers:
           app:
