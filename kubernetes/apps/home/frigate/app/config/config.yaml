@@ -35,9 +35,6 @@ record:
   retain:
     days: 5
     mode: motion
-  events:
-    pre_capture: 2
-    post_capture: 2
 
 objects:
   track:
