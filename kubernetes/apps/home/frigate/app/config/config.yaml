@@ -54,7 +54,7 @@ objects:
 go2rtc:
   streams:
     frigate_reolink_hq: rtsp://scrypted.home.svc.cluster.local:36585/ff9460be1bef9038
-    frigate_reolink_lq: rtsp://scrypted.home.svc.cluster.local:3658ce48a10881b27f92
+    frigate_reolink_lq: rtsp://scrypted.home.svc.cluster.local:36585/3658ce48a10881b27f92
 
 cameras:
   # --
