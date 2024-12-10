@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=https://frigate.holthome.net/api/config/schema.json
 logger:
   default: info
-  # logs:
-  #   frigate.record: debug
+  logs:
+    frigate.record: debug
 
 auth:
   enabled: False
@@ -17,6 +17,15 @@ mqtt:
 
 database:
   path: /data/frigate.db
+
+ffmpeg:
+  hwaccel_args:
+    - -hwaccel
+    - vaapi
+    - -hwaccel_device
+    - /dev/dri/renderD128
+    - -hwaccel_output_format
+    - yuv420p
 
 detectors:
   coral:
@@ -35,10 +44,6 @@ record:
   retain:
     days: 7
     mode: motion
-  events:
-    retain:
-      default: 30
-      mode: motion
 
 objects:
   track:
@@ -58,9 +63,9 @@ cameras:
   reolink:
     ffmpeg:
       inputs:
-        - path: rtsp://localhost:8554/frigate_reolink_lq
+        - path: rtsp://localhost:8554/frigate_reolink_lq?video=copy
           roles:
             - detect
-        - path: rtsp://localhost:8554/frigate_reolink_hq
+        - path: rtsp://localhost:8554/frigate_reolink_hq?video=copy&audio=aac
           roles:
             - record
