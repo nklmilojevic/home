@@ -54,18 +54,15 @@ objects:
 go2rtc:
   streams:
     frigate_reolink_hq: rtsp://scrypted.home.svc.cluster.local:36585/ff9460be1bef9038
-    frigate_reolink_lq: rtsp://scrypted.home.svc.cluster.local:36585/ce48a10881b27f92
 
 cameras:
   # --
   reolink:
     ffmpeg:
       inputs:
-        - path: rtsp://localhost:8554/frigate_reolink_lq
-          roles:
-            - detect
         - path: rtsp://localhost:8554/frigate_reolink_hq
           roles:
+            - detect
             - record
     # detect:
     #   height: 360
