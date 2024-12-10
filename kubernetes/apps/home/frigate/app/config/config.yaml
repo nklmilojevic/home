@@ -52,8 +52,8 @@ go2rtc:
   streams:
     # frigate_reolink_hq: rtsp://{FRIGATE_CAMERA_REOLINK_USER}:{FRIGATE_CAMERA_REOLINK_PASSWORD}@{FRIGATE_CAMERA_REOLINK_HOST}:554/h264Preview_01_main
     # frigate_reolink_lq: rtsp://{FRIGATE_CAMERA_REOLINK_USER}:{FRIGATE_CAMERA_REOLINK_PASSWORD}@{FRIGATE_CAMERA_REOLINK_HOST}:554/h264Preview_01_sub
-    frigate_reolink_hq: ffmpeg:http://{FRIGATE_CAMERA_REOLINK_HOST}/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_REOLINK_USER}&password={FRIGATE_CAMERA_REOLINK_PASSWORD}#video=copy#audio=copy#audio=opus
-    frigate_reolink_lq: ffmpeg:http://{FRIGATE_CAMERA_REOLINK_HOST}/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_REOLINK_USER}&password={FRIGATE_CAMERA_REOLINK_PASSWORD}
+    frigate_reolink_hq: "ffmpeg:http://{FRIGATE_CAMERA_REOLINK_HOST}/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_REOLINK_USER}&password={FRIGATE_CAMERA_REOLINK_PASSWORD}#video=copy#audio=copy#audio=opus"
+    frigate_reolink_lq: "ffmpeg:http://{FRIGATE_CAMERA_REOLINK_HOST}/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_REOLINK_USER}&password={FRIGATE_CAMERA_REOLINK_PASSWORD}"
 cameras:
   reolink:
     ffmpeg:
