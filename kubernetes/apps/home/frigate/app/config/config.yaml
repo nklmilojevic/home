@@ -53,7 +53,7 @@ objects:
 
 go2rtc:
   streams:
-    frigate_reolink_hq: rtsp://scrypted.home.svc.cluster.local:36585/ff9460be1bef9038
+    frigate_reolink_hq: rtsp://{FRIGATE_CAMERA_REOLINK_USER}:{FRIGATE_CAMERA_REOLINK_PASSWORD}@{FRIGATE_CAMERA_REOLINK_HOST}:554/h264Preview_01_main
 
 cameras:
   # --
@@ -64,14 +64,14 @@ cameras:
           roles:
             - detect
             - record
-    # detect:
-    #   height: 360
-    #   width: 640
-    #   fps: 10
-    # objects:
-    #   filters:
-    #     person:
-    #       min_area: 1500
-    #       max_area: 100000
-    #       threshold: 0.75
-    #       min_score: 0.60
+    detect:
+      height: 360
+      width: 640
+      fps: 10
+    objects:
+      filters:
+        person:
+          min_area: 1500
+          max_area: 100000
+          threshold: 0.75
+          min_score: 0.60
