@@ -25,13 +25,6 @@ spec:
         pod:
           annotations:
             k8s.v1.cni.cncf.io/networks: static-iot-scrypted
-          nodeSelector:
-            google.feature.node.kubernetes.io/coral: "true"
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
-            fsGroupChangePolicy: "OnRootMismatch"
         containers:
           app:
             image:
