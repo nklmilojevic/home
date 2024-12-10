@@ -88,10 +88,3 @@ spec:
         path: /cameras
         globalMounts:
           - path: /recs
-      usb:
-        enabled: true
-        type: hostPath
-        hostPath: /dev/bus/usb
-        hostPathType: Directory
-        globalMounts:
-          - path: /dev/bus/usb

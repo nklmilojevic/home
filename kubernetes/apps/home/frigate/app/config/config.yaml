@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=https://frigate.holthome.net/api/config/schema.json
+logger:
+  default: info
+  # logs:
+  #   frigate.record: debug
+
+auth:
+  enabled: False
+  trusted_proxies:
+    - 10.42.0.0/16
+    - 10.43.0.0/16
+    - 10.5.0.0/24
+
+mqtt:
+  host: mosquitto.home.svc.cluster.local
+  topic_prefix: frigate
+
+database:
+  path: /data/frigate.db
+
+detectors:
+  coral:
+    type: edgetpu
+    device: usb
+
+snapshots:
+  enabled: true
+  timestamp: false
+  bounding_box: true
+  retain:
+    default: 14
+
+record:
+  enabled: true
+  retain:
+    days: 14
+    mode: all
+  # events:
+  #   retain:
+  #     default: 14
+  # mode: active_objects
+
+objects:
+  track:
+    - person
+    - car
+    - dog
+  filters:
+    person:
+      min_area: 2500
+      max_area: 100000
+      threshold: 0.7
+
+go2rtc:
+  streams:
+    frigate_reolink_hq: rtsp://scrypted.home.svc.cluster.local:36585/ff9460be1bef9038
+    frigate_reolink_lq: rtsp://scrypted.home.svc.cluster.local:3658ce48a10881b27f92
+
+cameras:
+  # --
+  reolink:
+    ffmpeg:
+      inputs:
+        - path: rtsp://localhost:8554/frigate_reolink_lq
+          roles:
+            - detect
+        - path: rtsp://localhost:8554/frigate_reolink_hq
+          roles:
+            - record
+    # detect:
+    #   height: 360
+    #   width: 640
+    #   fps: 10
+    # objects:
+    #   filters:
+    #     person:
+    #       min_area: 1500
+    #       max_area: 100000
+    #       threshold: 0.75
+    #       min_score: 0.60
