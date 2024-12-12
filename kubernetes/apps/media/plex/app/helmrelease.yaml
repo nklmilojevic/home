@@ -99,8 +99,4 @@ spec:
         type: emptyDir
         medium: Memory
       media:
-        type: nfs
-        server: 10.5.0.10
-        path: /media
-        globalMounts:
-          - path: /media
+        existingClaim: nfs-media-pvc
