@@ -10,7 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/media/pvc/app
+  path: ./kubernetes/apps/media/_pvc/app
   prune: true
   sourceRef:
     kind: GitRepository
