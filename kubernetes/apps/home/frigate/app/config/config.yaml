@@ -1,6 +1,5 @@
-# yaml-language-server: $schema=https://frigate.holthome.net/api/config/schema.json
 logger:
-  default: debug
+  default: info
 
 auth:
   enabled: False
