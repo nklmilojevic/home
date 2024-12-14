@@ -44,8 +44,10 @@ objects:
 
 go2rtc:
   streams:
-    frigate_reolink_hq: "ffmpeg:http://{FRIGATE_CAMERA_REOLINK_HOST}/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_REOLINK_USER}&password={FRIGATE_CAMERA_REOLINK_PASSWORD}#video=copy#audio=copy#audio=opus"
-    frigate_reolink_lq: "ffmpeg:http://{FRIGATE_CAMERA_REOLINK_HOST}/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user={FRIGATE_CAMERA_REOLINK_USER}&password={FRIGATE_CAMERA_REOLINK_PASSWORD}"
+    frigate_reolink_hq: "rtsp://scrypted.home.svc.cluster.local:36585/ff9460be1bef9038"
+    frigate_reolink_lq: "rtsp://scrypted.home.svc.cluster.local:36585/ff9460be1bef9038"
+    # frigate_reolink_hq: "ffmpeg:http://{FRIGATE_CAMERA_REOLINK_HOST}/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_REOLINK_USER}&password={FRIGATE_CAMERA_REOLINK_PASSWORD}#video=copy#audio=copy#audio=opus"
+    # frigate_reolink_lq: "ffmpeg:http://{FRIGATE_CAMERA_REOLINK_HOST}/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user={FRIGATE_CAMERA_REOLINK_USER}&password={FRIGATE_CAMERA_REOLINK_PASSWORD}"
   webrtc:
     candidates:
       - 10.40.0.32:8555
