@@ -35,12 +35,22 @@ record:
   retain:
     days: 7
     mode: motion
+  events:
+    retain:
+      default: 30
+      mode: motion
 
 objects:
   track:
     - person
-    - car
-    - dog
+    - vehicle
+    - animal
+    - bike
+  filters:
+    person:
+      min_area: 5000
+      max_area: 100000
+      threshold: 0.7
 
 go2rtc:
   streams:
@@ -55,6 +65,10 @@ go2rtc:
 
 cameras:
   reolink:
+    detect:
+      width: 1280
+      height: 720
+      fps: 5
     ffmpeg:
       inputs:
         - path: rtsp://localhost:8554/frigate_reolink_lq?video=copy
