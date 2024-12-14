@@ -1,8 +1,6 @@
 # yaml-language-server: $schema=https://frigate.holthome.net/api/config/schema.json
 logger:
-  default: info
-  logs:
-    frigate.record: debug
+  default: debug
 
 auth:
   enabled: False
@@ -19,7 +17,7 @@ database:
   path: /data/frigate.db
 
 ffmpeg:
-  hwaccel_args: -hwaccel qsv -qsv_device /dev/dri/renderD128
+  hwaccel_args: -c:v h264_qsv
 
 detectors:
   coral:
