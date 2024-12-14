@@ -61,6 +61,7 @@ spec:
     service:
       app:
         controller: frigate
+        type: LoadBalancer
         annotations:
           metallb.universe.tf/loadBalancerIPs: "10.40.0.32"
         ports:
