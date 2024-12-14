@@ -17,7 +17,7 @@ database:
   path: /data/frigate.db
 
 ffmpeg:
-  hwaccel_args: -c:v h264_qsv
+  hwaccel_args: preset-vaapi
 
 detectors:
   coral:
