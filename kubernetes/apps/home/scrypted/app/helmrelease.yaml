@@ -24,7 +24,13 @@ spec:
 
         pod:
           annotations:
-            k8s.v1.cni.cncf.io/networks: static-iot-scrypted
+            k8s.v1.cni.cncf.io/networks: |
+              [{
+                "name":"multus-host",
+                "namespace": "networking",
+                "ips": ["10.5.0.207/24"],
+                "mac": "7e:84:d7:6e:5e:12"
+              }]
         containers:
           app:
             image:
