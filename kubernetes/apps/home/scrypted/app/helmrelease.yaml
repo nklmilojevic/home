@@ -28,8 +28,8 @@ spec:
               [{
                 "name":"multus-host",
                 "namespace": "networking",
-                "ips": ["10.5.0.210/24"],
-                "mac": "7e:84:d7:6e:5e:12"
+                "ips": ["10.5.0.211/24"],
+                "mac": "7e:84:d7:6e:5b:12"
               }]
         containers:
           app:
