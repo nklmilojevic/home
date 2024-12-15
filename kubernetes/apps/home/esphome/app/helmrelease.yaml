@@ -23,12 +23,18 @@ spec:
 
         pod:
           annotations:
-            k8s.v1.cni.cncf.io/networks: static-iot-esphome
-          dnsConfig:
-            nameservers:
-              - 10.50.0.1
-            searches:
-              - local
+            k8s.v1.cni.cncf.io/networks: |
+              [{
+                "name":"multus-host",
+                "namespace": "networking",
+                "ips": ["10.5.0.226/24"],
+                "mac": "7e:84:d7:6e:5e:11"
+              }]
+          # dnsConfig:
+          #   nameservers:
+          #     - 10.50.0.1
+          #   searches:
+          #     - local
 
         containers:
           app:
