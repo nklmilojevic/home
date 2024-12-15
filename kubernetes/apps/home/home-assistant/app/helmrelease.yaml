@@ -42,7 +42,13 @@ spec:
 
         pod:
           annotations:
-            k8s.v1.cni.cncf.io/networks: static-iot-hass
+            k8s.v1.cni.cncf.io/networks: |
+              [{
+                "name":"multus-host",
+                "namespace": "network",
+                "ips": ["10.5.0.205/24"],
+                "mac": "3d:57:e5:f7:44:01"
+              }]
 
         replicas: 1
 
