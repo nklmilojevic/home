@@ -47,7 +47,7 @@ spec:
               [{
                 "name":"multus-host",
                 "namespace": "networking",
-                "ips": ["10.5.0.227/24"],
+                "ips": ["10.5.0.205/24"],
                 "mac": "7e:84:d7:6e:5e:12"
               }]
         replicas: 1
