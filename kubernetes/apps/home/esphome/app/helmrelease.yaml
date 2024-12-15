@@ -25,10 +25,10 @@ spec:
           annotations:
             k8s.v1.cni.cncf.io/networks: |
               [{
-                "name":"multus-host",
+                "name":"multus-iot",
                 "namespace": "networking",
-                "ips": ["10.5.0.226/24"],
-                "mac": "7e:84:d7:6e:5e:11"
+                "ips": ["10.50.0.249/24"],
+                "mac": "7e:84:d7:6e:5e:14"
               }]
           # dnsConfig:
           #   nameservers:
