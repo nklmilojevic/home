@@ -51,14 +51,14 @@ spec:
                 "mac": "7e:84:d7:6e:5e:12"
               }]
         replicas: 1
-        initContainers:
-          01-init-db:
-            image:
-              repository: ghcr.io/onedr0p/postgres-init
-              tag: 16
-            envFrom:
-              - secretRef:
-                  name: homeassistant-secrets
+        # initContainers:
+        #   01-init-db:
+        #     image:
+        #       repository: ghcr.io/onedr0p/postgres-init
+        #       tag: 16
+        #     envFrom:
+        #       - secretRef:
+        #           name: homeassistant-secrets
 
         containers:
           app:
