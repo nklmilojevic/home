@@ -15,7 +15,7 @@ spec:
           "mode": "bridge",
           "capabilities": {
             "ips": true
-          },
+          }
         }
       ]
     }
