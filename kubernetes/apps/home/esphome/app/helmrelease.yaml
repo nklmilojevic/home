@@ -26,7 +26,7 @@ spec:
             k8s.v1.cni.cncf.io/networks: static-iot-esphome
           dnsConfig:
             nameservers:
-              - 10.3.0.1
+              - 10.40.0.1
             searches:
               - local
 
