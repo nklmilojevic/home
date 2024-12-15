@@ -45,9 +45,9 @@ spec:
             k8s.v1.cni.cncf.io/networks: |
               [{
                 "name":"multus-host",
-                "namespace": "networking",
+                "namespace": "network",
                 "ips": ["10.5.0.205/24"],
-                "mac": "C6:DB:80:0A:32:8E"
+                "mac": "7e:84:d7:6e:5e:11"
               }]
 
         replicas: 1
