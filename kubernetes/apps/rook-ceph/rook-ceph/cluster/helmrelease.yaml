@@ -80,13 +80,13 @@ spec:
         nodes:
           - name: "icarus001"
             devices:
-              - name: "/dev/nvme0n0"
+              - name: "/dev/nvme1n1"
           - name: "icarus002"
             devices:
-              - name: "/dev/nvme0n0"
+              - name: "/dev/nvme1n1"
           - name: "icarus003"
             devices:
-              - name: "/dev/nvme0n0"
+              - name: "/dev/nvme1n1"
     cephBlockPools:
       - name: ceph-blockpool
         spec:
