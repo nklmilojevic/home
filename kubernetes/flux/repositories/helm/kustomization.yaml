@@ -2,31 +2,31 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./bitnami.yaml
   - ./bjw-s.yaml
-  - ./external-dns.yaml
-  - ./hajimari.yaml
-  - ./ingress-nginx.yaml
+  - ./cilium.yaml
+  - ./coredns.yaml
   - ./jetstack.yaml
-  - ./k8s-gateway.yaml
-  - ./metallb.yaml
   - ./metrics-server.yaml
+  - ./openebs.yaml
+  - ./postfinance.yaml
+  - ./prometheus-community.yaml
+  - ./spegel.yaml
   - ./stakater.yaml
-  - ./csi-nfs.yaml
-  - ./external-secrets.yaml
-  - ./vector-chart.yaml
-  - ./victoriametrics.yaml
-  - ./backube.yaml
-  - ./grafana.yaml
-  - ./1password-charts.yaml
-  - ./nfs-subdir-external-provisioner.yaml
-  - ./democratic-csi.yaml
-  - ./multus.yaml
-  - ./gitea-charts.yaml
+  - ./external-dns.yaml
+  - ./ingress-nginx.yaml
+  - ./k8s-gateway.yaml
+  - ./angelnu.yaml
+  - ./bitnami.yaml
   - ./cloudnative-pg.yaml
   - ./dragonfly.yaml
+  - ./external-secrets.yaml
+  - ./grafana.yaml
   - ./intel.yaml
-  - ./node-feature-discovery.yaml
-  - ./openebs.yaml
-  - ./strimzi.yaml
   - ./k8tz.yaml
+  - ./nfs-subdir-external-provisioner.yaml
+  - ./node-feature-discovery.yaml
+  - ./vector-chart.yaml
+  - ./victoriametrics.yaml
+  - ./1password-charts.yaml
+  - ./rook-ceph.yaml
+  - ./piraeus.yaml

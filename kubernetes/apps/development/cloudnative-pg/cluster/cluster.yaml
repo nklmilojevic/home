@@ -38,23 +38,22 @@ spec:
           key: aws-secret-access-key
   # Note: previousCluster needs to be set to the name of the previous
   # cluster when recovering from an existing cnpg cluster
-  # bootstrap:
-  #   recovery:
-  #     source: postgres
+  bootstrap:
+    recovery:
+      source: pg16
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
-  # # Note: externalClusters is needed when recovering from an existing cnpg cluster
-  # externalClusters:
-  #   - name: postgres
-  #     barmanObjectStore:
-  #       wal:
-  #         compression: bzip2
-  #         maxParallel: 30
-  #       destinationPath: s3://k3s-cloudnative-pg/
-  #       endpointURL: https://s3.us-west-002.backblazeb2.com
-  #       s3Credentials:
-  #         accessKeyId:
-  #           name: cloudnative-pg-secret
-  #           key: aws-access-key-id
-  #         secretAccessKey:
-  #           name: cloudnative-pg-secret
-  #           key: aws-secret-access-key
+  externalClusters:
+    - name: pg16
+      barmanObjectStore:
+        wal:
+          compression: bzip2
+          maxParallel: 30
+        destinationPath: s3://postgres-home-cluster/
+        endpointURL: https://08d762fa335f39a89d3dad15db551e2f.r2.cloudflarestorage.com
+        s3Credentials:
+          accessKeyId:
+            name: cloudnative-pg-secret
+            key: aws-access-key-id
+          secretAccessKey:
+            name: cloudnative-pg-secret
+            key: aws-secret-access-key

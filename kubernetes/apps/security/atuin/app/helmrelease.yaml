@@ -91,7 +91,7 @@ spec:
         enabled: true
         className: internal
         hosts:
-          - host: &host atuin.milojevic.dev
+          - host: &host atuin.nikola.wtf
             paths:
               - path: /
                 service:

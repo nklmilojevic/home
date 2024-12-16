@@ -11,6 +11,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: rook-ceph-cluster
+    - name: volsync
     - name: external-secrets-stores
   path: ./kubernetes/apps/media/prowlarr/app
   prune: true
@@ -24,3 +26,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      APP_UID: "1000"
+      APP_GID: "1000"
+      VOLSYNC_CLAIM: prowlarr-config

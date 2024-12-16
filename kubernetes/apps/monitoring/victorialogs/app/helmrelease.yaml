@@ -35,12 +35,12 @@ spec:
         enabled: true
         ingressClassName: "internal"
         hosts:
-          - name: vmlogs.milojevic.dev
+          - name: vmlogs.nikola.wtf
             path: /
             port: 9428
         tls:
           - hosts:
-              - vmlogs.milojevic.dev
+              - vmlogs.nikola.wtf
 
       service:
         enabled: true

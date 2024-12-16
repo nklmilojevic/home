@@ -70,7 +70,7 @@ spec:
         annotations:
           hajimari.io/icon: "mdi:zigbee"
         hosts:
-          - host: &host zigbee2mqtt.milojevic.dev
+          - host: &host zigbee2mqtt.nikola.wtf
             paths:
               - path: /
                 pathType: Prefix

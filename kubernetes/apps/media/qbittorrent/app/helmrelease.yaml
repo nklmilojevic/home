@@ -72,7 +72,7 @@ spec:
         annotations:
           hajimari.io/icon: "mdi:download"
         hosts:
-          - host: &host qbittorrent.milojevic.dev
+          - host: &host qbittorrent.nikola.wtf
             paths:
               - path: /
                 pathType: Prefix

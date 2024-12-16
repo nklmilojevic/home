@@ -11,6 +11,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: rook-ceph-cluster
+    - name: volsync
     - name: external-secrets-stores
   path: ./kubernetes/apps/media/bazarr/app
   prune: true
@@ -24,3 +26,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_CLAIM: bazarr-config

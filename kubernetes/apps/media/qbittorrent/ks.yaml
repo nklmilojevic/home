@@ -11,6 +11,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: rook-ceph-cluster
+    - name: volsync
     - name: external-secrets-stores
   path: ./kubernetes/apps/media/qbittorrent/app
   prune: true
@@ -24,3 +26,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_CLAIM: qbittorrent-config
+      VOLSYNC_CAPACITY: 2Gi
+      VOLSYNC_ACCESSMODES: ReadWriteMany
+      VOLSYNC_STORAGECLASS: ceph-filesystem
+      VOLSYNC_SNAPSHOTCLASS: csi-ceph-filesystem

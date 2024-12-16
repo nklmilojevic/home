@@ -3,17 +3,25 @@
 Thumbs.db
 # k8s
 kubeconfig
-# vscode-sops
+talosconfig
 .decrypted~*.yaml
 .config.env
 *.agekey
 *.pub
 *.key
+# Private
+.private
+.bin
 # Ansible
-xanmanning.k3s*
-# Terraform
-.terraform
-.terraform.tfstate*
-terraform.tfstate*
+.venv*
+# Taskfile
+.task
+# Brew
+Brewfile.lock.json
+# intellij
+.idea
+# wiki
+wiki
+# Bootstrap
+/config.yaml
 .direnv
-.venv
