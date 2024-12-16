@@ -54,7 +54,7 @@ spec:
         controller: vector-aggregator
         type: LoadBalancer
         annotations:
-          metallb.universe.tf/loadBalancerIPs: "10.40.0.30"
+          lbipam.cilium.io/ips: "10.40.0.30"
         ports:
           http:
             primary: true

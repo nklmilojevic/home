@@ -4,5 +4,5 @@ namespace: home
 resources:
   # - ./externalsecret.yaml
   - ./pvc.yaml
-  - ./multus.yaml
+  # - ./multus.yaml
   - ./helmrelease.yaml

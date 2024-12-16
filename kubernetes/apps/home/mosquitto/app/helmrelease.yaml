@@ -42,7 +42,7 @@ spec:
         controller: mosquitto
         type: LoadBalancer
         annotations:
-          metallb.universe.tf/loadBalancerIPs: "10.40.0.8"
+          lbipam.cilium.io/ips: "10.40.0.8"
         externalTrafficPolicy: Local
         ports:
           http:
