@@ -7,5 +7,5 @@ resources:
   - ./volsync/ks.yaml
   - ./snapshot-controller/ks.yaml
   # - ./authelia/ks.yaml
-  # - ./atuin/ks.yaml
-  # - ./lldap/ks.yaml
+  - ./atuin/ks.yaml
+  - ./lldap/ks.yaml
