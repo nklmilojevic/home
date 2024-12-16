@@ -16,9 +16,14 @@ spec:
     kind: GitRepository
     name: home-kubernetes
   wait: false
+  dependsOn:
+    - name: rook-ceph-cluster
+    - name: volsync
+    - name: external-secrets-stores
   interval: 30m
   retryInterval: 1m
   timeout: 5m
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_CLAIM: tautulli-config

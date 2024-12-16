@@ -1,0 +1,3 @@
+---
+providerRegex: ^(icarus00[1-3])$
+bypassDnsResolution: true

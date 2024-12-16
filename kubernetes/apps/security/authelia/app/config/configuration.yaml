@@ -31,9 +31,9 @@ session:
   remember_me: 1M
   cookies:
     - name: milojevicdev_session
-      domain: milojevic.dev
-      authelia_url: https://auth.milojevic.dev
-      default_redirection_url: https://milojevic.dev
+      domain: nikola.wtf
+      authelia_url: https://auth.nikola.wtf
+      default_redirection_url: https://nikola.wtf
   redis:
     host: dragonfly.development.svc.cluster.local
     database_index: 15
@@ -41,8 +41,8 @@ session:
 notifier:
   disable_startup_check: true
   smtp:
-    address: smtp-relay.networking.svc.cluster.local:2525
-    sender: Authelia <authelia@milojevic.dev>
+    address: smtp-relay.network.svc.cluster.local:2525
+    sender: Authelia <authelia@nikola.wtf>
     disable_require_tls: true
 
 totp:
@@ -75,5 +75,5 @@ identity_providers:
         authorization_policy: two_factor
         pre_configured_consent_duration: 1y
         scopes: ["openid", "profile", "groups", "email"]
-        redirect_uris: ["https://grafana.milojevic.dev/login/generic_oauth"]
+        redirect_uris: ["https://grafana.nikola.wtf/login/generic_oauth"]
         userinfo_signed_response_alg: none

@@ -6,9 +6,9 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
+  url: "https://github.com/nklmilojevic/home.git"
   ref:
-    branch: main
-  url: "https://github.com/nklmilojevic/home"
+    branch: "main"
   ignore: |
     # exclude all
     /*

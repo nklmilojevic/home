@@ -63,7 +63,7 @@ spec:
         annotations:
           hajimari.io/icon: mdi:subtitles-outline
         hosts:
-          - host: &host bazarr.milojevic.dev
+          - host: &host bazarr.nikola.wtf
             paths:
               - path: /
                 pathType: Prefix

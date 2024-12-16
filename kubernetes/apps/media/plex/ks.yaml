@@ -10,17 +10,21 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: external-secrets-stores
   path: ./kubernetes/apps/media/plex/app
   prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
   wait: false
+  dependsOn:
+    - name: rook-ceph-cluster
+    - name: volsync
+    - name: external-secrets-stores
   interval: 30m
   retryInterval: 1m
   timeout: 5m
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_CLAIM: plex-config
+      VOLSYNC_CAPACITY: 50Gi
