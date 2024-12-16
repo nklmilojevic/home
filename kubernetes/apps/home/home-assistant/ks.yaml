@@ -26,7 +26,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      APP_UID: "0"
-      APP_GID: "0"
       VOLSYNC_CLAIM: home-assistant-config
-      VOLSYNC_CAPACITY: 8Gi
+      VOLSYNC_CAPACITY: 10Gi

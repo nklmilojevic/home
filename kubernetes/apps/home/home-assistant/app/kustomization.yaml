@@ -3,10 +3,8 @@ kind: Kustomization
 namespace: home
 resources:
   - ./externalsecret.yaml
-  - ./pvc.yaml
   - ./helmrelease.yaml
   - ../../../../templates/volsync
-  - ./multus.yaml
 configMapGenerator:
   - name: hass-config
     files:

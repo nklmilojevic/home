@@ -22,13 +22,14 @@ spec:
           secret.reloader.stakater.com/reload: esphome-secrets,esphome-deploykey
 
         pod:
-          # annotations:
-          #   k8s.v1.cni.cncf.io/networks: static-iot-esphome
-          dnsConfig:
-            nameservers:
-              - 10.3.0.1
-            searches:
-              - local
+          annotations:
+            k8s.v1.cni.cncf.io/networks: |
+              [{
+                "name":"multus-iot",
+                "namespace": "networking",
+                "ips": ["10.50.0.249/24"],
+                "mac": "7e:84:d7:6e:5e:14"
+              }]
 
         containers:
           app:
@@ -72,7 +73,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: esphome-data
+        existingClaim: esphome-config
         advancedMounts:
           esphome:
             app:

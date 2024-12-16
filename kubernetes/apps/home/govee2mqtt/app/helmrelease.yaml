@@ -32,7 +32,13 @@ spec:
 
         pod:
           annotations:
-            k8s.v1.cni.cncf.io/networks: static-iot-govee
+            k8s.v1.cni.cncf.io/networks: |
+              [{
+                "name":"multus-iot",
+                "namespace": "networking",
+                "ips": ["10.50.0.250/24"],
+                "mac": "7e:84:d7:6e:5e:13"
+              }]
         containers:
           app:
             image:
@@ -50,4 +56,4 @@ spec:
 
     persistence:
       data:
-        existingClaim: govee2mqtt-data
+        existingClaim: govee2mqtt-config
