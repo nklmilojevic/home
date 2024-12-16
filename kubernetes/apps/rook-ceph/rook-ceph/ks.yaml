@@ -1,42 +1,43 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app rook-ceph
+  name: &appname rook-ceph
   namespace: flux-system
 spec:
   targetNamespace: rook-ceph
   commonMetadata:
     labels:
-      app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/rook-ceph/rook-ceph/app
+      app.kubernetes.io/name: *appname
+  interval: 30m
+  timeout: 5m
+  path: "./kubernetes/apps/rook-ceph/rook-ceph/operator"
   prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
   wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 15m
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app rook-ceph-cluster
+  name: &appname rook-ceph-cluster
   namespace: flux-system
 spec:
   targetNamespace: rook-ceph
   commonMetadata:
     labels:
-      app.kubernetes.io/name: *app
+      app.kubernetes.io/name: *appname
+  interval: 30m
+  timeout: 5m
+  path: "./kubernetes/apps/rook-ceph/rook-ceph/cluster"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: true
   dependsOn:
     - name: rook-ceph
-  path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: home-kubernetes
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 15m
+    - name: snapshot-controller
