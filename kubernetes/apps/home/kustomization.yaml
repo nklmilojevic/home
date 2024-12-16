@@ -8,5 +8,5 @@ resources:
   - ./z2mqtt/ks.yaml
   - ./govee2mqtt/ks.yaml
   - ./scrypted/ks.yaml
-  # - ./esphome/ks.yaml
-  # - ./go2rtc/ks.yaml
+  - ./esphome/ks.yaml
+  - ./go2rtc/ks.yaml
