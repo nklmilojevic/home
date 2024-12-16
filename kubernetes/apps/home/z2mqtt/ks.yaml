@@ -27,5 +27,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: zigbee2mqtt-data
+      VOLSYNC_CLAIM: zigbee2mqtt-config
       VOLSYNC_CAPACITY: 2Gi
