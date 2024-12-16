@@ -42,13 +42,13 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: cloudflared-secret
-                    key: CLOUDFLARE_TUNNEL_ID
+                    key: TUNNEL_ID
             args:
               - tunnel
               - --config
               - /etc/cloudflared/config/config.yaml
               - run
-              - "$(CLOUDFLARE_TUNNEL_ID)"
+              - "$(TUNNEL_ID)"
             probes:
               liveness: &probes
                 enabled: true
