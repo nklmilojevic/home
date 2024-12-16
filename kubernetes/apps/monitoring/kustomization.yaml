@@ -7,7 +7,7 @@ resources:
   - ./grafana/ks.yaml
   - ./victorialogs/ks.yaml
   - ./vector/ks.yaml
-  # - ./network-ups-tools/ks.yaml
-  # - ./nut-exporter/ks.yaml
-  # - ./changedetection/ks.yaml
+  - ./network-ups-tools/ks.yaml
+  - ./nut-exporter/ks.yaml
+  - ./changedetection/ks.yaml
   - ./prometheus-operator-crds/ks.yaml
