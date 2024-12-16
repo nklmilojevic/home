@@ -5,8 +5,8 @@ metadata:
   name: isponsorblocktv
   namespace: flux-system
 spec:
-  targetnetwork
-  path: ./kubernetes/apps/networking/isponsorblocktv/app
+  targetNamespace: network
+  path: ./kubernetes/apps/network/isponsorblocktv/app
   prune: true
   sourceRef:
     kind: GitRepository

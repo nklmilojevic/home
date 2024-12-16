@@ -5,8 +5,8 @@ metadata:
   name: adguard
   namespace: flux-system
 spec:
-  targetnetwork
-  path: ./kubernetes/apps/networking/adguard/app
+  targetNamespace: network
+  path: ./kubernetes/apps/network/adguard/app
   prune: true
   sourceRef:
     kind: GitRepository
