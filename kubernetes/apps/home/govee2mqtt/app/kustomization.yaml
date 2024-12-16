@@ -4,5 +4,4 @@ namespace: home
 resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
-  - ./multus.yaml
   - ../../../../templates/volsync
