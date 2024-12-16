@@ -95,6 +95,3 @@ spec:
                 service:
                   identifier: app
                   port: http
-    persistence:
-      blah:
-        existingClaim: blah
