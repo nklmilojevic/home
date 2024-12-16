@@ -22,8 +22,8 @@ spec:
           secret.reloader.stakater.com/reload: esphome-secrets,esphome-deploykey
 
         pod:
-          annotations:
-            k8s.v1.cni.cncf.io/networks: static-iot-esphome
+          # annotations:
+          #   k8s.v1.cni.cncf.io/networks: static-iot-esphome
           dnsConfig:
             nameservers:
               - 10.3.0.1

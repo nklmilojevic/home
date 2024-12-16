@@ -56,7 +56,7 @@ spec:
         controller: qbittorrent
         type: LoadBalancer
         annotations:
-          metallb.universe.tf/loadBalancerIPs: "10.40.0.9"
+          lbipam.cilium.io/ips: "10.40.0.9"
         externalTrafficPolicy: Local
         ports:
           http:

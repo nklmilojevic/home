@@ -43,7 +43,7 @@ spec:
         type: LoadBalancer
         externalTrafficPolicy: Local
         annotations:
-          metallb.universe.tf/loadBalancerIPs: "10.40.0.13"
+          lbipam.cilium.io/ips: "10.40.0.13"
         ports:
           http:
             primary: true
