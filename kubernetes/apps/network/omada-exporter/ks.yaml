@@ -5,11 +5,11 @@ metadata:
   name: &app omada-exporter
   namespace: flux-system
 spec:
-  targetnetwork
+  targetNamespace: network
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/networking/omada-exporter/app
+  path: ./kubernetes/apps/network/omada-exporter/app
   prune: true
   sourceRef:
     kind: GitRepository
