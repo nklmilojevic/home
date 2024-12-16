@@ -1,6 +1,6 @@
 ---
 originRequest:
-  originServerName: "external.nikola.wtf"
+  originServerName: "external.${SECRET_DOMAIN}"
 
 ingress:
   - hostname: "${SECRET_DOMAIN}"
