@@ -1,0 +1,172 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
+---
+# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+talosVersion: v1.8.4
+# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+kubernetesVersion: v1.31.3
+
+clusterName: "home-kubernetes"
+endpoint: https://10.40.0.3:6443
+
+clusterPodNets:
+  - "10.69.0.0/16"
+clusterSvcNets:
+  - "10.96.0.0/16"
+
+additionalApiServerCertSans: &sans
+  - &talosControlplaneVip 10.40.0.3
+  - "127.0.0.1"
+additionalMachineCertSans: *sans
+
+# Disable built-in Flannel to use Cilium
+cniConfig:
+  name: none
+
+nodes:
+  - hostname: "icarus001"
+    ipAddress: "10.40.0.201"
+    installDiskSelector:
+      size: "<200GB"
+    talosImageURL: factory.talos.dev/installer/74551a2d2d0a9a018ba38835f3ce8d3ed712b4ef2b99a41ee1b84125e11c6d64
+    controlPlane: true
+    networkInterfaces:
+      - interface: bond0
+        bond:
+          mode: active-backup
+          deviceSelectors:
+            - hardwareAddr: "6c:1f:f7:08:ef:8a"
+              driver: r8152
+        dhcp: true
+        vip:
+          ip: *talosControlplaneVip
+        vlans:
+          - vlanId: 1
+            dhcp: false
+            addresses:
+              - 10.5.0.201/24
+            mtu: 1500
+          - vlanId: 50
+            dhcp: false
+            addresses:
+              - 10.50.0.201/24
+            mtu: 1500
+
+    schematic:
+      customization:
+        extraKernelArgs:
+          - net.ifnames=1
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/i915-ucode
+            - siderolabs/intel-ice-firmware
+            - siderolabs/intel-ucode
+            - siderolabs/mei
+            - siderolabs/realtek-firmware
+            - siderolabs/thunderbolt
+            - siderolabs/util-linux-tools
+
+  - hostname: "icarus002"
+    ipAddress: "10.40.0.202"
+    installDiskSelector:
+      size: "<200GB"
+    talosImageURL: factory.talos.dev/installer/74551a2d2d0a9a018ba38835f3ce8d3ed712b4ef2b99a41ee1b84125e11c6d64
+    controlPlane: true
+    networkInterfaces:
+      - interface: bond0
+        bond:
+          mode: active-backup
+          deviceSelectors:
+            - hardwareAddr: "6c:1f:f7:08:ef:71"
+              driver: r8152
+        dhcp: true
+        vip:
+          ip: *talosControlplaneVip
+        vlans:
+          - vlanId: 1
+            dhcp: false
+            addresses:
+              - 10.5.0.202/24
+            mtu: 1500
+          - vlanId: 50
+            dhcp: false
+            addresses:
+              - 10.50.0.202/24
+            mtu: 1500
+
+    schematic:
+      customization:
+        extraKernelArgs:
+          - net.ifnames=1
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/i915-ucode
+            - siderolabs/intel-ice-firmware
+            - siderolabs/intel-ucode
+            - siderolabs/mei
+            - siderolabs/realtek-firmware
+            - siderolabs/thunderbolt
+            - siderolabs/util-linux-tools
+
+  - hostname: "icarus003"
+    ipAddress: "10.40.0.203"
+    installDiskSelector:
+      size: "<200GB"
+    talosImageURL: factory.talos.dev/installer/74551a2d2d0a9a018ba38835f3ce8d3ed712b4ef2b99a41ee1b84125e11c6d64
+    controlPlane: true
+    networkInterfaces:
+      - interface: bond0
+        bond:
+          mode: active-backup
+          deviceSelectors:
+            - hardwareAddr: "6c:1f:f7:08:f0:fa"
+              driver: r8152
+        dhcp: true
+        vip:
+          ip: *talosControlplaneVip
+        vlans:
+          - vlanId: 1
+            dhcp: false
+            addresses:
+              - 10.5.0.203/24
+            mtu: 1500
+          - vlanId: 50
+            dhcp: false
+            addresses:
+              - 10.50.0.203/24
+            mtu: 1500
+
+    schematic:
+      customization:
+        extraKernelArgs:
+          - net.ifnames=1
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/i915-ucode
+            - siderolabs/intel-ice-firmware
+            - siderolabs/intel-ucode
+            - siderolabs/mei
+            - siderolabs/realtek-firmware
+            - siderolabs/thunderbolt
+            - siderolabs/util-linux-tools
+# Global patches
+patches:
+  - "@./patches/global/cluster-discovery.yaml"
+  - "@./patches/global/containerd.yaml"
+  - "@./patches/global/disable-search-domain.yaml"
+  - "@./patches/global/dns.yaml"
+  - "@./patches/global/hostdns.yaml"
+  - "@./patches/global/kubelet.yaml"
+  - "@./patches/global/kubeprism.yaml"
+  - "@./patches/global/nfs.yaml"
+  - "@./patches/global/ntp.yaml"
+  - "@./patches/global/openebs-local.yaml"
+  - "@./patches/global/sysctl.yaml"
+  - "@./patches/global/udev.yaml"
+
+# Controller patches
+controlPlane:
+  patches:
+    - "@./patches/controller/api-access.yaml"
+    - "@./patches/controller/cluster.yaml"
+    - "@./patches/controller/disable-admission-controller.yaml"
+    - "@./patches/controller/etcd.yaml"

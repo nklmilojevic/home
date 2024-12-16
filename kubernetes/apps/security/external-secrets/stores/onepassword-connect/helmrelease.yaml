@@ -24,7 +24,7 @@ spec:
       ingressclassName: "internal"
       pathType: Prefix
       hosts:
-        - host: &host "onepassword-connect.milojevic.dev"
+        - host: &host "onepassword-connect.nikola.wtf"
           paths:
             - path: /
       tls:

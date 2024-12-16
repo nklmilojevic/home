@@ -38,7 +38,7 @@ spec:
             env:
               TZ: "Europe/Belgrade"
               VERSION: "docker"
-              PLEX_ADVERTISE_URL: https://10.40.0.6:32400,https://plex.milojevic.dev:443
+              PLEX_ADVERTISE_URL: https://10.40.0.6:32400,https://plex.nikola.wtf:443
               PLEX_NO_AUTH_NETWORKS: 10.0.0.0/8
             securityContext:
               allowPrivilegeEscalation: false
@@ -81,7 +81,7 @@ spec:
           hajimari.io/icon: "plex"
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
-          - host: &host plex.milojevic.dev
+          - host: &host plex.nikola.wtf
             paths:
               - path: /
                 pathType: Prefix

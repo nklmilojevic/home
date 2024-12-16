@@ -71,7 +71,7 @@ spec:
         enabled: true
         className: internal
         hosts:
-          - host: &host cd.milojevic.dev
+          - host: &host cd.nikola.wtf
             paths:
               - path: /
                 pathType: Prefix

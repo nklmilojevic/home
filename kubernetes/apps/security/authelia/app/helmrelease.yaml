@@ -109,14 +109,14 @@ spec:
       app:
         className: external
         annotations:
-          external-dns.alpha.kubernetes.io/target: external.milojevic.dev
+          external-dns.alpha.kubernetes.io/target: external.nikola.wtf
           nginx.ingress.kubernetes.io/configuration-snippet: |
             add_header Cache-Control "no-store";
             add_header Pragma "no-cache";
             add_header X-Frame-Options "SAMEORIGIN";
             add_header X-XSS-Protection "1; mode=block";
         hosts:
-          - host: &host auth.milojevic.dev
+          - host: &host auth.nikola.wtf
             paths:
               - path: /
                 service:
