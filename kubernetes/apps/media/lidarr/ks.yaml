@@ -25,4 +25,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: bazarr-config
+      VOLSYNC_CLAIM: lidarr-config
