@@ -85,8 +85,13 @@ spec:
 
     persistence:
       config:
-        existingClaim: sabnzbd-data
+        existingClaim: sabnzbd-config
       media:
-        existingClaim: nfs-media-pvc
-      interim:
-        existingClaim: sabnzbd-interim
+        enabled: true
+        type: custom
+        volumeSpec:
+          nfs:
+            server: "10.5.0.10"
+            path: "/media"
+        globalMounts:
+          - path: /media
