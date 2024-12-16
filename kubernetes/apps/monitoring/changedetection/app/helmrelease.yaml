@@ -85,7 +85,7 @@ spec:
     persistence:
       data:
         enabled: true
-        existingClaim: changedetection-config
+        existingClaim: cd-config
         advancedMounts:
           changedetection:
             app:

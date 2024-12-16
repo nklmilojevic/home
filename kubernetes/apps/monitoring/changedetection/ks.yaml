@@ -19,3 +19,8 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CLAIM: cd-config
+      VOLSYNC_CAPACITY: 5Gi
