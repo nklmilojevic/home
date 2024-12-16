@@ -30,3 +30,4 @@ resources:
   - ./1password-charts.yaml
   - ./rook-ceph.yaml
   - ./piraeus.yaml
+  - ./backube.yaml
