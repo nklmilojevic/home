@@ -3,7 +3,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: pg16-v1
+  name: pg16
 spec:
   instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:16.4-19
@@ -22,13 +22,13 @@ spec:
     enablePodMonitor: true
   backup:
     retentionPolicy: 7d
-    barmanObjectStore:
+    barmanObjectStore: &barmanObjectStore
       wal:
         compression: bzip2
         maxParallel: 30
       destinationPath: s3://postgres-home-cluster/
       endpointURL: https://08d762fa335f39a89d3dad15db551e2f.r2.cloudflarestorage.com
-      serverName: postgres
+      serverName: &currentCluster postgres16
       s3Credentials:
         accessKeyId:
           name: cloudnative-pg-secret
@@ -40,20 +40,10 @@ spec:
   # cluster when recovering from an existing cnpg cluster
   bootstrap:
     recovery:
-      source: pg16
+      source: &previousCluster postgres
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
-    - name: pg16
+    - name: *previousCluster
       barmanObjectStore:
-        wal:
-          compression: bzip2
-          maxParallel: 30
-        destinationPath: s3://postgres-home-cluster/
-        endpointURL: https://08d762fa335f39a89d3dad15db551e2f.r2.cloudflarestorage.com
-        s3Credentials:
-          accessKeyId:
-            name: cloudnative-pg-secret
-            key: aws-access-key-id
-          secretAccessKey:
-            name: cloudnative-pg-secret
-            key: aws-secret-access-key
+        <<: *barmanObjectStore
+        serverName: *previousCluster
