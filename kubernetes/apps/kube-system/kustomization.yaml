@@ -9,3 +9,4 @@ resources:
   - ./reloader/ks.yaml
   - ./kubelet-csr-approver/ks.yaml
   - ./spegel/ks.yaml
+  - ./intel-device-plugin/ks.yaml
