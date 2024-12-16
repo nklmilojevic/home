@@ -77,6 +77,6 @@ spec:
 
     persistence:
       config:
-        existingClaim: lidarr-data
+        existingClaim: lidarr-config
       media:
         existingClaim: nfs-media-pvc
