@@ -83,4 +83,4 @@ spec:
 
     persistence:
       data:
-        existingClaim: z2mqtt-config
+        existingClaim: zigbee2mqtt-config
