@@ -1,10 +1,8 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app dragonfly-operator
-  namespace: development
 spec:
   interval: 30m
   chart:
@@ -16,50 +14,23 @@ spec:
         name: bjw-s
         namespace: flux-system
   install:
-    crds: CreateReplace
     remediation:
       retries: 3
   upgrade:
-    crds: CreateReplace
     cleanupOnFail: true
     remediation:
-      strategy: rollback
       retries: 3
   values:
-    serviceAccount:
-      create: false
-      name: dragonfly-operator-controller-manager
     controllers:
       dragonfly-operator:
         containers:
-          rbac-proxy:
-            image:
-              repository: gcr.io/kubebuilder/kube-rbac-proxy
-              tag: v0.16.0
-            args:
-              - "--secure-listen-address=0.0.0.0:8443"
-              - "--upstream=http://127.0.0.1:8080/"
-              - "--logtostderr=true"
-              - "--v=0"
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-            resources:
-              requests:
-                cpu: 5m
-                memory: 64Mi
-              limits:
-                cpu: 500m
-                memory: 128Mi
           app:
             image:
               repository: docker.dragonflydb.io/dragonflydb/operator
-              tag: v1.1.8
+              tag: v1.1.8@sha256:5e0ebd5d58066499fb19ea4102531972401f2a6100fc9f4dbc45284c4175de82
             args:
               - "--health-probe-bind-address=:8081"
-              - "--metrics-bind-address=:8080"
-              - "--leader-elect"
+              - "--metrics-bind-address=127.0.0.1:8080"
             command:
               - "/manager"
             securityContext:
@@ -114,8 +85,11 @@ spec:
         ports:
           http:
             port: *port
-          metrics:
-            port: 8080
+
+    serviceAccount:
+      create: true
+      name: *app
+
     serviceMonitor:
       app:
         serviceName: *app
