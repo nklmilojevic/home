@@ -76,6 +76,13 @@ spec:
 
     persistence:
       config:
-        existingClaim: bazarr-data
+        existingClaim: bazarr-config
       media:
-        existingClaim: nfs-media-pvc
+        enabled: true
+        type: custom
+        volumeSpec:
+          nfs:
+            server: "10.5.0.10"
+            path: "/media"
+        globalMounts:
+          - path: /media
