@@ -56,7 +56,7 @@ spec:
           https:
             port: 10443
           rebroadcast:
-            port: 34135
+            port: 36541
           rebroadcast2:
             port: 36585
 

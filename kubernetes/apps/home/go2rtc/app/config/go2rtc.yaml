@@ -3,4 +3,4 @@ log:
   output: "stdout"
 
 streams:
-  reolink: rtsp://scrypted.home.svc.cluster.local:36585/ff9460be1bef9038
+  reolink: rtsp://scrypted.home.svc.cluster.local:36541/71650cfb033051f5
