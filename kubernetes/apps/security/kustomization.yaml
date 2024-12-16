@@ -5,6 +5,6 @@ resources:
   - ./namespace.yaml
   - ./external-secrets/ks.yaml
   - ./volsync/ks.yaml
-  - ./authelia/ks.yaml
-  - ./atuin/ks.yaml
-  - ./lldap/ks.yaml
+  # - ./authelia/ks.yaml
+  # - ./atuin/ks.yaml
+  # - ./lldap/ks.yaml

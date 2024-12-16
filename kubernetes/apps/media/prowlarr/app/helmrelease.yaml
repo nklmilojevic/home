@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/onedr0p/prowlarr-develop
-              tag: 1.28.1.4879
+              tag: 1.28.0.4862
             env:
               TZ: "Europe/Belgrade"
             securityContext:
@@ -61,7 +61,7 @@ spec:
         annotations:
           hajimari.io/icon: "cloud-search"
         hosts:
-          - host: &host prowlarr.milojevic.dev
+          - host: &host prowlarr.nikola.wtf
             paths:
               - path: /
                 pathType: Prefix

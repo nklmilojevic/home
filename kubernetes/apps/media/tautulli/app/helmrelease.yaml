@@ -64,7 +64,7 @@ spec:
         annotations:
           hajimari.io/icon: "chart-bar"
         hosts:
-          - host: &host tautulli.milojevic.dev
+          - host: &host tautulli.nikola.wtf
             paths:
               - path: /
                 pathType: Prefix

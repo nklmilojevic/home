@@ -64,7 +64,7 @@ spec:
         annotations:
           hajimari.io/icon: mdi:headphones
         hosts:
-          - host: &host lidarr.milojevic.dev
+          - host: &host lidarr.nikola.wtf
             paths:
               - path: /
                 pathType: Prefix

@@ -3,10 +3,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./namespace.yaml
-  - ./victoriametrics/ks.yaml
-  - ./grafana/ks.yaml
-  - ./victorialogs/ks.yaml
-  - ./vector/ks.yaml
-  - ./network-ups-tools/ks.yaml
-  - ./nut-exporter/ks.yaml
-  - ./changedetection/ks.yaml
+  # - ./victoriametrics/ks.yaml
+  # - ./grafana/ks.yaml
+  # - ./victorialogs/ks.yaml
+  # - ./vector/ks.yaml
+  # - ./network-ups-tools/ks.yaml
+  # - ./nut-exporter/ks.yaml
+  # - ./changedetection/ks.yaml
+  - ./prometheus-operator-crds/ks.yaml

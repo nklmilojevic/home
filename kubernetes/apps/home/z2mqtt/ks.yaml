@@ -16,9 +16,15 @@ spec:
     kind: GitRepository
     name: home-kubernetes
   wait: false
+  dependsOn:
+    - name: rook-ceph-cluster
+    - name: volsync
+    - name: external-secrets-stores
+    - name: mosquitto
   interval: 30m
   retryInterval: 1m
   timeout: 5m
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_CLAIM: zigbee2mqtt-data

@@ -11,6 +11,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: rook-ceph-cluster
+    - name: volsync
     - name: external-secrets-stores
   path: ./kubernetes/apps/home/esphome/app
   prune: true
@@ -24,3 +26,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      APP_UID: "0"
+      APP_GID: "0"
+      VOLSYNC_CLAIM: esphome-config
+      VOLSYNC_CAPACITY: 5Gi

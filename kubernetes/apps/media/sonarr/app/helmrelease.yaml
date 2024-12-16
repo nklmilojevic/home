@@ -34,7 +34,7 @@ spec:
           app:
             image:
               repository: ghcr.io/onedr0p/sonarr-develop
-              tag: 4.0.11.2762
+              tag: 4.0.11.2743
 
             env:
               TZ: "Europe/Belgrade"
@@ -65,7 +65,7 @@ spec:
           hajimari.io/enable: "true"
           hajimari.io/icon: "television-box"
         hosts:
-          - host: &host sonarr.milojevic.dev
+          - host: &host sonarr.nikola.wtf
             paths:
               - path: /
                 pathType: Prefix

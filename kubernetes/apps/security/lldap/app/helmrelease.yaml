@@ -45,7 +45,7 @@ spec:
             env:
               TZ: America/New_York
               LLDAP_HTTP_PORT: &port 80
-              LLDAP_HTTP_URL: https://lldap.milojevic.dev
+              LLDAP_HTTP_URL: https://lldap.nikola.wtf
               LLDAP_LDAP_PORT: &ldapPort 389
               LLDAP_LDAP_BASE_DN: dc=home,dc=arpa
             envFrom: *envFrom
@@ -87,7 +87,7 @@ spec:
       app:
         className: internal
         hosts:
-          - host: &host "{{ .Release.Name }}.milojevic.dev"
+          - host: &host "{{ .Release.Name }}.nikola.wtf"
             paths:
               - path: /
                 service:

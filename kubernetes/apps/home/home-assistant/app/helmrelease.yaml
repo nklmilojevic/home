@@ -42,29 +42,24 @@ spec:
 
         pod:
           annotations:
-            # k8s.v1.cni.cncf.io/networks: static-iot-hass
-            k8s.v1.cni.cncf.io/networks: |
-              [{
-                "name":"multus-host",
-                "namespace": "networking",
-                "ips": ["10.5.0.205/24"],
-                "mac": "7e:84:d7:6e:5e:12"
-              }]
+            k8s.v1.cni.cncf.io/networks: static-iot-hass
+
         replicas: 1
-        # initContainers:
-        #   01-init-db:
-        #     image:
-        #       repository: ghcr.io/onedr0p/postgres-init
-        #       tag: 16
-        #     envFrom:
-        #       - secretRef:
-        #           name: homeassistant-secrets
+
+        initContainers:
+          01-init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
+            envFrom:
+              - secretRef:
+                  name: homeassistant-secrets
 
         containers:
           app:
             image:
               repository: ghcr.io/onedr0p/home-assistant
-              tag: 2024.12.3
+              tag: 2024.12.2
             env:
               TZ: "Europe/Belgrade"
             envFrom:
@@ -100,9 +95,9 @@ spec:
         annotations:
           nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
           nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
-          external-dns.alpha.kubernetes.io/target: "external.milojevic.dev"
+          external-dns.alpha.kubernetes.io/target: "external.nikola.wtf"
         hosts:
-          - host: &host hass.milojevic.dev
+          - host: &host hass.nikola.wtf
             paths:
               - path: /
                 pathType: Prefix

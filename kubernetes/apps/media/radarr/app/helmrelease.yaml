@@ -69,7 +69,7 @@ spec:
           hajimari.io/icon: mdi:filmstrip
           hajimari.io/enable: "true"
         hosts:
-          - host: &host radarr.milojevic.dev
+          - host: &host radarr.nikola.wtf
             paths:
               - path: /
                 pathType: Prefix

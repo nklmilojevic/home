@@ -72,7 +72,7 @@ spec:
       app:
         className: "internal"
         hosts:
-          - host: &host unpackerr.milojevic.dev
+          - host: &host unpackerr.nikola.wtf
             paths:
               - path: /
                 pathType: Prefix

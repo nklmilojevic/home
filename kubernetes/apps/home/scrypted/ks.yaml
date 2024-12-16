@@ -16,9 +16,16 @@ spec:
     kind: GitRepository
     name: home-kubernetes
   wait: false
+  dependsOn:
+    - name: multus-config
+    - name: rook-ceph-cluster
+    - name: volsync
+    - name: external-secrets-stores
   interval: 30m
   retryInterval: 1m
   timeout: 5m
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_CLAIM: scrypted-config
+      VOLSYNC_CAPACITY: 5Gi

@@ -11,7 +11,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: external-secrets-stores
+    - name: rook-ceph-cluster
+    - name: volsync
   path: ./kubernetes/apps/media/unpackerr/app
   prune: true
   sourceRef:
@@ -24,3 +25,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_CLAIM: unpackerr-config

@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: grafana
-      version: 8.8.1
+      version: 8.7.0
       sourceRef:
         kind: HelmRepository
         name: grafana-charts
@@ -32,17 +32,17 @@ spec:
 
     replicas: 1
     env:
-      GF_AUTH_GENERIC_OAUTH_API_URL: https://auth.milojevic.dev/api/oidc/userinfo
-      GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://auth.milojevic.dev/api/oidc/authorization
+      GF_AUTH_GENERIC_OAUTH_API_URL: https://auth.nikola.wtf/api/oidc/userinfo
+      GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://auth.nikola.wtf/api/oidc/authorization
       GF_AUTH_GENERIC_OAUTH_CLIENT_ID: grafana
-      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: https://auth.milojevic.dev/api/oidc/token
+      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: https://auth.nikola.wtf/api/oidc/token
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
       GF_EXPLORE_ENABLED: true
       GF_FEATURE_TOGGLES_ENABLE: publicDashboards
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel,victorialogs-datasource
       GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
       GF_SECURITY_COOKIE_SAMESITE: grafana
-      GF_SERVER_ROOT_URL: https://grafana.milojevic.dev
+      GF_SERVER_ROOT_URL: https://grafana.nikola.wtf
       GF_INSTALL_PLUGINS: https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.7.0/victorialogs-datasource-v0.7.0.zip;victorialogs-datasource,grafana-clock-panel,grafana-piechart-panel,grafana-worldmap-panel,natel-discrete-panel,pr0ps-trackmap-panel,vonage-status-panel
 
     envFromSecrets:
@@ -250,7 +250,7 @@ spec:
       path: /
       pathType: Prefix
       hosts:
-        - &host grafana.milojevic.dev
+        - &host grafana.nikola.wtf
       tls:
         - secretName: milojevic-dev-tls
           hosts:
