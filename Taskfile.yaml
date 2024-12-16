@@ -1,35 +1,35 @@
 ---
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
-version: '3'
+version: "3"
 
 set: [pipefail]
 shopt: [globstar]
 
 vars:
-  BOOTSTRAP_DIR: '{{.ROOT_DIR}}/bootstrap'
-  KUBERNETES_DIR: '{{.ROOT_DIR}}/kubernetes'
-  SCRIPTS_DIR: '{{.ROOT_DIR}}/scripts'
-  BOOTSTRAP_CONFIG_FILE: '{{.ROOT_DIR}}/config.yaml'
-  MAKEJINJA_CONFIG_FILE: '{{.ROOT_DIR}}/makejinja.toml'
-  SOPS_CONFIG_FILE: '{{.ROOT_DIR}}/.sops.yaml'
+  BOOTSTRAP_DIR: "{{.ROOT_DIR}}/bootstrap"
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/kubernetes"
+  SCRIPTS_DIR: "{{.ROOT_DIR}}/scripts"
+  BOOTSTRAP_CONFIG_FILE: "{{.ROOT_DIR}}/config.yaml"
+  MAKEJINJA_CONFIG_FILE: "{{.ROOT_DIR}}/makejinja.toml"
+  SOPS_CONFIG_FILE: "{{.ROOT_DIR}}/.sops.yaml"
 
 env:
-  KUBECONFIG: '{{.ROOT_DIR}}/kubeconfig'
-  PYTHONDONTWRITEBYTECODE: '1'
-  SOPS_AGE_KEY_FILE: '{{.ROOT_DIR}}/age.key'
-  VIRTUAL_ENV: '{{.ROOT_DIR}}/.venv'
+  KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
+  PYTHONDONTWRITEBYTECODE: "1"
+  SOPS_AGE_KEY_FILE: "{{.ROOT_DIR}}/age.key"
+  VIRTUAL_ENV: "{{.ROOT_DIR}}/.venv"
 
 includes:
   bootstrap: .taskfiles/bootstrap
   kubernetes: .taskfiles/kubernetes
   talos: .taskfiles/talos
   workstation: .taskfiles/workstation
+  rook: .taskfiles/rook
   user:
     taskfile: .taskfiles/User
     optional: true
 
 tasks:
-
   default: task --list
 
   init:
@@ -52,3 +52,16 @@ tasks:
     vars:
       HOME_SOPS_AGE_KEY_FILE_EXISTS:
         sh: test -f ~/.config/sops/age/keys.txt && echo true || echo false
+
+  unlock:
+    desc: Unlock all restic source repos
+    preconditions:
+      - which kubectl
+    vars:
+      SOURCES:
+        sh: kubectl get replicationsources --all-namespaces --no-headers --output=jsonpath='{range .items[*]}{.metadata.namespace},{.metadata.name}{"\n"}{end}'
+    cmds:
+      - for:
+          var: SOURCES
+          split: "\n"
+        cmd: kubectl --namespace {{splitList "," .ITEM | first}} patch --field-manager=flux-client-side-apply replicationsources {{splitList "," .ITEM | last}} --type merge --patch "{\"spec\":{\"restic\":{\"unlock\":\"{{now | unixEpoch}}\"}}}"

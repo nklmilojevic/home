@@ -28,3 +28,4 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CLAIM: zigbee2mqtt-data
+      VOLSYNC_CAPACITY: 2Gi
