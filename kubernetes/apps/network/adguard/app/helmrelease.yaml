@@ -27,7 +27,6 @@ spec:
     controllers:
       adguard:
         replicas: 1
-        strategy: RollingUpdate
 
         containers:
           app:

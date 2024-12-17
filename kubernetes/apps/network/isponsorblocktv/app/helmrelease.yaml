@@ -27,7 +27,6 @@ spec:
     controllers:
       isponsorblocktv:
         replicas: 1
-        strategy: RollingUpdate
 
         containers:
           app:

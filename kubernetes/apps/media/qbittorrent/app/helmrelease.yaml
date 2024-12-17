@@ -28,7 +28,6 @@ spec:
     controllers:
       qbittorrent:
         replicas: 1
-        strategy: RollingUpdate
 
         containers:
           app:
