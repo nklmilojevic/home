@@ -86,6 +86,10 @@ spec:
     persistence:
       config:
         existingClaim: sabnzbd-config
+      interim:
+        type: emptyDir
+        globalMounts:
+          - path: /interim
       media:
         enabled: true
         type: custom
