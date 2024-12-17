@@ -23,7 +23,6 @@ spec:
   values:
     controllers:
       cloudflared:
-        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
         containers:

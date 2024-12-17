@@ -28,7 +28,6 @@ spec:
     controllers:
       lidarr:
         replicas: 1
-        strategy: RollingUpdate
 
         containers:
           app:

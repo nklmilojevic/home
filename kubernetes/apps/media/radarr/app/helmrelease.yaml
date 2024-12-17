@@ -31,7 +31,6 @@ spec:
     controllers:
       radarr:
         replicas: 1
-        strategy: Recreate
 
         containers:
           app:
