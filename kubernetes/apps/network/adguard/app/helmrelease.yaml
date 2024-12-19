@@ -40,7 +40,7 @@ spec:
       app:
         controller: adguard
         type: LoadBalancer
-        # externalTrafficPolicy: Local
+        externalTrafficPolicy: Cluster
         annotations:
           lbipam.cilium.io/ips: "10.40.0.13"
         ports:
