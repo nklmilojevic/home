@@ -31,7 +31,7 @@ spec:
         containers:
           app:
             image:
-              repository: dougbw/coredns_omada
+              repository: ghcr.io/dougbw/coredns_omada
               tag: latest
             env:
               OMADA_URL: "https://10.5.0.6"
