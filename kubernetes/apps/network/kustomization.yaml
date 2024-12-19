@@ -13,4 +13,4 @@ resources:
   - ./omada-exporter/ks.yaml
   - ./adguard/ks.yaml
   - ./isponsorblocktv/ks.yaml
-  - ./coredns-omada/ks.yaml
+  - ./omada-coredns/ks.yaml
