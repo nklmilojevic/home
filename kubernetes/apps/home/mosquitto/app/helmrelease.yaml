@@ -43,7 +43,7 @@ spec:
         type: LoadBalancer
         annotations:
           lbipam.cilium.io/ips: "10.40.0.8"
-        externalTrafficPolicy: Local
+        externalTrafficPolicy: Cluster
         ports:
           http:
             port: 1883
