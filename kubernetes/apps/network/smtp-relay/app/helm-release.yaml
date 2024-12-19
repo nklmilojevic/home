@@ -48,7 +48,7 @@ spec:
       app:
         controller: smtp-relay
         type: LoadBalancer
-        # externalTrafficPolicy: Local
+        externalTrafficPolicy: Local
         annotations:
           lbipam.cilium.io/ips: "10.40.0.15"
 
