@@ -32,7 +32,7 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/sabnzbd
+              repository: ghcr.io/nklmilojevic/sabnzbd
               tag: "4.4.0"
 
             env:
