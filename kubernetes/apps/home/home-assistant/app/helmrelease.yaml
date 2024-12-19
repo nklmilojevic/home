@@ -63,7 +63,7 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/home-assistant
+              repository: ghcr.io/nklmilojevic/home-assistant
               tag: 2024.12.4
             env:
               TZ: "Europe/Belgrade"
