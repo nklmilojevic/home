@@ -50,7 +50,7 @@ spec:
 
     persistence:
       data:
-        existingClaim: mosquitto-data
+        existingClaim: mosquitto-config
       mosquitto-config:
         type: configMap
         name: mosquitto-config
