@@ -54,6 +54,12 @@ spec:
                 memory: 1374M
               limits:
                 memory: 2048M
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
 
     service:
       app:
@@ -77,18 +83,18 @@ spec:
               - *hostName
 
     persistence:
-      # config:
-      #   existingClaim: esphome-config
-      #   advancedMounts:
-      #     esphome:
-      #       app:
-      #         - path: /config
-      # secrets:
-      #   type: secret
-      #   name: esphome-secrets
-      #   globalMounts:
-      #     - path: /config/secrets.yaml
-      #       subPath: secrets.yaml
+      config:
+        existingClaim: esphome-config
+        advancedMounts:
+          esphome:
+            app:
+              - path: /config
+      secrets:
+        type: secret
+        name: esphome-secrets
+        globalMounts:
+          - path: /config/secrets.yaml
+            subPath: secrets.yaml
       cache:
         type: emptyDir
         advancedMounts:
