@@ -71,25 +71,17 @@
       ],
     },
     {
-      description: "Loose versioning for non-semver packages",
-      matchDatasources: [
+      "description": [
+        "Loose versioning for non-semver containers"
+      ],
+      "matchDatasources": [
         "docker"
       ],
-      matchPackageNames: [
-        "ghcr.io/nklmilojevic/plex",
+      "matchPackagePatterns": [
+        "plex"
       ],
-      versioning: "loose",
+      "versioning": "loose"
     },
-    {
-      description: "Custom versioning for http-https-echo",
-      matchDatasources: [
-        "docker"
-      ],
-      matchPackageNames: [
-        "ghcr.io/mendhak/http-https-echo"
-      ],
-      versioning: "regex:^(?<major>\\d+)$",
-    }
     {
       description: [
         'Flux Group',
