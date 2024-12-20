@@ -1,5 +1,5 @@
 {
-  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  $schema: 'https: //docs.renovatebot.com/renovate-schema.json',
   extends: [
     'config:recommended',
     'docker:enableMajor',
@@ -70,6 +70,26 @@
         'patch',
       ],
     },
+    {
+      description: "Loose versioning for non-semver packages",
+      matchDatasources: [
+        "docker"
+      ],
+      matchPackageNames: [
+        "ghcr.io/nklmilojevic/plex",
+      ],
+      versioning: "loose",
+    },
+    {
+      description: "Custom versioning for http-https-echo",
+      matchDatasources: [
+        "docker"
+      ],
+      matchPackageNames: [
+        "ghcr.io/mendhak/http-https-echo"
+      ],
+      versioning: "regex:^(?<major>\\d+)$",
+    }
     {
       description: [
         'Flux Group',
