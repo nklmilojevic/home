@@ -82,22 +82,22 @@ spec:
           - hosts:
               - *hostName
 
-    persistence:
-      config:
-        existingClaim: esphome-config
-        advancedMounts:
-          esphome:
-            app:
-              - path: /config
-      secrets:
-        type: secret
-        name: esphome-secrets
-        globalMounts:
-          - path: /config/secrets.yaml
-            subPath: secrets.yaml
-      cache:
-        type: emptyDir
-        advancedMounts:
-          esphome:
-            app:
-              - path: /cache
+    # persistence:
+    #   config:
+    #     existingClaim: esphome-config
+    #     advancedMounts:
+    #       esphome:
+    #         app:
+    #           - path: /config
+    #   secrets:
+    #     type: secret
+    #     name: esphome-secrets
+    #     globalMounts:
+    #       - path: /config/secrets.yaml
+    #         subPath: secrets.yaml
+    #   cache:
+    #     type: emptyDir
+    #     advancedMounts:
+    #       esphome:
+    #         app:
+    #           - path: /cache
