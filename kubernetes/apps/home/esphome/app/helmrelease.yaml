@@ -95,12 +95,12 @@ spec:
       #     globalMounts:
       #       - path: /config/secrets.yaml
       #         subPath: secrets.yaml
-      #   cache:
-      #     type: emptyDir
-      #     advancedMounts:
-      #       esphome:
-      #         app:
-      #           - path: /cache
+      cache:
+        type: emptyDir
+        advancedMounts:
+          esphome:
+            app:
+              - path: /cache
       config:
         type: emptyDir
         advancedMounts:
