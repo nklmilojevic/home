@@ -30,12 +30,17 @@ spec:
                 "ips": ["10.50.0.249/24"],
                 "mac": "7e:84:d7:6e:5e:14"
               }]
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
 
         containers:
           app:
             image:
-              repository: ghcr.io/esphome/esphome
-              tag: 2024.12.0
+              repository: ghcr.io/bjw-s-labs/esphome
+              tag: 2024.12.1
             probes:
               liveness:
                 enabled: false
@@ -72,12 +77,12 @@ spec:
               - *hostName
 
     persistence:
-      config:
-        existingClaim: esphome-config
-        advancedMounts:
-          esphome:
-            app:
-              - path: /config
+      # config:
+      #   existingClaim: esphome-config
+      #   advancedMounts:
+      #     esphome:
+      #       app:
+      #         - path: /config
       # secrets:
       #   type: secret
       #   name: esphome-secrets
