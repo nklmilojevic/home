@@ -32,7 +32,7 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/qbittorrent
+              repository: ghcr.io/nklmilojevic/qbittorrent
               tag: 5.0.3
 
             env:
