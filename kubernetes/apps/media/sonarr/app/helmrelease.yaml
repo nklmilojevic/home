@@ -32,8 +32,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/sonarr-develop
-              tag: 4.0.11.2774
+              repository: ghcr.io/nklmilojevic/sonarr
+              tag: 4.0.11.2680
 
             env:
               TZ: "Europe/Belgrade"

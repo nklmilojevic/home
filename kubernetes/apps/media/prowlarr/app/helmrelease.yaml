@@ -31,7 +31,7 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/prowlarr-develop
+              repository: ghcr.io/nklmilojevic/prowlarr
               tag: 1.28.2.4885
             env:
               TZ: "Europe/Belgrade"
