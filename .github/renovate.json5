@@ -71,16 +71,16 @@
       ],
     },
     {
-      "description": [
-        "Loose versioning for non-semver containers"
+      description: [
+        'Loose versioning for non-semver containers',
       ],
-      "matchDatasources": [
-        "docker"
+      matchDatasources: [
+        'docker',
       ],
-      "matchPackagePatterns": [
-        "plex"
+      versioning: 'loose',
+      matchPackageNames: [
+        '/plex/',
       ],
-      "versioning": "loose"
     },
     {
       description: [
