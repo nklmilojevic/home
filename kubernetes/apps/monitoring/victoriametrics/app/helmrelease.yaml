@@ -61,7 +61,7 @@ spec:
         routePrefix: /
 
       monzoTemplate:
-        enabled: false
+        enabled: true
 
       config:
         global:
@@ -110,3 +110,12 @@ spec:
         scrapeInterval: 25s
         extraArgs:
           promscrape.streamParse: "true"
+        ingress:
+          enabled: true
+          ingressClassName: internal
+          hosts:
+            - name: vmagent.nikola.wtf
+              path: /
+          tls:
+            - hosts:
+                - vmagent.nikola.wtf
