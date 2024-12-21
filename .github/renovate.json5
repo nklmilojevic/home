@@ -80,6 +80,7 @@
       versioning: 'loose',
       matchPackageNames: [
         '/plex/',
+        '/govee2mqtt/',
       ],
     },
     {
