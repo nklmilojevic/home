@@ -112,10 +112,9 @@ spec:
           promscrape.streamParse: "true"
       ingress:
         enabled: true
-        ingressClassName: internal
+        ingressClassName: "internal"
         hosts:
-          - name: vmagent.nikola.wtf
-            path: /
+          - vmagent.nikola.wtf
         tls:
           - hosts:
               - vmagent.nikola.wtf
