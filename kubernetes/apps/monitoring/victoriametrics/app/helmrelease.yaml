@@ -59,7 +59,14 @@ spec:
         selectAllByDefault: true
         externalURL: ""
         routePrefix: /
-
+      ingress:
+        enabled: true
+        ingressClassName: "internal"
+        hosts:
+          - vmalertmanager.nikola.wtf
+        tls:
+          - hosts:
+              - vmalertmanager.nikola.wtf
       monzoTemplate:
         enabled: true
 
