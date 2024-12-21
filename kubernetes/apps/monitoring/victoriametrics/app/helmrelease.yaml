@@ -90,7 +90,14 @@ spec:
         selectAllByDefault: true
 
         evaluationInterval: 15s
-
+      ingress:
+        enabled: true
+        ingressClassName: "internal"
+        hosts:
+          - vmalert.nikola.wtf
+        tls:
+          - hosts:
+              - vmalert.nikola.wtf
     vmagent:
       enabled: true
       # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec
