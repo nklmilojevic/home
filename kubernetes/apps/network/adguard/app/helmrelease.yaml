@@ -28,22 +28,22 @@ spec:
       adguard:
         replicas: 1
 
-        # initContainers:
-        #   copy-default-config:
-        #     image:
-        #       repository: alpine
-        #       tag: 3.21
+        initContainers:
+          copy-default-config:
+            image:
+              repository: alpine
+              tag: 3.21
 
-        #     command:
-        #       - sh
-        #       - -c
-        #       - |
-        #         if [[ ! -f /opt/adguardhome/conf/AdGuardHome.yaml ]]; then
-        #           mkdir -p /opt/adguardhome/conf
-        #           cp /tmp/AdGuardHome.yaml /opt/adguardhome/conf/AdGuardHome.yaml
-        #         fi
-        #     securityContext:
-        #       runAsUser: 0
+            command:
+              - sh
+              - -c
+              - |
+                if [[ ! -f /opt/adguardhome/conf/AdGuardHome.yaml ]]; then
+                  mkdir -p /opt/adguardhome/conf
+                  cp /tmp/AdGuardHome.yaml /opt/adguardhome/conf/AdGuardHome.yaml
+                fi
+            securityContext:
+              runAsUser: 0
 
         containers:
           app:
