@@ -76,10 +76,11 @@ spec:
         existingClaim: adguard-data
         globalMounts:
           - path: /opt/adguardhome/data
-      # conf:
-      #   existingClaim: adguard-conf
-      #   globalMounts:
-      #     - path: /opt/adguardhome/conf
+      conf:
+        existingClaim: adguard-conf
+        globalMounts:
+          - path: /tmp/AdGuardHome.yaml
+            subPath: AdGuardHome.yaml
 
     ingress:
       app:
