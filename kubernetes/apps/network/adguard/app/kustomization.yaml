@@ -6,6 +6,6 @@ resources:
 configMapGenerator:
   - name: adguard-config
     files:
-      - resources/AdGuard.yaml
+      - resources/AdGuardHome.yaml
 generatorOptions:
   disableNameSuffixHash: true
