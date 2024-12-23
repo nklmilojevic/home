@@ -3,3 +3,9 @@ kind: Kustomization
 resources:
   - ./pvc.yaml
   - ./helmrelease.yaml
+configMapGenerator:
+  - name: adguard-config
+    files:
+      - resources/AdGuard.yaml
+generatorOptions:
+  disableNameSuffixHash: true
