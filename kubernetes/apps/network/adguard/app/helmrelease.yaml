@@ -78,7 +78,6 @@ spec:
           - path: /opt/adguardhome/data
       config:
         type: emptyDir
-        advancedMounts:
         globalMounts:
           - path: /opt/adguardhome/conf
       conf:
