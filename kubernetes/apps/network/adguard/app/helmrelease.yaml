@@ -40,12 +40,6 @@ spec:
                   mkdir -p /opt/adguardhome/conf
                   cp /tmp/AdGuardHome.yaml /opt/adguardhome/conf/AdGuardHome.yaml
                 fi
-            volumeMounts:
-              - name: adguard-config
-                mountPath: /tmp/AdGuardHome.yaml
-                subPath: AdGuardHome.yaml
-              - name: config
-                mountPath: /opt/adguardhome/conf
             securityContext:
               runAsUser: 0
 
