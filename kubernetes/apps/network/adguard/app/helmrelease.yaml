@@ -79,7 +79,7 @@ spec:
       config:
         type: emptyDir
         advancedMounts:
-          config:
+          adguard:
             app:
               - path: /opt/adguardhome/conf
       conf:
