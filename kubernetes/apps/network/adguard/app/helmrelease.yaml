@@ -30,8 +30,10 @@ spec:
 
         initContainers:
           copy-default-config:
-            image: alpine
-            imagePullPolicy: IfNotPresent
+            image:
+              repository: alpine
+              tag: 3.21
+
             command:
               - sh
               - -c
