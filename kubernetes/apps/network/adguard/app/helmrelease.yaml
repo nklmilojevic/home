@@ -79,9 +79,8 @@ spec:
       config:
         type: emptyDir
         advancedMounts:
-          adguard:
-            app:
-              - path: /opt/adguardhome/conf
+        globalMounts:
+          - path: /opt/adguardhome/conf
       conf:
         type: configMap
         name: adguard-configmap
