@@ -77,9 +77,11 @@ spec:
         globalMounts:
           - path: /opt/adguardhome/data
       config:
-        existingClaim: adguard-config
-        globalMounts:
-          - path: /opt/adguardhome/conf
+        type: emptyDir
+        advancedMounts:
+          config:
+            app:
+              - path: /opt/adguardhome/conf
       conf:
         type: configMap
         name: adguard-configmap
