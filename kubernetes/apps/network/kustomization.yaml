@@ -11,6 +11,6 @@ resources:
   - ./multus/ks.yaml
   - ./smtp-relay/ks.yaml
   - ./omada-exporter/ks.yaml
-  - ./adguard/ks.yaml
+  # - ./adguard/ks.yaml
   - ./isponsorblocktv/ks.yaml
   - ./omada-coredns/ks.yaml
