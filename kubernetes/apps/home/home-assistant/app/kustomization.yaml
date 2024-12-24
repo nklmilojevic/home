@@ -5,9 +5,3 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ../../../../templates/volsync
-configMapGenerator:
-  - name: hass-config
-    files:
-      - config/configuration.yaml
-generatorOptions:
-  disableNameSuffixHash: true
