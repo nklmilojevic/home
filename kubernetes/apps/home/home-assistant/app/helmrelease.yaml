@@ -151,13 +151,6 @@ spec:
     persistence:
       config:
         existingClaim: home-assistant-config
-      hass-config:
-        type: configMap
-        name: hass-config
-        globalMounts:
-          - path: /config/configuration.yaml
-            subPath: configuration.yaml
-            readOnly: true
       logs:
         type: emptyDir
         globalMounts:
