@@ -68,7 +68,7 @@ spec:
           - hosts:
               - vmalertmanager.nikola.wtf
       monzoTemplate:
-        enabled: true
+        enabled: false
 
       config:
         global:
