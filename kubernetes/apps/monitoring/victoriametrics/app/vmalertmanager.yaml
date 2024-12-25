@@ -17,16 +17,16 @@ spec:
           chat_id: 104243855
           parse_mode: "HTML"
           send_resolved: true
-          message: |-
-            {{ define "telegram.message" }}
-            🚨 {{ .Status | toUpper }}
-            {{ if eq .Status "firing" }}🔥{{ else }}✅{{ end }} {{ .CommonLabels.alertname }}
+          # message: |-
+          #   {{ define "telegram.message" }}
+          #   🚨 {{ .Status | toUpper }}
+          #   {{ if eq .Status "firing" }}🔥{{ else }}✅{{ end }} {{ .CommonLabels.alertname }}
 
-            Labels:
-            {{ range .CommonLabels.SortedPairs }}• {{ .Name }}: {{ .Value }}
-            {{ end }}
+          #   Labels:
+          #   {{ range .CommonLabels.SortedPairs }}• {{ .Name }}: {{ .Value }}
+          #   {{ end }}
 
-            {{ if gt (len .Annotations) 0 }}Message:
-            {{ range .Annotations.SortedPairs }}• {{ .Name }}: {{ .Value }}
-            {{ end }}{{ end }}
-            {{ end }}
+          #   {{ if gt (len .Annotations) 0 }}Message:
+          #   {{ range .Annotations.SortedPairs }}• {{ .Name }}: {{ .Value }}
+          #   {{ end }}{{ end }}
+          #   {{ end }}
