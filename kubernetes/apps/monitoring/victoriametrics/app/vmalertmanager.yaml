@@ -17,3 +17,4 @@ spec:
           chat_id: 104243855
           parse_mode: "HTML"
           send_resolved: true
+          message: '{{ template "telegram.message" . }}'
