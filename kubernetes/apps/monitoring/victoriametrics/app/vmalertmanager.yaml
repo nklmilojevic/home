@@ -5,7 +5,6 @@ metadata:
   name: telegram
   namespace: monitoring
 spec:
-  disableNamespaceMatcher: true
   route:
     receiver: telegram
   receivers:
