@@ -70,6 +70,21 @@ spec:
       monzoTemplate:
         enabled: false
 
+      templateFiles:
+        telegram.tmpl: |-
+          {{ define "telegram.message" }}
+          🚨 {{ .Status | toUpper }}
+          {{ if eq .Status "firing" }}🔥{{ else }}✅{{ end }} {{ .CommonLabels.alertname }}
+
+          Labels:
+          {{ range .CommonLabels.SortedPairs }}• {{ .Name }}: {{ .Value }}
+          {{ end }}
+
+          {{ if gt (len .Annotations) 0 }}Message:
+          {{ range .Annotations.SortedPairs }}• {{ .Name }}: {{ .Value }}
+          {{ end }}{{ end }}
+          {{ end }}
+
       config:
         global:
           resolve_timeout: 5m
