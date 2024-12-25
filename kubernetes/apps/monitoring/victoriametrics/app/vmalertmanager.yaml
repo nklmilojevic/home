@@ -5,6 +5,7 @@ metadata:
   name: telegram
   namespace: monitoring
 spec:
+  disableNamespaceMatcher: true
   route:
     receiver: telegram
   receivers:
@@ -17,31 +18,3 @@ spec:
           chat_id: 104243855
           parse_mode: "HTML"
           send_resolved: true
-          message: |-
-            {{ define "alert_list" }}{{ range . }}
-            ---
-            🪪 <b>{{ .Labels.alertname }}</b>
-            {{- if eq .Labels.severity "critical" }}
-            🚨 CRITICAL 🚨 {{ end }}
-            {{- if eq .Labels.severity "warning" }}
-            ⚠️ WARNING ⚠️{{ end }}
-            {{- if .Annotations.summary }}
-            📝 {{ .Annotations.summary }}{{ end }}
-            {{- if .Annotations.description }}
-            📖 {{ .Annotations.description }}{{ end }}
-
-            🏷 Labels:
-            {{ range .Labels.SortedPairs }}  <i>{{ .Name }}</i>: <code>{{ .Value }}</code>
-            {{ end }}{{ end }}
-            {{ end }}
-
-            {{ define "telegram.message" }}
-            {{ if gt (len .Alerts.Firing) 0 }}
-            🔥 Alerts Firing 🔥
-            {{ template "alert_list" .Alerts.Firing }}
-            {{ end }}
-            {{ if gt (len .Alerts.Resolved) 0 }}
-            ✅ Alerts Resolved ✅
-            {{ template "alert_list" .Alerts.Resolved }}
-            {{ end }}
-            {{ end }}
