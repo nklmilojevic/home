@@ -85,7 +85,7 @@ spec:
           📖 {{ .Annotations.description }}{{ end }}
 
           🏷 Labels:
-          {{ range .Labels.SortedPairs }}  <i>{{ .Name }}</i>: <code>{{ .Value }}</code>
+          {{ range .Labels.SortedPairs }}• {{ .Name }}: {{ .Value }}
           {{ end }}
           {{ end }}
           {{ end }}
