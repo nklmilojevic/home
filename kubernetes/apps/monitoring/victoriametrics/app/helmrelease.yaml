@@ -72,17 +72,33 @@ spec:
 
       templateFiles:
         telegram.tmpl: |-
-          {{ define "telegram.message" }}
-          🚨 {{ .Status | toUpper }}
-          {{ if eq .Status "firing" }}🔥{{ else }}✅{{ end }} {{ .CommonLabels.alertname }}
+          {{ define "alert_list" }}
+          {{- range . }}
+          🪪 <b>{{ .Labels.alertname }}</b>
+          {{- if eq .Labels.severity "critical" }}
+          🚨 CRITICAL 🚨 {{ end }}
+          {{- if eq .Labels.severity "warning" }}
+          ⚠️ WARNING ⚠️{{ end }}
+          {{- if .Annotations.summary }}
+          📝 {{ .Annotations.summary }}{{ end }}
+          {{- if .Annotations.description }}
+          📖 {{ .Annotations.description }}{{ end }}
 
-          Labels:
-          {{ range .CommonLabels.SortedPairs }}• {{ .Name }}: {{ .Value }}
+          🏷 Labels:
+          {{ range .Labels.SortedPairs }}  <i>{{ .Name }}</i>: <code>{{ .Value }}</code>
+          {{ end }}
+          {{ end }}
           {{ end }}
 
-          {{ if gt (len .Annotations) 0 }}Message:
-          {{ range .Annotations.SortedPairs }}• {{ .Name }}: {{ .Value }}
-          {{ end }}{{ end }}
+          {{ define "telegram.message" }}
+          {{ if gt (len .Alerts.Firing) 0 }}
+          🔥 Alerts Firing 🔥
+          {{ template "alert_list" .Alerts.Firing }}
+          {{ end }}
+          {{ if gt (len .Alerts.Resolved) 0 }}
+          ✅ Alerts Resolved ✅
+          {{ template "alert_list" .Alerts.Resolved }}
+          {{ end }}
           {{ end }}
 
       config:
