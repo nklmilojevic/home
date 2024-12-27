@@ -97,4 +97,4 @@ spec:
             server: "10.5.0.10"
             path: "/mnt/vault/media"
         globalMounts:
-          - path: /media
+          - path: "/mnt/vault/media"

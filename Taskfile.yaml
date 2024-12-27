@@ -18,6 +18,7 @@ env:
   PYTHONDONTWRITEBYTECODE: "1"
   SOPS_AGE_KEY_FILE: "{{.ROOT_DIR}}/age.key"
   VIRTUAL_ENV: "{{.ROOT_DIR}}/.venv"
+  MINIJINJA_CONFIG_FILE: "{{.ROOT_DIR}}/.minijinja.toml"
 
 includes:
   bootstrap: .taskfiles/bootstrap
@@ -25,6 +26,7 @@ includes:
   talos: .taskfiles/talos
   workstation: .taskfiles/workstation
   rook: .taskfiles/rook
+  volsync: .taskfiles/volsync
   user:
     taskfile: .taskfiles/User
     optional: true
