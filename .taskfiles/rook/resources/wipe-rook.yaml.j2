@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: &app wipe-rook-icarus003
+  name: &app wipe-rook-{{ ENV.NODE }}
   namespace: default
   labels:
     app.kubernetes.io/name: *app
@@ -13,7 +13,7 @@ spec:
         app.kubernetes.io/name: *app
     spec:
       restartPolicy: Never
-      nodeName: icarus003
+      nodeName: {{ ENV.NODE }}
       initContainers:
         - name: data
           image: docker.io/library/alpine:latest
@@ -37,7 +37,7 @@ spec:
           args:
             - |
               apk add --no-cache findutils nvme-cli;
-              DISK=/dev/nvme1n1;
+              DISK={{ ENV.DISK }};
               nvme id-ns -H $DISK
               echo "=== Wiping $DISK ===";
               nvme format --lbaf=0 $DISK --force;

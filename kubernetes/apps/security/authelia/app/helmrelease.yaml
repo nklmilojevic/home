@@ -79,7 +79,7 @@ spec:
         pod:
           securityContext:
             runAsUser: 1000
-            runAsGroup: 1000
+            runAsGroup: 3000
             runAsNonRoot: true
           topologySpreadConstraints:
             - maxSkew: 1

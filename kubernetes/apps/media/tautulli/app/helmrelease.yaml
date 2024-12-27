@@ -46,9 +46,9 @@ spec:
         pod:
           securityContext:
             runAsUser: 1000
-            runAsGroup: 1000
+            runAsGroup: 3000
             runAsNonRoot: true
-            fsGroup: 1000
+            fsGroup: 3000
             fsGroupChangePolicy: OnRootMismatch
     service:
       app:
@@ -85,4 +85,4 @@ spec:
             server: "10.5.0.10"
             path: "/media"
         globalMounts:
-          - path: /media
+          - path: "/mnt/vault/media"
