@@ -11,3 +11,4 @@ resources:
   - ./nut-exporter/ks.yaml
   - ./changedetection/ks.yaml
   - ./prometheus-operator-crds/ks.yaml
+  - ./exporters/ks.yaml
