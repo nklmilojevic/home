@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omada-controller
+spec:
+  type: ExternalName
+  externalName: 10.5.0.10
+  ports:
+    - port: 30077
+      targetPort: 30077
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: truenas
+spec:
+  type: ExternalName
+  externalName: 10.5.0.10
+  ports:
+    - port: 80
+      targetPort: 80
