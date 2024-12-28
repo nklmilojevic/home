@@ -38,7 +38,7 @@ metadata:
 spec:
   ingressClassName: "internal"
   rules:
-    - host: truenas.milojevic.dev
+    - host: truenas.nikola.wtf
       http:
         paths:
           - path: /
