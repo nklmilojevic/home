@@ -46,3 +46,25 @@ spec:
                 name: truenas
                 port:
                   number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: adguard-backup-ingress
+  namespace: network
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
+spec:
+  ingressClassName: "internal"
+  rules:
+    - host: adguard-backup.nikola.wtf
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: adguard-backup
+                port:
+                  number: 30004
