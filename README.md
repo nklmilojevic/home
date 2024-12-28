@@ -28,9 +28,8 @@ As I really appreciate the silence, the goal was to build/get machines that are 
 * **UNYKAch 2128 19 2U Rack Case**
 * No-name **N100** motherboard from Aliexpress
 * **32GB SO-DIMM DDR5 RAM**
-* 3x**WD Red 16TB Pro**
-* **Patriot P300 128GB NVME** - for TrueNAS Scale
-* **Crucial P3 Plus 500 GB CT500P3PSSD8** - For SLOG
+* 3x**WD Red 16TB Pro** in raidz1
+* **Crucial P3 Plus 500 GB CT500P3PSSD8** - For TrueNAS Scale
 * **FSP250 PSU**
 * 3x**Noctua NF-A8 ULN**
 
@@ -38,7 +37,7 @@ NAS is TrueNAS Scale with raidz1 and SLOG.
 
 ### Talos
 
-3x NiPoGi CK10 Mini PC 32GB DDR4 RAM, I5-12450H and 1TB NVME for ceph are used for Talos nodes.
+3x NiPoGi CK10 Mini PC 32GB DDR4 RAM, i5-12450H and 1TB NVME for ceph are used for Talos nodes.
 
 ### Other
 
