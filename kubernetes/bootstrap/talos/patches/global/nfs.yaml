@@ -6,7 +6,8 @@ machine:
       content: |
         [ NFSMount_Global_Options ]
         nfsvers=4.2
-        tcp=True
+        hard=True
+        async=True
         noatime=True
         nodiratime=True
         nconnect=16
