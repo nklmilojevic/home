@@ -33,8 +33,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/upstream-vhost: "10.5.0.10:80"
 spec:
   ingressClassName: "internal"
   rules:
