@@ -1,3 +1,0 @@
----
-- ansible.builtin.import_tasks: groups.yml
-- ansible.builtin.import_tasks: users.yml

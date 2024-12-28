@@ -1,7 +1,0 @@
----
-essential_packages:
-  - samba
-  - hddtemp
-  - iotop
-  - net-tools
-  - iperf3

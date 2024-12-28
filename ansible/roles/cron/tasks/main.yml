@@ -1,3 +1,0 @@
----
-- name: Include crons.yml
-  ansible.builtin.import_tasks: crons.yml
