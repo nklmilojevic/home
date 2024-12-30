@@ -50,6 +50,7 @@ spec:
               METRICS_COLLECTOR: "1"
               POLLING_SCHEDULER: entry_frequency
               POLLING_FREQUENCY: "15"
+              FORCE_REFRESH_INTERVAL: "1"
               PORT: &port 80
               RUN_MIGRATIONS: "1"
             envFrom: *envFrom
