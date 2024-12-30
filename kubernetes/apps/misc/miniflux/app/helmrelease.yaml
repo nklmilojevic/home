@@ -44,7 +44,7 @@ spec:
             env:
               BASE_URL: https://miniflux.nikola.wtf
               CREATE_ADMIN: "1"
-              # DEBUG: "1"
+              DEBUG: "1"
               LOG_DATE_TIME: "1"
               METRICS_ALLOWED_NETWORKS: 10.0.0.0/8
               METRICS_COLLECTOR: "1"
