@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./miniflux/ks.yaml
-  # - ./paperless/ks.yaml
+  - ./paperless/ks.yaml
