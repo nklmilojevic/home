@@ -14,4 +14,5 @@ resources:
   - ./adguard/ks.yaml
   - ./isponsorblocktv/ks.yaml
   - ./omada-coredns/ks.yaml
+  - ./openspeedtest/ks.yaml
   - ./external-resources/
