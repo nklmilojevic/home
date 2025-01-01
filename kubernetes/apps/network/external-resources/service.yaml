@@ -16,7 +16,7 @@ metadata:
   namespace: network
 subsets:
   - addresses:
-      - ip: 10.5.0.10 # Assuming this is the IP for panopticon.omada.home
+      - ip: 10.5.0.10
     ports:
       - port: 30077
 ---
