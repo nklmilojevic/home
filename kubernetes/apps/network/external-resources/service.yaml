@@ -5,11 +5,20 @@ metadata:
   name: omada-controller
   namespace: network
 spec:
-  type: ExternalName
-  externalName: 10.5.0.10
   ports:
     - port: 30077
       targetPort: 30077
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: omada-controller
+  namespace: network
+subsets:
+  - addresses:
+      - ip: 10.5.0.10 # Assuming this is the IP for panopticon.omada.home
+    ports:
+      - port: 30077
 ---
 apiVersion: v1
 kind: Service
@@ -17,11 +26,20 @@ metadata:
   name: truenas
   namespace: network
 spec:
-  type: ExternalName
-  externalName: 10.5.0.10
   ports:
     - port: 80
       targetPort: 80
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: truenas
+  namespace: network
+subsets:
+  - addresses:
+      - ip: 10.5.0.10
+    ports:
+      - port: 80
 ---
 apiVersion: v1
 kind: Service
@@ -29,8 +47,17 @@ metadata:
   name: adguard-backup
   namespace: network
 spec:
-  type: ExternalName
-  externalName: 10.5.0.10
   ports:
     - port: 30004
       targetPort: 30004
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: adguard-backup
+  namespace: network
+subsets:
+  - addresses:
+      - ip: 10.5.0.10
+    ports:
+      - port: 30004
