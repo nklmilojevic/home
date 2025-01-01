@@ -34,7 +34,7 @@ spec:
               repository: ghcr.io/dougbw/coredns_omada
               tag: latest
             env:
-              OMADA_URL: "https://10.5.0.6"
+              OMADA_URL: "https://10.5.0.10:30077"
               OMADA_DISABLE_HTTPS_VERIFICATION: "true"
               UPSTREAM_DNS: "1.1.1.1"
             envFrom:
