@@ -72,9 +72,9 @@ spec:
       auth.basic:
         enabled: true
       auth.anonymous:
-        enabled: false
-        # org_id: 1
-        # org_role: Viewer
+        enabled: true
+        org_id: 1
+        org_role: Viewer
       news:
         news_feed_enabled: false
 
@@ -162,7 +162,9 @@ spec:
           url: https://raw.githubusercontent.com/cloudnative-pg/grafana-dashboards/main/charts/cluster/grafana-dashboard.json
           datasource: VictoriaMetrics
         cert-manager:
-          url: https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/cert-manager/dashboards/cert-manager.json
+          # renovate: depName="Cert-manager-Kubernetes"
+          gnetId: 20842
+          revision: 3
           datasource: VictoriaMetrics
         external-secrets:
           url: https://raw.githubusercontent.com/external-secrets/external-secrets/main/docs/snippets/dashboard.json
@@ -223,6 +225,16 @@ spec:
         nginx-request-handling-performance:
           url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/request-handling-performance.json
           datasource: VictoriaMetrics
+      node-feature-discovery:
+        url: https://raw.githubusercontent.com/kubernetes-sigs/node-feature-discovery/master/examples/grafana-dashboard.json
+        datasource: VictoriaMetrics
+      volsync:
+        # renovate: depName="VolSync Dashboard"
+        gnetId: 21356
+        revision: 3
+        datasource:
+          - { name: DS_PROMETHEUS, value: VictoriaMetrics }
+          - { name: VAR_REPLICATIONDESTNAME, value: .*-dst }
     sidecar:
       dashboards:
         enabled: true
