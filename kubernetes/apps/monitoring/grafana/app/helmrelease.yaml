@@ -30,7 +30,7 @@ spec:
     env:
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
       GF_EXPLORE_ENABLED: true
-      GF_INSTALL_PLUGINS: https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.7.0/victorialogs-datasource-v0.7.0.zip;victorialogs-datasource,natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
+      GF_INSTALL_PLUGINS: https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.7.0/victorialogs-datasource-v0.7.0.zip;victorialogs-datasource,natel-discrete-panel,pr0ps-trackmap-panel
       GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
       GF_SERVER_ROOT_URL: https://grafana.nikola.wtf
     grafana.ini:
