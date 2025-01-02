@@ -42,7 +42,7 @@ spec:
         kind: Silence
         metadata:
           name: ceph-node-nfsmount-diskspace-warning
-          namespace: observability
+          namespace: monitoring
         spec:
           matchers:
             - name: alertname
@@ -55,7 +55,7 @@ spec:
         kind: Silence
         metadata:
           name: ceph-node-local-diskspace-warning
-          namespace: observability
+          namespace: monitoring
         spec:
           matchers:
             - name: alertname
@@ -64,16 +64,16 @@ spec:
             - name: device
               value: /dev/sd.*
               isRegex: true
-      - apiVersion: monitoring.giantswarm.io/v1alpha1
-        kind: Silence
-        metadata:
-          name: expanse-memory-high-utilization
-          namespace: observability
-        spec:
-          matchers:
-            - name: alertname
-              value: NodeMemoryHighUtilization
-              isRegex: false
-            - name: instance
-              value: expanse.internal:9100
-              isRegex: false
+      # - apiVersion: monitoring.giantswarm.io/v1alpha1
+      #   kind: Silence
+      #   metadata:
+      #     name: expanse-memory-high-utilization
+      #     namespace: observability
+      #   spec:
+      #     matchers:
+      #       - name: alertname
+      #         value: NodeMemoryHighUtilization
+      #         isRegex: false
+      #       - name: instance
+      #         value: expanse.internal:9100
+      #         isRegex: false
