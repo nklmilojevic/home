@@ -223,7 +223,12 @@ spec:
         nginx-request-handling-performance:
           url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/request-handling-performance.json
           datasource: VictoriaMetrics
-
+      smartctl-exporter:
+        # renovate: depName="SMARTctl Exporter Dashboard"
+        gnetId: 22604
+        revision: 1
+        datasource:
+          - { name: DS_PROMETHEUS, value: VictoriaMetrics }
     sidecar:
       dashboards:
         enabled: true
