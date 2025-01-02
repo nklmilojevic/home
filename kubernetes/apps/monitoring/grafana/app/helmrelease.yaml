@@ -186,7 +186,7 @@ spec:
         truenas-scale-temperatures:
           url: https://raw.githubusercontent.com/Supporterino/truenas-graphite-to-prometheus/refs/heads/main/dashboards/truenas_scale_temperatures.json
           datasource:
-            - { name: DS_MIMIR, value: VictoriaMetrics }
+            - { name: DS_PROMETHEUS, value: VictoriaMetrics }
         ceph-cluster:
           # renovate: depName="Ceph Cluster"
           gnetId: 2842
