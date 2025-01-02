@@ -50,7 +50,7 @@ spec:
       auth.anonymous:
         enabled: true
         org_id: 1
-        org_name: Main Org.
+        org_name: "Main Org."
         org_role: Viewer
       news:
         news_feed_enabled: false
