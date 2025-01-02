@@ -175,8 +175,16 @@ spec:
         node-feature-discovery:
           url: https://raw.githubusercontent.com/kubernetes-sigs/node-feature-discovery/master/examples/grafana-dashboard.json
           datasource: VictoriaMetrics
-        truenas-sclae:
+        truenas-scale:
           url: https://raw.githubusercontent.com/Supporterino/truenas-graphite-to-prometheus/refs/heads/main/dashboards/truenas_scale.json
+          datasource:
+            - { name: DS_MIMIR, value: VictoriaMetrics }
+        truenas-scale-disk-insights:
+          url: https://raw.githubusercontent.com/Supporterino/truenas-graphite-to-prometheus/refs/heads/main/dashboards/truenas_scale_disk_insights.json
+          datasource:
+            - { name: DS_MIMIR, value: VictoriaMetrics }
+        truenas-scale-temperatures:
+          url: https://raw.githubusercontent.com/Supporterino/truenas-graphite-to-prometheus/refs/heads/main/dashboards/truenas_scale_temperatures.json
           datasource:
             - { name: DS_MIMIR, value: VictoriaMetrics }
         ceph-cluster:
