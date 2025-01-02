@@ -51,15 +51,6 @@ spec:
 
         replicas: 1
 
-        initContainers:
-          01-init-db:
-            image:
-              repository: ghcr.io/nklmilojevic/postgres-init
-              tag: 16.6
-            envFrom:
-              - secretRef:
-                  name: homeassistant-secrets
-
         containers:
           app:
             image:
