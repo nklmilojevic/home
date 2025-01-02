@@ -23,7 +23,7 @@ spec:
       strategy: rollback
       retries: 3
   dependsOn:
-    - name: victoriametrics
+    - name: vmetrics
       namespace: monitoring
     - name: silence-operator-crds
       namespace: observability
