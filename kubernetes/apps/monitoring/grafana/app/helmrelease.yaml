@@ -175,6 +175,24 @@ spec:
           datasource:
             - { name: DS_PROMETHEUS, value: VictoriaMetrics }
             - { name: VAR_REPLICATIONDESTNAME, value: .*-dst }
+        node-feature-discovery:
+          url: https://raw.githubusercontent.com/kubernetes-sigs/node-feature-discovery/master/examples/grafana-dashboard.json
+          datasource: VictoriaMetrics
+        ceph-cluster:
+          # renovate: depName="Ceph Cluster"
+          gnetId: 2842
+          revision: 18
+          datasource: VictoriaMetrics
+        ceph-osd:
+          # renovate: depName="Ceph - OSD (Single)"
+          gnetId: 5336
+          revision: 9
+          datasource: VictoriaMetrics
+        ceph-pools:
+          # renovate: depName="Ceph - Pools"
+          gnetId: 5342
+          revision: 9
+          datasource: VictoriaMetrics
     sidecar:
       dashboards:
         enabled: true
