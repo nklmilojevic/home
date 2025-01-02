@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -23,25 +23,16 @@ spec:
       strategy: rollback
       retries: 3
   values:
-    extraInitContainers:
-      - name: 01-init-db
-        image: ghcr.io/nklmilojevic/postgres-init:16
-        envFrom:
-          - secretRef:
-              name: &secret grafana-secret
-
-    replicas: 1
+    deploymentStrategy:
+      type: Recreate
+    admin:
+      existingSecret: grafana-admin-secret
     env:
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
       GF_EXPLORE_ENABLED: true
-      GF_FEATURE_TOGGLES_ENABLE: publicDashboards
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel,victorialogs-datasource
+      GF_INSTALL_PLUGINS: https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.7.0/victorialogs-datasource-v0.7.0.zip;victorialogs-datasource,natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
       GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
-      GF_SECURITY_COOKIE_SAMESITE: grafana
       GF_SERVER_ROOT_URL: https://grafana.nikola.wtf
-      GF_INSTALL_PLUGINS: https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.7.0/victorialogs-datasource-v0.7.0.zip;victorialogs-datasource,grafana-clock-panel,grafana-piechart-panel,grafana-worldmap-panel,natel-discrete-panel,pr0ps-trackmap-panel,vonage-status-panel
-    envFromSecrets:
-      - name: *secret
     grafana.ini:
       analytics:
         check_for_updates: false
@@ -50,48 +41,10 @@ spec:
       auth.anonymous:
         enabled: true
         org_id: 1
-        org_name: "Main Org."
+        org_name: Main Org.
         org_role: Viewer
       news:
         news_feed_enabled: false
-    dashboardProviders:
-      dashboardproviders.yaml:
-        apiVersion: 1
-        providers:
-          - name: default
-            orgId: 1
-            folder: ""
-            type: file
-            disableDeletion: false
-            editable: true
-            options:
-              path: /var/lib/grafana/dashboards/default-folder
-          - name: flux
-            orgId: 1
-            folder: Flux
-            type: file
-            disableDeletion: false
-            editable: true
-            options:
-              path: /var/lib/grafana/dashboards/flux-folder
-          - name: kubernetes
-            orgId: 1
-            folder: Kubernetes
-            type: file
-            disableDeletion: false
-            editable: true
-            options:
-              path: /var/lib/grafana/dashboards/kubernetes-folder
-          - name: nginx
-            orgId: 1
-            folder: Nginx
-            type: file
-            disableDeletion: false
-            editable: true
-            options:
-              path: /var/lib/grafana/dashboards/nginx-folder
-
-    defaultDashboardsEnabled: true
     datasources:
       datasources.yaml:
         apiVersion: 1
@@ -105,7 +58,6 @@ spec:
               prometheusType: Prometheus
               timeInterval: 1m
             isDefault: true
-
     additionalDataSources:
       - name: vmlogs
         orgId: 1
@@ -113,6 +65,18 @@ spec:
         url: http://vm-logs-victoria-logs-single-server.monitoring.svc:9428
         version: 1
 
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: default
+            orgId: 1
+            folder: ""
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/default
     dashboards:
       default:
         cloudflared:
@@ -201,21 +165,10 @@ spec:
         nginx-request-handling-performance:
           url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/request-handling-performance.json
           datasource: VictoriaMetrics
-      node-feature-discovery:
-        url: https://raw.githubusercontent.com/kubernetes-sigs/node-feature-discovery/master/examples/grafana-dashboard.json
-        datasource: VictoriaMetrics
-      volsync:
-        # renovate: depName="VolSync Dashboard"
-        gnetId: 21356
-        revision: 3
-        datasource:
-          - { name: DS_PROMETHEUS, value: VictoriaMetrics }
-          - { name: VAR_REPLICATIONDESTNAME, value: .*-dst }
     sidecar:
       dashboards:
         enabled: true
         searchNamespace: ALL
-        labelValue: ""
         label: grafana_dashboard
         folderAnnotation: grafana_folder
         provider:
@@ -223,20 +176,21 @@ spec:
           foldersFromFilesStructure: true
       datasources:
         enabled: true
-        initDatasources: true
         searchNamespace: ALL
-
+        labelValue: ""
+    plugins:
+      - grafana-clock-panel
+      - grafana-piechart-panel
+      - grafana-worldmap-panel
+      - natel-discrete-panel
+      - pr0ps-trackmap-panel
+      - vonage-status-panel
     serviceMonitor:
       enabled: true
-
     ingress:
       enabled: true
       ingressClassName: internal
-      path: /
-      pathType: Prefix
-      hosts:
-        - grafana.nikola.wtf
-
+      hosts: ["grafana.nikola.wtf"]
     persistence:
       enabled: false
     testFramework:
