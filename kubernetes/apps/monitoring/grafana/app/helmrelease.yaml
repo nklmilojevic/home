@@ -250,16 +250,10 @@ spec:
     ingress:
       enabled: true
       ingressClassName: internal
-      annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-production"
       path: /
       pathType: Prefix
       hosts:
-        - &host grafana.nikola.wtf
-      tls:
-        - secretName: milojevic-dev-tls
-          hosts:
-            - *host
+        - grafana.nikola.wtf
 
     persistence:
       enabled: false
