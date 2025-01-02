@@ -31,3 +31,4 @@ resources:
   - ./rook-ceph.yaml
   - ./piraeus.yaml
   - ./backube.yaml
+  - ./wiremind.yaml
