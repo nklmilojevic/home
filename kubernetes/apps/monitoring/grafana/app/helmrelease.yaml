@@ -168,6 +168,13 @@ spec:
           revision: 1
           datasource:
             - { name: DS_PROMETHEUS, value: VictoriaMetrics }
+        volsync:
+          # renovate: depName="VolSync Dashboard"
+          gnetId: 21356
+          revision: 3
+          datasource:
+            - { name: DS_PROMETHEUS, value: VictoriaMetrics }
+            - { name: VAR_REPLICATIONDESTNAME, value: .*-dst }
     sidecar:
       dashboards:
         enabled: true
