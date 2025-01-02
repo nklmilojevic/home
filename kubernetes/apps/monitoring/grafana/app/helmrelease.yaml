@@ -32,10 +32,6 @@ spec:
 
     replicas: 1
     env:
-      GF_AUTH_GENERIC_OAUTH_API_URL: https://auth.nikola.wtf/api/oidc/userinfo
-      GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://auth.nikola.wtf/api/oidc/authorization
-      GF_AUTH_GENERIC_OAUTH_CLIENT_ID: grafana
-      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: https://auth.nikola.wtf/api/oidc/token
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
       GF_EXPLORE_ENABLED: true
       GF_FEATURE_TOGGLES_ENABLE: publicDashboards
@@ -44,7 +40,6 @@ spec:
       GF_SECURITY_COOKIE_SAMESITE: grafana
       GF_SERVER_ROOT_URL: https://grafana.nikola.wtf
       GF_INSTALL_PLUGINS: https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.7.0/victorialogs-datasource-v0.7.0.zip;victorialogs-datasource,grafana-clock-panel,grafana-piechart-panel,grafana-worldmap-panel,natel-discrete-panel,pr0ps-trackmap-panel,vonage-status-panel
-
     envFromSecrets:
       - name: *secret
     grafana.ini:
@@ -52,32 +47,13 @@ spec:
         check_for_updates: false
         check_for_plugin_updates: false
         reporting_enabled: false
-      auth:
-        oauth_auto_login: false
-        oauth_allow_insecure_email_lookup: true
-      auth.generic_oauth:
-        enabled: true
-        name: Authelia
-        icon: signin
-        scopes: openid profile email groups
-        empty_scopes: false
-        login_attribute_path: preferred_username
-        groups_attribute_path: groups
-        name_attribute_path: name
-        use_pkce: true
-      auth.generic_oauth.group_mapping:
-        org_id: 1
-        role_attribute_path: |
-          contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'people') && 'Viewer'
-      auth.basic:
-        enabled: true
       auth.anonymous:
         enabled: true
         org_id: 1
+        org_name: Main Org.
         org_role: Viewer
       news:
         news_feed_enabled: false
-
     dashboardProviders:
       dashboardproviders.yaml:
         apiVersion: 1
@@ -265,10 +241,3 @@ spec:
       enabled: false
     testFramework:
       enabled: false
-    topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app.kubernetes.io/name: grafana
