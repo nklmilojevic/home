@@ -23,8 +23,8 @@ spec:
       strategy: rollback
       retries: 3
   dependsOn:
-    - name: kube-prometheus-stack
-      namespace: observability
+    - name: victoriametrics
+      namespace: monitoring
     - name: silence-operator-crds
       namespace: observability
   values:
