@@ -34,7 +34,7 @@ spec:
       config:
         alertmanager:
           service:
-            address: http://kube-prometheus-stack-alertmanager:9093
+            address: http://vmalertmanager-vmetrics-victoria-metrics-k8s-stack:9093
     rbac:
       create: true
     extraDeploy:
