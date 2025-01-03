@@ -27,6 +27,6 @@ spec:
     substitute:
       APP: *app
       APP_UID: "1000"
-      APP_GID: "3000"
+      APP_GID: "1000"
       VOLSYNC_CLAIM: paperless-data
       VOLSYNC_CAPACITY: 15Gi

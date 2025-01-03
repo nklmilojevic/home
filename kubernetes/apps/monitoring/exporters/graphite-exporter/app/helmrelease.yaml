@@ -55,7 +55,7 @@ spec:
         pod:
           securityContext:
             runAsUser: 1000
-            runAsGroup: 3000
+            runAsGroup: 1000
             runAsNonRoot: true
         replicas: 2
         strategy: RollingUpdate
