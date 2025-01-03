@@ -20,8 +20,8 @@ spec:
     copyMethod: Snapshot
     moverSecurityContext:
       runAsUser: ${APP_UID:-1000}
-      runAsGroup: ${APP_GID:-3000}
-      fsGroup: ${APP_GID:-3000}
+      runAsGroup: ${APP_GID:-1000}
+      fsGroup: ${APP_GID:-1000}
     repository: "${APP}-volsync-r2"
     storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
     volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}"
