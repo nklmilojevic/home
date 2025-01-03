@@ -43,7 +43,7 @@ spec:
           app:
             image:
               repository: ghcr.io/wez/govee2mqtt
-              tag: 2025.01.01-ae1f0cc1
+              tag: 2025.01.02-63e73826
               pullPolicy: IfNotPresent
             env:
               GOVEE_MQTT_HOST: "mosquitto.home.svc"
