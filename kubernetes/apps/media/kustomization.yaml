@@ -15,3 +15,4 @@ resources:
   - ./unpackerr/ks.yaml
   - ./recyclarr/ks.yaml
   - ./readarr/ks.yaml
+  - ./overseerr/ks.yaml
