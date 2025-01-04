@@ -71,12 +71,7 @@ spec:
 
     persistence:
       config:
-        enabled: true
         existingClaim: overseerr-config
-        advancedMounts:
-          main:
-            main:
-              - path: /app/config
       logs:
         type: emptyDir
         globalMounts:
