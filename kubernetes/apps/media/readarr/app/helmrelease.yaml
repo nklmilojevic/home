@@ -1,49 +1,42 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: readarr
+  namespace: media
 spec:
-  interval: 15m
+  interval: 5m
+  # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
   chart:
     spec:
       chart: app-template
       version: 3.6.0
+      interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-      interval: 15m
-  maxHistory: 3
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
     controllers:
       readarr:
-        annotations:
-          reloader.stakater.com/auto: "true"
-        pod:
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            runAsNonRoot: true
-            fsGroup: 1000
-            fsGroupChangePolicy: OnRootMismatch
+        replicas: 1
+
         containers:
           app:
             image:
               repository: ghcr.io/nklmilojevic/readarr-develop
               tag: 0.4.6.2711
+
             env:
+              TZ: "Europe/Belgrade"
               READARR__APP__INSTANCENAME: Readarr
               READARR__APP__THEME: dark
               READARR__AUTH__METHOD: External
@@ -52,23 +45,42 @@ spec:
               READARR__LOG__LEVEL: info
               READARR__SERVER__PORT: &port 8787
               READARR__UPDATE__BRANCH: develop
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+
     service:
       app:
         controller: readarr
         ports:
           http:
-            port: *port
+            port: 8787
+
     ingress:
       app:
-        enabled: true
-        className: internal
+        className: "internal"
         hosts:
-          - host: readarr.nikola.wtf
+          - host: &host readarr.nikola.wtf
             paths:
               - path: /
+                pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: http
+        tls:
+          - hosts:
+              - *host
+
     persistence:
       config:
         existingClaim: readarr-config
