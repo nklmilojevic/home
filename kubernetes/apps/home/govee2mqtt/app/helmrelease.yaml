@@ -28,7 +28,6 @@ spec:
     controllers:
       govee2mqtt:
         replicas: 1
-        strategy: RollingUpdate
 
         pod:
           annotations:
