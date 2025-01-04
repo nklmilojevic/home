@@ -23,11 +23,9 @@ resources:
   - ./grafana.yaml
   - ./intel.yaml
   - ./k8tz.yaml
-  - ./nfs-subdir-external-provisioner.yaml
   - ./node-feature-discovery.yaml
-  - ./vector-chart.yaml
   - ./victoriametrics.yaml
-  - ./1password-charts.yaml
+  - ./1password.yaml
   - ./rook-ceph.yaml
   - ./piraeus.yaml
   - ./backube.yaml
