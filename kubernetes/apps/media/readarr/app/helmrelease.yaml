@@ -39,7 +39,7 @@ spec:
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/nklmilojevic/readarr-develop
               tag: 0.4.6.2711
@@ -53,13 +53,13 @@ spec:
               READARR__SERVER__PORT: &port 8787
               READARR__UPDATE__BRANCH: develop
     service:
-      readarr:
+      app:
         controller: readarr
         ports:
           http:
             port: *port
     ingress:
-      readarr:
+      app:
         enabled: true
         className: internal
         hosts:
