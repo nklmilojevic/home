@@ -32,8 +32,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/lidarr
-              tag: 2.4.3.4248
+              repository: ghcr.io/nklmilojevic/lidarr
+              tag: 2.8.2.4493
             env:
               TZ: "Europe/Belgrade"
               LIDARR__PORT: &port 8080
