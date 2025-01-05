@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/prowlarr
-              tag: 1.28.2.4885
+              tag: 1.29.2.4915
             env:
               TZ: "Europe/Belgrade"
             securityContext:
