@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/readarr-develop
-              tag: 0.4.6.2711
+              tag: 0.4.7.2718
 
             env:
               TZ: "Europe/Belgrade"
