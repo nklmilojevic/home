@@ -11,34 +11,30 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, talhelper }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixpkgs {
-          inherit system;
-        };
-      in
-      {
-        devShells.default = pkgs.mkShell {
-          packages = with pkgs; [
-            age
-            cloudflared
-            fluxcd
-            go-task
-            helmfile
-            kubeconform
-            kubectl
-            kubernetes-helm
-            kustomize
-            minijinja
-            moreutils
-            pre-commit
-            sops
-            stern
-            talosctl
-            yq
-          ] ++ [
-            talhelper.packages.${system}.default
-          ];
-        };
-      });
+    flake-utils.lib.eachDefaultSystem (system: let
+      pkgs = import nixpkgs { inherit system; };
+    in {
+      devShells.default = pkgs.mkShell {
+        packages = with pkgs; [
+          age
+          cloudflared
+          fluxcd
+          go-task
+          helmfile
+          kubeconform
+          kubectl
+          kubernetes-helm
+          kustomize
+          minijinja
+          moreutils
+          pre-commit
+          sops
+          stern
+          talosctl
+          yq
+        ] ++ [
+          talhelper.packages.${system}.default
+        ];
+      };
+    });
 }
