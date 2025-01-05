@@ -36,7 +36,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/radarr
-              tag: 5.16.3.9541
+              tag: 5.17.2.9580
             env:
               TZ: "Europe/Belgrade"
               PUID: "1000"
