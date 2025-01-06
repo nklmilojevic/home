@@ -155,6 +155,10 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /tmp
+      dockerenv:
+        type: emptyDir
+        globalMounts:
+          - path: /.dockerenv
 
     serviceMonitor:
       home-assistant:
