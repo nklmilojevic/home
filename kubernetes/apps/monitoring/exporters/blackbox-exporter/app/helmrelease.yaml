@@ -58,7 +58,7 @@ spec:
       rules:
         - alert: BlackboxProbeFailed
           expr: probe_success == 0
-          for: 15m
+          for: 1m
           labels:
             severity: critical
           annotations:
