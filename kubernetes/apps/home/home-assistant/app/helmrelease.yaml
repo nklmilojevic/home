@@ -58,6 +58,7 @@ spec:
               tag: 2025.1.0
             env:
               TZ: "Europe/Belgrade"
+              PYTHONPATH: "/config/deps"
             envFrom:
               - secretRef:
                   name: homeassistant-secrets
