@@ -27,6 +27,6 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CLAIM: home-assistant-config
-      VOLSYNC_CAPACITY: 21G
+      VOLSYNC_CAPACITY: 22G
       APP_UID: "1000"
       APP_GID: "1000"
