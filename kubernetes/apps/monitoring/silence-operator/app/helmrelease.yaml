@@ -61,9 +61,9 @@ spec:
             - name: alertname
               value: CephNodeDiskspaceWarning
               isRegex: false
-            - name: mountpoint
-              value: /var
-              isRegex: false
+            - name: device
+              value: /dev/sd.*
+              isRegex: true
       # - apiVersion: monitoring.giantswarm.io/v1alpha1
       #   kind: Silence
       #   metadata:
