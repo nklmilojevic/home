@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./graphite-exporter/ks.yaml
   - ./smartctl-exporter/ks.yaml
-  - ./blackbox-erpoter/ks.yaml
+  - ./blackbox-exporter/ks.yaml
