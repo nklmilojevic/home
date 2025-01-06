@@ -25,3 +25,4 @@ wiki
 # Bootstrap
 /config.yaml
 .direnv
+.aider*
