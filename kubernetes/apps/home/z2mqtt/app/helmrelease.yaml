@@ -34,29 +34,33 @@ spec:
               repository: koenkk/zigbee2mqtt
               tag: 2.0.0
               pullPolicy: IfNotPresent
-            env:
-              ZIGBEE2MQTT_DATA: "/data"
-              ZIGBEE2MQTT_CONFIG_ADVANCED_LAST_SEEN: "ISO_8601"
-              ZIGBEE2MQTT_CONFIG_ADVANCED_LEGACY_API: "false"
-              ZIGBEE2MQTT_CONFIG_ADVANCED_LEGACY_AVAILABILITY_PAYLOAD: "false"
-              ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_LEVEL: "info"
-              ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_OUTPUT: '["console"]'
-              ZIGBEE2MQTT_CONFIG_PERMIT_JOIN: "false"
-              ZIGBEE2MQTT_CONFIG_MQTT_BASE_TOPIC: "zigbee2mqtt"
-              ZIGBEE2MQTT_CONFIG_MQTT_SERVER: "mqtt://mosquitto.home.svc"
-              ZIGBEE2MQTT_CONFIG_MQTT_INCLUDE_DEVICE_INFORMATION: "true"
-              ZIGBEE2MQTT_CONFIG_EXPERIMENTAL_NEW_API: "true"
-              ZIGBEE2MQTT_CONFIG_SERIAL_PORT: "tcp://10.5.0.50:6638"
-              ZIGBEE2MQTT_CONFIG_SERIAL_BAUDRATE: "115200"
-              ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER: "ember"
-              ZIGBEE2MQTT_CONFIG_SERIAL_RTSCTS: "false"
-              ZIGBEE2MQTT_CONFIG_ADVANCED_TRANSMIT_POWER: "20"
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities:
                 drop: ["ALL"]
                 add: ["NET_BIND_SERVICE"]
+          code-server:
+            image:
+              repository: ghcr.io/coder/code-server
+              tag: 4.96.2@sha256:6b8c0e944caec80057e71d2c2f352cee38fe00ae4b7515fc4458eb300844f699
+            args:
+              - --auth
+              - none
+              - --disable-telemetry
+              - --disable-update-check
+              - --user-data-dir
+              - /data/.code-server
+              - --extensions-dir
+              - /data/.code-server
+              - --port
+              - "12321"
+              - /data
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -71,6 +75,8 @@ spec:
         ports:
           http:
             port: 8080
+          code-server:
+            port: 12321
     ingress:
       app:
         className: "internal"
@@ -84,6 +90,12 @@ spec:
                 service:
                   identifier: app
                   port: http
+          - host: z2mqtt-code.nikola.wtf
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: code-server
         tls:
           - hosts:
               - *host
