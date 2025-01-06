@@ -155,10 +155,6 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /tmp
-      bkah:
-        type: emptyDir
-        globalMounts:
-          - path: /usr/local/lib/python3.13
 
     serviceMonitor:
       home-assistant:
