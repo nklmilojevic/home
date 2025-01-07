@@ -20,6 +20,7 @@ spec:
     - name: multus-config
     - name: rook-ceph-cluster
     - name: volsync
+    - name: volsync
     - name: external-secrets-stores
   interval: 30m
   retryInterval: 1m
