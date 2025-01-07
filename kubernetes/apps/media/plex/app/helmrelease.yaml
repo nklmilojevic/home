@@ -32,8 +32,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/nklmilojevic/plex
-              tag: 1.41.3.9314-a0bfb8370
+              repository: docker.io/nklmilojevic/plex
+              tag: 1.41.3.9314-a0bfb8370@sha256:0f3e812f0895d2f72902b08456bb5d578c1b934e9203716cc9b4cc1c13e172bc
             env:
               TZ: "Europe/Belgrade"
               VERSION: "docker"

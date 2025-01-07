@@ -32,8 +32,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/nklmilojevic/lidarr
-              tag: 2.8.2.4493
+              repository: docker.io/nklmilojevic/lidarr
+              tag: 2.8.2.4493@sha256:26b0490a334cf4b6b032c877d46b9e65d47b378df46564aba7d113b16787c758
             env:
               TZ: "Europe/Belgrade"
               LIDARR__PORT: &port 8080
