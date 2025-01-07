@@ -32,8 +32,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/nklmilojevic/qbittorrent
-              tag: 5.0.3
+              repository: docker.io/nklmilojevic/qbittorrent
+              tag: 5.0.3@sha256:b8d17e2413f25be51590cec53f32de7a1150ec603bc34b9fede928fb0160ed0a
 
             env:
               TZ: "Europe/Belgrade"

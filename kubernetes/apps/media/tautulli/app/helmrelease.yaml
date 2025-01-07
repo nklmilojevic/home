@@ -31,8 +31,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/nklmilojevic/tautulli
-              tag: 2.15.0
+              repository: docker.io/nklmilojevic/tautulli
+              tag: 2.15.0@sha256:7e688114e6f80b7ca90cd84e5d9b47a9143988d6ac710acd952e4c2f5d7428a2
 
             env:
               TZ: "Europe/Belgrade"

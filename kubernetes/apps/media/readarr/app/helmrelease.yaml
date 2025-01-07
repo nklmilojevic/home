@@ -32,8 +32,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/nklmilojevic/readarr-develop
-              tag: 0.4.7.2718
+              repository: docker.io/nklmilojevic/readarr-develop
+              tag: 0.4.7.2718@sha256:c9f405e91a1485f4b4a74dc1a9d0f847164182474c02304d04539fb2d04b5e2b
 
             env:
               TZ: "Europe/Belgrade"

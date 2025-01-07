@@ -32,8 +32,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/nklmilojevic/bazarr
-              tag: 1.5.1
+              repository: docker.io/nklmilojevic/bazarr
+              tag: 1.5.1@sha256:3ce60a631ff765790c82687fe7b4bb7d59b147d0d163d107c21d5a614adb5c8a
             env:
               TZ: "Europe/Belgrade"
             securityContext:
