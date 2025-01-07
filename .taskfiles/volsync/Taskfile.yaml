@@ -42,13 +42,12 @@ tasks:
       - kubectl --namespace {{.NS}} delete job {{ .JOB }}
 
   snapshot:
-    desc: Snapshot an app [K8S_CLUSTER=main] [NS=default] [APP=required]
+    desc: Snapshot an app [NS=default] [APP=required]
     preconditions:
       - which kubectl
       - kubectl --namespace {{.NS}} get replicationsources {{.APP}}
     requires:
       vars:
-        - K8S_CLUSTER
         - APP
     vars:
       NS: '{{.NS | default "default"}}'
@@ -59,13 +58,12 @@ tasks:
       - kubectl --namespace {{.NS}} wait job/{{.JOB}} --for=condition=complete --timeout=120m
 
   restore:
-    desc: Restore an app [K8S_CLUSTER=main] [NS=default] [APP=required] [PREVIOUS=required]
+    desc: Restore an app [NS=default] [APP=required] [PREVIOUS=required]
     preconditions:
       - which flux kubectl minijinja-cli
       - test -f {{.VOLSYNC_TASK_RESOURCES_DIR}}/replicationdestination.yaml.j2
     requires:
       vars:
-        - K8S_CLUSTER
         - APP
         - PREVIOUS
     vars:
