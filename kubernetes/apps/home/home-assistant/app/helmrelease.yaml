@@ -54,11 +54,10 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/nklmilojevic/home-assistant
-              tag: 2025.1.1@sha256:0c482297147bd49ac00eaf293b7c0f62b790f8e4c7bee9d4d1acd8ad589cfc31
+              repository: docker.io/nklmilojevic/home-assistant
+              tag: 2025.1.1@sha256:578c33be056ac0eaed468268452e6063d8102397bf17e468328ffd4e070f8f1c
             env:
               TZ: "Europe/Belgrade"
-              PYTHONPATH: "/config/deps"
             envFrom:
               - secretRef:
                   name: homeassistant-secrets
