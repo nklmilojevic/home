@@ -23,7 +23,7 @@ spec:
               service:
                 name: omada-controller
                 port:
-                  number: 30077
+                  number: 8043
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
