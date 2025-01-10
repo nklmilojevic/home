@@ -49,6 +49,27 @@ spec:
                 insecureSkipVerify: true
                 caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
                 serverName: kubernetes
+    kubeScheduler:
+      enabled: true
+      endpoints: []
+      service:
+        enabled: true
+        port: 10259
+        targetPort: 10259
+        selector:
+          component: kube-scheduler
+      vmScrape:
+        spec:
+          jobLabel: jobLabel
+          namespaceSelector:
+            matchNames: [kube-system]
+          endpoints:
+            - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+              port: http-metrics
+              scheme: https
+              tlsConfig:
+                insecureSkipVerify: true
+                caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 
     grafana:
       enabled: false
