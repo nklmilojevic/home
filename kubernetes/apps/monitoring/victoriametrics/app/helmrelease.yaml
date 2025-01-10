@@ -150,7 +150,6 @@ spec:
             scheme: http
             static_configs:
               - targets:
-                  - "10.5.0.10:9100"
                   - "10.5.0.32:9100"
         selectAllByDefault: true
         scrapeInterval: 25s
