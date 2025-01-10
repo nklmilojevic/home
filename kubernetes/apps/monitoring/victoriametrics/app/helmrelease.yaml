@@ -39,9 +39,10 @@ spec:
             #   key: ""
             port: http-metrics
             scheme: https
-            # tlsConfig:
-            #   caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            #   serverName: kubernetes
+            tlsConfig:
+              insecureSkipVerify: true # TODO: remove this after fixing the issue with self-signed certificates
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              serverName: kubernetes
     grafana:
       enabled: false
 
