@@ -50,6 +50,9 @@ spec:
         servicePort: 9428
         type: ClusterIP
 
+      serviceMonitor:
+        enabled: true
+
       statefulSet:
         enabled: true
         podManagementPolicy: OrderedReady
