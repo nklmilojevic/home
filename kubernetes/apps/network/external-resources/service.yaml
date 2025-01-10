@@ -6,8 +6,8 @@ metadata:
   namespace: network
 spec:
   ports:
-    - port: 30077
-      targetPort: 30077
+    - port: 8043
+      targetPort: 8043
 ---
 apiVersion: v1
 kind: Endpoints
@@ -16,9 +16,9 @@ metadata:
   namespace: network
 subsets:
   - addresses:
-      - ip: 10.5.0.10
+      - ip: 10.5.0.32
     ports:
-      - port: 30077
+      - port: 8043
 ---
 apiVersion: v1
 kind: Service

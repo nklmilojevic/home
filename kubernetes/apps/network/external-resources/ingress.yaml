@@ -8,8 +8,8 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
     nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/upstream-vhost: "10.5.0.10:30077"
-    nginx.ingress.kubernetes.io/proxy-redirect-from: "~https://(.+):30077/(.+)/login$"
+    nginx.ingress.kubernetes.io/upstream-vhost: "10.5.0.10:8043"
+    nginx.ingress.kubernetes.io/proxy-redirect-from: "~https://(.+):8043/(.+)/login$"
     nginx.ingress.kubernetes.io/proxy-redirect-to: "https://$1/$2/login"
 spec:
   ingressClassName: "internal"
