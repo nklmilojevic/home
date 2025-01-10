@@ -109,7 +109,9 @@ spec:
         - module: icmp
           name: zigbee-controller-icmp
           url: 10.5.0.50
-
+        - module: http_2xx
+          name: zigbee-controller-http
+          url: "http://10.5.0.50/"
         - module: icmp
           name: ping-cloudflare
           url: 1.1.1.1
