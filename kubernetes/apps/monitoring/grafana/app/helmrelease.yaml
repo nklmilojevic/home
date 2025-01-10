@@ -202,6 +202,8 @@ spec:
           gnetId: 5342
           revision: 9
           datasource: VictoriaMetrics
+        victoriametrics:
+          url: https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/refs/heads/master/dashboards/victoriametrics.json
     sidecar:
       dashboards:
         enabled: true
