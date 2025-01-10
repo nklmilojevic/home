@@ -26,6 +26,22 @@ spec:
       strategy: rollback
       retries: 3
   values:
+    kubeControllerManager:
+      # -- Spec for VMServiceScrape CRD is [here](https://docs.victoriametrics.com/operator/api.html#vmservicescrapespec)
+      spec:
+        jobLabel: jobLabel
+        namespaceSelector:
+          matchNames:
+            - kube-system
+        endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            # bearerTokenSecret:
+            #   key: ""
+            port: http-metrics
+            scheme: https
+            # tlsConfig:
+            #   caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            #   serverName: kubernetes
     grafana:
       enabled: false
 
