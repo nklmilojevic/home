@@ -238,7 +238,5 @@ spec:
       enabled: true
       ingressClassName: internal
       hosts: ["grafana.nikola.wtf"]
-    persistence:
-      enabled: false
     testFramework:
       enabled: false
