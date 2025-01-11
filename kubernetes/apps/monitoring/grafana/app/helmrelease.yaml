@@ -64,7 +64,7 @@ spec:
     additionalDataSources:
       - name: vmlogs
         orgId: 1
-        type: victorialogs
+        type: victoriametrics-logs-datasource
         url: http://vm-logs-victoria-logs-single-server.monitoring.svc:9428
         version: 1
 
