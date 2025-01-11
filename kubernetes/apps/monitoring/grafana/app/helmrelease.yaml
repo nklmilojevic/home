@@ -35,6 +35,8 @@ spec:
       GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
       GF_SERVER_ROOT_URL: https://grafana.nikola.wtf
     grafana.ini:
+      plugins:
+        allow_loading_unsigned_plugins: "victoriametrics-logs-datasource"
       analytics:
         check_for_updates: false
         check_for_plugin_updates: false
