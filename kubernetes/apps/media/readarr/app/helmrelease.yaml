@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: docker.io/nklmilojevic/readarr-develop
-              tag: 0.4.7.2718@sha256:f0c2991d47bc26b0b85c65585307ee305d50141debbd0e94f2d0a2c7a7ad7d66
+              tag: 0.4.8.2726@sha256:16b0be0ffd3848d04a3e05a9b180d95a2267167552f300b5fd82b1bc3e070d12
 
             env:
               TZ: "Europe/Belgrade"
