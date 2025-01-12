@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: docker.io/nklmilojevic/tautulli
-              tag: 2.15.0@sha256:7e688114e6f80b7ca90cd84e5d9b47a9143988d6ac710acd952e4c2f5d7428a2
+              tag: 2.15.1@sha256:09aaae97446b9caf933278d47801e7a846321e54d75ecc36f000c1e3b2379d1d
 
             env:
               TZ: "Europe/Belgrade"
