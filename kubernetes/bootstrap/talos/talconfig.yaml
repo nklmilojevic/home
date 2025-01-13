@@ -57,7 +57,6 @@ nodes:
           - net.ifnames=1
         systemExtensions:
           officialExtensions:
-            - siderolabs/i915-ucode
             - siderolabs/intel-ice-firmware
             - siderolabs/intel-ucode
             - siderolabs/mei
@@ -99,7 +98,6 @@ nodes:
           - net.ifnames=1
         systemExtensions:
           officialExtensions:
-            - siderolabs/i915-ucode
             - siderolabs/intel-ice-firmware
             - siderolabs/intel-ucode
             - siderolabs/mei
@@ -110,7 +108,7 @@ nodes:
   - hostname: "icarus003"
     ipAddress: "10.40.0.203"
     installDiskSelector:
-      size: "<200GB"
+      serial: "50026B7686429B50"
     talosImageURL: factory.talos.dev/installer/74551a2d2d0a9a018ba38835f3ce8d3ed712b4ef2b99a41ee1b84125e11c6d64
     controlPlane: true
     networkInterfaces:
@@ -141,7 +139,6 @@ nodes:
           - net.ifnames=1
         systemExtensions:
           officialExtensions:
-            - siderolabs/i915-ucode
             - siderolabs/intel-ice-firmware
             - siderolabs/intel-ucode
             - siderolabs/mei
