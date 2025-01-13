@@ -78,6 +78,7 @@ spec:
       enabled: true
       operator:
         disable_prometheus_converter: false
+        enable_converter_ownership: true
 
     serviceAccount:
       create: true
