@@ -55,7 +55,7 @@ spec:
           app:
             image:
               repository: docker.io/nklmilojevic/home-assistant
-              tag: 2025.1.2@sha256:a849de9f9b15a1e2cb7d2f2d3b493c411b28b0f0e062973ee9cd9def47c72859
+              tag: 2025.1.2@sha256:eca78f459e1a0b43171bd6cae6af92c492679cbaf691020b80a8b9cc4f1987ed
             env:
               TZ: "Europe/Belgrade"
             envFrom:
