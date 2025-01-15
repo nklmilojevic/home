@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: docker.io/nklmilojevic/lidarr
-              tag: 2.8.2.4493@sha256:be0ff7616a546404ee183906a4f9a31cf016185f691eb176495ea6cd1f327504
+              tag: 2.8.2.4493@sha256:b1536779e3f241a860b281252b501b4520cf872b46118b8c48a90db33ba1960e
             env:
               TZ: "Europe/Belgrade"
               LIDARR__PORT: &port 8080
