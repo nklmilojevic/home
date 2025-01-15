@@ -31,8 +31,8 @@ spec:
         containers:
           app:
             image:
-              repository: docker.io/nklmilojevic/tautulli
-              tag: 2.15.1@sha256:a71484342018181fd790f99346cadb94a5ddcfbd083afbd8575bcefd683d807a
+              repository: quay.io/nklmilojevic/tautulli
+              tag: 2.15.1@sha256:625bbcdf72c72945e62aa77086bc83cb29277149ed4b37e52cfc06606666e62a
 
             env:
               TZ: "Europe/Belgrade"

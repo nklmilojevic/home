@@ -32,8 +32,8 @@ spec:
         containers:
           app:
             image:
-              repository: docker.io/nklmilojevic/bazarr
-              tag: 1.5.1@sha256:017185f5dd9dc11fb8260e081d00cb50bdbbb620573b0b973710bdeb31120125
+              repository: quay.io/nklmilojevic/bazarr
+              tag: 1.5.1@sha256:d9192003e9f4e53d0185a03f9cd43c318f6872019e86d415ebdfc2d845050f05
             env:
               TZ: "Europe/Belgrade"
             securityContext:
