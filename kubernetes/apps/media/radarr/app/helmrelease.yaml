@@ -36,7 +36,7 @@ spec:
           app:
             image:
               repository: docker.io/nklmilojevic/radarr
-              tag: 5.17.2.9580@sha256:18e9445d91b2577061ccee40643f7057ac6e898bddd34cd8825daf8e85aab603
+              tag: 5.17.2.9580@sha256:c8a3bb686532e77da4b0204dbcf5593c3519c697e780590a96aebe21dc536cd7
             env:
               TZ: "Europe/Belgrade"
               PUID: "1000"
