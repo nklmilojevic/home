@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: docker.io/nklmilojevic/sabnzbd
-              tag: 4.4.1@sha256:f3ed819aa37c212baedd4927e1e309a851064f2f562f3ca8bd5a57288c8b1230
+              tag: 4.4.1@sha256:28725752a5e81e9d331211c4aeed6d7efb3c1817f5e0d6e09c847177824adef0
 
             env:
               TZ: "Europe/Belgrade"
