@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: docker.io/nklmilojevic/qbittorrent
-              tag: 5.0.3@sha256:12d2cec15c027078613e9eafb948a3b8697f8df7ae02813b4505f68fb4587722
+              tag: 5.0.3@sha256:de051b149ae48a4c922dbd8db1347a935cad2ef40e524974e1cf73b7e4ddca42
 
             env:
               TZ: "Europe/Belgrade"
