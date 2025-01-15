@@ -36,7 +36,7 @@ spec:
           init-db:
             image:
               repository: docker.io/nklmilojevic/postgres-init
-              tag: 16.6@sha256:494548756e6f467318b5b74ece7f2d3df1dccf9ea03dec663ebd6d96e535892a
+              tag: 16.6@sha256:2cb36945543f502c47b00456b47031a56fdffbb127cd131e285f6002263e2a5e
             envFrom: &envFrom
               - secretRef:
                   name: atuin-secrets
