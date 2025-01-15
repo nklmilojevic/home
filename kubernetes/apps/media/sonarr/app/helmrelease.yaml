@@ -32,8 +32,8 @@ spec:
         containers:
           app:
             image:
-              repository: docker.io/nklmilojevic/sonarr
-              tag: 4.0.12.2823@sha256:39950b3730c1dda4617134c29909d92876ea77fee18cf9b4fa7b28c71e4d0cf1
+              repository: quay.io/nklmilojevic/sonarr
+              tag: 4.0.12.2823@sha256:792b128acd8c707be3571ef096e2b830848790e3da485eae6cb5fe715e85eda8
 
             env:
               TZ: "Europe/Belgrade"

@@ -32,8 +32,8 @@ spec:
         containers:
           app:
             image:
-              repository: docker.io/nklmilojevic/sabnzbd
-              tag: 4.4.1@sha256:28725752a5e81e9d331211c4aeed6d7efb3c1817f5e0d6e09c847177824adef0
+              repository: quay.io/nklmilojevic/sabnzbd
+              tag: 4.4.1@sha256:eb921c7a00b0bcfc69c9bd81a6265d6bc955301f2c4adb27a0daf24544af607f
 
             env:
               TZ: "Europe/Belgrade"

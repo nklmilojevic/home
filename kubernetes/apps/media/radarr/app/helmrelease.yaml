@@ -35,8 +35,8 @@ spec:
         containers:
           app:
             image:
-              repository: docker.io/nklmilojevic/radarr
-              tag: 5.17.2.9580@sha256:c8a3bb686532e77da4b0204dbcf5593c3519c697e780590a96aebe21dc536cd7
+              repository: quay.io/nklmilojevic/radarr
+              tag: 5.17.2.9580@sha256:7ccff07030c9db070bc820aa70c2a9cf711e5364b6fa7eba82bf3f167fb5b285
             env:
               TZ: "Europe/Belgrade"
               PUID: "1000"

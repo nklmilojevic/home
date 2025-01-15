@@ -32,8 +32,8 @@ spec:
         containers:
           app:
             image:
-              repository: docker.io/nklmilojevic/plex
-              tag: 1.41.3.9314-a0bfb8370@sha256:52f5f436cac09e250f5e46a258446448926dea834e7746282b82ac47caa1418f
+              repository: quay.io/nklmilojevic/plex
+              tag: 1.41.3.9314-a0bfb8370@sha256:913779d0c80479b6e3c76c80c1583e11b25c1d4ab87cc15af37eb8491b501878
             env:
               TZ: "Europe/Belgrade"
               VERSION: "docker"

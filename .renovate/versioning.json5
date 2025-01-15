@@ -8,7 +8,7 @@
       ],
       matchPackageNames: [
         "ghcr.io/cross-seed/cross-seed",
-        "docker.io/nklmilojevic/plex",
+        "quay.io/nklmilojevic/plex",
       ],
       versioning: "loose",
     },
