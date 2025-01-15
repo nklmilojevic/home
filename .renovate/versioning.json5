@@ -1,0 +1,26 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  packageRules: [
+    {
+      description: "Loose versioning for non-semver packages",
+      matchDatasources: [
+        "docker"
+      ],
+      matchPackageNames: [
+        "ghcr.io/cross-seed/cross-seed",
+        "docker.io/nklmilojevic/plex",
+      ],
+      versioning: "loose",
+    },
+    {
+      description: "Custom versioning for http-https-echo",
+      matchDatasources: [
+        "docker"
+      ],
+      matchPackageNames: [
+        "ghcr.io/mendhak/http-https-echo"
+      ],
+      versioning: "regex:^(?<major>\\d+)$",
+    }
+  ],
+}

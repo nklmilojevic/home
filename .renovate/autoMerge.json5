@@ -1,0 +1,14 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  packageRules: [
+    {
+      description: "Auto merge container digests",
+      matchDatasources: ["docker"],
+      automerge: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["digest"],
+      matchPackagePrefixes: ["ghcr.io/onedr0p", "ghcr.io/bjw-s", "ghcr.io/bjw-s-labs", "docker.io/nklmilojevic"],
+      ignoreTests: true,
+    },
+  ],
+}
