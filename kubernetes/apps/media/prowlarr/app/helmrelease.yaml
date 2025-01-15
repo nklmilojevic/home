@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: docker.io/nklmilojevic/prowlarr
-              tag: 1.29.2.4915@sha256:be0749333cb874c90d08a6ef9820e50b2604a7a4f7e3f73f146e92dfbfb2b598
+              tag: 1.29.2.4915@sha256:01434bf0c348433b8e57937c5ff7ada0d0ea721cc0ed3f8cbfe37e17bce453f8
             env:
               TZ: "Europe/Belgrade"
             securityContext:
