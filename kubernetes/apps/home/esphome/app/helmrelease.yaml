@@ -39,8 +39,8 @@ spec:
         containers:
           app:
             image:
-              repository: docker.io/nklmilojevic/esphome
-              tag: 2024.12.2@sha256:d9d8e1daceda1185da078ec3743a1c7d4f25b7a88fb89ef4525a2ea4e53ee771
+              repository: quay.io/nklmilojevic/esphome
+              tag: 2024.12.2@sha256:a1b6d6a069fd864bde248460314074530307706769a3f2aea731993816d2a164
             probes:
               liveness:
                 enabled: false
