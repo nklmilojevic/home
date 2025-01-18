@@ -112,7 +112,7 @@ spec:
             port: 53
             protocol: UDP
     serviceMonitor:
-      main:
+      blocky:
         serviceName: blocky
         endpoints:
           - interval: 30s
