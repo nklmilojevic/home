@@ -113,7 +113,7 @@ spec:
             protocol: UDP
     serviceMonitor:
       blocky:
-        serviceName: app
+        serviceName: blocky-app
         endpoints:
           - interval: 30s
             path: /metrics
