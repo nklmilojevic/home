@@ -1,0 +1,33 @@
+---
+upstreams:
+  groups:
+    default:
+      - tcp-tls:1dot1dot1dot1.cloudflare-dns.com
+      - tcp-tls:dns.google
+      - tcp-tls:dns10.quad9.net
+conditional:
+  mapping:
+    nikola.wtf: tcp+udp:10.40.0.5
+    omada.home: tcp+udp:10.40.0.20
+clientLookup:
+  upstream: tcp+udp:10.40.0.20
+blocking:
+  blackLists:
+    ads:
+      - https://big.oisd.nl/domainswild
+  allowLists:
+    ads:
+      - https://raw.githubusercontent.com/nklmilojevic/ml-allowlist/refs/heads/main/allowlist.txt
+  clientGroupsBlock:
+    default:
+      - ads
+caching:
+  cacheTimeNegative: 30s
+redis:
+  address: blocky-redis.network.svc.cluster.local:6379
+  database: 1
+prometheus:
+  enable: true
+bootstrapDns: tcp+udp:1.1.1.1
+ports:
+  http: 4000
