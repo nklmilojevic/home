@@ -15,5 +15,5 @@ resources:
   - ./isponsorblocktv/ks.yaml
   - ./omada-coredns/ks.yaml
   - ./openspeedtest/ks.yaml
-  # - ./blocky/ks.yaml
+  - ./blocky/ks.yaml
   - ./external-resources/
