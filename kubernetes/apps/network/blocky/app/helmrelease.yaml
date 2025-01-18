@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: blocky
+  name: &app blocky
 spec:
   interval: 30m
   chart:
@@ -113,10 +113,11 @@ spec:
             protocol: UDP
     serviceMonitor:
       blocky:
-        serviceName: blocky
+        serviceName: app
         endpoints:
           - interval: 30s
             path: /metrics
+
             port: http
             scrapeTimeout: 10s
 
