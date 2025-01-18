@@ -12,10 +12,10 @@ conditional:
 clientLookup:
   upstream: tcp+udp:10.40.0.20
 blocking:
-  blackLists:
+  denylists:
     ads:
       - https://big.oisd.nl/domainswild
-  allowLists:
+  allowlists:
     ads:
       - https://raw.githubusercontent.com/nklmilojevic/ml-allowlist/refs/heads/main/allowlist.txt
   clientGroupsBlock:
