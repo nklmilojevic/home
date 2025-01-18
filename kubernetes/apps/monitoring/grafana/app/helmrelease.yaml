@@ -187,6 +187,10 @@ spec:
           url: https://raw.githubusercontent.com/Supporterino/truenas-graphite-to-prometheus/refs/heads/main/dashboards/truenas_scale_temperatures.json
           datasource:
             - { name: DS_PROMETHEUS, value: VictoriaMetrics }
+        blocky:
+          url: https://0xerr0r.github.io/blocky/latest/blocky-grafana.json
+          datasource:
+            - { name: DS_PROMETHEUS, value: VictoriaMetrics }
         ceph-cluster:
           # renovate: depName="Ceph Cluster"
           gnetId: 2842

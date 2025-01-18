@@ -9,7 +9,7 @@ conditional:
     nikola.wtf: tcp+udp:10.40.0.5
     omada.home: tcp+udp:10.40.0.20
 clientLookup:
-  upstream: tcp+udp:10.5.0.1
+  upstream: tcp+udp:10.40.0.20
   singleNameOrder:
     - 2
     - 1
