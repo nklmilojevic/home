@@ -3,21 +3,23 @@ upstreams:
   groups:
     default:
       - tcp-tls:1dot1dot1dot1.cloudflare-dns.com
-      - tcp-tls:dns.google
       - tcp-tls:dns10.quad9.net
 conditional:
   mapping:
     nikola.wtf: tcp+udp:10.40.0.5
     omada.home: tcp+udp:10.40.0.20
 clientLookup:
-  upstream: tcp+udp:10.40.0.20
+  upstream: tcp+udp:10.5.0.1
+  singleNameOrder:
+    - 2
+    - 1
 blocking:
   denylists:
     ads:
       - https://big.oisd.nl/domainswild
   allowlists:
     ads:
-      - https://raw.githubusercontent.com/nklmilojevic/ml-allowlist/refs/heads/main/allowlist.txt
+      - https://raw.githubusercontent.com/nklmilojevic/ml-allowlist/refs/heads/main/allowlist-wc.txt
   clientGroupsBlock:
     default:
       - ads
