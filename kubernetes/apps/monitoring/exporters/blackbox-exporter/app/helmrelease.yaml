@@ -106,8 +106,8 @@ spec:
           url: "https://10.5.0.32:8043/"
         # TrueNAS
         - module: http_2xx
-          name: adguard-backup-http
-          url: "http://10.5.0.10:30004/"
+          name: blocky-backup-http
+          url: "http://10.5.0.32:4000/"
         # Other devices
         - module: icmp
           name: zigbee-controller-icmp
