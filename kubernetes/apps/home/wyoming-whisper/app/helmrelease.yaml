@@ -32,7 +32,7 @@ spec:
               tag: latest
             args:
               - --model
-              - turbo
+              - distil-large-v3
               - --language
               - en
             env:
