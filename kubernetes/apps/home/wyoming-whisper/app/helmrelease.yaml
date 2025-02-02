@@ -32,7 +32,7 @@ spec:
               tag: latest
             args:
               - --model
-              - auto
+              - tiny.en
               - --language
               - en
             env:
