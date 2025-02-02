@@ -32,7 +32,7 @@ spec:
               tag: latest
             args:
               - --model
-              - base
+              - small
               - --language
               - en
             env:
