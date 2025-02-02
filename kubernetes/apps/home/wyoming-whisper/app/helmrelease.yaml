@@ -1,0 +1,59 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app wyoming-whisper
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.6.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: storage
+    - name: mosquitto
+      namespace: home-automation
+  values:
+    controllers:
+      wyoming-whisper:
+        containers:
+          app:
+            image:
+              repository: rhasspy/wyoming-whisper
+              tag: latest
+            args:
+              - --model
+              - base
+              - --language
+              - en
+            env:
+              TZ: Europe/Belgrade
+    service:
+      app:
+        controller: *app
+        ports:
+          whisper:
+            enabled: true
+            primary: true
+            port: 10300
+            protocol: TCP
+    persistence:
+      data:
+        enabled: true
+        existingClaim: *app
