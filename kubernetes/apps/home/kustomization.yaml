@@ -10,3 +10,5 @@ resources:
   - ./scrypted/ks.yaml
   - ./esphome/ks.yaml
   - ./go2rtc/ks.yaml
+  - ./wyoming-piper/ks.yaml
+  - ./wyoming-whisper/ks.yaml
