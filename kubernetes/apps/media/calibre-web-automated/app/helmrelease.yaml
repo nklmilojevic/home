@@ -46,10 +46,10 @@ spec:
             #       - ALL
         pod:
           securityContext:
-            runAsUser: 0
-            runAsGroup: 0
+            runAsUser: 1000
+            runAsGroup: 1000
             runAsNonRoot: false
-            fsGroup: 0
+            fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
 
     service:
