@@ -16,3 +16,4 @@ resources:
   - ./recyclarr/ks.yaml
   - ./readarr/ks.yaml
   - ./overseerr/ks.yaml
+  - ./calibre-web-automated/ks.yaml

@@ -1,0 +1,83 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: calibre-web-automated
+  namespace: media
+spec:
+  interval: 5m
+  # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
+  chart:
+    spec:
+      chart: app-template
+      version: 3.7.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      calibre-web-automated:
+        replicas: 1
+
+        containers:
+          app:
+            image:
+              repository: docker.io/crocodilestick/calibre-web-automated
+              tag: V3.0.3@sha256:4e1a78ef73dd0a7d5542c660dad75f084251b4dd3d33f66791d8751838e9f6dd
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        controller: calibre-web-automated
+        ports:
+          http:
+            port: 8083
+
+    ingress:
+      app:
+        className: "internal"
+        hosts:
+          - host: &host cwa.nikola.wtf
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+
+    persistence:
+      config:
+        existingClaim: calibre-web-automated-config
+      nas:
+        type: nfs
+        server: 10.5.0.10
+        path: /mnt/vault/apps/cwa
+        advancedMounts:
+          paperless:
+            app:
+              - path: /calibre-library
