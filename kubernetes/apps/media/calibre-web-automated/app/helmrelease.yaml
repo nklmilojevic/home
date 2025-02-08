@@ -77,7 +77,7 @@ spec:
     persistence:
       config:
         existingClaim: calibre-web-automated-config
-      nas:
+      calibre-library:
         type: nfs
         server: 10.5.0.10
         path: /mnt/vault/apps/cwa
