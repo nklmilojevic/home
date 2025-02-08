@@ -46,10 +46,10 @@ spec:
             #       - ALL
         pod:
           securityContext:
-            runAsUser: 1000
+            runAsUser: 0
             runAsGroup: 1000
             runAsNonRoot: false
-            fsGroup: 1000
+            fsGroup: 0
             fsGroupChangePolicy: OnRootMismatch
 
     service:
@@ -79,3 +79,11 @@ spec:
         existingClaim: calibre-web-automated-config
       calibre-library:
         existingClaim: calibre-web-automated-library
+      cwa-book-ingest:
+        type: nfs
+        server: 10.5.0.10
+        path: /mnt/vault/apps/cwa
+        advancedMounts:
+          calibre-web-automated:
+            app:
+              - path: /cwa-book-ingest
