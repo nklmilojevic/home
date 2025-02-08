@@ -78,10 +78,4 @@ spec:
       config:
         existingClaim: calibre-web-automated-config
       calibre-library:
-        type: nfs
-        server: 10.5.0.10
-        path: /mnt/vault/apps/cwa
-        advancedMounts:
-          calibre-web-automated:
-            app:
-              - path: /calibre-library
+        existingClaim: calibre-web-automated-library
