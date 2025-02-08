@@ -78,6 +78,6 @@ spec:
         server: 10.5.0.10
         path: /mnt/vault/apps/cwa
         advancedMounts:
-          paperless:
+          calibre-web-automated:
             app:
               - path: /calibre-library
