@@ -34,10 +34,10 @@ spec:
             image:
               repository: docker.io/crocodilestick/calibre-web-automated
               tag: V3.0.3@sha256:4e1a78ef73dd0a7d5542c660dad75f084251b4dd3d33f66791d8751838e9f6dd
-          env:
-            TZ: "Europe/Belgrade"
-            PUID: 1000
-            PGID: 1000
+            env:
+              TZ: "Europe/Belgrade"
+              PUID: 1000
+              PGID: 1000
 
             # securityContext:
             #   allowPrivilegeEscalation: false
