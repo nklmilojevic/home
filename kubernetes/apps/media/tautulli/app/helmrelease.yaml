@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/tautulli
-              tag: 2.15.1@sha256:abbbcc551b5a927bd87eb694ef563e55ce1bd6d718a418a8180cf9a837e111c7
+              tag: 2.15.1@sha256:ed6fe410f9561ccb7ffe813a99306bdf25a4ef6776fdd6c9a1149a5a28785336
 
             env:
               TZ: "Europe/Belgrade"
