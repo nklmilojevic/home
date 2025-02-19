@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/qbittorrent
-              tag: 5.0.4@sha256:0703d3c0ac34d2729f9175a40c1071914dd47d1233a336d735a46fa1a66723b6
+              tag: 5.0.4@sha256:eb2dae92683618e38982d6bfbea4c102b446a1a9025e92768acc73ba4f1a9ef0
 
             env:
               TZ: "Europe/Belgrade"
