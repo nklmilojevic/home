@@ -36,7 +36,7 @@ spec:
           init-db:
             image:
               repository: quay.io/nklmilojevic/postgres-init
-              tag: 16.8@sha256:40aeaa234e7ae844e5d6a958d6023af0dbf8b756c81fd06e0d733d52b7d740b4
+              tag: 16.8@sha256:f9f8de30e807111c5fe894f63ccb6920f974bacecdeca6adc02068a6e1a54827
             envFrom: &envFrom
               - secretRef:
                   name: atuin-secrets
