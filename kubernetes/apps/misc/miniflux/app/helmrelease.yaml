@@ -32,7 +32,7 @@ spec:
           init-db:
             image:
               repository: quay.io/nklmilojevic/postgres-init
-              tag: 16.8@sha256:c2d61dcdf01a21563b4f8cde836c81bd5a4ebaa7ef369cace79cd9783cdccc73
+              tag: 16.8@sha256:87a54e5501a13dc73a1065cc09f33fa592c01c362077671e4697a4ddc85ccaf7
             envFrom: &envFrom
               - secretRef:
                   name: miniflux-secrets
