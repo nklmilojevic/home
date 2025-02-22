@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/sabnzbd
-              tag: 4.4.1@sha256:eb921c7a00b0bcfc69c9bd81a6265d6bc955301f2c4adb27a0daf24544af607f
+              tag: 4.4.1@sha256:4e2defd87069868c2700c50f6a0d0a67ddc92b6c015ffd4eb5e68317cdb0ea3a
 
             env:
               TZ: "Europe/Belgrade"
