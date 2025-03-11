@@ -108,7 +108,7 @@ nodes:
   - hostname: "icarus003"
     ipAddress: "10.40.0.203"
     installDiskSelector:
-      serial: "50026B7686429B50"
+      model: "Verbatim*"
     talosImageURL: factory.talos.dev/installer/74551a2d2d0a9a018ba38835f3ce8d3ed712b4ef2b99a41ee1b84125e11c6d64
     controlPlane: true
     networkInterfaces:
@@ -116,8 +116,8 @@ nodes:
         bond:
           mode: active-backup
           deviceSelectors:
-            - hardwareAddr: "6c:1f:f7:08:f0:fa"
-              driver: r8152
+            - hardwareAddr: "58:47:ca:77:36:2d"
+              driver: igc
         dhcp: true
         vip:
           ip: *talosControlplaneVip
