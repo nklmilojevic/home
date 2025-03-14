@@ -55,7 +55,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/home-assistant
-              tag: 2025.3.2@sha256:6057b9c9bc68d512d9308ab97bf8148bed99072bf37747987b89a4a068871731
+              tag: 2025.3.3@sha256:99877ebc75f00be76eedb275ed9442d735f9ba95db5026b8e1ee07dba0f44030
             env:
               TZ: "Europe/Belgrade"
             envFrom:
