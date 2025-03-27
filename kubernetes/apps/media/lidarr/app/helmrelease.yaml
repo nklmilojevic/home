@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/lidarr
-              tag: 2.10.3.4602@sha256:1969791f83ebff1efa584a34b0d13b61595190823c61d7718bb0edee2fa57d59
+              tag: 2.10.3.4602@sha256:03e9a22a0438154c2f2e842df350b0a6c14dce332ee8b3af988de17423acf420
             env:
               TZ: "Europe/Belgrade"
               LIDARR__PORT: &port 8080
