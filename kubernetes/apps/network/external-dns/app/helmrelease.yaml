@@ -24,7 +24,8 @@ spec:
       strategy: rollback
       retries: 3
   values:
-    provider: cloudflare
+    provider:
+      name: cloudflare
     env:
       - name: CF_API_TOKEN
         valueFrom:
@@ -37,7 +38,9 @@ spec:
       - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
       - --crd-source-kind=DNSEndpoint
     policy: sync
-    sources: ["crd", "ingress"]
+    sources:
+      - crd
+      - ingress
     txtPrefix: k8s.
     txtOwnerId: default
     domainFilters: ["${SECRET_DOMAIN}"]
