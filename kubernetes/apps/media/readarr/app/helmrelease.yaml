@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/readarr-develop
-              tag: 0.4.12.2753@sha256:a10a8900888168059089de02a051a04ddc473f580b6f3a9f83a09e4546cf2cf1
+              tag: 0.4.13.2760@sha256:02bd8dfd045de1e41cdf81ee6c276f088e6cee070248979dde42759d983fb3ef
 
             env:
               TZ: "Europe/Belgrade"
