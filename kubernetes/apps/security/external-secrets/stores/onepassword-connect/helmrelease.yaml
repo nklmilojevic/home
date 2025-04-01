@@ -18,15 +18,4 @@ spec:
         namespace: flux-system
   values:
     ingress:
-      enabled: true
-      labels: {}
-      annotations: {}
-      ingressclassName: "internal"
-      pathType: Prefix
-      hosts:
-        - host: &host "onepassword-connect.nikola.wtf"
-          paths:
-            - path: /
-      tls:
-        - hosts:
-            - *host
+      enabled: false
