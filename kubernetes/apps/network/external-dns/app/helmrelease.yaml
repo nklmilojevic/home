@@ -34,7 +34,7 @@ spec:
             key: api-token
     extraArgs:
       - --ingress-class=external
-      - --gateway-label-filter=gateway==external
+      - --gateway-name=external
       - --cloudflare-proxied
       - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
       - --crd-source-kind=DNSEndpoint
