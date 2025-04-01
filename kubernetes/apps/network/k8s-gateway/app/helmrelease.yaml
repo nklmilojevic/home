@@ -7,7 +7,7 @@ spec:
   interval: 30m
   chart:
     spec:
-      chart: k8s_gateway
+      chart: k8s-gateway
       version: 1.0.3
       sourceRef:
         kind: HelmRepository
