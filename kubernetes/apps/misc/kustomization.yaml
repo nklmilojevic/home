@@ -5,4 +5,4 @@ resources:
   - ./namespace.yaml
   - ./miniflux/ks.yaml
   - ./paperless/ks.yaml
-  # - ./n8n/ks.yaml
+  - ./n8n/ks.yaml
