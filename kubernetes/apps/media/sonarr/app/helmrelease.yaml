@@ -50,25 +50,20 @@ spec:
         controller: sonarr
         ports:
           http:
-            port: 8989
+            port: &port 8989
 
-    ingress:
+    route:
       app:
-        className: "internal"
-        annotations:
-          hajimari.io/enable: "true"
-          hajimari.io/icon: "television-box"
-        hosts:
-          - host: &host sonarr.nikola.wtf
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames:
+          - sonarr.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: sonarr
+                port: *port
 
     persistence:
       config:

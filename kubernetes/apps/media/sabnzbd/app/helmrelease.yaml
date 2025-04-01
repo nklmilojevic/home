@@ -60,22 +60,18 @@ spec:
           http:
             port: *port
 
-    ingress:
+    route:
       app:
-        className: "internal"
-        annotations:
-          hajimari.io/icon: "download-box"
-        hosts:
-          - host: &host sabnzbd.nikola.wtf
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames:
+          - sabnzbd.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: sabnzbd
+                port: *port
 
     persistence:
       config:

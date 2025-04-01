@@ -46,15 +46,17 @@ spec:
         controller: openspeedtest
         ports:
           http:
-            port: 3000
+            port: &port 3000
 
-    ingress:
+    route:
       app:
-        className: "internal"
-        hosts:
-          - host: openspeedtest.nikola.wtf
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
+        hostnames:
+          - openspeedtest.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: openspeedtest
+                port: *port

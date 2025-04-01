@@ -101,19 +101,20 @@ spec:
         controller: redis
         ports:
           http:
-            port: 6379
+            port: &port 6379
 
-    ingress:
+    route:
       app:
-        className: "internal"
-        hosts:
-          - host: paperless.nikola.wtf
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-
+        hostnames:
+          - paperless.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: paperless
+                port: *port
     persistence:
       data:
         existingClaim: paperless-data
