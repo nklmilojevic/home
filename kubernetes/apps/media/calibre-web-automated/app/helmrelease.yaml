@@ -52,22 +52,20 @@ spec:
         controller: calibre-web-automated
         ports:
           http:
-            port: 8083
+            port: &port 8083
 
-    ingress:
+    route:
       app:
-        className: "internal"
-        hosts:
-          - host: &host cwa.nikola.wtf
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames:
+          - cwa.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: calibre-web-automated
+                port: *port
 
     persistence:
       config:

@@ -59,22 +59,20 @@ spec:
         controller: readarr
         ports:
           http:
-            port: 8787
+            port: &port 8787
 
-    ingress:
+    route:
       app:
-        className: "internal"
-        hosts:
-          - host: &host readarr.nikola.wtf
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames:
+          - readarr.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: readarr
+                port: *port
 
     persistence:
       config:

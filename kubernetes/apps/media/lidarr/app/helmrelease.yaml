@@ -52,22 +52,18 @@ spec:
           http:
             port: *port
 
-    ingress:
+    route:
       app:
-        className: "internal"
-        annotations:
-          hajimari.io/icon: mdi:headphones
-        hosts:
-          - host: &host lidarr.nikola.wtf
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames:
+          - lidarr.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: lidarr
+                port: *port
 
     persistence:
       config:
