@@ -15,7 +15,10 @@ enableRuntimeDeviceDetection: true
 endpointRoutes:
   enabled: true
 envoy:
-  enabled: false
+  enabled: true
+gatewayAPI:
+  enabled: true
+  enableAlpn: true
 hubble:
   enabled: true
   metrics:
