@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: k8s-gateway
-  namespace: networking
+  namespace: network
   labels:
     app.kubernetes.io/instance: k8s-gateway
     app.kubernetes.io/name: k8s-gateway
@@ -45,4 +45,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: k8s-gateway
-    namespace: networking
+    namespace: network
