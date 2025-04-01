@@ -232,9 +232,16 @@ spec:
       - victoriametrics-logs-datasource
     serviceMonitor:
       enabled: true
-    ingress:
-      enabled: true
-      ingressClassName: internal
-      hosts: ["grafana.nikola.wtf"]
+
+    route:
+      main:
+        enabled: true
+        hostnames:
+          - grafana.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+
     testFramework:
       enabled: false
