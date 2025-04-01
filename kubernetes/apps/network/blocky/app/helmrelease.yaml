@@ -92,7 +92,7 @@ spec:
         controller: blocky
         ports:
           http:
-            port: 4000
+            port: &port 4000
       dns:
         controller: blocky
         type: LoadBalancer
@@ -108,20 +108,18 @@ spec:
             port: 53
             protocol: UDP
 
-    ingress:
+    route:
       app:
-        className: "internal"
-        hosts:
-          - host: &host blocky.nikola.wtf
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames:
+          - blocky.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: blocky
+                port: *port
 
     serviceMonitor:
       blocky:

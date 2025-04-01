@@ -106,13 +106,7 @@ spec:
         externalURL: ""
         routePrefix: /
       ingress:
-        enabled: true
-        ingressClassName: "internal"
-        hosts:
-          - vmalertmanager.nikola.wtf
-        tls:
-          - hosts:
-              - vmalertmanager.nikola.wtf
+        enabled: false
       monzoTemplate:
         enabled: false
 
@@ -175,13 +169,7 @@ spec:
 
         evaluationInterval: 15s
       ingress:
-        enabled: true
-        ingressClassName: "internal"
-        hosts:
-          - vmalert.nikola.wtf
-        tls:
-          - hosts:
-              - vmalert.nikola.wtf
+        enabled: false
     vmagent:
       enabled: true
       # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec
@@ -202,10 +190,4 @@ spec:
         extraArgs:
           promscrape.streamParse: "true"
       ingress:
-        enabled: true
-        ingressClassName: "internal"
-        hosts:
-          - vmagent.nikola.wtf
-        tls:
-          - hosts:
-              - vmagent.nikola.wtf
+        enabled: false
