@@ -117,17 +117,17 @@ spec:
           - backendRefs:
               - name: *app
                 port: *port
-      # code-server:
-      #   hostnames:
-      #     - hass-code.nikola.wtf
-      #   parentRefs:
-      #     - name: internal
-      #       namespace: kube-system
-      #       sectionName: https
-      #   rules:
-      #     - backendRefs:
-      #         - name: *app
-      #           port: 12321
+      code-server:
+        hostnames:
+          - hass-code.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: 12321
 
     persistence:
       config:
