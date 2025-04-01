@@ -18,12 +18,6 @@ spec:
     monitoring:
       enabled: true
       createPrometheusRules: true
-    ingress:
-      dashboard:
-        ingressClassName: "internal"
-        host:
-          name: rook.nikola.wtf
-          path: "/"
     toolbox:
       enabled: false
     configOverride: |
