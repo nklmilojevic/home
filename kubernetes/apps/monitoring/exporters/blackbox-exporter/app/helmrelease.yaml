@@ -43,15 +43,6 @@ spec:
           icmp:
             preferred_ip_protocol: "ip4"
 
-    ingress:
-      enabled: true
-      className: internal
-      hosts:
-        - host: blackbox-exporter.nikola.wtf
-          paths:
-            - path: /
-              pathType: Prefix
-
     prometheusRule:
       enabled: true
       additionalLabels:

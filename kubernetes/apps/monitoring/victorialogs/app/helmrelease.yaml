@@ -31,16 +31,16 @@ spec:
         existingClaim: ""
         size: 20Gi
 
-      ingress:
-        enabled: true
-        ingressClassName: "internal"
-        hosts:
-          - name: vmlogs.nikola.wtf
-            path: /
-            port: 9428
-        tls:
-          - hosts:
-              - vmlogs.nikola.wtf
+      # ingress:
+      #   enabled: true
+      #   ingressClassName: "internal"
+      #   hosts:
+      #     - name: vmlogs.nikola.wtf
+      #       path: /
+      #       port: 9428
+      #   tls:
+      #     - hosts:
+      #         - vmlogs.nikola.wtf
 
       service:
         enabled: true
