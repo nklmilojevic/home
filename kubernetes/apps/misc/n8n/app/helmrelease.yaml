@@ -70,13 +70,29 @@ spec:
             app:
               - path: /home/node/.n8n
 
-    ingress:
+    route:
       app:
-        className: "internal"
-        hosts:
-          - host: n8n.nikola.wtf
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
+        hostnames:
+          - *hostName
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: n8n
+                port: *port
+      webhooks:
+        hostnames:
+          - n8n-webhook.nikola.wtf
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - matches:
+              - path:
+                  value: /webhook
+            backendRefs:
+              - name: n8n
+                port: *port
