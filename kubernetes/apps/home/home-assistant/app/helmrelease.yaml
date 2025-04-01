@@ -91,7 +91,7 @@ spec:
         controller: home-assistant
         ports:
           http:
-            port: 8123
+            port: &port 8123
           mdns-tcp:
             enabled: true
             port: 5353
@@ -105,34 +105,30 @@ spec:
           code-server:
             port: 12321
 
-    ingress:
+    route:
       app:
-        className: "external"
-        annotations:
-          nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
-          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
-          external-dns.alpha.kubernetes.io/target: "external.nikola.wtf"
-        hosts:
-          - host: &host hass.nikola.wtf
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
-
+        hostnames:
+          - hass.nikola.wtf
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
       code-server:
-        className: internal
-        hosts:
-          - host: hass-code.nikola.wtf
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: code-server
+        hostnames:
+          - hass-code.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: 12321
+
     persistence:
       config:
         existingClaim: home-assistant-config
