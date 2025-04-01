@@ -1,5 +1,4 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -47,7 +46,7 @@ spec:
         controller: scrypted
         ports:
           http:
-            port: 11080
+            port: &port 11080
           https:
             port: 10443
           rebroadcast:
@@ -55,19 +54,18 @@ spec:
           rebroadcast2:
             port: 36585
 
-    ingress:
+    route:
       app:
-        className: "internal"
-        hosts:
-          - host: &hostName scrypted.nikola.wtf
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *hostName
+        hostnames:
+          - scrypted.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: scrypted
+                port: *port
 
     persistence:
       config:
