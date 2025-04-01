@@ -63,19 +63,18 @@ spec:
           http:
             port: 6052
 
-    ingress:
+    route:
       app:
-        className: "internal"
-        hosts:
-          - host: &hostName esphome.nikola.wtf
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *hostName
+        hostnames:
+          - esphome.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: esphome
+                port: *port
 
     persistence:
       config:
