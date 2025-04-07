@@ -7,7 +7,6 @@ resources:
   - ./mosquitto/ks.yaml
   - ./z2mqtt/ks.yaml
   - ./govee2mqtt/ks.yaml
-  - ./scrypted/ks.yaml
   - ./esphome/ks.yaml
   - ./go2rtc/ks.yaml
   - ./wyoming-piper/ks.yaml
