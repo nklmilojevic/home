@@ -3,7 +3,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: OCIRepository
 metadata:
-  name: victorialogs
+  name: victoriametrics
 spec:
   interval: 10m
   layerSelector:
