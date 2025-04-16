@@ -36,7 +36,7 @@ sinks:
     inputs: ["mikrotik_source"]
     type: elasticsearch
     endpoints:
-      - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
+      - http://victorialogs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
     mode: "bulk"
     compression: gzip
     api_version: "v8"
@@ -54,7 +54,7 @@ sinks:
     type: elasticsearch
     inputs: [k8s_transform]
     endpoints:
-      - http://vm-logs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
+      - http://victorialogs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
     mode: bulk
     api_version: v8
     compression: gzip
