@@ -6,15 +6,9 @@ metadata:
   namespace: monitoring
 spec:
   interval: 5m
-  chart:
-    spec:
-      chart: victoria-logs-single
-      # renovate: registryUrl=https://victoriametrics.github.io/helm-charts chart=victoria-logs-single
-      version: 0.9.5
-      sourceRef:
-        kind: HelmRepository
-        name: victoriametrics
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: victorialogs
   values:
     server:
       enabled: true
@@ -30,17 +24,6 @@ spec:
         storageClass: ""
         existingClaim: ""
         size: 20Gi
-
-      # ingress:
-      #   enabled: true
-      #   ingressClassName: "internal"
-      #   hosts:
-      #     - name: vmlogs.nikola.wtf
-      #       path: /
-      #       port: 9428
-      #   tls:
-      #     - hosts:
-      #         - vmlogs.nikola.wtf
 
       service:
         enabled: true
