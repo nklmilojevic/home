@@ -6,15 +6,9 @@ metadata:
   name: snapshot-controller
 spec:
   interval: 30m
-  chart:
-    spec:
-      chart: snapshot-controller
-      version: 4.0.2
-      sourceRef:
-        kind: HelmRepository
-        name: piraeus
-        namespace: flux-system
-      interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: snapshot-controller
   install:
     crds: CreateReplace
   upgrade:
