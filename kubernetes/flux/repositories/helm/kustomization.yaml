@@ -3,21 +3,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./cilium.yaml
-  - ./coredns.yaml
-  - ./jetstack.yaml
   - ./metrics-server.yaml
   - ./openebs.yaml
-  - ./postfinance.yaml
   - ./external-dns.yaml
   - ./k8s-gateway.yaml
   - ./angelnu.yaml
-  - ./bitnami.yaml
   - ./cloudnative-pg.yaml
-  - ./dragonfly.yaml
   - ./k8tz.yaml
   - ./node-feature-discovery.yaml
-  - ./victoriametrics.yaml
   - ./1password.yaml
-  - ./piraeus.yaml
   - ./backube.yaml
   - ./wiremind.yaml
