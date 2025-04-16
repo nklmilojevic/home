@@ -18,8 +18,6 @@ resources:
   - ./bitnami.yaml
   - ./cloudnative-pg.yaml
   - ./dragonfly.yaml
-  - ./external-secrets.yaml
-  - ./intel.yaml
   - ./k8tz.yaml
   - ./node-feature-discovery.yaml
   - ./victoriametrics.yaml
