@@ -145,12 +145,6 @@ spec:
           gnetId: 11454
           revision: 14
           datasource: VictoriaMetrics
-        nginx:
-          url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/nginx.json
-          datasource: VictoriaMetrics
-        nginx-request-handling-performance:
-          url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/request-handling-performance.json
-          datasource: VictoriaMetrics
         smartctl-exporter:
           # renovate: depName="SMARTctl Exporter Dashboard"
           gnetId: 22604
@@ -166,7 +160,8 @@ spec:
             - { name: VAR_REPLICATIONDESTNAME, value: .*-dst }
         node-feature-discovery:
           url: https://raw.githubusercontent.com/kubernetes-sigs/node-feature-discovery/master/examples/grafana-dashboard.json
-          datasource: VictoriaMetrics
+          datasource:
+            - { name: DS_PROMETHEUS, value: VictoriaMetrics }
         truenas-scale:
           url: https://raw.githubusercontent.com/Supporterino/truenas-graphite-to-prometheus/refs/heads/main/dashboards/truenas_scale.json
           datasource:
