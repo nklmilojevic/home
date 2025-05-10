@@ -68,13 +68,13 @@ spec:
         interval: 1m
         scrapeTimeout: 30s
       targets:
-        # PiKVM
+        # JetKVM
         - module: http_2xx
-          name: pikvm-https
-          url: "https://10.5.0.30"
+          name: jetkvm-https
+          url: "http://10.5.0.111"
         - module: icmp
-          name: pikvm-icmp
-          url: 10.5.0.30
+          name: jetkvm-icmp
+          url: 10.5.0.111
         # TrueNAS
         - module: http_2xx
           name: truenas-http
