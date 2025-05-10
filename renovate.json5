@@ -8,6 +8,7 @@
     "github>nklmilojevic/home//.renovate/versioning.json5",
     "github>nklmilojevic/home//.renovate/autoMerge.json5",
     "github>nklmilojevic/home//.renovate/grafanaDashboards.json5",
+    "github>nklmilojevic/home//.renovate/customManagers.json5",
   ],
   ignorePaths: [
     ".archive/**"
