@@ -4,3 +4,6 @@ kind: Kustomization
 resources:
   - ./service.yaml
   - ./httproute.yaml
+  - ./omada-caddy-configmap.yaml
+  - ./omada-caddy-deployment.yaml
+  - ./omada-caddy-service.yaml
