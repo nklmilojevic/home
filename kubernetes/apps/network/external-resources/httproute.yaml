@@ -33,7 +33,7 @@ spec:
       sectionName: https
   rules:
     - backendRefs:
-        - name: omada-caddy-proxy
+        - name: omada-nginx-proxy
           namespace: network
           port: 80
 ---
