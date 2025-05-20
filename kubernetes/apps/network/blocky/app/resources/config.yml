@@ -15,9 +15,9 @@ clientLookup:
     - 2
     - 1
 blocking:
-  # denylists:
-  #   ads:
-  #     - https://big.oisd.nl/domainswild
+  denylists:
+    ads:
+      - https://big.oisd.nl/domainswild
   allowlists:
     ads:
       - https://raw.githubusercontent.com/nklmilojevic/ml-allowlist/refs/heads/main/allowlist-wc.txt
