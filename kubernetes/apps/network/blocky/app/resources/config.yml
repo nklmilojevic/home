@@ -2,8 +2,9 @@
 upstreams:
   groups:
     default:
-      - tcp-tls:1dot1dot1dot1.cloudflare-dns.com
-      - tcp-tls:dns10.quad9.net
+      - tcp:tls:13b5b9.dns.nextdns.io
+      # - tcp-tls:1dot1dot1dot1.cloudflare-dns.com
+      # - tcp-tls:dns10.quad9.net
 conditional:
   mapping:
     nikola.wtf: tcp+udp:10.40.0.5
@@ -14,9 +15,9 @@ clientLookup:
     - 2
     - 1
 blocking:
-  denylists:
-    ads:
-      - https://big.oisd.nl/domainswild
+  # denylists:
+  #   ads:
+  #     - https://big.oisd.nl/domainswild
   allowlists:
     ads:
       - https://raw.githubusercontent.com/nklmilojevic/ml-allowlist/refs/heads/main/allowlist-wc.txt
