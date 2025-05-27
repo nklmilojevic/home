@@ -24,6 +24,8 @@ spec:
   values:
     controllers:
       vector-agent:
+        serviceAccount:
+          identifier: vector-agent
         type: daemonset
         strategy: RollingUpdate
         annotations:
@@ -66,8 +68,8 @@ spec:
             port: 1514
             protocol: UDP
     serviceAccount:
-      create: true
-      name: vector-agent
+      vector-agent:
+        enabled: true
     persistence:
       config:
         enabled: true
