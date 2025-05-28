@@ -96,12 +96,12 @@ spec:
         controller: paperless
         ports:
           http:
-            port: 8000
+            port: &port 8000
       redis:
         controller: redis
         ports:
           http:
-            port: &port 6379
+            port: 6379
 
     route:
       app:
