@@ -113,7 +113,7 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - name: paperless
+              - name: paperless-app
                 port: *port
     persistence:
       data:
