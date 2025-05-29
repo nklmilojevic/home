@@ -9,9 +9,7 @@ resources:
   - ./k8s-gateway/ks.yaml
   - ./multus/ks.yaml
   - ./smtp-relay/ks.yaml
-  - ./omada-exporter/ks.yaml
   - ./isponsorblocktv/ks.yaml
-  - ./omada-coredns/ks.yaml
   - ./openspeedtest/ks.yaml
   - ./blocky/ks.yaml
   - ./external-resources/
