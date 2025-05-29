@@ -2,27 +2,6 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: omada-controller
-  namespace: network
-spec:
-  ports:
-    - port: 8043
-      targetPort: 8043
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: omada-controller
-  namespace: network
-subsets:
-  - addresses:
-      - ip: 10.5.0.32
-    ports:
-      - port: 8043
----
-apiVersion: v1
-kind: Service
-metadata:
   name: truenas
   namespace: network
 spec:
@@ -40,24 +19,3 @@ subsets:
       - ip: 10.5.0.10
     ports:
       - port: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: adguard-backup
-  namespace: network
-spec:
-  ports:
-    - port: 30004
-      targetPort: 30004
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: adguard-backup
-  namespace: network
-subsets:
-  - addresses:
-      - ip: 10.5.0.10
-    ports:
-      - port: 30004

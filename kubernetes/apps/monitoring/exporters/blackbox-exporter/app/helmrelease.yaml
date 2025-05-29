@@ -82,17 +82,6 @@ spec:
         - module: icmp
           name: truenas-icmp
           url: 10.5.0.10
-        # Omada
-        - module: icmp
-          name: tools-icmp
-          url: 10.5.0.32
-        - module: http_2xx
-          name: omada-https
-          url: "https://10.5.0.32:8043/"
-        # TrueNAS
-        - module: http_2xx
-          name: blocky-backup-http
-          url: "http://10.5.0.32:4000/"
         # Other devices
         - module: icmp
           name: zigbee-controller-icmp
