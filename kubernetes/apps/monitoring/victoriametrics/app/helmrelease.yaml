@@ -179,9 +179,9 @@ spec:
       #       static_configs:
       #         - targets:
       #             - "10.5.0.32:9100"
-        selectAllByDefault: true
-        scrapeInterval: 25s
-        extraArgs:
-          promscrape.streamParse: "true"
+        # selectAllByDefault: true
+        # scrapeInterval: 25s
+        # extraArgs:
+        #   promscrape.streamParse: "true"
       ingress:
         enabled: false
