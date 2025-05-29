@@ -12,3 +12,4 @@ resources:
   - ./prometheus-operator-crds/ks.yaml
   - ./exporters/
   - ./silence-operator/ks.yaml
+  - ./unpoller/ks.yaml
