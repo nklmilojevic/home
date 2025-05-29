@@ -168,17 +168,17 @@ spec:
       enabled: true
       # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec
       # defined spec will be added to the remoteWrite configuration of VMAgent
-      spec:
-        inlineScrapeConfig: |
-          - job_name: node-exporter
-            honor_labels: true
-            scrape_interval: 1m
-            scrape_timeout: 10s
-            metrics_path: /metrics
-            scheme: http
-            static_configs:
-              - targets:
-                  - "10.5.0.32:9100"
+      # spec:
+      #   inlineScrapeConfig: |
+      #     - job_name: node-exporter
+      #       honor_labels: true
+      #       scrape_interval: 1m
+      #       scrape_timeout: 10s
+      #       metrics_path: /metrics
+      #       scheme: http
+      #       static_configs:
+      #         - targets:
+      #             - "10.5.0.32:9100"
         selectAllByDefault: true
         scrapeInterval: 25s
         extraArgs:
