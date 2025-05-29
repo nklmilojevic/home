@@ -4,6 +4,4 @@ kind: Kustomization
 resources:
   - ./service.yaml
   - ./httproute.yaml
-  - ./omada-nginx-configmap.yaml
-  - ./omada-nginx-deployment.yaml
-  - ./omada-nginx-service.yaml
+
