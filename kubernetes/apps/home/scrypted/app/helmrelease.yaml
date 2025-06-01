@@ -66,12 +66,12 @@ spec:
             port: 34136
 
     persistence:
-      # config:
-      #   existingClaim: scrypted-config
-      #   advancedMounts:
-      #     scrypted:
-      #       app:
-      #         - path: /server/volume
+      config:
+        existingClaim: scrypted-config
+        advancedMounts:
+          scrypted:
+            app:
+              - path: /server/volume
       tmpfs:
         type: emptyDir
         advancedMounts:
@@ -81,8 +81,6 @@ spec:
                 subPath: cache
               - path: /.npm
                 subPath: npm-cache
-              - path: /server/volume
-                subPath: volume
 
     route:
       app:
