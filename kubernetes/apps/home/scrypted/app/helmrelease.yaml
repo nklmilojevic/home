@@ -1,0 +1,95 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: scrypted
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  values:
+    controllers:
+      scrypted:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        pod:
+          annotations:
+            k8s.v1.cni.cncf.io/networks: |
+              [{
+                "name":"multus-host",
+                "namespace": "network",
+                "ips": ["10.5.0.206/24"],
+                "mac": "dc:de:70:dd:f5:9b"
+              }]
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: "OnRootMismatch"
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/bjw-s-labs/scrypted
+              tag: 0.139.0@sha256:0a376e9166d51e0d0fae47b9234774338809fdbd317db614fdc95cef532f024e
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 136m
+                memory: 1024Mi
+              limits:
+                gpu.intel.com/i915: 1
+                memory: 8192Mi
+
+    service:
+      app:
+        controller: scrypted
+        ports:
+          http:
+            port: &port 11080
+            primary: true
+          rebroadcast1:
+            port: 34135
+          rebroadcast2:
+            port: 34136
+
+    persistence:
+      config:
+        existingClaim: scrypted-config
+        advancedMounts:
+          scrypted:
+            app:
+              - path: /server/volume
+      tmpfs:
+        type: emptyDir
+        advancedMounts:
+          scrypted:
+            app:
+              - path: /.cache
+                subPath: cache
+              - path: /.npm
+                subPath: npm-cache
+
+    route:
+      app:
+        hostnames:
+          - scrypted.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
