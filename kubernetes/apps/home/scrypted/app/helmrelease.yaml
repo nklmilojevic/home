@@ -65,22 +65,24 @@ spec:
           rebroadcast2:
             port: 34136
 
-    # persistence:
-    # config:
-    #   existingClaim: scrypted-config
-    #   advancedMounts:
-    #     scrypted:
-    #       app:
-    #         - path: /server/volume
-    # tmpfs:
-    #   type: emptyDir
-    #   advancedMounts:
-    #     scrypted:
-    #       app:
-    #         - path: /.cache
-    #           subPath: cache
-    #         - path: /.npm
-    #           subPath: npm-cache
+    persistence:
+      # config:
+      #   existingClaim: scrypted-config
+      #   advancedMounts:
+      #     scrypted:
+      #       app:
+      #         - path: /server/volume
+      tmpfs:
+        type: emptyDir
+        advancedMounts:
+          scrypted:
+            app:
+              - path: /.cache
+                subPath: cache
+              - path: /.npm
+                subPath: npm-cache
+              - path: /server/volume
+                subPath: volume
 
     route:
       app:
