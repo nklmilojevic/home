@@ -29,9 +29,7 @@ spec:
                 "mac": "dc:de:70:dd:f5:99"
               }]
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
+            runAsNonRoot: false
             fsGroupChangePolicy: "OnRootMismatch"
 
         containers:
