@@ -14,14 +14,22 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
   values:
+    defaultPodOptions:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: feature
+                    operator: In
+                    values:
+                      - ups
     controllers:
       scrypted:
         annotations:
           reloader.stakater.com/auto: "true"
 
         pod:
-          nodeSelector:
-            google.feature.node.kubernetes.io/coral: "true"
           annotations:
             k8s.v1.cni.cncf.io/networks: |
               [{
