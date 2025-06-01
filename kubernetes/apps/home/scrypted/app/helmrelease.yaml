@@ -14,9 +14,9 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
   values:
-    defaultPodOptions:
-      nodeSelector:
-        google.feature.node.kubernetes.io/coral: "true"
+    # defaultPodOptions:
+    #   nodeSelector:
+    #     google.feature.node.kubernetes.io/coral: "true"
 
     controllers:
       scrypted:
@@ -86,6 +86,12 @@ spec:
                 subPath: cache
               - path: /.npm
                 subPath: npm-cache
+      usb:
+        type: hostPath
+        hostPath: /dev/bus/usb
+        hostPathType: Directory
+        globalMounts:
+          - path: /dev/bus/usb
 
     route:
       app:
