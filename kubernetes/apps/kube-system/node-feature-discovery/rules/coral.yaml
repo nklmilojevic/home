@@ -1,4 +1,3 @@
----
 apiVersion: nfd.k8s-sigs.io/v1alpha1
 kind: NodeFeatureRule
 metadata:
@@ -11,7 +10,5 @@ spec:
       matchFeatures:
         - feature: usb.device
           matchExpressions:
-            vendor: { op: In, value: ["1a6e", "089a"] }
-        - feature: usb.device
-          matchExpressions:
-            vendor: { op: In, value: ["18d1", "9302"] }
+            vendor: { op: In, value: ["1a6e"] }
+            device: { op: In, value: ["089a"] }
