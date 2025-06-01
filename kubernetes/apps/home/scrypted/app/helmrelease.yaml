@@ -37,7 +37,7 @@ spec:
             runAsGroup: 1000
             fsGroup: 1000
             fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups: [44, 105, 100, 109]
+            supplementalGroups: [20, 44, 105, 100, 109]
 
         containers:
           app:
