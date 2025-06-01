@@ -15,15 +15,9 @@ spec:
       namespace: rook-ceph
   values:
     defaultPodOptions:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: feature
-                    operator: In
-                    values:
-                      - ups
+      nodeSelector:
+        google.feature.node.kubernetes.io/coral: "true"
+
     controllers:
       scrypted:
         annotations:
@@ -91,12 +85,12 @@ spec:
                 subPath: cache
               - path: /.npm
                 subPath: npm-cache
-      usb:
+      coral:
         type: hostPath
-        hostPath: /dev/bus/usb
-        hostPathType: Directory
+        hostPath: /dev/apex_0
+        hostPathType: CharDevice
         globalMounts:
-          - path: /dev/bus/usb
+          - path: /dev/apex_0
 
     route:
       app:
