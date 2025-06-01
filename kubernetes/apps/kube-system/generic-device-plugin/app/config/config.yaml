@@ -8,5 +8,6 @@ devices:
 
   - name: coral
     groups:
-      - paths:
-          - path: /dev/apex_0
+      - count: 1
+        paths:
+          - path: /dev/bus/usb
