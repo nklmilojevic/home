@@ -14,9 +14,9 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
   values:
-    # defaultPodOptions:
-    #   nodeSelector:
-    #     google.feature.node.kubernetes.io/coral: "true"
+    defaultPodOptions:
+      nodeSelector:
+        kubernetes.io/hostname: icarus003
 
     controllers:
       scrypted:
