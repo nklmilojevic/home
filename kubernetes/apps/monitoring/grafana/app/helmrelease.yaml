@@ -92,6 +92,12 @@ spec:
         cloudnative-pg:
           url: https://raw.githubusercontent.com/cloudnative-pg/grafana-dashboards/main/charts/cluster/grafana-dashboard.json
           datasource: VictoriaMetrics
+        vernemq:
+          # renovate: depName="VerneMQ Cluster"
+          gnetId: 23485
+          revision: 1
+          datasource:
+            - { name: DS_PROMETHEUS, value: VictoriaMetrics }
         cert-manager:
           # renovate: depName="Cert-manager-Kubernetes"
           gnetId: 20842
