@@ -39,7 +39,7 @@ spec:
               tag: 2025.01.04-abbd0b48
               pullPolicy: IfNotPresent
             env:
-              GOVEE_MQTT_HOST: "mosquitto.home.svc"
+              GOVEE_MQTT_HOST: "vernemq-app.home.svc"
               GOVEE_LAN_BROADCAST_ALL: "true"
             envFrom:
               - secretRef:
