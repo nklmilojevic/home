@@ -73,6 +73,6 @@ spec:
         volumeSpec:
           nfs:
             server: "10.5.0.16"
-            path: "/mnt/unastransfer/Videos"
+            path: "/unastransfer/Videos"
         globalMounts:
           - path: "/media"
