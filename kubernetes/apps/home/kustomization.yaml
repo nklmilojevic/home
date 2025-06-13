@@ -11,4 +11,4 @@ resources:
   - ./wyoming-piper/ks.yaml
   - ./wyoming-whisper/ks.yaml
   - ./scrypted/ks.yaml
-  - ./vernemq/ks.yaml
+  # - ./vernemq/ks.yaml
