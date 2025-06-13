@@ -92,7 +92,7 @@ spec:
         type: custom
         volumeSpec:
           nfs:
-            server: "10.5.0.10"
-            path: "/mnt/vault/media"
+            server: "10.5.0.16"
+            path: "/media"
         globalMounts:
           - path: "/media"
