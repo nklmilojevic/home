@@ -75,7 +75,7 @@ spec:
       cwa-book-ingest:
         type: nfs
         server: 10.5.0.10
-        path: /mnt/vault/apps/cwa
+        path: /var/nfs/shared/cwa
         advancedMounts:
           calibre-web-automated:
             app:
