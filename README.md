@@ -8,10 +8,10 @@ My home setup with all things needed for managing media, home automation and mor
 
 * Gateway - **Ubiquity UDM Pro**
 * Switch - **USW Pro Max 24 PoE**
-* Switch - **USW Flex 2.5G 8**
+* Switch - **USW Flex 2.5G 8 PoE**
 * Wireless AP - **U6 Enterprise**
 * Wireless AP - **U6 Enterprise IW**
-* NAS - UNAS Pro
+* NAS - **UNAS Pro**
 
 Network is divided into several VLANs for different purposes.
 
