@@ -4,29 +4,16 @@ My home setup with all things needed for managing media, home automation and mor
 
 ## Setup overview
 
-### Network setup
+### Equipment
 
 * Gateway - **Ubiquity UDM Pro**
 * Switch - **USW Pro Max 24 PoE**
 * Switch - **USW Flex 2.5G 8**
 * Wireless AP - **U6 Enterprise**
 * Wireless AP - **U6 Enterprise IW**
+* NAS - UNAS Pro
 
 Network is divided into several VLANs for different purposes.
-
-### NAS
-
-As I really appreciate the silence, the goal was to build/get machines that are either passive or very silent.
-
-* **UNYKAch 2128 19 2U Rack Case**
-* No-name **N100** motherboard from Aliexpress
-* **32GB SO-DIMM DDR5 RAM**
-* 3x**WD Red 16TB Pro** in raidz1
-* **Crucial P3 Plus 500 GB CT500P3PSSD8** - For TrueNAS Scale
-* **FSP250 PSU**
-* 3x**Noctua NF-A8 ULN**
-
-NAS is TrueNAS Scale with raidz1.
 
 ### Talos
 
