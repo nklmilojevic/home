@@ -14,5 +14,7 @@ webrtc:
     - urls:
         - stun:stun.cloudflare.com:3478
 streams:
-  entrance:
+  terrace:
     - rtspx://10.5.0.1:7441/KAfuuAzB5GlC2seV
+  entrance:
+    - rtspx://10.5.0.1:7441/7h9l4fCP4Ekos4KY
