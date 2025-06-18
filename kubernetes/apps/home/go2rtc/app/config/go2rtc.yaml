@@ -1,6 +1,18 @@
 ---
 log:
-  output: "stdout"
-
+  streams: error # UniFi Protect based setups spam the logs with WARN messages
+api:
+  listen: :80
+rtsp:
+  listen: :554
+webrtc:
+  listen: :8555
+  candidates:
+    - 10.40.0.29:8555
+    - stun:8555
+  ice_servers:
+    - urls:
+        - stun:stun.cloudflare.com:3478
 streams:
-  reolink: rtsp://scrypted.home.svc.cluster.local:36541/71650cfb033051f5
+  entrance:
+    - rtspx://10.5.0.1:7441/KAfuuAzB5GlC2seV

@@ -1,65 +1,96 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: go2rtc
+  name: &app go2rtc
 spec:
-  interval: 30m
+  interval: 1h
   chartRef:
     kind: OCIRepository
     name: app-template
-    namespace: flux-system
-
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
   values:
     controllers:
       go2rtc:
+        replicas: 1
         annotations:
           reloader.stakater.com/auto: "true"
-
-        pod:
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
-            fsGroupChangePolicy: OnRootMismatch
-
         containers:
           app:
             image:
               repository: docker.io/alexxit/go2rtc
-              tag: 1.9.9
-            resources:
-              requests:
-                cpu: 10m
-                memory: 128Mi
-              limits:
-                memory: 512Mi
+              tag: 1.9.9@sha256:7d31dcb73633310e80497c431f4534c81ed55ec0708db3262bc56918e654bba5
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 80
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities:
-                drop:
-                  - ALL
-
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
     service:
       app:
-        controller: go2rtc
+        forceRename: *app
+        primary: true
         ports:
-          api:
-            port: 1984
-          rtsp:
-            port: 8554
-          webrtc:
+          http:
+            port: *port
+      streams:
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: 10.40.0.29
+        ports:
+          streams-rtsp:
+            port: 554
+          streams-webrtc-tcp:
             port: 8555
-
+            protocol: TCP
+          streams-webrtc-udp:
+            port: 8555
+            protocol: UDP
+    route:
+      app:
+        hostnames:
+          - go2rtc.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
     persistence:
-      config:
+      config-file:
         type: configMap
         name: go2rtc-configmap
-        advancedMounts:
-          go2rtc:
-            app:
-              - path: /config/go2rtc.yaml
-                subPath: go2rtc.yaml
-                readOnly: true
+        globalMounts:
+          - path: /config/go2rtc.yaml
+            subPath: go2rtc.yaml
+            readOnly: true
