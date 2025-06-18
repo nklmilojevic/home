@@ -64,7 +64,7 @@ spec:
       streams:
         type: LoadBalancer
         annotations:
-          lbipam.cilium.io/ips: 10.40.0.29
+          lbipam.cilium.io/ips: 10.40.0.61
         ports:
           streams-rtsp:
             port: 554
