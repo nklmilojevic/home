@@ -44,18 +44,7 @@ spec:
               ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER: "ember"
               ZIGBEE2MQTT_CONFIG_SERIAL_RTSCTS: "false"
               ZIGBEE2MQTT_CONFIG_ADVANCED_TRANSMIT_POWER: "20"
-              ZIGBEE2MQTT_CONFIG_MQTT_SERVER: "mqtt://vernemq-app.home.svc.cluster.local:1883"
-              ZIGBEE2MQTT_CONFIG_MQTT_VERSION: 5
-              ZIGBEE2MQTT_CONFIG_MQTT_USER:
-                valueFrom:
-                  secretKeyRef:
-                    name: z2mqtt-secret
-                    key: VERNEMQ_USERNAME
-              ZIGBEE2MQTT_CONFIG_MQTT_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: z2mqtt-secret
-                    key: VERNEMQ_PASSWORD
+              ZIGBEE2MQTT_CONFIG_MQTT_SERVER: "mqtt://mosquitto.home.svc.cluster.local:1883"
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
