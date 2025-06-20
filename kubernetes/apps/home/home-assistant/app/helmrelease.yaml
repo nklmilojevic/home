@@ -110,7 +110,7 @@ spec:
         hostnames:
           - hass.nikola.wtf
         parentRefs:
-          - name: external
+          - name: internal
             namespace: kube-system
             sectionName: https
         rules:
