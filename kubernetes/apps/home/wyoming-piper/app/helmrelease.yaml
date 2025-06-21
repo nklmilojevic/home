@@ -28,7 +28,7 @@ spec:
               tag: 1.5.4
             args:
               - --voice
-              - en-us-lessac-low
+              - en-us-alan-medium
             env:
               TZ: Europe/Belgrade
     service:
