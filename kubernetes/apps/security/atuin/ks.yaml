@@ -6,8 +6,6 @@ metadata:
   namespace: flux-system
 spec:
   targetNamespace: security
-  dependsOn:
-    - name: cloudnative-pg
   path: ./kubernetes/apps/security/atuin/app
   prune: true
   sourceRef:

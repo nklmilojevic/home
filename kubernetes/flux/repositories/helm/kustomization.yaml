@@ -6,7 +6,6 @@ resources:
   - ./openebs.yaml
   - ./external-dns.yaml
   - ./angelnu.yaml
-  - ./cloudnative-pg.yaml
   - ./node-feature-discovery.yaml
   - ./1password.yaml
   - ./backube.yaml
