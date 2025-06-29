@@ -40,8 +40,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/atuinsh/atuin
-              tag: v18.6.1
+              repository: ghcr.io/szinn/atuin
+              tag: v18.6.1-sqlite-5@sha256:192389b6b6da30fbf81c6fee8f978a7262d8683657056cf021983481b41162c5
             env:
               ATUIN_HOST: 0.0.0.0
               ATUIN_PORT: &port 80
@@ -49,8 +49,9 @@ spec:
               ATUIN_METRICS__ENABLE: "true"
               ATUIN_METRICS__HOST: 0.0.0.0
               ATUIN_METRICS__PORT: &metricsPort 8080
+              ATUIN_DB_URI: sqlite:///config/atuin.db
               ATUIN_TLS__ENABLE: "false"
-            envFrom: *envFrom
+            # envFrom: *envFrom
             args: ["server", "start"]
             securityContext:
               allowPrivilegeEscalation: false
@@ -97,5 +98,4 @@ spec:
 
     persistence:
       config:
-        enabled: true
-        type: emptyDir
+        existingClaim: atuin-config
