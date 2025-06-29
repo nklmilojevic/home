@@ -89,9 +89,6 @@ spec:
         nut-exporter:
           url: https://raw.githubusercontent.com/nklmilojevic/grafana-dashboards/main/nut-exporter.json
           datasource: VictoriaMetrics
-        cloudnative-pg:
-          url: https://raw.githubusercontent.com/cloudnative-pg/grafana-dashboards/main/charts/cluster/grafana-dashboard.json
-          datasource: VictoriaMetrics
         cert-manager:
           # renovate: depName="Cert-manager-Kubernetes"
           gnetId: 20842
