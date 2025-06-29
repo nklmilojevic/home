@@ -16,3 +16,10 @@ spec:
   interval: 15m
   retryInterval: 1m
   timeout: 3m
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CLAIM: atuin-config
+      VOLSYNC_CAPACITY: 10Gi
+      APP_UID: "1000"
+      APP_GID: "1000"
