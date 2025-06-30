@@ -77,13 +77,13 @@ spec:
               startup:
                 enabled: false
 
-          exporter:
-            dependsOn: app
-            image:
-              repository: ghcr.io/wipash/librechatmetrics
-              tag: latest
-            env:
-              PROMETHEUS_PORT: &exporterport "9123"
+          # exporter:
+          #   dependsOn: app
+          #   image:
+          #     repository: ghcr.io/wipash/librechatmetrics
+          #     tag: latest
+          #   env:
+          #     PROMETHEUS_PORT: &exporterport "9123"
 
           ragapi:
             image:
