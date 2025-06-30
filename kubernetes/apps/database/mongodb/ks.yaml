@@ -55,13 +55,13 @@ spec:
       MONGO_SECRET_FROM: spotify
       MONGO_DB: librechat
       MONGO_USER: librechat
-  healthChecks:
-    - apiVersion: &apiVersion mongodbcommunity.mongodb.com/v1
-      kind: &kind MongoDBCommunity
-      name: *app
-      namespace: database
-  healthCheckExprs:
-    - apiVersion: *apiVersion
-      kind: *kind
-      failed: status.phase == 'Failed'
-      current: status.phase == 'Running'
+  # healthChecks:
+  #   - apiVersion: &apiVersion mongodbcommunity.mongodb.com/v1
+  #     kind: &kind MongoDBCommunity
+  #     name: *app
+  #     namespace: database
+  # healthCheckExprs:
+  #   - apiVersion: *apiVersion
+  #     kind: *kind
+  #     failed: status.phase == 'Failed'
+  #     current: status.phase == 'Running'
