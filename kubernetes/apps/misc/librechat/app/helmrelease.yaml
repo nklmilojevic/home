@@ -35,8 +35,6 @@ spec:
             envFrom: &envFrom
               - secretRef:
                   name: *secret
-              - configMapRef:
-                  name: *configMap
         containers:
           app:
             image:
