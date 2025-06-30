@@ -42,7 +42,7 @@ spec:
   #   - ../../../../components/volsync
   dependsOn:
     - name: mongodb
-      namespace: *namespace
+      namespace: database
   postBuild:
     substitute:
       APP: data-volume-mongo-librechat-0 # volsync creates the statefulset pvc
@@ -59,7 +59,7 @@ spec:
     - apiVersion: &apiVersion mongodbcommunity.mongodb.com/v1
       kind: &kind MongoDBCommunity
       name: *app
-      namespace: *namespace
+      namespace: database
   healthCheckExprs:
     - apiVersion: *apiVersion
       kind: *kind
