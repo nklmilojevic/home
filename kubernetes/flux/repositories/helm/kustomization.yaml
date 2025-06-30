@@ -10,3 +10,4 @@ resources:
   - ./1password.yaml
   - ./backube.yaml
   - ./wiremind.yaml
+  - ./cloudnative-pg.yaml
