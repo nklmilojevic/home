@@ -104,11 +104,7 @@ spec:
         controller: librechat
         ports:
           http:
-            port: 3080
-          mongo-express:
-            port: 8081
-          # litellm:
-          #   port: 4000
+            port: &port 3080
           metrics:
             port: *exporterport
 
