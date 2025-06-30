@@ -11,3 +11,4 @@ resources:
   - ./backube.yaml
   - ./wiremind.yaml
   - ./cloudnative-pg.yaml
+  - ./meilisearch.yaml
