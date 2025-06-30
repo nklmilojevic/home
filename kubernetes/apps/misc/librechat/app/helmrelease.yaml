@@ -112,8 +112,8 @@ spec:
         ports:
           http:
             port: &port 3080
-          metrics:
-            port: *exporterport
+          # metrics:
+          #   port: *exporterport
 
     persistence:
       config:
@@ -170,12 +170,12 @@ spec:
               - name: librechat
                 port: *port
 
-    serviceMonitor:
-      app:
-        serviceName: librechat
-        endpoints:
-          - port: metrics
-            scheme: http
-            path: /
-            interval: 1m
-            scrapeTimeout: 30s
+    # serviceMonitor:
+    #   app:
+    #     serviceName: librechat
+    #     endpoints:
+    #       - port: metrics
+    #         scheme: http
+    #         path: /
+    #         interval: 1m
+    #         scrapeTimeout: 30s
