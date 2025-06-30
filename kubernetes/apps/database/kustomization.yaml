@@ -5,4 +5,4 @@ resources:
   - ./namespace.yaml
   - ./cloudnative-pg/ks.yaml
   - ./mongodb/ks.yaml
-  - ./meilisearch/ks.yaml
+  # - ./meilisearch/ks.yaml
