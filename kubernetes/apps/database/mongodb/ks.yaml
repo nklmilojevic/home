@@ -14,7 +14,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: home-kubernetes
     namespace: flux-system
   interval: 1h
   retryInterval: 2m
@@ -35,7 +35,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: home-kubernetes
     namespace: flux-system
   interval: 1h
   retryInterval: 2m
