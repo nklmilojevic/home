@@ -1,0 +1,34 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: meilisearch
+  namespace: karakeep
+spec:
+  chart:
+    spec:
+      chart: meilisearch
+      version: 0.14.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: meilisearch
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    command:
+      - tini
+      - --
+      - /bin/meilisearch
+      - --experimental-dumpless-upgrade
+    environment:
+      MEILI_ENV: production
+      MEILI_LOG_LEVEL: WARN
+      MEILI_NO_ANALYTICS: "true"
+    auth:
+      existingMasterKeySecret: meilisearch
+    persistence:
+      enabled: true
+      storageClass: openebs-local
+      size: 8Gi
