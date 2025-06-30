@@ -42,7 +42,7 @@ spec:
   #   - ../../../../components/volsync
   dependsOn:
     - name: mongodb
-      namespace: database
+      namespace: flux-system
   postBuild:
     substitute:
       APP: data-volume-mongo-librechat-0 # volsync creates the statefulset pvc
