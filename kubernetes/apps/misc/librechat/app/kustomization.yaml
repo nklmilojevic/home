@@ -9,3 +9,5 @@ configMapGenerator:
   - name: librechat-config
     files:
       - ./resources/librechat.yaml
+generatorOptions:
+  disableNameSuffixHash: true
