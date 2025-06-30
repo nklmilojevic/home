@@ -1,98 +1,178 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: n8n
+  name: &app librechat
 spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
     name: app-template
     namespace: flux-system
-  dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
     controllers:
-      n8n:
+      librechat:
+        type: deployment
         annotations:
           reloader.stakater.com/auto: "true"
-
-        pod:
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
-            fsGroupChangePolicy: "OnRootMismatch"
-
+          secret.reloader.stakater.com/reload: &secret librechat-secret
+          configmap.reloader.stakater.com/reload: &configMap librechat-configmap
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17
+            envFrom: &envFrom
+              - secretRef:
+                  name: *secret
+              - configMapRef:
+                  name: *configMap
         containers:
           app:
             image:
-              repository: ghcr.io/n8n-io/n8n
-              tag: 1.100.1
+              repository: ghcr.io/danny-avila/librechat-dev
+              tag: latest@sha256:85f10a55edc388c17c5811aacb3e476f9ee9380fa4071e4cdf872177865b5d86
             env:
-              DB_SQLITE_VACUUM_ON_STARTUP: true
-              EXECUTIONS_DATA_PRUNE: true
-              EXECUTIONS_DATA_MAX_AGE: 7
-              EXECUTIONS_DATA_PRUNE_MAX_COUNT: 50000
-              GENERIC_TIMEZONE: "Europe/Belgrade"
-              N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: false
-              N8N_PROTOCOL: "https"
-              N8N_PORT: &port 8080
-              N8N_HOST: &hostName n8n.nikola.wtf
-              N8N_LOG_LEVEL: info
-              N8N_LOG_OUTPUT: console
-              N8N_ENCRYPTION_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: n8n-secret
-                    key: N8N_ENCRYPTION_KEY
+              PORT: "3080"
+              NODE_ENV: "development"
+              GOOGLE_MODELS: "gemini-2.5-pro,gemini-2.5-flash,gemini-2.5-flash-lite-preview-06-17,gemini-2.0-flash,gemini-2.0-flash-lite"
+
+            dependsOn:
+              - ragapi
+
+            envFrom: *envFrom
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+              runAsUser: 1000
+              runAsGroup: 1000
+              fsGroup: 1000
             resources:
               requests:
-                cpu: 5m
-                memory: 128Mi
+                cpu: 10m
               limits:
-                memory: 2Gi
+                memory: 1000Mi
+            probes: &probes
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: false
+
+          exporter:
+            dependsOn: app
+            image:
+              repository: ghcr.io/wipash/librechatmetrics
+              tag: latest
+            env:
+              PROMETHEUS_PORT: &exporterport "9123"
+
+          ragapi:
+            image:
+              repository: ghcr.io/danny-avila/librechat-rag-api-dev-lite
+              tag: latest@sha256:e03717fc8fc9afab4645ec7190b8e24ce31ae4bb717c445793791b6ff1c67952
+            envFrom: *envFrom
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            probes: *probes
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
 
     service:
       app:
-        controller: n8n
+        controller: librechat
         ports:
           http:
-            port: *port
+            port: 3080
+          mongo-express:
+            port: 8081
+          # litellm:
+          #   port: 4000
+          metrics:
+            port: *exporterport
 
     persistence:
-      data:
-        existingClaim: n8n
+      config:
+        enabled: true
+        type: configMap
+        name: librechat-config
         advancedMounts:
-          n8n:
+          librechat:
             app:
-              - path: /home/node/.n8n
+              - subPath: librechat.yaml
+                path: /app/librechat.yaml
+
+      app-data:
+        enabled: true
+        type: emptyDir
+        advancedMounts:
+          librechat:
+            app:
+              - path: /app/data
+              - path: /app/api/data
+
+      tmp:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+
+      data:
+        enabled: true
+        existingClaim: *app
+        advancedMounts:
+          librechat:
+            app:
+              - subPath: logs
+                path: /app/api/logs
+              - subPath: images
+                path: /app/client/public/images
+              - subPath: uploads
+                path: /app/uploads
+            ragapi:
+              - subPath: ragapi
+                path: /app/uploads
 
     route:
       app:
         hostnames:
-          - *hostName
+          - chat.nikola.wtf
         parentRefs:
           - name: internal
             namespace: kube-system
             sectionName: https
         rules:
           - backendRefs:
-              - name: n8n
+              - name: librechat
                 port: *port
-      webhooks:
-        hostnames:
-          - n8n-webhook.nikola.wtf
-        parentRefs:
-          - name: external
-            namespace: kube-system
-            sectionName: https
-        rules:
-          - matches:
-              - path:
-                  value: /webhook
-            backendRefs:
-              - name: n8n
-                port: *port
+
+    serviceMonitor:
+      app:
+        serviceName: librechat
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /
+            interval: 1m
+            scrapeTimeout: 30s
