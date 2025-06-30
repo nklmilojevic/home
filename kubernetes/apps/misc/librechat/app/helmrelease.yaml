@@ -53,6 +53,7 @@ spec:
               ALLOW_UNVERIFIED_EMAIL_LOGIN: "true"
               DOMAIN_CLIENT: "https://chat.nikola.wtf"
               DOMAIN_SERVER: "https://chat.nikola.wtf"
+              SEARCH: "true"
             dependsOn:
               - ragapi
 
