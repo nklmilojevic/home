@@ -30,5 +30,5 @@ spec:
       existingMasterKeySecret: meilisearch
     persistence:
       enabled: true
-      storageClass: openebs-local
+      storageClass: openebs-hostpath
       size: 8Gi
