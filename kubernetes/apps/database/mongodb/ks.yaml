@@ -6,7 +6,7 @@ metadata:
   name: &app mongodb
   namespace: flux-system
 spec:
-  targetNamespace: *namespace
+  targetNamespace: database
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -26,7 +26,7 @@ metadata:
   name: &app mongodb-librechat
   namespace: flux-system
 spec:
-  targetNamespace: *namespace
+  targetNamespace: database
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
