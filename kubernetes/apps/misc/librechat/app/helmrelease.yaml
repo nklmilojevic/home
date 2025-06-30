@@ -26,7 +26,6 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
           secret.reloader.stakater.com/reload: &secret librechat-secret
-          configmap.reloader.stakater.com/reload: &configMap librechat-configmap
         initContainers:
           init-db:
             image:
