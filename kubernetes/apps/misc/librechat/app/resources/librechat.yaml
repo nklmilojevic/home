@@ -76,6 +76,5 @@ mcpServers:
     initTimeout: 150000 # higher timeout to allow for initial authentication
     url: "https://mcp.mailerlite.dev/sse"
   intercom:
-    type: "sse"
-    initTimeout: 150000 # higher timeout to allow for initial authentication
-    url: "https://mcp.intercom.com/sse"
+    command: "npx"
+    "args": ["-y", "mcp-remote", "https://mcp.intercom.com/sse"]
