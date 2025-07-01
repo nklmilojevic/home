@@ -17,9 +17,9 @@ interface:
       initTimeout: 150000 # higher timeout to allow for initial authentication
       url: "https://mcp.mailerlite.dev/mcp"
     intercom:
-      type: "streamable-http"
+      type: "sse"
       initTimeout: 150000 # higher timeout to allow for initial authentication
-      url: "https://mcp.intercom.com/mcp"
+      url: "https://mcp.intercom.com/sse"
   # Privacy policy settings
   privacyPolicy:
     externalUrl: "https://librechat.ai/privacy-policy"
