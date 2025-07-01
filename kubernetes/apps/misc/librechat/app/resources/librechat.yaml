@@ -7,19 +7,6 @@ version: 1.2.1
 # Custom interface configuration
 interface:
   customWelcome: "Welcome to LibreChat! Enjoy your experience."
-  # MCP Servers UI configuration
-  mcpServers:
-    # Public remote MCP server for PayPal, uses OAuth Client Discovery
-    # ❌ Refresh Tokens: you may need to re-authenticate periodically
-    # More info: https://developer.paypal.com/tools/mcp-server/
-    mailerlite:
-      type: "streamable-http"
-      initTimeout: 150000 # higher timeout to allow for initial authentication
-      url: "https://mcp.mailerlite.dev/mcp"
-    intercom:
-      type: "sse"
-      initTimeout: 150000 # higher timeout to allow for initial authentication
-      url: "https://mcp.intercom.com/sse"
   # Privacy policy settings
   privacyPolicy:
     externalUrl: "https://librechat.ai/privacy-policy"
@@ -88,3 +75,7 @@ mcpServers:
     type: "streamable-http"
     initTimeout: 150000 # higher timeout to allow for initial authentication
     url: "https://mcp.mailerlite.dev/mcp"
+  intercom:
+    type: "sse"
+    initTimeout: 150000 # higher timeout to allow for initial authentication
+    url: "https://mcp.intercom.com/sse"
