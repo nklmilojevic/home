@@ -72,9 +72,6 @@ mcpServers:
   # ❌ Refresh Tokens: you may need to re-authenticate periodically
   # More info: https://developer.paypal.com/tools/mcp-server/
   mailerlite:
-    type: "sse"
+    type: "streamable-http"
     initTimeout: 150000 # higher timeout to allow for initial authentication
-    url: "https://mcp.mailerlite.dev/sse"
-  intercom:
-    command: "npx"
-    "args": ["-y", "mcp-remote", "https://mcp.intercom.com/sse"]
+    url: "https://mcp.mailerlite.dev/mcp"
