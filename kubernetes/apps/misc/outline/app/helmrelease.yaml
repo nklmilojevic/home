@@ -83,8 +83,8 @@ spec:
               PORT: &port 3000
 
               FILE_STORAGE: local
-              FILE_STORAGE_UPLOAD_MAX_SIZE: 26214400
-              FILE_STORAGE_IMPORT_MAX_SIZE: 26214400
+              FILE_STORAGE_UPLOAD_MAX_SIZE: 226214400
+              FILE_STORAGE_IMPORT_MAX_SIZE: 226214400
               DATABASE_CONNECTION_POOL_MAX: 10
               WEB_CONCURRENCY: 10
 
