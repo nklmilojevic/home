@@ -78,7 +78,7 @@ spec:
               TZ: Europe/Belgrade
               NODE_ENV: production
               PGSSLMODE: disable
-              REDIS_URL: redis://outline-redis.misc.svc.cluster.local:6379
+              REDIS_URL: redis://dragonfly.database.svc.cluster.local:6379
               URL: https://docs.nikola.wtf
               PORT: &port 3000
 
