@@ -6,3 +6,4 @@ resources:
   - ./cloudnative-pg/ks.yaml
   - ./mongodb/ks.yaml
   - ./meilisearch/ks.yaml
+  - ./dragonfly/ks.yaml
