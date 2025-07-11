@@ -147,7 +147,7 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - name: outline
+              - name: outline-app
                 port: *port
 
     persistence:
