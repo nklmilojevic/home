@@ -99,8 +99,8 @@ spec:
             resources:
               requests:
                 cpu: 10m
-              limits:
-                memory: 750Mi
+              # limits:
+              #   memory: 750Mi
 
             probes:
               liveness:
