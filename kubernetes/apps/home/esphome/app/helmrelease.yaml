@@ -35,7 +35,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/esphome
-              tag: 2025.6.3@sha256:b8cf7577a7e271df811f33e22b0a30b09f864c89965723cffd3cd3dd1ad556f9
+              tag: 2025.6.3@sha256:bbca1c80aa9d9c9999e9e2a8efae20e107808f1eff67e1a25a592ae4184558af
             probes:
               liveness:
                 enabled: false
