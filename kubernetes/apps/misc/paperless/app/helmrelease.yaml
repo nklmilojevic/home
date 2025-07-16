@@ -47,7 +47,7 @@ spec:
               PAPERLESS_OCR_LANGUAGES: nld
               PAPERLESS_OCR_LANGUAGE: nld
               # Configure redis integration
-              PAPERLESS_REDIS: redis://paperless-redis.misc.svc.cluster.local:6379
+              PAPERLESS_REDIS: redis://redis-paperless.database.svc.cluster.local:6379
               # Configure user permissions
               USERMAP_GID: "1000"
               # Configure admin user
