@@ -2,13 +2,13 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: ot-operator-cluster
+  name: ot-operator-sentinel
 spec:
   interval: 30m
   timeout: 60s
-  url: oci://ghcr.io/ot-container-kit/charts/redis-cluster
+  url: oci://ghcr.io/ot-container-kit/charts/redis-sentinel
   ref:
-    tag: 0.17.0
+    tag: 0.16.9
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
