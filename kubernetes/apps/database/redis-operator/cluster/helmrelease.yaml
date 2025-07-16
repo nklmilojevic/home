@@ -24,30 +24,12 @@ spec:
       interval: 30s
       scrapeTimeout: 10s
       namespace: monitoring
-      # -- extraLabels are added to the servicemonitor when enabled set to true
-      extraLabels:
-        {}
-        # foo: bar
-        # team: devops
 
     redisExporter:
       enabled: true
       image: quay.io/opstree/redis-exporter
       tag: "v1.44.0"
       imagePullPolicy: IfNotPresent
-      resources:
-        {}
-        # requests:
-        #   cpu: 100m
-        #   memory: 128Mi
-        # limits:
-        #   cpu: 100m
-        #   memory: 128Mi
-      env:
-        []
-        # - name: VAR_NAME
-        #   value: "value1"
-      securityContext: {}
 
     storageSpec:
       volumeClaimTemplate:
@@ -64,8 +46,3 @@ spec:
           resources:
             requests:
               storage: 1Gi
-      #   selector: {}
-
-    podSecurityContext:
-      runAsUser: 1000
-      fsGroup: 1000
