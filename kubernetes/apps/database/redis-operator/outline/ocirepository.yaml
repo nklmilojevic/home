@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: ot-operator-standalone
+spec:
+  interval: 30m
+  timeout: 60s
+  url: oci://ghcr.io/ot-container-kit/charts/redis
+  ref:
+    tag: 0.16.5
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
