@@ -78,7 +78,7 @@ spec:
               TZ: Europe/Belgrade
               NODE_ENV: production
               PGSSLMODE: disable
-              REDIS_URL: redis://outline-redis.misc.svc.cluster.local:6379
+              REDIS_URL: redis://redis-cluster-master.database.svc.cluster.local:6379
               URL: https://docs.nikola.wtf
               PORT: &port 3000
 
@@ -113,18 +113,6 @@ spec:
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
-      redis:
-        containers:
-          redis:
-            image:
-              repository: docker.io/valkey/valkey
-              tag: 8.1.3
-            resources:
-              requests:
-                cpu: 5m
-                memory: 32Mi
-              limits:
-                memory: 128Mi
 
     service:
       app:
@@ -132,11 +120,6 @@ spec:
         ports:
           http:
             port: *port
-      redis:
-        controller: redis
-        ports:
-          redis:
-            port: 6379
 
     route:
       app:
@@ -148,7 +131,7 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - name: outline-app
+              - name: outline
                 port: *port
 
     persistence:
