@@ -14,6 +14,6 @@ mcpServers:
   mailerlite:
     type: "streamable-http"
     initTimeout: 150000 # higher timeout to allow for initial authentication
-    url: "https://mcp.mailerlite.dev/mcp"
+    url: "https://mcp.mailerlite.com/mcp"
     headers:
       X-User-ID: "{{LIBRECHAT_USER_ID}}"
