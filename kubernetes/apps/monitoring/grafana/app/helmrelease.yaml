@@ -217,7 +217,7 @@ spec:
         vmagent:
           url: https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/refs/heads/master/dashboards/vmagent.json
         vmlogs:
-          url: https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/refs/heads/master/dashboards/victorialogs.json
+          url: https://raw.githubusercontent.com/VictoriaMetrics/VictoriaLogs/refs/heads/master/dashboards/victorialogs.json
         vmalert:
           url: https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/refs/heads/master/dashboards/vmalert.json
         vmoperator:
