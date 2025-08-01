@@ -15,5 +15,15 @@ mcpServers:
     type: "streamable-http"
     initTimeout: 150000 # higher timeout to allow for initial authentication
     url: "https://mcp.mailerlite.com/mcp"
-    headers:
-      X-User-ID: "{{LIBRECHAT_USER_ID}}"
+endpoints:
+  custom:
+    - name: "My LLM"
+      apiKey: "${LITELLM_API_KEY}"
+      baseURL: "https://litellm.nikola.wtf"
+      models:
+        default: ["anthropic-vertex"]
+        fetch: false
+      titleConvo: true
+      titleModel: "anthropic-vertex"
+      forcePrompt: false
+      modelDisplayLabel: "My LLM"
