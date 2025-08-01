@@ -55,7 +55,7 @@ spec:
               DOMAIN_CLIENT: "https://chat.nikola.wtf"
               DOMAIN_SERVER: "https://chat.nikola.wtf"
               SEARCH: "true"
-              LITELLM_API_KEY: "user_provided"
+              LITELLM_API_KEY: "sk-12345"
             dependsOn:
               - ragapi
 
