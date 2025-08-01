@@ -18,7 +18,7 @@ mcpServers:
 endpoints:
   custom:
     - name: "My LLM"
-      apiKey: "sk-12345"
+      apiKey: "sk--pT24fiJaylgAxJcL0-gZA"
       baseURL: "https://litellm.nikola.wtf"
       models:
         default: ["anthropic-vertex"]
