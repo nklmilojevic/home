@@ -106,6 +106,15 @@ spec:
               - subPath: auth.json
                 path: /app/auth.json
 
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /.cache
+            subPath: cache
+          - path: /.npm
+            subPath: npm
+          - path: /tmp
+            subPath: tmp
     route:
       app:
         hostnames:
