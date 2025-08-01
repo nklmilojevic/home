@@ -53,6 +53,7 @@ spec:
               DOMAIN_SERVER: "https://chat.nikola.wtf"
               SEARCH: "true"
               LITELLM_API_KEY: "sk-12345"
+              OPENAI_API_KEY: user_provided
             dependsOn:
               - ragapi
 
