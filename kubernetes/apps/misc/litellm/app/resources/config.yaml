@@ -1,6 +1,6 @@
 model_list:
   - model_name: anthropic-vertex
     litellm_params:
-      model: vertex_ai/claude-sonnet-4-20250514
+      model: vertex_ai/claude-sonnet-4@20250514
       vertex_ai_project: "mailerlite-gcp"
       vertex_ai_location: "global"
