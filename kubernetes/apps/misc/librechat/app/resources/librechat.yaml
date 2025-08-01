@@ -19,7 +19,7 @@ endpoints:
   custom:
     - name: "My LLM"
       apiKey: "sk--pT24fiJaylgAxJcL0-gZA"
-      baseURL: "https://litellm.nikola.wtf/v1"
+      baseURL: "http://litellm:4000/v1"
       models:
         default: ["anthropic-vertex"]
         fetch: false
