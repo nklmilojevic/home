@@ -8,4 +8,4 @@ model_list:
     litellm_params:
       model: vertex_ai/mistral-small-2503
       vertex_ai_project: "mailerlite-librechat"
-      vertex_ai_location: "global"
+      vertex_ai_location: "europe-west4"
