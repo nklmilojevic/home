@@ -21,9 +21,9 @@ endpoints:
       apiKey: "sk--pT24fiJaylgAxJcL0-gZA"
       baseURL: "http://litellm:4000/v1"
       models:
-        default: ["anthropic-vertex"]
-        fetch: false
+        default: ["claude-sonnet-4"]
+        fetch: true
       titleConvo: true
-      titleModel: "anthropic-vertex"
+      titleModel: "claude-sonnet-4"
       forcePrompt: false
       modelDisplayLabel: "My LLM"
