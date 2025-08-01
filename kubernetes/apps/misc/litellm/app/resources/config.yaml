@@ -3,4 +3,4 @@ model_list:
     litellm_params:
       model: vertex_ai/claude-sonnet-4@20250514
       vertex_ai_project: "mailerlite-gcp"
-      vertex_ai_location: "global"
+      vertex_ai_location: "europe-west1"
