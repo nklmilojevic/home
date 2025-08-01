@@ -23,7 +23,7 @@ endpoints:
       models:
         default: ["anthropic-vertex"]
         fetch: false
-      titleConvo: true
+      titleConvo: false
       titleModel: "anthropic-vertex"
       forcePrompt: false
       modelDisplayLabel: "My LLM"
