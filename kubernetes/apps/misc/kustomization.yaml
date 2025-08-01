@@ -7,3 +7,4 @@ resources:
   - ./n8n/ks.yaml
   - ./librechat/ks.yaml
   - ./outline/ks.yaml
+  - ./litellm/ks.yaml
