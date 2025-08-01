@@ -16,19 +16,19 @@ mcpServers:
     initTimeout: 150000 # higher timeout to allow for initial authentication
     url: "https://mcp.mailerlite.com/mcp"
 endpoints:
-custom:
-  - name: "Lite LLM"
-    # A place holder - otherwise it becomes the default (OpenAI) key
-    # Provide the key instead in each "model" block within "litellm/litellm-config.yaml"
-    apiKey: "${LITELLM_API_KEY}"
-    # See the required changes above in "Start LiteLLM Proxy Server" step.
-    baseURL: "https://litellm.nikola.wtf"
-    models:
-      default: ["anthropic-vertex"]
-      fetch: true
-    titleConvo: true
-    titleModel: "anthropic-vertex"
-    summarize: false
-    summaryModel: "anthropic-vertex"
-    forcePrompt: false
-    modelDisplayLabel: "Lite LLM"
+  custom:
+    - name: "Lite LLM"
+      # A place holder - otherwise it becomes the default (OpenAI) key
+      # Provide the key instead in each "model" block within "litellm/litellm-config.yaml"
+      apiKey: "${LITELLM_API_KEY}"
+      # See the required changes above in "Start LiteLLM Proxy Server" step.
+      baseURL: "https://litellm.nikola.wtf"
+      models:
+        default: ["anthropic-vertex"]
+        fetch: true
+      titleConvo: true
+      titleModel: "anthropic-vertex"
+      summarize: false
+      summaryModel: "anthropic-vertex"
+      forcePrompt: false
+      modelDisplayLabel: "Lite LLM"
