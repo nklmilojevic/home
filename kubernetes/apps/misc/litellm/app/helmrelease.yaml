@@ -38,7 +38,7 @@ spec:
           app:
             image:
               repository: ghcr.io/berriai/litellm
-              tag: v1.74.7-stable@sha256:3b02ce9a4b9ed37415c37cb8f106bf9d239dee5bdf731679fbf7b36bb492075e
+              tag: v1.74.9-stable@sha256:f78c763d6f2289305a3acc3a003c6170f797bdda70c56e75776fbab670e663cc
             env:
               GOOGLE_APPLICATION_CREDENTIALS: "/app/auth.json"
               TZ: "Europe/Belgrade"
