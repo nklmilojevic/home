@@ -5,6 +5,6 @@ resources:
   - ./namespace.yaml
   - ./paperless/ks.yaml
   - ./n8n/ks.yaml
-  # - ./librechat/ks.yaml
+  - ./librechat/ks.yaml
   - ./outline/ks.yaml
   - ./litellm/ks.yaml
