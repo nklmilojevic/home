@@ -68,7 +68,7 @@ nodes:
   - hostname: "icarus002"
     ipAddress: "10.40.0.202"
     installDiskSelector:
-      serial: "50026B73832C8683"
+      serial: "50026B7686429B50"
     talosImageURL: factory.talos.dev/installer/2e00237e630ea339ac40b2a205a8d2bdc87773a154e4257e2b0bebdac70aab5b
     controlPlane: true
     networkInterfaces:
