@@ -47,7 +47,7 @@ spec:
             type: prometheus
             uid: prometheus
             access: proxy
-            url: http://vmsingle-vmetrics-victoria-metrics-k8s-stack.monitoring.svc.cluster.local:8429
+            url: http://vmsingle-vmetrics-victoria-metrics-k8s-stack.monitoring.svc.cluster.local:8428
             jsonData:
               prometheusType: Prometheus
               timeInterval: 1m
