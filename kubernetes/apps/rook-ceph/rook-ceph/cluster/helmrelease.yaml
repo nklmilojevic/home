@@ -14,7 +14,17 @@ spec:
       enabled: true
       createPrometheusRules: true
     toolbox:
-      enabled: false
+      enabled: true
+    route:
+      dashboard:
+        host:
+          name: rook.nikola.wtf
+          path: /
+          pathType: PathPrefix
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
     cephClusterSpec:
       cephConfig:
         global:
