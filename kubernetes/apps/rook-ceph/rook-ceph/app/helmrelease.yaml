@@ -18,9 +18,12 @@ spec:
       strategy: rollback
       retries: 3
   values:
+    crds:
+      enabled: true
     csi:
-      enableVolumeGroupSnapshot: false
       cephFSKernelMountOptions: ms_mode=prefer-crc
+      enableCephfsDriver: false
+      enableCephfsSnapshotter: false
       enableLiveness: true
       serviceMonitor:
         enabled: true
