@@ -15,3 +15,4 @@ resources:
   - ./readarr/ks.yaml
   - ./overseerr/ks.yaml
   - ./calibre-web-automated/ks.yaml
+  - ./tautulli/ks.yaml
