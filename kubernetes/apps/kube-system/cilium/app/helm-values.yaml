@@ -16,6 +16,22 @@ endpointRoutes:
   enabled: true
 envoy:
   enabled: true
+  log:
+    accessLogBufferSize: 16384
+    format_json: >
+      {
+        "ts":"%START_TIME%",
+        "method":"%REQ(:METHOD)%",
+        "path":"%REQ(:PATH)%",
+        "status":%RESPONSE_CODE%,
+        "duration_ms":%DURATION%,
+        "protocol":"%PROTOCOL%",
+        "authority":"%REQ(:AUTHORITY)%",
+        "xff":"%REQ(X-FORWARDED-FOR)%",
+        "upstream_host":"%UPSTREAM_HOST%",
+        "route":"%ROUTE_NAME%",
+        "req_id":"%REQ(X-REQUEST-ID)%"
+        }
 gatewayAPI:
   enabled: true
   enableAlpn: true
