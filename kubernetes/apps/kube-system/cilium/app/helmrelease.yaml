@@ -35,6 +35,88 @@ spec:
     - kind: ConfigMap
       name: cilium-helm-values
   values:
+    autoDirectNodeRoutes: true
+    bpf:
+      masquerade: false
+    cgroup:
+      autoMount:
+        enabled: false
+      hostRoot: /sys/fs/cgroup
+    cluster:
+      id: 1
+      name: home-kubernetes
+    cni:
+      exclusive: false
+    enableRuntimeDeviceDetection: true
+    endpointRoutes:
+      enabled: true
+    envoy:
+      enabled: true
+      log:
+        accessLogBufferSize: 16384
+        format_json: >
+          {
+            "ts":"%START_TIME%",
+            "method":"%REQ(:METHOD)%",
+            "path":"%REQ(:PATH)%",
+            "status":%RESPONSE_CODE%,
+            "duration_ms":%DURATION%,
+            "protocol":"%PROTOCOL%",
+            "authority":"%REQ(:AUTHORITY)%",
+            "xff":"%REQ(X-FORWARDED-FOR)%",
+            "upstream_host":"%UPSTREAM_HOST%",
+            "route":"%ROUTE_NAME%",
+            "req_id":"%REQ(X-REQUEST-ID)%"
+            }
+    gatewayAPI:
+      enabled: true
+      enableAlpn: true
+      relay:
+        enabled: true
+        rollOutPods: true
+      serviceMonitor:
+        enabled: false
+      ui:
+        enabled: true
+        ingress:
+          enabled: false
+        rollOutPods: true
+    ipam:
+      mode: "kubernetes"
+    ipv4NativeRoutingCIDR: "10.69.0.0/16"
+    k8sServiceHost: 127.0.0.1
+    k8sServicePort: 7445
+    kubeProxyReplacement: true
+    kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
+    l2announcements:
+      enabled: true
+    loadBalancer:
+      algorithm: maglev
+      mode: dsr
+    localRedirectPolicy: true
+    operator:
+      replicas: 1
+      rollOutPods: true
+    rollOutCiliumPods: true
+    routingMode: native
+    securityContext:
+      capabilities:
+        ciliumAgent:
+          - CHOWN
+          - KILL
+          - NET_ADMIN
+          - NET_RAW
+          - IPC_LOCK
+          - SYS_ADMIN
+          - SYS_RESOURCE
+          - DAC_OVERRIDE
+          - FOWNER
+          - SETGID
+          - SETUID
+        cleanCiliumState:
+          - NET_ADMIN
+          - SYS_ADMIN
+          - SYS_RESOURCE
     hubble:
       enabled: true
       metrics:
