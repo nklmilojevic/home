@@ -119,6 +119,14 @@ spec:
         static:
           enabled: true
           filePath: stdout
+          fieldMask:
+            - time
+            - verdict
+            - source.namespace
+            - source.pod_name
+            - destination.namespace
+            - destination.pod_name
+            - l7
       metrics:
         enabled:
           - dns:query
