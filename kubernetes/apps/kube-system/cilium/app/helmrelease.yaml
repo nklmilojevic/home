@@ -31,9 +31,9 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  valuesFrom:
-    - kind: ConfigMap
-      name: cilium-helm-values
+  # valuesFrom:
+  #   - kind: ConfigMap
+  #     name: cilium-helm-values
   values:
     autoDirectNodeRoutes: true
     bpf:
