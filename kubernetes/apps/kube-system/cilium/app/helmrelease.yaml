@@ -54,6 +54,13 @@ spec:
       enabled: true
       log:
         accessLogBufferSize: 16384
+        format_json:
+          ts: "%Y-%m-%dT%T.%e"
+          level: "%l"
+          logger: "%n"
+          src: "%g:%#"
+          thread: "%t"
+          msg: "%j"
     gatewayAPI:
       enabled: true
       enableAlpn: true
