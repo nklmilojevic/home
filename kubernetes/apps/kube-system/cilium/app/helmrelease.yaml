@@ -115,6 +115,10 @@ spec:
           - SYS_RESOURCE
     hubble:
       enabled: true
+      export:
+        static:
+          enabled: true
+          filePath: stdout
       metrics:
         enabled:
           - dns:query
