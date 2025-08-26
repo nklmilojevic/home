@@ -52,6 +52,9 @@ spec:
       enabled: true
     envoy:
       enabled: true
+      prometheus:
+        serviceMonitor:
+          enabled: true
       log:
         accessLogBufferSize: 16384
         format_json:
