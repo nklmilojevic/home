@@ -18,3 +18,5 @@ spec:
     crds: CreateReplace
     remediation:
       retries: 5
+  values:
+    manager: []
