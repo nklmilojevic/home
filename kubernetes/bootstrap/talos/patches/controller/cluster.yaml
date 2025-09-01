@@ -2,7 +2,7 @@ cluster:
   allowSchedulingOnControlPlanes: true
   apiServer:
     extraArgs:
-      feature-gates: AuthorizeNodeWithSelectors=false
+      enable-aggregator-routing: true
   controllerManager:
     extraArgs:
       bind-address: 0.0.0.0
@@ -13,16 +13,3 @@ cluster:
   scheduler:
     extraArgs:
       bind-address: 0.0.0.0
-    config:
-      apiVersion: kubescheduler.config.k8s.io/v1
-      kind: KubeSchedulerConfiguration
-      profiles:
-        - schedulerName: default-scheduler
-          pluginConfig:
-            - name: PodTopologySpread
-              args:
-                defaultingType: List
-                defaultConstraints:
-                  - maxSkew: 1
-                    topologyKey: kubernetes.io/hostname
-                    whenUnsatisfiable: ScheduleAnyway
