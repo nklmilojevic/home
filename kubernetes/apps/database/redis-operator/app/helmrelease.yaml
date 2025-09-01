@@ -19,4 +19,6 @@ spec:
     remediation:
       retries: 5
   values:
-    manager: []
+    manager:
+      config:
+        kubeClientQPS: 0
