@@ -7,7 +7,6 @@ resources:
   - ./coredns/ks.yaml
   - ./metrics-server/ks.yaml
   - ./reloader/ks.yaml
-  # - ./kubelet-csr-approver/ks.yaml
   - ./spegel/ks.yaml
   - ./intel-device-plugin/ks.yaml
   - ./generic-device-plugin/ks.yaml
