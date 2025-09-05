@@ -42,6 +42,11 @@ spec:
                 "ips": ["10.5.0.205/24"],
                 "mac": "dc:de:70:dd:f4:9e"
               }]
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65533
+            fsGroup: 65533
+            fsGroupChangePolicy: OnRootMismatch
 
         replicas: 1
 
