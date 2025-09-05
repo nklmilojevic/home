@@ -42,11 +42,6 @@ spec:
                 "ips": ["10.5.0.205/24"],
                 "mac": "dc:de:70:dd:f4:9e"
               }]
-          securityContext:
-            runAsUser: 65534
-            runAsGroup: 65533
-            fsGroup: 65533
-            fsGroupChangePolicy: OnRootMismatch
 
         replicas: 1
 
@@ -57,7 +52,6 @@ spec:
               tag: 2025.9.0@sha256:4bdbc7f521aa6e20cc9d0af35d82b72a643bf198b174b68856ab86dc9b87b62a
             env:
               TZ: "Europe/Belgrade"
-              VENV_FOLDER: /venv
             envFrom:
               - secretRef:
                   name: homeassistant-secrets
@@ -144,18 +138,21 @@ spec:
     persistence:
       config:
         existingClaim: home-assistant-config
-      logs:
-        type: emptyDir
+      config-cache:
+        existingClaim: "home-assistant-cache"
         globalMounts:
-          - path: /config/logs
-      tts:
+          - path: /config/.venv
+      tmpfs:
         type: emptyDir
-        globalMounts:
-          - path: /config/tts
-      tmp:
-        type: emptyDir
-        globalMounts:
-          - path: /tmp
+        advancedMounts:
+          home-assistant:
+            app:
+              - path: /config/logs
+                subPath: logs
+              - path: /config/tts
+                subPath: tts
+              - path: /tmp
+                subPath: tmp
 
     serviceMonitor:
       home-assistant:
