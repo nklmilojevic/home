@@ -86,12 +86,7 @@ spec:
                 cpu: 10m
               limits:
                 memory: 512Mi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities:
-                drop:
-                  - ALL
+
     service:
       app:
         controller: &app home-assistant
