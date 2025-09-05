@@ -37,7 +37,7 @@ spec:
   values:
     autoDirectNodeRoutes: true
     bpf:
-      masquerade: false
+      masquerade: true
     cgroup:
       autoMount:
         enabled: false
