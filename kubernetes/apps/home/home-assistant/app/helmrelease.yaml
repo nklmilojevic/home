@@ -52,6 +52,7 @@ spec:
               tag: 2025.9.0@sha256:4bdbc7f521aa6e20cc9d0af35d82b72a643bf198b174b68856ab86dc9b87b62a
             env:
               TZ: "Europe/Belgrade"
+              VENV_FOLDER: /venv
             envFrom:
               - secretRef:
                   name: homeassistant-secrets
