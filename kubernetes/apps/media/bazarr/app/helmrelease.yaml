@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/bazarr
-              tag: 1.5.2@sha256:6a70341467bab5718949b1df0d244b5c5a4276f27b9559d8758fcf1df6e754e1
+              tag: 1.5.3@sha256:32ac9683e670492272f17dd3863fdf73d3d57447af3990168a02f4702f949b69
             env:
               TZ: "Europe/Belgrade"
             securityContext:
