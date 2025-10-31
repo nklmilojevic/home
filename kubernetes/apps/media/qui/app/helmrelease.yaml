@@ -71,4 +71,9 @@ spec:
           - qui.nikola.wtf
         parentRefs:
           - name: internal
-            namespace: network
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: qui
+                port: *port
