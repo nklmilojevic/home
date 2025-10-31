@@ -35,6 +35,9 @@ spec:
   #   - kind: ConfigMap
   #     name: cilium-helm-values
   values:
+    prometheus:
+      serviceMonitor:
+        trustCRDsExist: true
     autoDirectNodeRoutes: true
     bpf:
       masquerade: true
