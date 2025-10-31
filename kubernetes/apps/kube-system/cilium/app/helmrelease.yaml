@@ -36,7 +36,9 @@ spec:
   #     name: cilium-helm-values
   values:
     prometheus:
+      enabled: true
       serviceMonitor:
+        enabled: true
         trustCRDsExist: true
     autoDirectNodeRoutes: true
     bpf:
@@ -55,9 +57,6 @@ spec:
       enabled: true
     envoy:
       enabled: true
-      prometheus:
-        serviceMonitor:
-          enabled: true
       log:
         accessLogBufferSize: 16384
         format_json:
@@ -135,9 +134,6 @@ spec:
       relay:
         enabled: true
         rollOutPods: true
-        prometheus:
-          serviceMonitor:
-            enabled: true
       ui:
         enabled: true
         rollOutPods: true
