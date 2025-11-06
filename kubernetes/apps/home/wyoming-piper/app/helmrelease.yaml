@@ -29,6 +29,8 @@ spec:
             args:
               - --voice
               - en_GB-alan-medium
+              - --data-dir
+              - /data
             env:
               TZ: Europe/Belgrade
     service:
