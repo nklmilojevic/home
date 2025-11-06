@@ -31,8 +31,6 @@ spec:
               - tiny.en
               - --language
               - en
-              - --data-dir
-              - /data
             env:
               TZ: Europe/Belgrade
     service:
