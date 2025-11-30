@@ -178,7 +178,7 @@ spec:
         - name: GITEA__SECURITY__SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: forgejo
+              name: forgejo-secret
               key: SECRET_KEY
       podAnnotations:
         reloader.stakater.com/search: "true"
