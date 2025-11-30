@@ -72,8 +72,7 @@ spec:
           OFFLINE_MODE: false # Enable CDN for static files and Gravatar
           LANDING_PAGE: explore # Show explore page for non-authenticated users
         database:
-          DB_TYPE: sqlite
-          PATH: data/forgejo.db
+          DB_TYPE: sqlite3
         indexer:
           REPO_INDEXER_ENABLED: true
           REPO_INDEXER_REPO_TYPES: sources,forks,mirrors,templates
