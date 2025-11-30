@@ -73,6 +73,7 @@ spec:
           LANDING_PAGE: explore # Show explore page for non-authenticated users
         database:
           DB_TYPE: sqlite
+          PATH: data/forgejo.db
         indexer:
           REPO_INDEXER_ENABLED: true
           REPO_INDEXER_REPO_TYPES: sources,forks,mirrors,templates
