@@ -179,7 +179,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: forgejo-secret
-              key: SECRET_KEY
+              key: FORGEJO_SECRET_KEY
       podAnnotations:
         reloader.stakater.com/search: "true"
 
