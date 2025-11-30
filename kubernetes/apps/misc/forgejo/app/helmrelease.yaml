@@ -1,0 +1,202 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: forgejo
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: forgejo
+  values:
+    replicaCount: 1
+    strategy:
+      type: "Recreate"
+    image:
+      registry: code.forgejo.org
+      repository: forgejo/forgejo
+      tag: 13.0.3
+      rootless: true
+
+    podSecurityContext:
+      fsGroup: 1000
+
+    containerSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        add: ["SYS_CHROOT"]
+
+    service:
+      http:
+        port: 3000
+      ssh:
+        type: LoadBalancer
+        port: 2222
+        loadBalancerIP: 10.40.0.40
+        externalTrafficPolicy: Local
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+
+    persistence:
+      enabled: true
+      mount: true
+      create: false
+      claimName: forgejo
+
+    gitea:
+      admin:
+        existingSecret: forgejo-admin-secret
+        email: "nikola@milojevic.me"
+        passwordMode: "keepUpdated"
+      config:
+        APP_NAME: "Forgejo"
+        server:
+          DOMAIN: git.nikola.wtf
+          ROOT_URL: https://git.nikola.wtf
+          DISABLE_SSH: false
+          SSH_DOMAIN: ssh.git.nikola.wtf
+          SSH_PORT: 2222
+          SSH_LISTEN_PORT: 2222
+          ENABLE_GZIP: true
+          LFS_START_SERVER: true
+          OFFLINE_MODE: false # Enable CDN for static files and Gravatar
+          LANDING_PAGE: explore # Show explore page for non-authenticated users
+        database:
+          DB_TYPE: sqlite
+        indexer:
+          REPO_INDEXER_ENABLED: true
+          REPO_INDEXER_REPO_TYPES: sources,forks,mirrors,templates
+          ISSUE_INDEXER_TYPE: db # Use database for issue indexing (simpler than bleve)
+        queue:
+          TYPE: redis
+          CONN_STR: redis://redis-forgejo.database.svc.cluster.local:6379
+        repository:
+          DEFAULT_BRANCH: main
+          ENABLE_PUSH_CREATE_USER: true # Allow push-to-create repos
+          DISABLE_HTTP_GIT: false
+          DEFAULT_PRIVATE: last # Remember last choice for new repos
+        security:
+          # INSTALL_LOCK: true
+          PASSWORD_HASH_ALGO: argon2
+          PASSWORD_COMPLEXITY: lower,upper,digit,spec
+          PASSWORD_CHECK_PWN: true
+          MIN_PASSWORD_LENGTH: 12 # Stronger minimum password
+          REVERSE_PROXY_LIMIT: 1 # Trust X-Forwarded-For from 1 proxy (Envoy)
+          UPDATE_AVATAR: true
+        service:
+          REGISTER_EMAIL_CONFIRM: true
+          DISABLE_REGISTRATION: false
+          ENABLE_NOTIFY_MAIL: true
+          DEFAULT_KEEP_EMAIL_PRIVATE: true
+          DEFAULT_ALLOW_CREATE_ORGANIZATION: true
+          DEFAULT_ENABLE_TIMETRACKING: true
+          ENABLE_USER_HEATMAP: true
+          AUTO_WATCH_NEW_REPOS: true
+          SHOW_REGISTRATION_BUTTON: true
+          VALID_SITE_URL_SCHEMES: https
+          EXPLORE.REQUIRE_SIGNIN_VIEW: false # Allow anonymous explore
+        qos:
+          ENABLED: true
+        cache:
+          ADAPTER: redis
+          HOST: redis://redis-forgejo.database.svc.cluster.local:6379
+        session:
+          PROVIDER: redis
+          PROVIDER_CONFIG: redis://redis-forgejo.database.svc.cluster.local:6379
+          COOKIE_SECURE: true
+          DOMAIN: git.nikola.wtf
+          COOKIE_NAME: forgejo_session
+          SESSION_LIFE_TIME: 86400 # 24h session lifetime
+          SAME_SITE: lax # Balance between security and OAuth2 compatibility
+        cron:
+          ENABLED: true
+        cron.git_gc_repos:
+          ENABLED: true
+          SCHEDULE: "@every 168h"
+          TIMEOUT: 60s
+          ARGS: "--aggressive --auto"
+        cron.update_mirrors:
+          SCHEDULE: "@every 10m"
+          PULL_LIMIT: 50
+          PUSH_LIMIT: 50
+        cron.cleanup_actions:
+          ENABLED: true
+          SCHEDULE: "@midnight"
+        metrics:
+          ENABLED: true
+          serviceMonitor:
+            enabled: true
+            namespace: monitoring
+        time:
+          DEFAULT_UI_LOCATION: Europe/Belgrade
+        ui:
+          DEFAULT_THEME: forgejo-auto
+          SHOW_USER_EMAIL: false # Don't show emails on explore
+          AMBIGUOUS_UNICODE_DETECTION: true
+          DEFAULT_SHOW_FULL_NAME: true
+          FEED_MAX_COMMIT_NUM: 10
+          GRAPH_MAX_COMMIT_NUM: 100
+        markdown:
+          ENABLE_HARD_LINE_BREAK_IN_COMMENTS: true
+          ENABLE_MATH: true
+        webhook:
+          ALLOWED_HOST_LIST: external # Allow webhooks to external hosts only
+          SKIP_TLS_VERIFY: false
+          DELIVER_TIMEOUT: 10 # 10 seconds webhook timeout
+        migrations:
+          ALLOW_LOCALNETWORKS: true # Allow migrations from local network addresses
+          ALLOWED_DOMAINS: "*" # Allow migrations from any domain
+        api:
+          ENABLE_SWAGGER: true
+          MAX_RESPONSE_ITEMS: 50
+          DEFAULT_PAGING_NUM: 30
+        git:
+          DISABLE_DIFF_HIGHLIGHT: false
+          MAX_GIT_DIFF_LINES: 1000
+          MAX_GIT_DIFF_FILES: 100
+          ENABLE_AUTO_GIT_WIRE_PROTOCOL: true
+          PULL_REQUEST_PUSH_MESSAGE: true
+          VERBOSE_PUSH: true
+        actions:
+          ENABLED: true
+          DEFAULT_ACTIONS_URL: https://github.com # Use GitHub as primary source for actions
+          ARTIFACT_RETENTION_DAYS: 90
+          LOG_RETENTION_DAYS: 365
+          LOG_COMPRESSION: zstd # Compress action logs
+      additionalConfigFromEnvs:
+        # Database - CNPG auto-generated connection string
+        - name: GITEA__SECURITY__SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: forgejo-secret
+              key: SECRET_KEY
+      podAnnotations:
+        reloader.stakater.com/search: "true"
+
+    ingress:
+      enabled: false
+    valkey-cluster:
+      enabled: false
+    postgresql-ha:
+      enabled: false
+    postgresql:
+      enabled: false
+    redis-cluster:
+      enabled: false
+
+    checkDeprecation: true
+    test:
+      enabled: true
+      image:
+        name: busybox
+        tag: latest
