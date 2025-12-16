@@ -34,7 +34,7 @@ spec:
           app:
             image:
               repository: docker.io/timberio/vector
-              tag: 0.51.1-alpine
+              tag: 0.52.0-alpine
             env:
               PROCFS_ROOT: /host/proc
               SYSFS_ROOT: /host/sys
