@@ -1,0 +1,78 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: appdaemon
+  namespace: home
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    controllers:
+      appdaemon:
+        annotations:
+          secret.reloader.stakater.com/reload: "appdaemon-secrets"
+
+        replicas: 1
+
+        containers:
+          app:
+            image:
+              repository: docker.io/acockburn/appdaemon
+              tag: 4.5.11
+            env:
+              HA_URL: "http://home-assistant:8123"
+              DASH_URL: "http://0.0.0.0:5050"
+            envFrom:
+              - secretRef:
+                  name: appdaemon-secrets
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+
+    service:
+      app:
+        controller: &app appdaemon
+        ports:
+          http:
+            port: &port 5050
+
+    route:
+      app:
+        hostnames:
+          - appdaemon.nikola.wtf
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
+
+    persistence:
+      conf:
+        existingClaim: appdaemon-config

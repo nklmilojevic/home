@@ -12,3 +12,4 @@ resources:
   - ./wyoming-whisper/ks.yaml
   - ./scrypted/ks.yaml
   - ./mosquitto/ks.yaml
+  - ./appdaemon/ks.yaml
