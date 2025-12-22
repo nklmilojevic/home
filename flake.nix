@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     talosctl.url = "github:nklmilojevic/talosctl-flake";
+    talhelper.url = "github:budimanjojo/talhelper";
   };
 
   outputs = {
@@ -12,6 +13,7 @@
     nixpkgs,
     flake-utils,
     talosctl,
+    talhelper,
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {
@@ -34,7 +36,7 @@
           pre-commit
           sops
           stern
-          talhelper
+          talhelper.packages.${system}.default
           talosctl.packages.${system}.default
           yq
         ];
