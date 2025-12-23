@@ -5,38 +5,53 @@ metadata:
   name: multus
 spec:
   interval: 30m
-  chart:
-    spec:
-      chart: multus
-      version: 5.0.7
-      sourceRef:
-        kind: HelmRepository
-        name: angelnu
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: app-template
   install:
     remediation:
-      retries: 3
+      retries: -1
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
       retries: 3
   values:
-    image:
-      repository: ghcr.io/k8snetworkplumbingwg/multus-cni
-      tag: v4.2.3-thick@sha256:e93af9e533cc16ca7847aeec3b516c9b1e8891c2b95c727991e94c9b59c4970e
-    cni:
-      image:
-        repository: ghcr.io/angelnu/cni-plugins
-        tag: 1.9.0@sha256:6670a644e646654ee61755477e24b2fd1a4c817212bd8f5eec5f7ea56e501216
-      logLevel: error
-      paths:
-        bin: /opt/cni/bin
-        config: /etc/cni/net.d
-    resources:
-      requests:
-        cpu: 10m
-      limits:
-        memory: 1024Mi
-    hostPaths:
-      netns: /var/run/netns
+    controllers:
+      multus:
+        type: daemonset
+        initContainers:
+          cni-plugins:
+            image:
+              repository: ghcr.io/home-operations/cni-plugins
+              tag: 1.9.0@sha256:cd462d8720f1d9867748f86f84d3b0898f935f882a5130ce47c2c037b1bd3471
+        containers:
+          multus:
+            image:
+              repository: ghcr.io/k8snetworkplumbingwg/multus-cni
+              tag: v4.2.3@sha256:54f120a6f8fede8e2da0d0fe3bed3da2c92edcb2cd895e4f382784a9a708e1b9
+            command:
+              - /thin_entrypoint
+            args:
+              - --cleanup-config-on-exit=true
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 32Mi
+            securityContext:
+              privileged: true
+    defaultPodOptions:
+      hostNetwork: true
+    persistence:
+      etc-cni-net-d:
+        type: hostPath
+        hostPath: /etc/cni/net.d
+        globalMounts:
+          - path: /host/etc/cni/net.d
+      opt-cni-bin:
+        type: hostPath
+        hostPath: /opt/cni/bin
+        globalMounts:
+          - path: /host/opt/cni/bin
+    serviceAccount:
+      multus: {}
