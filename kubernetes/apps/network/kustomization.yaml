@@ -6,7 +6,7 @@ resources:
   - ./cloudflared/ks.yaml
   - ./echo-server/ks.yaml
   - ./external-dns/ks.yaml
-  - ./multus/ks.yaml
+  # - ./multus/ks.yaml
   - ./smtp-relay/ks.yaml
   - ./isponsorblocktv/ks.yaml
   - ./openspeedtest/ks.yaml
