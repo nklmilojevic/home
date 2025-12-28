@@ -27,8 +27,8 @@ spec:
         containers:
           app:
             image:
-              repository: quay.io/nklmilojevic/sabnzbd
-              tag: 4.5.5@sha256:e69050258819788110ce74aee194b1b5a5daad9ee67916328d7bec2c1141daca
+              repository: ghcr.io/home-operations/sabnzbd
+              tag: 4.5.5
 
             env:
               TZ: "Europe/Belgrade"
