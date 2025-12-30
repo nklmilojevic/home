@@ -27,7 +27,7 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/home-operations/tautulli
+              repository: quay.io/nklmilojevic/tautulli
               tag: 2.16.0
             probes:
               liveness: &probes
