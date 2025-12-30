@@ -27,7 +27,7 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/home-operations/sabnzbd
+              repository: quay.io/nklmilojevic/sabnzbd
               tag: 4.5.5
 
             env:

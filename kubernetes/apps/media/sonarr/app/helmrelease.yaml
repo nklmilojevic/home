@@ -27,7 +27,7 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/home-operations/sonarr
+              repository: quay.io/nklmilojevic/sonarr
               tag: 4.0.16.2946
 
             env:
