@@ -20,6 +20,7 @@ spec:
       strategy: rollback
       retries: 3
   values:
+    defaultPodOptionsStrategy: merge
     defaultPodOptions:
       affinity:
         podAntiAffinity:
@@ -34,7 +35,6 @@ spec:
 
     controllers:
       sabnzbd:
-        defaultPodOptionsStrategy: merge
         replicas: 1
 
         containers:
