@@ -31,6 +31,8 @@ spec:
                     operator: In
                     values:
                       - home-assistant
+              namespaces:
+                - home
               topologyKey: kubernetes.io/hostname
 
     controllers:
