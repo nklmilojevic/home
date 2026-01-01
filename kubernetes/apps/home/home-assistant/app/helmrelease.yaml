@@ -35,6 +35,8 @@ spec:
                     operator: In
                     values:
                       - sabnzbd
+              namespaces:
+                - media
               topologyKey: kubernetes.io/hostname
 
     controllers:
