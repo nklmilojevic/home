@@ -34,6 +34,7 @@ spec:
 
     controllers:
       sabnzbd:
+        defaultPodOptionsStrategy: merge
         replicas: 1
 
         containers:
