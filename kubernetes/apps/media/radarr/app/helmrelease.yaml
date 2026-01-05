@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/radarr
-              tag: 6.1.0.10309@sha256:677bc1cc29aa7a908dac71ec015066db6ba02bad68c1f17eff2595d8fe5add1c
+              tag: 6.1.0.10316@sha256:10f3d0b282a2181ecb31f74d8e71efeff59f29be37b8efb3bbf9f9b8223a9ef5
             env:
               TZ: "Europe/Belgrade"
               PUID: "1000"
