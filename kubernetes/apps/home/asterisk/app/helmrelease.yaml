@@ -69,6 +69,19 @@ spec:
             port: 10100
             protocol: UDP
 
+    route:
+      websocket:
+        hostnames:
+          - asterisk.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: asterisk-sip
+                port: 8088
+
     persistence:
       config-pjsip:
         type: configMap
