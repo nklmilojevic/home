@@ -8,5 +8,6 @@ configMapGenerator:
     files:
       - config/pjsip.conf
       - config/extensions.conf
+      - config/http.conf
 generatorOptions:
   disableNameSuffixHash: true

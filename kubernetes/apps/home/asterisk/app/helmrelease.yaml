@@ -59,6 +59,9 @@ spec:
           sip-tcp:
             port: 5060
             protocol: TCP
+          websocket:
+            port: 8088
+            protocol: TCP
           rtp-start:
             port: 10000
             protocol: UDP
@@ -80,4 +83,11 @@ spec:
         globalMounts:
           - path: /etc/asterisk/extensions.conf
             subPath: extensions.conf
+            readOnly: true
+      config-http:
+        type: configMap
+        name: asterisk-config
+        globalMounts:
+          - path: /etc/asterisk/http.conf
+            subPath: http.conf
             readOnly: true
