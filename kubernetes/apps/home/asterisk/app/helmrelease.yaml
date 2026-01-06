@@ -27,7 +27,7 @@ spec:
           app:
             image:
               repository: docker.io/andrius/asterisk
-              tag: 20.11.1-alpine
+              tag: 18
             probes:
               liveness:
                 enabled: false
@@ -43,7 +43,7 @@ spec:
       sip:
         type: LoadBalancer
         annotations:
-          lbipam.cilium.io/ips: 10.40.0.30
+          lbipam.cilium.io/ips: "10.40.0.32"
         ports:
           sip-udp:
             port: 5060
