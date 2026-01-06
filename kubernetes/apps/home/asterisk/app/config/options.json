@@ -4,7 +4,7 @@
   "auto_add_secret": "hass123",
   "video_support": true,
   "register_ingress_entry": false,
-  "generate_ssl_cert": false,
+  "generate_ssl_cert": true,
   "certfile": "fullchain.pem",
   "keyfile": "privkey.pem",
   "additional_sounds": [],
