@@ -27,7 +27,7 @@ spec:
           app:
             image:
               repository: docker.io/andrius/asterisk
-              tag: 18
+              tag: 23
             probes:
               liveness:
                 enabled: false
