@@ -98,3 +98,10 @@ spec:
           - path: /config/config.json
             subPath: options.json
             readOnly: true
+      config-manager:
+        type: configMap
+        name: asterisk-config
+        globalMounts:
+          - path: /config/asterisk/custom/manager.conf
+            subPath: manager.conf
+            readOnly: true

@@ -8,5 +8,6 @@ configMapGenerator:
   - name: asterisk-config
     files:
       - config/options.json
+      - config/manager.conf
 generatorOptions:
   disableNameSuffixHash: true
