@@ -105,3 +105,17 @@ spec:
           - path: /config/asterisk/custom/manager.conf
             subPath: manager.conf
             readOnly: true
+      config-pjsip:
+        type: configMap
+        name: asterisk-config
+        globalMounts:
+          - path: /config/asterisk/custom/pjsip_custom.conf
+            subPath: pjsip_custom.conf
+            readOnly: true
+      config-extensions:
+        type: configMap
+        name: asterisk-config
+        globalMounts:
+          - path: /config/asterisk/custom/extensions_custom.conf
+            subPath: extensions_custom.conf
+            readOnly: true

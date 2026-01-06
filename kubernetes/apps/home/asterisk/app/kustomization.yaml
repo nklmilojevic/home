@@ -9,5 +9,7 @@ configMapGenerator:
     files:
       - config/options.json
       - config/manager.conf
+      - config/pjsip_custom.conf
+      - config/extensions_custom.conf
 generatorOptions:
   disableNameSuffixHash: true
