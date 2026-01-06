@@ -79,7 +79,7 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - name: asterisk-sip
+              - name: asterisk
                 port: 8088
 
     persistence:
