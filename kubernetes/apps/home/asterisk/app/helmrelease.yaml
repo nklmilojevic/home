@@ -116,6 +116,6 @@ spec:
         type: configMap
         name: asterisk-config
         globalMounts:
-          - path: /config/asterisk/custom/extensions_custom.conf
+          - path: /etc/asterisk/extensions.conf
             subPath: extensions_custom.conf
             readOnly: true
