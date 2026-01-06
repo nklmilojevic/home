@@ -13,3 +13,4 @@ resources:
   - ./scrypted/ks.yaml
   - ./mosquitto/ks.yaml
   - ./appdaemon/ks.yaml
+  - ./asterisk/ks.yaml
