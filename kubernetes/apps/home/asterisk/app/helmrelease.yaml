@@ -34,8 +34,13 @@ spec:
         containers:
           app:
             image:
-              repository: docker.io/andrius/asterisk
-              tag: 18
+              repository: ghcr.io/tech7fox/asterisk-hass-addon
+              tag: latest
+            env:
+              HA_URL: "https://hass.nikola.wtf"
+            envFrom:
+              - secretRef:
+                  name: asterisk-secrets
             probes:
               liveness:
                 enabled: false
@@ -86,31 +91,10 @@ spec:
                 port: 8088
 
     persistence:
-      config-pjsip:
+      config:
         type: configMap
         name: asterisk-config
         globalMounts:
-          - path: /etc/asterisk/pjsip.conf
-            subPath: pjsip.conf
-            readOnly: true
-      config-extensions:
-        type: configMap
-        name: asterisk-config
-        globalMounts:
-          - path: /etc/asterisk/extensions.conf
-            subPath: extensions.conf
-            readOnly: true
-      config-http:
-        type: configMap
-        name: asterisk-config
-        globalMounts:
-          - path: /etc/asterisk/http.conf
-            subPath: http.conf
-            readOnly: true
-      config-manager:
-        type: configMap
-        name: asterisk-config
-        globalMounts:
-          - path: /etc/asterisk/manager.conf
-            subPath: manager.conf
+          - path: /config/config.json
+            subPath: options.json
             readOnly: true
