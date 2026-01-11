@@ -1,5 +1,6 @@
-[listen]
-address = "[::]:8080"
+listen = "[::]:8080"
+allowed-hosts = ["attic.nikola.wtf"]
+api-endpoint = "https://attic.nikola.wtf/"
 
 [database]
 url = "sqlite:///var/lib/attic/server.db?mode=rwc"
