@@ -61,7 +61,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/home-assistant
-              tag: 2025.12.5@sha256:6745d6c9adb222e6c8b55d88ab10ca8d538845c3e058596601bb8eac82a2f92f
+              tag: 2026.1.0@sha256:172745e09f10b9f052e5aa5dc9d6b664ba84d120ff9e2d83fcf2a92023b51c26
             env:
               TZ: "Europe/Belgrade"
             envFrom:
@@ -78,7 +78,7 @@ spec:
           code-server:
             image:
               repository: ghcr.io/coder/code-server
-              tag: 4.107.0@sha256:4b622c4cd1b0f559fec0df67fcf09042d63e9ce84c575102066afd9511695627
+              tag: 4.107.1@sha256:b6ca653b4490903fdc9622cccf4970c39d7fcbf31ea3d71791db939a46bd51b0
             args:
               - --auth
               - none
