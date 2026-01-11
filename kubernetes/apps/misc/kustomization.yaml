@@ -3,7 +3,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./namespace.yaml
-  - ./attic/ks.yaml
   - ./paperless/ks.yaml
   - ./n8n/ks.yaml
   - ./forgejo/ks.yaml
