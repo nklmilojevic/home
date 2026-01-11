@@ -23,10 +23,8 @@ spec:
               repository: ghcr.io/zhaofengli/attic
               tag: latest
             args:
-              - --config
+              - -f
               - /config/server.toml
-              - --mode
-              - api-server
             env:
               ATTIC_SERVER_TOKEN_HS256_SECRET_BASE64:
                 valueFrom:
@@ -55,7 +53,7 @@ spec:
         controller: attic
         ports:
           http:
-            port: &port 8080
+            port: 8080
 
     route:
       app:
@@ -68,12 +66,12 @@ spec:
         rules:
           - backendRefs:
               - name: attic
-                port: *port
+                port: 8080
 
     persistence:
       config:
         type: configMap
-        name: attic-config
+        name: attic-configmap
         globalMounts:
           - path: /config/server.toml
             subPath: server.toml
@@ -82,30 +80,3 @@ spec:
         existingClaim: attic-data
         globalMounts:
           - path: /var/lib/attic
-
-    configMaps:
-      config:
-        data:
-          server.toml: |
-            [listen]
-            address = "0.0.0.0:8080"
-
-            [database]
-            url = "sqlite:///var/lib/attic/server.db?mode=rwc"
-
-            [storage]
-            type = "local"
-            path = "/var/lib/attic/storage"
-
-            [chunking]
-            nar-size-threshold = 65536
-            min-size = 16384
-            avg-size = 65536
-            max-size = 262144
-
-            [compression]
-            type = "zstd"
-
-            [garbage-collection]
-            interval = "12 hours"
-            default-retention-period = "6 months"
