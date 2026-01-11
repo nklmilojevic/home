@@ -1,0 +1,113 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: attic
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+
+  values:
+    controllers:
+      attic:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/zhaofengli/attic
+              tag: latest
+            args:
+              - --config
+              - /config/server.toml
+              - --mode
+              - api-server
+            env:
+              ATTIC_SERVER_TOKEN_HS256_SECRET_BASE64:
+                valueFrom:
+                  secretKeyRef:
+                    name: attic-secret
+                    key: ATTIC_SERVER_TOKEN_HS256_SECRET_BASE64
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+
+    service:
+      app:
+        controller: attic
+        ports:
+          http:
+            port: &port 8080
+
+    route:
+      app:
+        hostnames:
+          - attic.nikola.wtf
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: attic
+                port: *port
+
+    persistence:
+      config:
+        type: configMap
+        name: attic-config
+        globalMounts:
+          - path: /config/server.toml
+            subPath: server.toml
+            readOnly: true
+      data:
+        type: nfs
+        server: 10.5.0.10
+        path: /var/nfs/shared/attic
+        globalMounts:
+          - path: /var/lib/attic
+
+    configMaps:
+      config:
+        data:
+          server.toml: |
+            [listen]
+            address = "0.0.0.0:8080"
+
+            [database]
+            url = "sqlite:///var/lib/attic/server.db?mode=rwc"
+
+            [storage]
+            type = "local"
+            path = "/var/lib/attic/storage"
+
+            [chunking]
+            nar-size-threshold = 65536
+            min-size = 16384
+            avg-size = 65536
+            max-size = 262144
+
+            [compression]
+            type = "zstd"
+
+            [garbage-collection]
+            interval = "12 hours"
+            default-retention-period = "6 months"
