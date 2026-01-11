@@ -79,9 +79,7 @@ spec:
             subPath: server.toml
             readOnly: true
       data:
-        type: nfs
-        server: 10.5.0.10
-        path: /var/nfs/shared/attic
+        existingClaim: attic-data
         globalMounts:
           - path: /var/lib/attic
 
