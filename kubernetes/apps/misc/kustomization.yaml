@@ -6,4 +6,3 @@ resources:
   - ./paperless/ks.yaml
   - ./n8n/ks.yaml
   - ./forgejo/ks.yaml
-  - ./octoeverywhere-bambu-connect/ks.yaml
