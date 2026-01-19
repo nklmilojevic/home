@@ -64,11 +64,11 @@ spec:
     route:
       app:
         hostnames:
-          - readarr.${SECRET_DOMAIN}
+          - readarr.nikola.wtf
         parentRefs:
-          - name: ${GATEWAY_INTERNAL}
-            namespace: ${GATEWAY_NAMESPACE}
-            sectionName: ${GATEWAY_SECTION}
+          - name: internal
+            namespace: kube-system
+            sectionName: https
         rules:
           - backendRefs:
               - name: readarr

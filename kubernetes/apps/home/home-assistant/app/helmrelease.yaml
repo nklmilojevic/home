@@ -121,22 +121,22 @@ spec:
     route:
       app:
         hostnames:
-          - hass.${SECRET_DOMAIN}
+          - hass.nikola.wtf
         parentRefs:
-          - name: ${GATEWAY_EXTERNAL}
-            namespace: ${GATEWAY_NAMESPACE}
-            sectionName: ${GATEWAY_SECTION}
+          - name: external
+            namespace: kube-system
+            sectionName: https
         rules:
           - backendRefs:
               - name: *app
                 port: *port
       code-server:
         hostnames:
-          - hass-code.${SECRET_DOMAIN}
+          - hass-code.nikola.wtf
         parentRefs:
-          - name: ${GATEWAY_INTERNAL}
-            namespace: ${GATEWAY_NAMESPACE}
-            sectionName: ${GATEWAY_SECTION}
+          - name: internal
+            namespace: kube-system
+            sectionName: https
         rules:
           - backendRefs:
               - name: *app

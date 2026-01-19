@@ -57,11 +57,11 @@ spec:
     route:
       app:
         hostnames:
-          - cwa.${SECRET_DOMAIN}
+          - cwa.nikola.wtf
         parentRefs:
-          - name: ${GATEWAY_INTERNAL}
-            namespace: ${GATEWAY_NAMESPACE}
-            sectionName: ${GATEWAY_SECTION}
+          - name: internal
+            namespace: kube-system
+            sectionName: https
         rules:
           - backendRefs:
               - name: calibre-web-automated
