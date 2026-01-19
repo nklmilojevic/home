@@ -5,4 +5,8 @@ metadata:
   name: cluster-settings
   namespace: flux-system
 data:
-  SETTING_EXAMPLE: Global settings for your cluster go in this file, this file is NOT encrypted
+  GATEWAY_INTERNAL: internal
+  GATEWAY_EXTERNAL: external
+  GATEWAY_NAMESPACE: kube-system
+  GATEWAY_SECTION: https
+  SECRET_DOMAIN: nikola.wtf

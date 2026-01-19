@@ -83,11 +83,11 @@ spec:
     route:
       app:
         hostnames:
-          - echo-server.nikola.wtf
+          - echo-server.${SECRET_DOMAIN}
         parentRefs:
-          - name: external
-            namespace: kube-system
-            sectionName: https
+          - name: ${GATEWAY_EXTERNAL}
+            namespace: ${GATEWAY_NAMESPACE}
+            sectionName: ${GATEWAY_SECTION}
         rules:
           - backendRefs:
               - name: echo-server
