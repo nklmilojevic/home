@@ -88,11 +88,11 @@ spec:
     route:
       app:
         hostnames:
-          - paperless.nikola.wtf
+          - paperless.${SECRET_DOMAIN}
         parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
+          - name: ${GATEWAY_INTERNAL}
+            namespace: ${GATEWAY_NAMESPACE}
+            sectionName: ${GATEWAY_SECTION}
         rules:
           - backendRefs:
               - name: paperless

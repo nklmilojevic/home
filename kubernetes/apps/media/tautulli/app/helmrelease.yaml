@@ -67,11 +67,11 @@ spec:
     route:
       app:
         hostnames:
-          - tautulli.nikola.wtf
+          - tautulli.${SECRET_DOMAIN}
         parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
+          - name: ${GATEWAY_INTERNAL}
+            namespace: ${GATEWAY_NAMESPACE}
+            sectionName: ${GATEWAY_SECTION}
         rules:
           - backendRefs:
               - name: tautulli

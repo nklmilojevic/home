@@ -95,11 +95,11 @@ spec:
     route:
       app:
         hostnames:
-          - scrypted.nikola.wtf
+          - scrypted.${SECRET_DOMAIN}
         parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
+          - name: ${GATEWAY_INTERNAL}
+            namespace: ${GATEWAY_NAMESPACE}
+            sectionName: ${GATEWAY_SECTION}
         rules:
           - backendRefs:
               - identifier: app

@@ -78,11 +78,11 @@ spec:
     route:
       app:
         hostnames:
-          - go2rtc.nikola.wtf
+          - go2rtc.${SECRET_DOMAIN}
         parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
+          - name: ${GATEWAY_INTERNAL}
+            namespace: ${GATEWAY_NAMESPACE}
+            sectionName: ${GATEWAY_SECTION}
         rules:
           - backendRefs:
               - identifier: app

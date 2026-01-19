@@ -98,11 +98,11 @@ spec:
     route:
       app:
         hostnames:
-          - sabnzbd.nikola.wtf
+          - sabnzbd.${SECRET_DOMAIN}
         parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
+          - name: ${GATEWAY_INTERNAL}
+            namespace: ${GATEWAY_NAMESPACE}
+            sectionName: ${GATEWAY_SECTION}
         rules:
           - backendRefs:
               - name: sabnzbd
