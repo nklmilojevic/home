@@ -83,7 +83,7 @@ spec:
     route:
       app:
         hostnames:
-          - echo-server.nikola.wtf
+          - "{{ .Release.Name }}.nikola.wtf"
         parentRefs:
           - name: external
             namespace: kube-system
