@@ -55,7 +55,7 @@ spec:
     route:
       app:
         hostnames:
-          - sonarr.nikola.wtf
+          - "{{ .Release.Name }}.nikola.wtf"
         parentRefs:
           - name: internal
             namespace: kube-system
@@ -67,7 +67,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: sonarr-config
+        existingClaim: "{{ .Release.Name }}-config"
       media:
         enabled: true
         type: custom

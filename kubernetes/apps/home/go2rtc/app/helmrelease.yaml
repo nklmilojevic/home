@@ -78,7 +78,7 @@ spec:
     route:
       app:
         hostnames:
-          - go2rtc.nikola.wtf
+          - "{{ .Release.Name }}.nikola.wtf"
         parentRefs:
           - name: internal
             namespace: kube-system

@@ -88,7 +88,7 @@ spec:
     route:
       app:
         hostnames:
-          - paperless.nikola.wtf
+          - "{{ .Release.Name }}.nikola.wtf"
         parentRefs:
           - name: internal
             namespace: kube-system

@@ -71,7 +71,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: scrypted-config
+        existingClaim: "{{ .Release.Name }}-config"
         advancedMounts:
           scrypted:
             app:
@@ -95,7 +95,7 @@ spec:
     route:
       app:
         hostnames:
-          - scrypted.nikola.wtf
+          - "{{ .Release.Name }}.nikola.wtf"
         parentRefs:
           - name: internal
             namespace: kube-system
