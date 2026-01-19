@@ -54,11 +54,11 @@ spec:
     route:
       app:
         hostnames:
-          - requests.${SECRET_DOMAIN}
+          - requests.nikola.wtf
         parentRefs:
-          - name: ${GATEWAY_EXTERNAL}
-            namespace: ${GATEWAY_NAMESPACE}
-            sectionName: ${GATEWAY_SECTION}
+          - name: external
+            namespace: kube-system
+            sectionName: https
         rules:
           - backendRefs:
               - name: *app

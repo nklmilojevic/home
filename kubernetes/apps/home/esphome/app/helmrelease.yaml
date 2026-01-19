@@ -66,11 +66,11 @@ spec:
     route:
       app:
         hostnames:
-          - esphome.${SECRET_DOMAIN}
+          - esphome.nikola.wtf
         parentRefs:
-          - name: ${GATEWAY_INTERNAL}
-            namespace: ${GATEWAY_NAMESPACE}
-            sectionName: ${GATEWAY_SECTION}
+          - name: internal
+            namespace: kube-system
+            sectionName: https
         rules:
           - backendRefs:
               - name: esphome

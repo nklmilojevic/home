@@ -80,11 +80,11 @@ spec:
     route:
       websocket:
         hostnames:
-          - asterisk.${SECRET_DOMAIN}
+          - asterisk.nikola.wtf
         parentRefs:
-          - name: ${GATEWAY_INTERNAL}
-            namespace: ${GATEWAY_NAMESPACE}
-            sectionName: ${GATEWAY_SECTION}
+          - name: internal
+            namespace: kube-system
+            sectionName: https
         rules:
           - backendRefs:
               - name: asterisk

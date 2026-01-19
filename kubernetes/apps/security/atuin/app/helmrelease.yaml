@@ -76,11 +76,11 @@ spec:
     route:
       app:
         hostnames:
-          - atuin.${SECRET_DOMAIN}
+          - atuin.nikola.wtf
         parentRefs:
-          - name: ${GATEWAY_INTERNAL}
-            namespace: ${GATEWAY_NAMESPACE}
-            sectionName: ${GATEWAY_SECTION}
+          - name: internal
+            namespace: kube-system
+            sectionName: https
         rules:
           - backendRefs:
               - name: *app

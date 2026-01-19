@@ -54,11 +54,11 @@ spec:
     route:
       app:
         hostnames:
-          - bazarr.${SECRET_DOMAIN}
+          - bazarr.nikola.wtf
         parentRefs:
-          - name: ${GATEWAY_INTERNAL}
-            namespace: ${GATEWAY_NAMESPACE}
-            sectionName: ${GATEWAY_SECTION}
+          - name: internal
+            namespace: kube-system
+            sectionName: https
         rules:
           - backendRefs:
               - name: bazarr
