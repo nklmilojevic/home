@@ -17,3 +17,4 @@ resources:
   - ./overseerr/ks.yaml
   - ./calibre-web-automated/ks.yaml
   - ./tautulli/ks.yaml
+  - ./agregarr/ks.yaml
