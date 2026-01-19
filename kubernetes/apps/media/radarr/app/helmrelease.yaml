@@ -59,7 +59,7 @@ spec:
     route:
       app:
         hostnames:
-          - radarr.nikola.wtf
+          - "{{ .Release.Name }}.nikola.wtf"
         parentRefs:
           - name: internal
             namespace: kube-system
@@ -71,7 +71,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: radarr-config
+        existingClaim: "{{ .Release.Name }}-config"
       media:
         enabled: true
         type: custom

@@ -71,7 +71,7 @@ spec:
     route:
       app:
         hostnames:
-          - plex.nikola.wtf
+          - "{{ .Release.Name }}.nikola.wtf"
         parentRefs:
           - name: internal
             namespace: kube-system
@@ -83,7 +83,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: plex-config
+        existingClaim: "{{ .Release.Name }}-config"
       transcode:
         type: emptyDir
         medium: Memory

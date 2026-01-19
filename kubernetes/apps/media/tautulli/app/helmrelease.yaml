@@ -67,7 +67,7 @@ spec:
     route:
       app:
         hostnames:
-          - tautulli.nikola.wtf
+          - "{{ .Release.Name }}.nikola.wtf"
         parentRefs:
           - name: internal
             namespace: kube-system
@@ -79,4 +79,4 @@ spec:
 
     persistence:
       config:
-        existingClaim: tautulli-config
+        existingClaim: "{{ .Release.Name }}-config"
