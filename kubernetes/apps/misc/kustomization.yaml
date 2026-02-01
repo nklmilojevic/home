@@ -6,3 +6,4 @@ resources:
   - ./paperless/ks.yaml
   - ./n8n/ks.yaml
   - ./forgejo/ks.yaml
+  - ./invoicing/ks.yaml
