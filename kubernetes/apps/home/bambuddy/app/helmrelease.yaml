@@ -53,6 +53,8 @@ spec:
             port: 990
           mqtt:
             port: 8883
+          camera:
+            port: 322
     persistence:
       config:
         existingClaim: bambuddy
