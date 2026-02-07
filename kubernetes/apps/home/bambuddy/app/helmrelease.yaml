@@ -49,6 +49,10 @@ spec:
           http:
             appProtocol: kubernetes.io/wss
             port: *httpPort
+          ftp:
+            port: 990
+          mqtt:
+            port: 8883
     persistence:
       config:
         existingClaim: bambuddy
