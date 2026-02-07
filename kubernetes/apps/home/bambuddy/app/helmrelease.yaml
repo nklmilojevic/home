@@ -53,8 +53,6 @@ spec:
             port: 990
           mqtt:
             port: 8883
-          camera:
-            port: 322
     persistence:
       config:
         existingClaim: bambuddy
@@ -80,3 +78,7 @@ spec:
           - name: internal
             namespace: kube-system
             sectionName: https
+        rules:
+          - backendRefs:
+              - name: http
+                port: *httpPort
