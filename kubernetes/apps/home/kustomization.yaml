@@ -14,4 +14,4 @@ resources:
   - ./mosquitto/ks.yaml
   - ./appdaemon/ks.yaml
   - ./asterisk/ks.yaml
-  - ./bambuddy/ks.yaml
+#  - ./bambuddy/ks.yaml
