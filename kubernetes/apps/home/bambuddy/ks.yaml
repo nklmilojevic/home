@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app bambuddy
+  namespace: flux-system
+spec:
+  targetNamespace: home
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: multus-config
+    - name: rook-ceph-cluster
+    - name: volsync
+    - name: external-secrets-stores
+  path: ./kubernetes/apps/home/bambuddy/app
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CLAIM: bambuddy
+      VOLSYNC_CAPACITY: 5Gi
+      APP_UID: "1000"
+      APP_GID: "1000"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: false
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
