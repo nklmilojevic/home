@@ -42,10 +42,7 @@ spec:
               ATUIN_METRICS__PORT: &metricsPort 8080
               ATUIN_DB_URI: sqlite:///config/atuin.db
               ATUIN_TLS__ENABLE: "false"
-            command:
-              - atuin
-              - server
-              - start
+            args: ["start"]
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
