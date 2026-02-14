@@ -104,6 +104,7 @@ spec:
         controller: &app home-assistant
         ports:
           http:
+            appProtocol: kubernetes.io/ws
             port: &port 8123
           mdns-tcp:
             enabled: true
