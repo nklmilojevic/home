@@ -7,3 +7,4 @@ resources:
   - ./n8n/ks.yaml
   - ./forgejo/ks.yaml
   - ./invoicing/ks.yaml
+  - ./stirling-pdf/ks.yaml
