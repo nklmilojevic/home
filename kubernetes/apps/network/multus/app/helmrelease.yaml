@@ -24,7 +24,7 @@ spec:
           cni-plugins:
             image:
               repository: quay.io/nklmilojevic/cni-plugins
-              tag: 1.9.0
+              tag: 1.9.1
         containers:
           multus:
             image:
