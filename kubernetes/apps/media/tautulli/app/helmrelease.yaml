@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/tautulli
-              tag: 2.16.1
+              tag: 2.17.0
             probes:
               liveness: &probes
                 enabled: true
