@@ -32,6 +32,9 @@ spec:
             runAsGroup: 0
             fsGroup: 0
             fsGroupChangePolicy: OnRootMismatch
+            sysctls:
+              - name: net.ipv6.conf.all.disable_ipv6
+                value: "0"
 
         containers:
           app:
@@ -52,6 +55,12 @@ spec:
               MATTER_SERVER__INSTANCE_NAME: matter-server
               MATTER_SERVER__PORT: &port 5580
               MATTER_SERVER__LOG_LEVEL: info
+            securityContext:
+              privileged: false
+              capabilities:
+                add:
+                  - NET_RAW
+                  - NET_ADMIN
             probes:
               liveness:
                 enabled: false
