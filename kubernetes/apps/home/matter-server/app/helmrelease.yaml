@@ -23,8 +23,8 @@ spec:
               [{
                 "name":"multus-iot",
                 "namespace": "network",
-                "ips": ["10.50.0.251/24"],
-                "mac": "3a:f2:c8:91:b7:4d"
+                "ips": ["10.50.0.245/24"],
+                "mac": "3a:f2:c8:91:b7:4g"
               }]
           securityContext:
             runAsNonRoot: false
@@ -44,9 +44,9 @@ spec:
               - --primary-interface
               - net1
               - --log-level
-              - info
+              - debug
               - --log-level-sdk
-              - info
+              - debug
             env:
               TZ: Europe/Belgrade
               MATTER_SERVER__INSTANCE_NAME: matter-server
