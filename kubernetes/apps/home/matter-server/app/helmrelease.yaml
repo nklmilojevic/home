@@ -18,29 +18,13 @@ spec:
           reloader.stakater.com/auto: "true"
 
         pod:
-          annotations:
-            k8s.v1.cni.cncf.io/networks: |
-              [{
-                "name":"multus-host",
-                "namespace": "network",
-                "ips": ["10.5.0.245/24"],
-                "mac": "3a:f2:c8:91:b7:44"
-              }]
+          hostNetwork: true
           securityContext:
             runAsNonRoot: false
             runAsUser: 0
             runAsGroup: 0
             fsGroup: 0
             fsGroupChangePolicy: OnRootMismatch
-            sysctls:
-              - name: net.ipv6.conf.all.disable_ipv6
-                value: "0"
-              - name: net.ipv6.conf.net1.accept_ra
-                value: "2"
-              - name: net.ipv6.conf.net1.accept_ra_rt_info_max_plen
-                value: "64"
-              - name: net.ipv6.conf.net1.forwarding
-                value: "1"
 
         containers:
           app:
@@ -50,8 +34,6 @@ spec:
             args:
               - --storage-path
               - /data
-              - --primary-interface
-              - eth0
               - --log-level
               - debug
               - --log-level-sdk
