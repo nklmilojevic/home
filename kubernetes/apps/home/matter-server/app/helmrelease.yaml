@@ -34,6 +34,8 @@ spec:
             args:
               - --storage-path
               - /data
+              - --primary-interface
+              - bond0.1
               - --log-level
               - debug
               - --log-level-sdk
