@@ -51,9 +51,17 @@ spec:
               [{
                 "name":"multus-host",
                 "namespace": "network",
-                "ips": ["10.5.0.205/24"],
+                "ips": ["10.5.0.205/24", "fdb8:4fc6:cb91:be2::205/64"],
                 "mac": "dc:de:70:dd:f4:9e"
               }]
+          securityContext:
+            sysctls:
+              - name: net.ipv6.conf.net1.accept_ra
+                value: "2"
+              - name: net.ipv6.conf.net1.accept_ra_defrtr
+                value: "1"
+              - name: net.ipv6.conf.net1.accept_ra_rt_info_max_plen
+                value: "64"
 
         replicas: 1
 
