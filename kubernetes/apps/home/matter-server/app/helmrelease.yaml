@@ -23,7 +23,7 @@ spec:
               [{
                 "name":"multus-host",
                 "namespace": "network",
-                "ips": ["10.5.0.245/24", "fdb8:4fc6:cb91:be2::245/64"],
+                "ips": ["10.5.0.245/24", "fd00:5::245/64"],
                 "mac": "3a:f2:c8:91:b7:44"
               }]
           securityContext:
