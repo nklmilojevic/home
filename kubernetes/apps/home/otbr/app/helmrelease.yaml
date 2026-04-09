@@ -47,7 +47,8 @@ spec:
               repository: ghcr.io/ownbee/hass-otbr-docker
               tag: v0.3.0
             env:
-              DEVICE: socket://10.5.0.207:6638
+              DEVICE: /tmp/ttyOTBR
+              NETWORK_DEVICE: "10.5.0.207:6638"
               BACKBONE_IF: net1
               OTBR_REST_PORT: &port 8081
               BAUDRATE: "460800"
