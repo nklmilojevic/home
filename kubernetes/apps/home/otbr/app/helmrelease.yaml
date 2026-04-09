@@ -47,11 +47,11 @@ spec:
               repository: ghcr.io/ownbee/hass-otbr-docker
               tag: v0.3.0
             env:
-              DEVICE: /dev/ttyACM0
+              DEVICE: socket://10.5.0.207:6638
               BACKBONE_IF: net1
               OTBR_REST_PORT: &port 8081
               BAUDRATE: "460800"
-              FLOW_CONTROL: "1"
+              FLOW_CONTROL: "0"
               NAT64: "0"
             securityContext:
               privileged: true
@@ -91,7 +91,6 @@ spec:
                 cpu: 10m
               limits:
                 memory: 512Mi
-                kernel.org/zbt: 1
 
     service:
       app:
