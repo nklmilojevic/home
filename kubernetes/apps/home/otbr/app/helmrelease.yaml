@@ -22,9 +22,9 @@ spec:
           annotations:
             k8s.v1.cni.cncf.io/networks: |
               [{
-                "name":"multus-host",
+                "name":"multus-iot",
                 "namespace": "network",
-                "ips": ["10.5.0.246/24", "fd00:5::246/64"],
+                "ips": ["10.50.0.246/24", "fd00:50::246/64"],
                 "mac": "4a:e3:b1:72:c5:9d"
               }]
           securityContext:
@@ -48,7 +48,7 @@ spec:
               tag: v0.3.0
             env:
               DEVICE: /tmp/ttyOTBR
-              NETWORK_DEVICE: "10.5.0.207:6638"
+              NETWORK_DEVICE: "10.50.0.205:6638"
               BACKBONE_IF: net1
               OTBR_REST_PORT: &port 8081
               BAUDRATE: "460800"
