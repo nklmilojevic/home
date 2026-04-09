@@ -2,6 +2,9 @@ machine:
   kubelet:
     # extraArgs:
     #   rotate-server-certificates: true
+    extraConfig:
+      allowedUnsafeSysctls:
+        - net.ipv6.conf.*
     nodeIP:
       validSubnets:
         - 10.40.0.0/24
