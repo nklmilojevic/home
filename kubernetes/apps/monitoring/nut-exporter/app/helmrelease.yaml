@@ -26,11 +26,12 @@ spec:
         containers:
           app:
             image:
-              repository: docker.io/hon95/prometheus-nut-exporter
-              tag: "1.2.1"
+              repository: ghcr.io/druggeri/nut_exporter
+              tag: "3.2.5"
             env:
               TZ: "Europe/Belgrade"
-              HTTP_PATH: "/metrics"
+              NUT_EXPORTER_SERVER: "network-ups-tools.monitoring.svc"
+              NUT_EXPORTER_VARIABLES: "battery.charge,battery.runtime,battery.voltage,battery.voltage.nominal,input.voltage,input.voltage.nominal,ups.load,ups.status"
             resources:
               requests:
                 cpu: 15m
@@ -40,16 +41,13 @@ spec:
         controller: nut-exporter
         ports:
           metrics:
-            port: 9995
+            port: 9199
     serviceMonitor:
       nut-exporter:
         serviceName: nut-exporter
         endpoints:
           - port: metrics
             scheme: http
-            path: /metrics
+            path: /ups_metrics
             interval: 1m
             scrapeTimeout: 30s
-            params:
-              target:
-                - "10.5.0.49:3493"
