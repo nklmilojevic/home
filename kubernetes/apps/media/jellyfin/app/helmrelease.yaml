@@ -28,14 +28,42 @@ spec:
           app:
             image:
               repository: ghcr.io/jellyfin/jellyfin
-              tag: 10.11.8
+              tag: 10.11.8@sha256:93227545077893cc9516f28b3adb733b67bc4691f41b6167428a2a0e3220b81c
             env:
               TZ: "Europe/Belgrade"
+              DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
+              JELLYFIN_PublishedServerUrl: https://jellyfin.nikola.wtf
             securityContext:
               allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
               capabilities:
                 drop:
                   - ALL
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 8096
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              startup:
+                enabled: false
             resources:
               requests:
                 gpu.intel.com/i915: 1
@@ -43,7 +71,7 @@ spec:
                 memory: 512Mi
               limits:
                 gpu.intel.com/i915: 1
-                memory: 8000Mi
+                memory: 8Gi
 
         pod:
           securityContext:
@@ -63,7 +91,7 @@ spec:
           lbipam.cilium.io/ips: "10.40.0.7"
         ports:
           http:
-            port: &port 8096
+            port: *port
           discovery:
             port: 7359
             protocol: UDP
@@ -84,13 +112,22 @@ spec:
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}-config"
-      cache:
-        type: emptyDir
+      metadata:
+        size: 10Gi
+        accessMode: ReadWriteOnce
         globalMounts:
-          - path: /cache
-      transcode:
+          - path: /metadata
+      tmpfs:
         type: emptyDir
-        medium: Memory
+        advancedMounts:
+          jellyfin:
+            app:
+              - path: /cache
+                subPath: cache
+              - path: /tmp
+                subPath: tmp
+              - path: /transcode
+                subPath: transcode
       media:
         enabled: true
         type: custom
