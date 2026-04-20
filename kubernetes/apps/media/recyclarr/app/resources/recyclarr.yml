@@ -72,9 +72,8 @@ sonarr:
             score: 0
 
       - trash_ids:
-          - 9b27ab6498ec0f31a3353992e19434ca # DV (WEBDL)
-          - 0dad0a507451acddd754fe6dc3a7f5e7 # HDR10+ Boost
-          - 385e9e8581d33133c3961bdcdeffb7b4 # DV HDR10+ Boost
+          - 9b27ab6498ec0f31a3353992e19434ca # DV (w/o HDR fallback)
+          - 0c4b99df9206d2cfac3c05ab897dd62a # HDR10+ Boost
         assign_scores_to:
           - name: WEB-2160p
 
@@ -120,7 +119,7 @@ radarr:
       - trash_ids:
           - 7a0d1ad358fee9f5b074af3ef3f9d9ef # HALLOWED
           - b6832f586342ef70d9c128d40c07b872 # Bad Dual Groups
-          - 90cedc1fea7ea5d11298bebd3d1d3223 # EVO (no WEBDL)
+          - e204b80c87be9497a8a6eaff48f72905 # LQ (Release Title)
           - ae9b7c9ebde1f3bd336a8cbd1ec4c5e5 # No-RlsGroup
           - 7357cf5161efbf8c4d5d0c30b4815ee2 # Obfuscated
           - 5c44f52a8714fdd79bb4d98e2673be1f # Retags
