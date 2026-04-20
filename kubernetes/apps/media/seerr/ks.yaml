@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app overseerr
+  name: &app seerr
   namespace: flux-system
 spec:
   targetNamespace: media
@@ -13,7 +13,7 @@ spec:
   dependsOn:
     - name: rook-ceph-cluster
     - name: volsync
-  path: ./kubernetes/apps/media/overseerr/app
+  path: ./kubernetes/apps/media/seerr/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -25,5 +25,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: overseerr-config
+      VOLSYNC_CLAIM: seerr-config
       VOLSYNC_CAPACITY: 15Gi
