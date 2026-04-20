@@ -15,7 +15,7 @@ resources:
   - ./unpackerr/ks.yaml
   - ./recyclarr/ks.yaml
   - ./readarr/ks.yaml
-  - ./overseerr/ks.yaml
+  - ./seerr/ks.yaml
   - ./calibre-web-automated/ks.yaml
   - ./tautulli/ks.yaml
   - ./plex-trakt-sync/ks.yaml
