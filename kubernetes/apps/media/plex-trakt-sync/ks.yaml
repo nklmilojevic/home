@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app plex-trakt-sync
+  namespace: flux-system
+spec:
+  targetNamespace: media
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./kubernetes/apps/media/plex-trakt-sync/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: false
+  dependsOn:
+    - name: rook-ceph-cluster
+    - name: volsync
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CLAIM: plex-trakt-sync-config
+      VOLSYNC_CAPACITY: 1Gi

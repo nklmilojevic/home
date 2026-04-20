@@ -18,3 +18,4 @@ resources:
   - ./overseerr/ks.yaml
   - ./calibre-web-automated/ks.yaml
   - ./tautulli/ks.yaml
+  - ./plex-trakt-sync/ks.yaml
