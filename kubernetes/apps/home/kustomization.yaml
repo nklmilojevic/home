@@ -16,4 +16,3 @@ resources:
   - ./asterisk/ks.yaml
   - ./matter-server/ks.yaml
   - ./otbr/ks.yaml
-#  - ./bambuddy/ks.yaml
