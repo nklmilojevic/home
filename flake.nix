@@ -31,10 +31,11 @@
           kubectl
           kubernetes-helm
           kustomize
+          lefthook
           minijinja
           moreutils
-          pre-commit
           sops
+          yamllint
           stern
           talhelper.packages.${system}.default
           talosctl.packages.${system}.default

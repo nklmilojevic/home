@@ -1,0 +1,7 @@
+---
+pre-commit:
+  parallel: true
+  commands:
+    yamllint:
+      glob: "*.{yaml,yml}"
+      run: yamllint --config-file .yamllint.yaml {staged_files}
