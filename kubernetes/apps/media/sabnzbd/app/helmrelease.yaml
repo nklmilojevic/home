@@ -43,7 +43,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/sabnzbd
-              tag: 4.5.5
+              tag: 5.0.0
 
             env:
               TZ: "Europe/Belgrade"
