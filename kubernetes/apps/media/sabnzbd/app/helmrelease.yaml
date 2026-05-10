@@ -65,15 +65,16 @@ spec:
                     port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 180
+                  timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
             resources:
               requests:
-                cpu: 5m
-                memory: 1Gi
+                cpu: 50m
+                memory: 250Mi
+                ephemeral-storage: 5Gi
               limits:
-                memory: 12Gi
+                memory: 3Gi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -122,12 +123,14 @@ spec:
           - path: "/media"
       temp:
         type: emptyDir
+        sizeLimit: 1Gi
         advancedMounts:
           sabnzbd:
             app:
               - path: /tmp
       incomplete:
         type: emptyDir
+        sizeLimit: 80Gi
         advancedMounts:
           sabnzbd:
             app:
