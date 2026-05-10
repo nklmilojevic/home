@@ -56,25 +56,17 @@ spec:
                 sabnzbd.media.svc.cluster.local,
                 sabnzbd.nikola.wtf
             probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /api?mode=version
-                    port: *port
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
             resources:
               requests:
-                cpu: 50m
-                memory: 250Mi
+                cpu: 10m
+                memory: 100Mi
                 ephemeral-storage: 5Gi
               limits:
-                memory: 3Gi
+                memory: 12Gi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
