@@ -31,7 +31,7 @@ spec:
           component: kube-controller-manager
       vmScrape:
         spec:
-          jobLabel: jobLabel
+          jobLabel: app.kubernetes.io/component
           namespaceSelector:
             matchNames:
               - kube-system
@@ -54,7 +54,7 @@ spec:
           component: kube-scheduler
       vmScrape:
         spec:
-          jobLabel: jobLabel
+          jobLabel: app.kubernetes.io/component
           namespaceSelector:
             matchNames: [kube-system]
           endpoints:
@@ -80,7 +80,8 @@ spec:
 
     ## -- Create default rules for monitoring the cluster
     defaultRules:
-      create: false
+      # NOTE: this chart's toggle is `enabled`, not `create` (which is silently ignored).
+      enabled: true
 
       # -- Runbook url prefix for default rules
       runbookUrl: https://runbooks.prometheus-operator.dev/runbooks
@@ -89,6 +90,13 @@ spec:
       labels: {}
       # -- Annotations for default rules
       annotations: {}
+
+      # kube-scheduler.rules are histogram-quantile recordings that yield 0 samples
+      # whenever the cluster is idle (no pod scheduling), repeatedly tripping
+      # RecordingRulesNoData. They only feed the kube-scheduler Grafana dashboard.
+      groups:
+        kubeScheduler:
+          enabled: false
 
     alertmanager:
       enabled: true
