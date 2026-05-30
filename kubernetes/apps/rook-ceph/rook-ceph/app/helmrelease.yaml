@@ -23,8 +23,10 @@ spec:
     csi:
       cephFSKernelMountOptions: ms_mode=prefer-crc
       enableLiveness: true
+      # Disabled: with the ceph-csi-operator there is no `app: csi-metrics` Service,
+      # so this legacy ServiceMonitor is orphaned and trips ScrapePoolHasNoTargets.
       serviceMonitor:
-        enabled: true
+        enabled: false
     monitoring:
       enabled: true
     resources:

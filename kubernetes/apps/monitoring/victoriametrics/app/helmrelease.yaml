@@ -65,6 +65,27 @@ spec:
                 insecureSkipVerify: true
                 caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 
+    kubeEtcd:
+      enabled: true
+      # Talos runs etcd as a host service (no pod to select), exposing metrics on
+      # http://0.0.0.0:2381 via the etcd listen-metrics-urls machine-config patch.
+      # Scrape the control-plane node IPs over plain HTTP instead of the default
+      # pod selector + https on 2379 (which discovers 0 targets on Talos).
+      endpoints:
+        - 10.40.0.201
+        - 10.40.0.202
+        - 10.40.0.203
+      service:
+        enabled: true
+        port: 2381
+        targetPort: 2381
+      vmScrape:
+        spec:
+          jobLabel: app.kubernetes.io/component
+          endpoints:
+            - port: http-metrics
+              scheme: http
+
     grafana:
       enabled: false
 
