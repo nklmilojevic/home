@@ -135,21 +135,39 @@ spec:
 
       templateFiles:
         telegram.tmpl: |-
-          {{ define "alert_list" }}
-          {{- range . }}
+          {{ define "alert_item" }}
           🪪 <b>{{ .Labels.alertname }}</b>
           {{- if eq .Labels.severity "critical" }}
-          🚨 CRITICAL 🚨 {{ end }}
+          🚨 CRITICAL 🚨{{ end }}
           {{- if eq .Labels.severity "warning" }}
           ⚠️ WARNING ⚠️{{ end }}
           {{- if .Annotations.summary }}
-          📝 {{ .Annotations.summary }}{{ end }}
+          📝 {{ printf "%.200s" .Annotations.summary }}{{ end }}
           {{- if .Annotations.description }}
-          📖 {{ .Annotations.description }}{{ end }}
-
-          🏷 Labels:
-          {{ range .Labels.SortedPairs }}• {{ .Name }}: {{ .Value }}
+          📖 {{ printf "%.400s" .Annotations.description }}{{ end }}
+          {{- if or .Labels.namespace .Labels.pod .Labels.instance }}
+          🏷 {{ with .Labels.namespace }}ns={{ . }} {{ end }}{{ with .Labels.pod }}pod={{ . }} {{ end }}{{ with .Labels.instance }}instance={{ . }}{{ end }}{{ end }}
           {{ end }}
+
+          {{ define "alert_list" }}
+          {{- range $i, $alert := . }}
+          {{- if lt $i 4 }}
+          {{- template "alert_item" $alert }}
+          {{- end }}
+          {{- end }}
+          {{- if gt (len .) 4 }}
+          … and {{ len (slice . 4) }} more alert(s) in this group
+          {{ end }}
+          {{ end }}
+
+          {{ define "alert_list_resolved" }}
+          {{- range $i, $alert := . }}
+          {{- if lt $i 5 }}
+          • {{ $alert.Labels.alertname }}{{ with $alert.Labels.namespace }} ({{ . }}{{ with $alert.Labels.pod }}/{{ . }}{{ end }}){{ end }}
+          {{- end }}
+          {{- end }}
+          {{- if gt (len .) 5 }}
+          … and {{ len (slice . 5) }} more resolved
           {{ end }}
           {{ end }}
 
@@ -160,7 +178,7 @@ spec:
           {{ end }}
           {{ if gt (len .Alerts.Resolved) 0 }}
           ✅ Alerts Resolved ✅
-          {{ template "alert_list" .Alerts.Resolved }}
+          {{ template "alert_list_resolved" .Alerts.Resolved }}
           {{ end }}
           {{ end }}
 
