@@ -5,6 +5,12 @@ machine:
     extraConfig:
       allowedUnsafeSysctls:
         - net.ipv6.conf.*
+      # Reclaim unused container images before the disk fills. Kubelet's
+      # default high threshold is 85%; the EPHEMERAL partition also hosts the
+      # Ceph mon store, which warns (MON_DISK_LOW) below 30% free, so GC well
+      # before then.
+      imageGCHighThresholdPercent: 70
+      imageGCLowThresholdPercent: 55
     nodeIP:
       validSubnets:
         - 10.40.0.0/24
