@@ -8,39 +8,45 @@
     talhelper.url = "github:budimanjojo/talhelper";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-    talosctl,
-    talhelper,
-  }:
-    flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = import nixpkgs {
-        inherit system;
-      };
-    in {
-      devShells.default = pkgs.mkShell {
-        packages = with pkgs; [
-          age
-          cloudflared
-          fluxcd
-          go-task
-          helmfile
-          kubeconform
-          kubectl
-          kubernetes-helm
-          kustomize
-          lefthook
-          minijinja
-          moreutils
-          sops
-          yamllint
-          stern
-          talhelper.packages.${system}.default
-          talosctl.packages.${system}.default
-          yq
-        ];
-      };
-    });
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      talosctl,
+      talhelper,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+        };
+      in
+      {
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            age
+            cloudflared
+            fluxcd
+            go-task
+            helmfile
+            kubeconform
+            kubectl
+            kubernetes-helm
+            kustomize
+            lefthook
+            minijinja
+            moreutils
+            sops
+            yamllint
+            stern
+            talhelper.packages.${system}.default
+            talosctl.packages.${system}.default
+            vals
+            yq
+          ];
+        };
+      }
+    );
 }
