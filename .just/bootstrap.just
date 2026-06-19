@@ -8,20 +8,23 @@ talos_dir := root / 'kubernetes/bootstrap/talos'
 config := talos_dir / 'talconfig.yaml'
 secret := talos_dir / 'talsecret.sops.yaml'
 clusterconfig := talos_dir / 'clusterconfig'
-helmfile := root / 'kubernetes/bootstrap/helmfile.yaml'
+helmfile := root / 'bootstrap/helmfile.yaml'
+kustomize_apps := root / 'bootstrap/kustomize/apps'
 
 [private]
 default:
     @just --list bootstrap
 
-# NOTE: the Flux/operator bootstrap is built in the bootstrap-restructure step.
-# This brings up Talos + the pre-Flux Helm releases (cilium/coredns/spegel).
+# Bootstrap a Talos + Kubernetes + Flux cluster end-to-end
+[confirm('Bootstrap the cluster end-to-end? [y/N]')]
+[doc('Bootstrap Talos + Kubernetes + Flux end-to-end')]
+cluster: nodes k8s kubeconfig secrets apps
+    @just log info "Bootstrap complete — flux-instance sync is now reconciling the repo"
 
-# Bootstrap Talos and the base Helm releases
-[confirm('Bootstrap the Talos cluster? [y/N]')]
-[doc('Bootstrap Talos + base Helm releases')]
+# Generate + apply Talos config to all nodes (insecure)
+[private]
 [script]
-talos:
+nodes:
     if [[ ! -f "{{ secret }}" ]]; then
         just log info "Generating Talos secrets"
         talhelper gensecret > "{{ secret }}"
@@ -31,19 +34,35 @@ talos:
     talhelper genconfig --config-file "{{ config }}" --secret-file "{{ secret }}" --out-dir "{{ clusterconfig }}"
     just log info "Applying Talos config to nodes (insecure)"
     talhelper gencommand apply --config-file "{{ config }}" --out-dir "{{ clusterconfig }}" --extra-flags="--insecure" | bash
+
+# Bootstrap Kubernetes (etcd) on a controlplane node
+[private]
+[script]
+k8s:
     just log info "Bootstrapping Kubernetes (retry until ready)"
     until talhelper gencommand bootstrap --config-file "{{ config }}" --out-dir "{{ clusterconfig }}" | bash; do sleep 10; done
+
+# Fetch the kubeconfig to the repo root
+[private]
+[script]
+kubeconfig:
     just log info "Fetching kubeconfig"
     until talhelper gencommand kubeconfig --config-file "{{ config }}" --out-dir "{{ clusterconfig }}" --extra-flags="{{ root }} --force" | bash; do sleep 10; done
-    just bootstrap apps
-    talosctl health --server=false
 
-# Apply the pre-Flux Helm releases via helmfile
+# Inject the 1Password-backed bootstrap secrets (op-credentials, tunnel-id) via vals.
+# Requires OP_SERVICE_ACCOUNT_TOKEN in the environment.
+[private]
+[script]
+secrets:
+    just log info "Waiting for nodes to register"
+    until kubectl wait --for=condition=Ready=False nodes --all --timeout=600s; do sleep 10; done
+    just log info "Injecting bootstrap secrets from 1Password (vals)"
+    kustomize build "{{ kustomize_apps }}" | vals eval -f - | kubectl apply --server-side --field-manager=kustomize-controller -f -
+
+# Install the pre-Flux Helm releases + Flux Operator/Instance via helmfile
 [private]
 [script]
 apps:
-    just log info "Waiting for nodes to register"
-    until kubectl wait --for=condition=Ready=False nodes --all --timeout=600s; do sleep 10; done
-    just log info "Applying base Helm releases"
-    helmfile --file "{{ helmfile }}" apply --skip-diff-on-install --suppress-diff
+    just log info "Applying base Helm releases (cilium → coredns → spegel → flux-operator → flux-instance)"
+    helmfile --file "{{ helmfile }}" sync --hide-notes
     until kubectl wait --for=condition=Ready nodes --all --timeout=600s; do sleep 10; done
