@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app stirling-pdf
-  namespace: flux-system
 spec:
   targetNamespace: misc
   commonMetadata:
@@ -12,11 +11,13 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: external-secrets-stores
+      namespace: security
   path: ./kubernetes/apps/misc/stirling-pdf/app
   prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
+    namespace: flux-system
   wait: false
   interval: 30m
   retryInterval: 1m

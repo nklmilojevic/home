@@ -3,7 +3,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app rook-ceph
-  namespace: flux-system
 spec:
   targetNamespace: rook-ceph
   commonMetadata:
@@ -14,6 +13,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
+    namespace: flux-system
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -23,7 +23,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app rook-ceph-cluster
-  namespace: flux-system
 spec:
   targetNamespace: rook-ceph
   commonMetadata:
@@ -31,13 +30,17 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: rook-ceph
+      namespace: rook-ceph
     - name: ceph-csi-drivers
+      namespace: rook-ceph
     - name: snapshot-controller
+      namespace: security
   path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
   prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
+    namespace: flux-system
   wait: true
   interval: 30m
   retryInterval: 1m

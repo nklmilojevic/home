@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &appname volsync
-  namespace: flux-system
 spec:
   targetNamespace: security
   commonMetadata:
@@ -17,6 +16,8 @@ spec:
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
+    namespace: flux-system
   dependsOn:
     - name: snapshot-controller
+      namespace: security
   wait: false
