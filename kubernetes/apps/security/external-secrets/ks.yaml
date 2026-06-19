@@ -26,10 +26,6 @@ metadata:
   name: &app external-secrets-stores
   namespace: flux-system
 spec:
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
   targetNamespace: security
   commonMetadata:
     labels:
