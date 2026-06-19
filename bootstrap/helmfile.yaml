@@ -1,0 +1,67 @@
+---
+helmDefaults:
+  wait: true
+  waitForJobs: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+repositories:
+  - name: cilium
+    url: https://helm.cilium.io
+  - name: coredns
+    url: https://coredns.github.io/helm
+
+releases:
+  - name: prometheus-operator-crds
+    namespace: observability
+    chart: oci://ghcr.io/prometheus-community/charts/prometheus-operator-crds
+    version: 30.0.0
+  - name: cilium
+    namespace: kube-system
+    chart: cilium/cilium
+    version: 1.19.5
+    values:
+      - ../kubernetes/apps/kube-system/cilium/app/helm-values.yaml
+    needs:
+      - observability/prometheus-operator-crds
+  - name: coredns
+    namespace: kube-system
+    chart: coredns/coredns
+    version: 1.46.0
+    values:
+      - ../kubernetes/apps/kube-system/coredns/app/helm-values.yaml
+    needs:
+      - observability/prometheus-operator-crds
+      - kube-system/cilium
+  - name: spegel
+    namespace: kube-system
+    chart: oci://ghcr.io/spegel-org/helm-charts/spegel
+    version: 0.7.2
+    values:
+      - ../kubernetes/apps/kube-system/spegel/app/helm-values.yaml
+    needs:
+      - observability/prometheus-operator-crds
+      - kube-system/cilium
+      - kube-system/coredns
+  # Flux Operator installs + manages the Flux controllers; flux-instance's sync
+  # then pulls this repo and Flux takes over reconciling everything else.
+  # Values are read from each app's HelmRelease (DRY — no drift with Flux).
+  - name: flux-operator
+    namespace: flux-system
+    chart: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator
+    # renovate: datasource=github-releases depName=controlplaneio-fluxcd/flux-operator
+    version: 0.52.0
+    values:
+      - ./templates/flux-values.yaml.gotmpl
+    needs:
+      - kube-system/spegel
+  - name: flux-instance
+    namespace: flux-system
+    chart: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance
+    # renovate: datasource=github-releases depName=controlplaneio-fluxcd/flux-operator
+    version: 0.52.0
+    values:
+      - ./templates/flux-values.yaml.gotmpl
+    needs:
+      - flux-system/flux-operator

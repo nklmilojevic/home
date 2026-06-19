@@ -1,0 +1,2 @@
+{{- /* Read .spec.values from the app's HelmRelease so bootstrap and Flux stay in sync */ -}}
+{{ (fromYaml (readFile (printf "../../kubernetes/apps/flux-system/%s/app/helmrelease.yaml" .Release.Name))).spec.values | toYaml }}

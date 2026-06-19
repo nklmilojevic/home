@@ -1,0 +1,7 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: _ # renamed to the target namespace by the kustomize `namespace:` directive
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
