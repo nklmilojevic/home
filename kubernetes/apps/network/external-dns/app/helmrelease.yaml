@@ -45,7 +45,7 @@ spec:
       - gateway-httproute
     txtPrefix: k8s.
     txtOwnerId: default
-    domainFilters: ["${SECRET_DOMAIN}"]
+    domainFilters: ["nikola.wtf"]
     serviceMonitor:
       enabled: true
     podAnnotations:

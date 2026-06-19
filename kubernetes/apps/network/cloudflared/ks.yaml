@@ -16,6 +16,10 @@ spec:
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: cloudflare-tunnel-id-secret
   wait: false
   interval: 30m
   timeout: 5m
