@@ -1,0 +1,93 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: flux-instance
+  namespace: flux-system
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: flux-instance
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    instance:
+      components:
+        - source-controller
+        - kustomize-controller
+        - helm-controller
+        - notification-controller
+        - image-reflector-controller
+        - image-automation-controller
+      cluster:
+        type: kubernetes
+        domain: cluster.local
+        networkPolicy: false
+      sync:
+        # name=home-kubernetes adopts the existing GitRepository and keeps all
+        # sourceRef: name: home-kubernetes references across the repo working.
+        name: home-kubernetes
+        kind: GitRepository
+        url: https://github.com/nklmilojevic/home.git
+        ref: refs/heads/main
+        path: kubernetes/flux
+        interval: 1h
+      kustomize:
+        patches:
+          # Increase the number of workers and API rate limits
+          - patch: |
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --concurrent=8
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --kube-api-qps=500
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --kube-api-burst=1000
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --requeue-dependency=5s
+            target:
+              kind: Deployment
+              name: (kustomize-controller|helm-controller|source-controller)
+          # Bump resource limits
+          - patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: not-used
+              spec:
+                template:
+                  spec:
+                    containers:
+                      - name: manager
+                        resources:
+                          limits:
+                            cpu: 2000m
+                            memory: 2Gi
+            target:
+              kind: Deployment
+              name: (kustomize-controller|helm-controller|source-controller)
+          # Enable Helm near-OOM detection
+          - patch: |
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --feature-gates=OOMWatch=true
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --oom-watch-memory-threshold=95
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --oom-watch-interval=500ms
+            target:
+              kind: Deployment
+              name: helm-controller
