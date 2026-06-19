@@ -29,8 +29,9 @@
             age
             cloudflared
             fluxcd
-            go-task
+            gum
             helmfile
+            just
             kubeconform
             kubectl
             kubernetes-helm
