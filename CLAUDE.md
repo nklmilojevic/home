@@ -10,7 +10,7 @@ This is a Kubernetes homelab repository using Flux CD for GitOps, managing ~40 a
 - **Secrets**: External Secrets with 1Password Connect, SOPS encryption
 - **Storage**: Rook-Ceph (distributed), OpenEBS (local), NFS (shared media)
 - **Backups**: VolSync with R2 backend
-- **Automation**: Task (Go-based task runner)
+- **Automation**: just (recipe runner; modules under `.just/`)
 
 ## Directory Structure
 
@@ -285,8 +285,9 @@ Global variables from `flux/vars/`:
 ## Useful Commands
 
 ```bash
-task kubernetes:kubeconform  # Validate manifests
-task configure               # Render templates
-flux reconcile ks {app}      # Force reconciliation
+just                         # List all recipes (modules: bootstrap, kube, talos, rook, volsync)
+just kube reconcile          # Force a cluster reconcile from Git
+just kube apply-ks {ns} {app} # Apply a Kustomization locally
+just talos generate-config   # Render Talos config (talhelper)
 flux get ks -A               # List all Kustomizations
 ```
