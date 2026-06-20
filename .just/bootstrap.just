@@ -4,10 +4,8 @@ set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
 root := justfile_directory()
-talos_dir := root / 'kubernetes/bootstrap/talos'
-config := talos_dir / 'talconfig.yaml'
-secret := talos_dir / 'talsecret.sops.yaml'
-clusterconfig := talos_dir / 'clusterconfig'
+talos_dir := root / 'talos'
+talosconfig := root / 'talosconfig'
 helmfile := root / 'bootstrap/helmfile.yaml'
 kustomize_apps := root / 'bootstrap/kustomize/apps'
 
@@ -18,36 +16,49 @@ default:
 # Bootstrap a Talos + Kubernetes + Flux cluster end-to-end
 [confirm('Bootstrap the cluster end-to-end? [y/N]')]
 [doc('Bootstrap Talos + Kubernetes + Flux end-to-end')]
-cluster: nodes k8s kubeconfig secrets apps
+cluster: nodes talosconfig k8s kubeconfig secrets apps
     @just log info "Bootstrap complete — flux-instance sync is now reconciling the repo"
 
-# Generate + apply Talos config to all nodes (insecure)
+# Render + apply native Talos config to all nodes (insecure / maintenance mode)
 [private]
 [script]
 nodes:
-    if [[ ! -f "{{ secret }}" ]]; then
-        just log info "Generating Talos secrets"
-        talhelper gensecret > "{{ secret }}"
-        sops --encrypt --in-place "{{ secret }}"
-    fi
-    just log info "Generating Talos config"
-    talhelper genconfig --config-file "{{ config }}" --secret-file "{{ secret }}" --out-dir "{{ clusterconfig }}"
     just log info "Applying Talos config to nodes (insecure)"
-    talhelper gencommand apply --config-file "{{ config }}" --out-dir "{{ clusterconfig }}" --extra-flags="--insecure" | bash
+    for file in "{{ talos_dir }}"/nodes/*.yaml.j2; do
+        node="$(basename "${file}" .yaml.j2)"
+        just log info "Applying config" node "${node}"
+        just talos render-config "${node}" \
+            | talosctl --nodes "${node}" apply-config --insecure --file /dev/stdin
+    done
+
+# Mint a client talosconfig from the 1Password secrets bundle (vals)
+[private]
+[script]
+talosconfig:
+    just log info "Generating talosconfig from 1Password"
+    talosctl gen config home-kubernetes https://10.40.0.3:6443 \
+        --with-secrets <(just template "{{ talos_dir }}/talsecret.yaml.j2") \
+        --output-types talosconfig --output "{{ talosconfig }}" --force
+    nodes=()
+    for file in "{{ talos_dir }}"/nodes/*.yaml.j2; do nodes+=("$(basename "${file}" .yaml.j2)"); done
+    talosctl --talosconfig "{{ talosconfig }}" config node "${nodes[@]}"
+    talosctl --talosconfig "{{ talosconfig }}" config endpoint "${nodes[@]}"
 
 # Bootstrap Kubernetes (etcd) on a controlplane node
 [private]
 [script]
 k8s:
-    just log info "Bootstrapping Kubernetes (retry until ready)"
-    until talhelper gencommand bootstrap --config-file "{{ config }}" --out-dir "{{ clusterconfig }}" | bash; do sleep 10; done
+    node="$(basename "$(ls "{{ talos_dir }}"/nodes/*.yaml.j2 | head -1)" .yaml.j2)"
+    just log info "Bootstrapping Kubernetes (retry until ready)" node "${node}"
+    until talosctl --nodes "${node}" bootstrap; do sleep 10; done
 
 # Fetch the kubeconfig to the repo root
 [private]
 [script]
 kubeconfig:
+    node="$(basename "$(ls "{{ talos_dir }}"/nodes/*.yaml.j2 | head -1)" .yaml.j2)"
     just log info "Fetching kubeconfig"
-    until talhelper gencommand kubeconfig --config-file "{{ config }}" --out-dir "{{ clusterconfig }}" --extra-flags="{{ root }} --force" | bash; do sleep 10; done
+    until talosctl --nodes "${node}" kubeconfig --force "{{ root }}"; do sleep 10; done
 
 # Inject the 1Password-backed bootstrap secrets (op-credentials, tunnel-id) via vals.
 # Requires OP_SERVICE_ACCOUNT_TOKEN in the environment.
