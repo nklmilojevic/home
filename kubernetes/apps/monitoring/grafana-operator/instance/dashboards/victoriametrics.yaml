@@ -8,7 +8,6 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: grafana
-  resyncPeriod: 24h
   url: https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/refs/heads/master/dashboards/victoriametrics.json
 ---
 apiVersion: grafana.integreatly.org/v1beta1
@@ -20,7 +19,6 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: grafana
-  resyncPeriod: 24h
   url: https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/refs/heads/master/dashboards/vmagent.json
 ---
 apiVersion: grafana.integreatly.org/v1beta1
@@ -32,7 +30,6 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: grafana
-  resyncPeriod: 24h
   url: https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/refs/heads/master/dashboards/vmalert.json
 ---
 apiVersion: grafana.integreatly.org/v1beta1
@@ -44,7 +41,6 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: grafana
-  resyncPeriod: 24h
   url: https://raw.githubusercontent.com/VictoriaMetrics/VictoriaMetrics/refs/heads/master/dashboards/operator.json
 ---
 apiVersion: grafana.integreatly.org/v1beta1
@@ -59,5 +55,4 @@ spec:
   datasources:
     - inputName: DS_VICTORIALOGS
       datasourceName: VictoriaLogs
-  resyncPeriod: 24h
   url: https://raw.githubusercontent.com/VictoriaMetrics/VictoriaLogs/refs/heads/master/dashboards/victorialogs.json

@@ -11,7 +11,6 @@ spec:
   datasources:
     - inputName: DS_PROMETHEUS
       datasourceName: VictoriaMetrics
-  resyncPeriod: 24h
   # renovate: dashboardName="Node Exporter Full"
   grafanaCom:
     id: 1860
@@ -29,7 +28,6 @@ spec:
   datasources:
     - inputName: DS_PROMETHEUS
       datasourceName: VictoriaMetrics
-  resyncPeriod: 24h
   # renovate: dashboardName="Kubernetes / System / API Server"
   grafanaCom:
     id: 15761
@@ -47,7 +45,6 @@ spec:
   datasources:
     - inputName: DS_PROMETHEUS
       datasourceName: VictoriaMetrics
-  resyncPeriod: 24h
   # renovate: dashboardName="Kubernetes / System / CoreDNS"
   grafanaCom:
     id: 15762
@@ -65,7 +62,6 @@ spec:
   datasources:
     - inputName: DS_PROMETHEUS
       datasourceName: VictoriaMetrics
-  resyncPeriod: 24h
   # renovate: dashboardName="Kubernetes / Views / Global"
   grafanaCom:
     id: 15757
@@ -83,7 +79,6 @@ spec:
   datasources:
     - inputName: DS_PROMETHEUS
       datasourceName: VictoriaMetrics
-  resyncPeriod: 24h
   # renovate: dashboardName="Kubernetes / Views / Namespaces"
   grafanaCom:
     id: 15758
@@ -101,7 +96,6 @@ spec:
   datasources:
     - inputName: DS_PROMETHEUS
       datasourceName: VictoriaMetrics
-  resyncPeriod: 24h
   # renovate: dashboardName="Kubernetes / Views / Nodes"
   grafanaCom:
     id: 15759
@@ -119,7 +113,6 @@ spec:
   datasources:
     - inputName: DS_PROMETHEUS
       datasourceName: VictoriaMetrics
-  resyncPeriod: 24h
   # renovate: dashboardName="Kubernetes / Views / Pods"
   grafanaCom:
     id: 15760
@@ -137,7 +130,6 @@ spec:
   datasources:
     - inputName: DS_PROMETHEUS
       datasourceName: VictoriaMetrics
-  resyncPeriod: 24h
   # renovate: dashboardName="K8s / Storage / Volumes / Cluster"
   grafanaCom:
     id: 11454
@@ -155,5 +147,4 @@ spec:
   datasources:
     - inputName: DS_PROMETHEUS
       datasourceName: VictoriaMetrics
-  resyncPeriod: 24h
   url: https://raw.githubusercontent.com/kubernetes-sigs/node-feature-discovery/master/examples/grafana-dashboard.json
