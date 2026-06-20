@@ -1,4 +1,9 @@
 ---
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    trustCRDsExist: true
 autoDirectNodeRoutes: true
 bpf:
   masquerade: true
@@ -18,34 +23,17 @@ envoy:
   enabled: true
   log:
     accessLogBufferSize: 16384
-    format_json: >
-      {
-        "ts":"%START_TIME%",
-        "method":"%REQ(:METHOD)%",
-        "path":"%REQ(:PATH)%",
-        "status":%RESPONSE_CODE%,
-        "duration_ms":%DURATION%,
-        "protocol":"%PROTOCOL%",
-        "authority":"%REQ(:AUTHORITY)%",
-        "xff":"%REQ(X-FORWARDED-FOR)%",
-        "upstream_host":"%UPSTREAM_HOST%",
-        "route":"%ROUTE_NAME%",
-        "req_id":"%REQ(X-REQUEST-ID)%"
-        }
+    format_json:
+      ts: '%Y-%m-%dT%T.%e'
+      level: '%l'
+      logger: '%n'
+      src: '%g:%#'
+      thread: '%t'
+      msg: '%j'
 gatewayAPI:
   enabled: true
+  xffNumTrustedHops: 1
   enableAlpn: true
-hubble:
-  enabled: true
-  metrics:
-    enabled:
-      - dns:query;ignoreAAAA
-      - drop
-      - tcp
-      - flow
-      - port-distribution
-      - icmp
-      - http
   relay:
     enabled: true
     rollOutPods: true
@@ -57,8 +45,8 @@ hubble:
       enabled: false
     rollOutPods: true
 ipam:
-  mode: "kubernetes"
-ipv4NativeRoutingCIDR: "10.69.0.0/16"
+  mode: kubernetes
+ipv4NativeRoutingCIDR: 10.69.0.0/16
 k8sServiceHost: 127.0.0.1
 k8sServicePort: 7445
 kubeProxyReplacement: true
@@ -92,3 +80,24 @@ securityContext:
       - NET_ADMIN
       - SYS_ADMIN
       - SYS_RESOURCE
+hubble:
+  enabled: true
+  metrics:
+    enabled:
+      - dns:query
+      - drop
+      - tcp
+      - flow
+      - port-distribution
+      - icmp
+      - http
+    serviceMonitor:
+      enabled: true
+    dashboards:
+      enabled: true
+  relay:
+    enabled: true
+    rollOutPods: true
+  ui:
+    enabled: true
+    rollOutPods: true
