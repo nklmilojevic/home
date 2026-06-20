@@ -13,9 +13,9 @@
       description: "Process Grafana dashboards",
       fileMatch: ["(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"],
       matchStrings: [
-        '# renovate: dashboardName="(?<depName>.*)"\\n(?<indentation>\\s+)gnetId: (?<packageName>\\d+)\\n.+revision: (?<currentValue>\\d+)',
+        '# renovate: dashboardName="(?<depName>.*)"\\n(?<indentation>\\s+)grafanaCom:\\n\\s+id: (?<packageName>\\d+)\\n\\s+revision: (?<currentValue>\\d+)',
       ],
-      autoReplaceStringTemplate: '# renovate: dashboardName="{{{depName}}}"\n{{{indentation}}}gnetId: {{{packageName}}}\n{{{indentation}}}revision: {{{newValue}}}',
+      autoReplaceStringTemplate: '# renovate: dashboardName="{{{depName}}}"\n{{{indentation}}}grafanaCom:\n{{{indentation}}}  id: {{{packageName}}}\n{{{indentation}}}  revision: {{{newValue}}}',
       datasourceTemplate: "custom.grafana-dashboards",
       versioningTemplate: "regex:^(?<major>\\d+)$",
     },

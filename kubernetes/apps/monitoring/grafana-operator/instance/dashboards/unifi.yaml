@@ -1,0 +1,90 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: unifi-pdu
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: VictoriaMetrics
+  resyncPeriod: 24h
+  # renovate: dashboardName="UniFi-Poller: PDU Insights - Prometheus"
+  grafanaCom:
+    id: 23027
+    revision: 1
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: unifi-insights
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: VictoriaMetrics
+  resyncPeriod: 24h
+  # renovate: dashboardName="UniFi-Poller: Client Insights - Prometheus"
+  grafanaCom:
+    id: 11315
+    revision: 9
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: unifi-network-sites
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: VictoriaMetrics
+  resyncPeriod: 24h
+  # renovate: dashboardName="UniFi-Poller: Network Sites - Prometheus"
+  grafanaCom:
+    id: 11311
+    revision: 5
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: unifi-uap
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: VictoriaMetrics
+  resyncPeriod: 24h
+  # renovate: dashboardName="UniFi-Poller: UAP Insights - Prometheus"
+  grafanaCom:
+    id: 11314
+    revision: 10
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: unifi-usw
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: VictoriaMetrics
+  resyncPeriod: 24h
+  # renovate: dashboardName="UniFi-Poller: USW Insights - Prometheus"
+  grafanaCom:
+    id: 11312
+    revision: 9

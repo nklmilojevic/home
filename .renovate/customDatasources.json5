@@ -1,0 +1,14 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  customDatasources: {
+    // Talos versions buildable by the Image Factory.
+    // Returns a bare JSON array (e.g. ["v1.13.4", ...]); wrap each into { version }.
+    "talos-factory": {
+      defaultRegistryUrlTemplate: "https://factory.talos.dev/versions",
+      format: "json",
+      transformTemplates: [
+        '{ "releases": $map($, function($v) { { "version": $v } }) }',
+      ],
+    },
+  },
+}
