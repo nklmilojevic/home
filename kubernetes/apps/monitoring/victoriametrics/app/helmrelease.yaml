@@ -214,21 +214,18 @@ spec:
     vmagent:
       enabled: true
       # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec
-      # defined spec will be added to the remoteWrite configuration of VMAgent
-      # spec:
-      #   inlineScrapeConfig: |
-      #     - job_name: node-exporter
-      #       honor_labels: true
-      #       scrape_interval: 1m
-      #       scrape_timeout: 10s
-      #       metrics_path: /metrics
-      #       scheme: http
-      #       static_configs:
-      #         - targets:
-      #             - "10.5.0.32:9100"
-        # selectAllByDefault: true
-        # scrapeInterval: 25s
-        # extraArgs:
-        #   promscrape.streamParse: "true"
+      spec:
+        # Drop the volatile `pod` label from rook-ceph-mgr metrics. The mgr is a
+        # singleton active daemon; when its pod restarts (same instance IP, new pod
+        # name) the old series linger inside the [2d] lookback window and fork the
+        # left side of CephPoolGrowth's `* on(...,instance) group_right()` join,
+        # producing "duplicate time series" query errors (RequestErrorsToAPI /
+        # TooManyLogs). Dropping `pod` collapses old+new into one series identity so
+        # the rule self-heals across mgr restarts. Scoped via VM's `if` selector so
+        # no other metrics are touched. No ceph dashboard/rule keys on this label.
+        inlineRelabelConfig:
+          - if: '{job="rook-ceph-mgr"}'
+            action: labeldrop
+            regex: pod
       ingress:
         enabled: false
