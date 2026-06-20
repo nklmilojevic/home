@@ -4,6 +4,8 @@ prometheus:
   serviceMonitor:
     enabled: true
     trustCRDsExist: true
+dashboards:
+  enabled: true
 autoDirectNodeRoutes: true
 bpf:
   masquerade: true
@@ -60,6 +62,8 @@ localRedirectPolicy: true
 operator:
   replicas: 1
   rollOutPods: true
+  dashboards:
+    enabled: true
 rollOutCiliumPods: true
 routingMode: native
 securityContext:

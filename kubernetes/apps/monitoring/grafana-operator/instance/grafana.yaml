@@ -21,8 +21,6 @@ spec:
       enabled: "true"
     news:
       news_feed_enabled: "false"
-    security:
-      angular_support_enabled: "true"
     server:
       root_url: "https://grafana.nikola.wtf"
   deployment:
@@ -45,7 +43,7 @@ spec:
                       name: grafana-admin-secret
                       key: admin-password
                 - name: GF_INSTALL_PLUGINS
-                  value: grafana-clock-panel,grafana-piechart-panel,grafana-worldmap-panel,victoriametrics-logs-datasource
+                  value: grafana-clock-panel,victoriametrics-logs-datasource
   httpRoute:
     spec:
       hostnames:
