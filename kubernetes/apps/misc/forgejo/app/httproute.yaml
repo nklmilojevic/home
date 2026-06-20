@@ -9,7 +9,7 @@ spec:
     - git.nikola.wtf
   parentRefs:
     - name: internal
-      namespace: kube-system
+      namespace: network
       sectionName: https
   rules:
     - backendRefs:
