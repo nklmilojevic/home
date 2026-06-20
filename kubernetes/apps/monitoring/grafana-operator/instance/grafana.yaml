@@ -29,6 +29,11 @@ spec:
         type: Recreate
       template:
         spec:
+          securityContext:
+            fsGroup: 10001
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile:
+              type: RuntimeDefault
           containers:
             - name: grafana
               env:
@@ -44,6 +49,18 @@ spec:
                       key: admin-password
                 - name: GF_INSTALL_PLUGINS
                   value: grafana-clock-panel,victoriametrics-logs-datasource
+          volumes:
+            - name: grafana-data
+              persistentVolumeClaim:
+                claimName: grafana-pvc
+  persistentVolumeClaim:
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+      storageClassName: ceph-block
   httpRoute:
     spec:
       hostnames:
