@@ -18,5 +18,7 @@ spec:
       strategy: rollback
       retries: 3
   values:
+    dashboard:
+      enabled: true
     serviceMonitor:
       enabled: true
