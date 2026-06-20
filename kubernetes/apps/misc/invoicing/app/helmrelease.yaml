@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/invoicing
-              tag: latest
+              tag: latest@sha256:a99e63f8136297127bee5b0d565c76fb245efdb9b60060dca66d3c823dfedaac
             env:
               TZ: "Europe/Belgrade"
               DATABASE_URL: "file:/app/data/invoicing.db"
