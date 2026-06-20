@@ -172,7 +172,7 @@ spec:
           - {app}.nikola.wtf
         parentRefs:
           - name: internal
-            namespace: kube-system
+            namespace: network
             sectionName: https
         rules:
           - backendRefs:
@@ -270,8 +270,9 @@ Global variables from `flux/vars/`:
 
 ## Domain & Routes
 
-- Internal apps: `{app}.nikola.wtf` via `internal` gateway in `kube-system`
-- External apps: Use `external` gateway or LoadBalancer
+- Internal apps: `{app}.nikola.wtf` via the `internal` Envoy Gateway in `network`
+- External apps: Use the `external` Envoy Gateway (in `network`) or LoadBalancer
+- Gateways are Envoy Gateway (GatewayClass `envoy`); Cilium's Gateway API is disabled
 
 ## Important Notes
 

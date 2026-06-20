@@ -33,19 +33,7 @@ envoy:
       thread: '%t'
       msg: '%j'
 gatewayAPI:
-  enabled: true
-  xffNumTrustedHops: 1
-  enableAlpn: true
-  relay:
-    enabled: true
-    rollOutPods: true
-  serviceMonitor:
-    enabled: false
-  ui:
-    enabled: true
-    ingress:
-      enabled: false
-    rollOutPods: true
+  enabled: false
 ipam:
   mode: kubernetes
 ipv4NativeRoutingCIDR: 10.69.0.0/16

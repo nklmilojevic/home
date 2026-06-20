@@ -4,7 +4,7 @@ originRequest:
 
 ingress:
   - hostname: nikola.wtf
-    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
+    service: &svc https://10.40.0.50
   - hostname: "*.nikola.wtf"
     service: *svc
   - service: http_status:404

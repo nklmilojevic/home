@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: network
 resources:
   - ./namespace.yaml
+  - ./envoy-gateway/ks.yaml
   - ./cloudflared/ks.yaml
   - ./echo-server/ks.yaml
   - ./external-dns/ks.yaml
