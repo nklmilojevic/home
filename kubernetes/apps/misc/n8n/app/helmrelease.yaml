@@ -83,6 +83,8 @@ spec:
               - name: n8n
                 port: *port
       webhooks:
+        annotations:
+          gatus.home-operations.com/enabled: "false"
         hostnames:
           - n8n-webhook.nikola.wtf
         parentRefs:

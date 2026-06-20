@@ -102,6 +102,10 @@ spec:
 
     route:
       app:
+        annotations:
+          # / returns 404; probe the OTBR REST health endpoint (same as the container probes).
+          gatus.home-operations.com/endpoint: |
+            url: https://otbr.nikola.wtf/node
         hostnames:
           - "{{ .Release.Name }}.nikola.wtf"
         parentRefs:

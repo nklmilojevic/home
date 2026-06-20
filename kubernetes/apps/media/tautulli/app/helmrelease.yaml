@@ -66,6 +66,11 @@ spec:
 
     route:
       app:
+        annotations:
+          # Up if it responds (tautulli serves under a subpath; / returns 404).
+          gatus.home-operations.com/endpoint: |
+            conditions:
+              - "[STATUS] < 500"
         hostnames:
           - "{{ .Release.Name }}.nikola.wtf"
         parentRefs:
