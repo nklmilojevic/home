@@ -21,7 +21,9 @@ spec:
             limits:
               memory: 2Gi
       envoyService:
-        externalTrafficPolicy: Local
+        # Cluster (not Local): Local + Cilium DSR makes cross-VLAN routed clients
+        # (e.g. the IoT VLAN) fail with connection-refused on the asymmetric return path.
+        externalTrafficPolicy: Cluster
   shutdown:
     drainTimeout: 180s
   telemetry:
