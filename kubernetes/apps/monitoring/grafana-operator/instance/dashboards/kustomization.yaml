@@ -6,5 +6,6 @@ resources:
   - ./ceph.yaml
   - ./kubernetes.yaml
   - ./monitoring.yaml
+  - ./network.yaml
   - ./unifi.yaml
   - ./victoriametrics.yaml
