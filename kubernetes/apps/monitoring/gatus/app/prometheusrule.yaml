@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: gatus-rules
+spec:
+  groups:
+    - name: gatus.rules
+      rules:
+        - alert: GatusEndpointDown
+          expr: |-
+            gatus_results_endpoint_success{group!="connectivity"} == 0
+          for: 10m
+          annotations:
+            summary: >-
+              Gatus endpoint {{ $labels.name }} ({{ $labels.group }}) is down
+          labels:
+            severity: critical

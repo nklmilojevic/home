@@ -1,0 +1,65 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: gatus
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: gatus
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    deploymentAnnotations:
+      reloader.stakater.com/auto: "true"
+    gatus:
+      delayStartSeconds: "5"
+      env:
+        TZ: Europe/Belgrade
+    sidecar:
+      kinds:
+        httproute:
+          enable: true
+          auto: true
+        service:
+          enable: true
+    httpRoute:
+      enabled: true
+      annotations:
+        gatus.home-operations.com/enabled: "false"
+      hostnames:
+        - gatus.nikola.wtf
+        - status.nikola.wtf
+      parentRefs:
+        - name: internal
+          namespace: kube-system
+          sectionName: https
+        - name: external
+          namespace: kube-system
+          sectionName: https
+    monitoring:
+      serviceMonitor:
+        enabled: true
+    config:
+      existingConfigMap: gatus-configmap
+      items:
+        - key: config.yaml
+          path: config.yaml
+    persistence:
+      enabled: true
+      storageClass: ceph-block
+      accessMode: ReadWriteOnce
+      size: 5Gi
+    resources:
+      requests:
+        cpu: 100m
+      limits:
+        memory: 512Mi
