@@ -21,6 +21,11 @@ spec:
       enabled: "true"
     news:
       news_feed_enabled: "false"
+    plugins:
+      # Grafana 12 preinstalls bundled app plugins and tries to auto-update them
+      # into the read-only root filesystem (fails for elasticsearch). We install
+      # what we need via GF_INSTALL_PLUGINS instead.
+      preinstall_disabled: "true"
     server:
       root_url: "https://grafana.nikola.wtf"
   deployment:
