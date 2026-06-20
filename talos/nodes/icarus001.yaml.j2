@@ -1,0 +1,29 @@
+---
+machine:
+  type: controlplane
+  install:
+    diskSelector:
+      serial: 50026B73832C9285
+  network:
+    hostname: icarus001
+    interfaces:
+      - interface: bond0
+        dhcp: true
+        bond:
+          mode: active-backup
+          deviceSelectors:
+            - hardwareAddr: 6c:1f:f7:08:ef:8a
+              driver: r8152
+        vip:
+          ip: 10.40.0.3
+        vlans:
+          - vlanId: 1
+            mtu: 1500
+            dhcp: false
+            addresses:
+              - 10.5.0.201/24
+          - vlanId: 50
+            mtu: 1500
+            dhcp: false
+            addresses:
+              - 10.50.0.201/24

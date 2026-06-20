@@ -1,0 +1,29 @@
+---
+machine:
+  type: controlplane
+  install:
+    diskSelector:
+      model: VK0300GDUQV*
+  network:
+    hostname: icarus003
+    interfaces:
+      - interface: bond0
+        dhcp: true
+        bond:
+          mode: active-backup
+          deviceSelectors:
+            - hardwareAddr: 58:47:ca:77:36:2d
+              driver: igc
+        vip:
+          ip: 10.40.0.3
+        vlans:
+          - vlanId: 1
+            mtu: 1500
+            dhcp: false
+            addresses:
+              - 10.5.0.203/24
+          - vlanId: 50
+            mtu: 1500
+            dhcp: false
+            addresses:
+              - 10.50.0.203/24

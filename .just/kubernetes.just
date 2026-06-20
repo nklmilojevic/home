@@ -21,7 +21,7 @@ apply-ks ns app:
     flux build ks {{ app }} \
         --kustomization-file "{{ root }}/kubernetes/apps/{{ ns }}/{{ app }}/ks.yaml" \
         --path "{{ root }}/kubernetes/apps/{{ ns }}/{{ app }}" \
-        | yq -y 'if .kind == "Kustomization" then .metadata.namespace = "{{ ns }}" else . end' \
+        | yq '(select(.kind == "Kustomization") | .metadata.namespace) = "{{ ns }}"' \
         | kubectl apply --server-side --field-manager=kustomize-controller -f -
 
 # Gather common resources, useful when asking for support

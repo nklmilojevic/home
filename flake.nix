@@ -5,7 +5,6 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     talosctl.url = "github:nklmilojevic/talosctl-flake";
-    talhelper.url = "github:budimanjojo/talhelper";
   };
 
   outputs =
@@ -14,7 +13,6 @@
       nixpkgs,
       flake-utils,
       talosctl,
-      talhelper,
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
@@ -26,7 +24,6 @@
       {
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
-            age
             cloudflared
             fluxcd
             gum
@@ -39,13 +36,11 @@
             lefthook
             minijinja
             moreutils
-            sops
             yamllint
             stern
-            talhelper.packages.${system}.default
             talosctl.packages.${system}.default
             vals
-            yq
+            yq-go
           ];
         };
       }
