@@ -70,6 +70,10 @@ spec:
 
     route:
       app:
+        annotations:
+          # Plex returns 401 on / (auth-gated); probe the unauthenticated /identity instead.
+          gatus.home-operations.com/endpoint: |
+            url: https://plex.nikola.wtf/identity
         hostnames:
           - "{{ .Release.Name }}.nikola.wtf"
         parentRefs:
