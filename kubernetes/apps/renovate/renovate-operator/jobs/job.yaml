@@ -1,0 +1,24 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/renovate-operator.mogenius.com/renovatejob_v1alpha1.json
+apiVersion: renovate-operator.mogenius.com/v1alpha1
+kind: RenovateJob
+metadata:
+  name: github-nklmilojevic
+  namespace: renovate
+spec:
+  discoveryFilters:
+    - nklmilojevic/*
+  image: ghcr.io/renovatebot/renovate:43.222.1
+  parallelism: 3
+  provider:
+    name: github
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  schedule: 0 * * * *
+  secretRef: renovate-secret
+  webhook:
+    enabled: true
+    authentication:
+      enabled: false
