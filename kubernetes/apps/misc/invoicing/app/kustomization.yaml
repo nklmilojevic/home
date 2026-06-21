@@ -5,4 +5,5 @@ namespace: misc
 resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
+  - ./ocirepository.yaml
   - ../../../../templates/volsync

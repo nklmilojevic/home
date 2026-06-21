@@ -10,8 +10,7 @@ spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: app-template
-    namespace: flux-system
+    name: unpoller
   install:
     remediation:
       retries: -1

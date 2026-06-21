@@ -4,4 +4,5 @@ kind: Kustomization
 namespace: security
 resources:
   - ./helmrelease.yaml
+  - ./ocirepository.yaml
   - ./clustersecretstore.yaml
