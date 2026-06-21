@@ -9,3 +9,4 @@ resources:
   - ./forgejo/ks.yaml
   - ./invoicing/ks.yaml
   - ./stirling-pdf/ks.yaml
+  - ./manyfold/ks.yaml
