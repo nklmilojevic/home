@@ -48,7 +48,7 @@ spec:
   # renovate: dashboardName="Kubernetes / System / CoreDNS"
   grafanaCom:
     id: 15762
-    revision: 17
+    revision: 22
 ---
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
