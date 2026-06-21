@@ -65,7 +65,7 @@ spec:
   # renovate: dashboardName="Kubernetes / Views / Global"
   grafanaCom:
     id: 15757
-    revision: 37
+    revision: 43
 ---
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
