@@ -23,6 +23,25 @@ spec:
             runAsNonRoot: true
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
+        initContainers:
+          chown-tmpdirs:
+            image:
+              repository: docker.io/library/alpine
+              tag: "3.24"
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - |
+                chmod o-rwx /tmp
+            securityContext:
+              runAsUser: 0
+              runAsNonRoot: false
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
         containers:
           app:
             image:
@@ -106,10 +125,11 @@ spec:
         type: emptyDir
         advancedMounts:
           manyfold:
-            app:
+            app: &tmpdirs
               - path: /tmp
                 subPath: host-tmp
               - path: /app/tmp
                 subPath: app-tmp
               - path: /app/log
                 subPath: app-log
+            chown-tmpdirs: *tmpdirs
