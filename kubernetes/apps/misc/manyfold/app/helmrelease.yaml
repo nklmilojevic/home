@@ -101,6 +101,10 @@ spec:
             port: *port
     route:
       app:
+        annotations:
+          # / returns 302 (redirect to login); probe the /health endpoint instead.
+          gatus.home-operations.com/endpoint: |
+            url: https://manyfold.nikola.wtf/health
         hostnames:
           - "{{ .Release.Name }}.nikola.wtf"
         parentRefs:
