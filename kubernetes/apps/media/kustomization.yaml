@@ -20,3 +20,5 @@ resources:
   - ./calibre-web-automated/ks.yaml
   - ./tautulli/ks.yaml
   - ./plex-trakt-sync/ks.yaml
+  - ./shelfmark/ks.yaml
+  - ./bookboss/ks.yaml
