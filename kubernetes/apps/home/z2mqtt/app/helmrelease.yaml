@@ -10,14 +10,6 @@ spec:
     kind: OCIRepository
     name: app-template
     namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
   values:
     controllers:
       z2mqtt:
@@ -49,8 +41,10 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities:
-                drop: ["ALL"]
-                add: ["NET_BIND_SERVICE"]
+                drop:
+                  - "ALL"
+                add:
+                  - "NET_BIND_SERVICE"
 
     defaultPodOptions:
       securityContext:
@@ -59,7 +53,7 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-        seccompProfile: { type: RuntimeDefault }
+        seccompProfile: {type: RuntimeDefault}
 
     service:
       app:

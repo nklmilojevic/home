@@ -1,7 +1,14 @@
 ---
 pre-commit:
-  parallel: true
+  parallel: false
   commands:
+    # Format staged YAML first and re-stage any fixes, then lint.
+    yamlfmt:
+      priority: 1
+      glob: "*.{yaml,yml}"
+      run: yamlfmt {staged_files}
+      stage_fixed: true
     yamllint:
+      priority: 2
       glob: "*.{yaml,yml}"
       run: yamllint --config-file .yamllint.yaml {staged_files}

@@ -3,6 +3,8 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: isponsorblocktv
+  labels:
+    flux.home/helm-defaults: skip
 spec:
   interval: 15m
   chartRef:

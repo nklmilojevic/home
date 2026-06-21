@@ -11,14 +11,6 @@ spec:
     kind: OCIRepository
     name: app-template
     namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
   values:
     controllers:
       calibre-web-automated:
@@ -33,12 +25,6 @@ spec:
               TZ: "Europe/Belgrade"
               PUID: 1000
               PGID: 1000
-
-            # securityContext:
-            #   allowPrivilegeEscalation: false
-            #   capabilities:
-            #     drop:
-            #       - ALL
         pod:
           securityContext:
             runAsUser: 0

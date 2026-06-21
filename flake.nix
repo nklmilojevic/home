@@ -36,6 +36,7 @@
             lefthook
             minijinja
             moreutils
+            yamlfmt
             yamllint
             stern
             talosctl.packages.${system}.default

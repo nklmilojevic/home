@@ -11,14 +11,6 @@ spec:
     kind: OCIRepository
     name: app-template
     namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
   values:
     controllers:
       jellyfin:
@@ -80,7 +72,11 @@ spec:
             runAsNonRoot: true
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: [44, 105, 100, 109]
+            supplementalGroups:
+              - 44
+              - 105
+              - 100
+              - 109
 
     service:
       app:

@@ -11,11 +11,5 @@ spec:
     name: intel-device-plugins-operator
   install:
     crds: CreateReplace
-    remediation:
-      retries: 3
   upgrade:
-    cleanupOnFail: true
     crds: CreateReplace
-    remediation:
-      strategy: rollback
-      retries: 3

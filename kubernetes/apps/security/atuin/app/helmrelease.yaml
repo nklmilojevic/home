@@ -10,14 +10,6 @@ spec:
     kind: OCIRepository
     name: app-template
     namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-      strategy: rollback
   uninstall:
     keepHistory: false
   values:
@@ -42,11 +34,12 @@ spec:
               ATUIN_METRICS__PORT: &metricsPort 8080
               ATUIN_DB_URI: sqlite:///config/atuin.db
               ATUIN_TLS__ENABLE: "false"
-            args: ["start"]
+            args:
+              - "start"
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+              capabilities: {drop: ["ALL"]}
             resources:
               requests:
                 cpu: 10m
