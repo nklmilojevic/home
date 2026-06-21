@@ -37,6 +37,6 @@ spec:
         enabled: true
     resources:
       requests:
-        cpu: 50m
+        cpu: 100m
       limits:
         memory: 1Gi
