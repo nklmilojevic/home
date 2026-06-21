@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/toolhive.stacklok.dev/embeddingserver_v1beta1.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: EmbeddingServer
+metadata:
+  name: text-embeddings-inference
+spec:
+  env:
+    - name: HOSTNAME
+      value: "::"
+  image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
+  model: sentence-transformers/all-MiniLM-L6-v2
