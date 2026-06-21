@@ -99,7 +99,7 @@ spec:
   # renovate: dashboardName="Kubernetes / Views / Nodes"
   grafanaCom:
     id: 15759
-    revision: 29
+    revision: 40
 ---
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
@@ -116,7 +116,7 @@ spec:
   # renovate: dashboardName="Kubernetes / Views / Pods"
   grafanaCom:
     id: 15760
-    revision: 21
+    revision: 39
 ---
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
