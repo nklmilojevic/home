@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: openebs
-        namespace: flux-system
   values:
     engines:
       local:

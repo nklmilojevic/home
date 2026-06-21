@@ -3,8 +3,8 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: wiremind
-  namespace: flux-system
+  name: silence-operator
+  namespace: monitoring
 spec:
   interval: 2h
   url: https://wiremind.github.io/wiremind-helm-charts/
