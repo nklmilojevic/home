@@ -7,8 +7,7 @@ spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: app-template
-    namespace: flux-system
+    name: unpackerr
   values:
     controllers:
       unpackerr:

@@ -8,8 +8,7 @@ spec:
   timeout: 15m
   chartRef:
     kind: OCIRepository
-    name: app-template
-    namespace: flux-system
+    name: vector-agent
   dependsOn:
     - name: vector-aggregator
       namespace: monitoring

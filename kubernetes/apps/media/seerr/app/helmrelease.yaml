@@ -8,8 +8,7 @@ spec:
   interval: 15m
   chartRef:
     kind: OCIRepository
-    name: app-template
-    namespace: flux-system
+    name: seerr
   maxHistory: 3
   uninstall:
     keepHistory: false

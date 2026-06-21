@@ -8,8 +8,7 @@ spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: app-template
-    namespace: flux-system
+    name: scrypted
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -37,7 +36,12 @@ spec:
             runAsGroup: 1000
             fsGroup: 1000
             fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups: [20, 44, 105, 100, 109]
+            supplementalGroups:
+              - 20
+              - 44
+              - 105
+              - 100
+              - 109
 
         containers:
           app:

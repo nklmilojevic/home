@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: network
 resources:
   - ./helmrelease.yaml
+  - ./ocirepository.yaml
   - ./externalsecret.yaml
 configMapGenerator:
   - name: smtp-relay-configmap
