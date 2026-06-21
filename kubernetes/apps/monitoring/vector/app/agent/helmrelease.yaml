@@ -10,14 +10,6 @@ spec:
     kind: OCIRepository
     name: app-template
     namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
   dependsOn:
     - name: vector-aggregator
       namespace: monitoring
@@ -55,7 +47,9 @@ spec:
                   fieldRef:
                     apiVersion: v1
                     fieldPath: metadata.namespace
-            args: ["--config", "/etc/vector/vector.yaml"]
+            args:
+              - "--config"
+              - "/etc/vector/vector.yaml"
             securityContext:
               privileged: true
 

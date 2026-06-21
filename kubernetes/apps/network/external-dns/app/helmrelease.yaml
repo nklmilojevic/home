@@ -15,14 +15,8 @@ spec:
         namespace: flux-system
   install:
     crds: CreateReplace
-    remediation:
-      retries: 3
   upgrade:
-    cleanupOnFail: true
     crds: CreateReplace
-    remediation:
-      strategy: rollback
-      retries: 3
   values:
     provider:
       name: cloudflare
@@ -45,7 +39,8 @@ spec:
       - gateway-httproute
     txtPrefix: k8s.
     txtOwnerId: default
-    domainFilters: ["nikola.wtf"]
+    domainFilters:
+      - "nikola.wtf"
     serviceMonitor:
       enabled: true
     podAnnotations:

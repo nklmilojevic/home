@@ -10,14 +10,6 @@ spec:
     kind: OCIRepository
     name: app-template
     namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
   values:
     controllers:
       vector-aggregator:
@@ -30,7 +22,9 @@ spec:
             image:
               repository: docker.io/timberio/vector
               tag: 0.56.0-alpine
-            args: ["--config", "/etc/vector/vector.yaml"]
+            args:
+              - "--config"
+              - "/etc/vector/vector.yaml"
             probes:
               liveness:
                 enabled: true

@@ -11,14 +11,8 @@ spec:
     name: victoriametrics
   install:
     crds: CreateReplace
-    remediation:
-      retries: 3
   upgrade:
     crds: CreateReplace
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
   values:
     kubeControllerManager:
       enabled: true
@@ -56,7 +50,8 @@ spec:
         spec:
           jobLabel: app.kubernetes.io/component
           namespaceSelector:
-            matchNames: [kube-system]
+            matchNames:
+              - kube-system
           endpoints:
             - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
               port: http-metrics
@@ -186,7 +181,8 @@ spec:
         global:
           resolve_timeout: 5m
         route:
-          group_by: ["alertname"]
+          group_by:
+            - "alertname"
           group_wait: 1m
           group_interval: 5m
           repeat_interval: 3h

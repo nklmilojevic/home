@@ -4,6 +4,8 @@ kind: HelmRelease
 metadata:
   name: &app smtp-relay
   namespace: network
+  labels:
+    flux.home/helm-defaults: skip
 spec:
   interval: 15m
   chartRef:
