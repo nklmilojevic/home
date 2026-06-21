@@ -43,3 +43,29 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app toolhive-operator-config
+spec:
+  targetNamespace: ai
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: toolhive-operator
+      namespace: ai
+    - name: ha-mcp
+      namespace: ai
+  path: ./kubernetes/apps/ai/toolhive/config
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+    namespace: flux-system
+  wait: false
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
