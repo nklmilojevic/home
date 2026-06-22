@@ -15,5 +15,3 @@ resources:
   - ./mosquitto/ks.yaml
   - ./appdaemon/ks.yaml
   - ./asterisk/ks.yaml
-  - ./matter-server/ks.yaml
-  - ./otbr/ks.yaml
