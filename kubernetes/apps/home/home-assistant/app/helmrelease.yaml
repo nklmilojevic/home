@@ -47,9 +47,9 @@ spec:
           annotations:
             k8s.v1.cni.cncf.io/networks: |
               [{
-                "name":"multus-host",
+                "name":"multus-iot",
                 "namespace": "network",
-                "ips": ["10.5.0.205/24", "fd00:5::205/64"],
+                "ips": ["10.50.0.246/24", "fd00:50::246/64"],
                 "mac": "dc:de:70:dd:f4:9e"
               }]
 
