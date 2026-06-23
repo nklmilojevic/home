@@ -61,14 +61,16 @@ kubeconfig:
     until talosctl --nodes "${node}" kubeconfig --force "{{ root }}"; do sleep 10; done
 
 # Inject the 1Password-backed bootstrap secrets (op-credentials, tunnel-id) via vals.
-# Requires OP_SERVICE_ACCOUNT_TOKEN in the environment.
+# The op service-account token is fetched inline on the vals call below.
 [private]
 [script]
 secrets:
     just log info "Waiting for nodes to register"
     until kubectl wait --for=condition=Ready=False nodes --all --timeout=600s; do sleep 10; done
     just log info "Injecting bootstrap secrets from 1Password (vals)"
-    kustomize build "{{ kustomize_apps }}" | vals eval -f - | kubectl apply --server-side --field-manager=kustomize-controller -f -
+    kustomize build "{{ kustomize_apps }}" \
+        | OP_SERVICE_ACCOUNT_TOKEN="$(op read --account my.1password.eu "op://homecluster/op service token/token")" vals eval -f - \
+        | kubectl apply --server-side --field-manager=kustomize-controller -f -
 
 # Install the pre-Flux Helm releases + Flux Operator/Instance via helmfile
 [private]

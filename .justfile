@@ -24,7 +24,10 @@ default:
 log lvl msg *args:
     gum log -t rfc3339 -s -l "{{ lvl }}" "{{ msg }}" {{ args }}
 
-# Render a template: minijinja then resolve ref+op:// via vals
+# Render a template: minijinja then resolve ref+op:// via vals. The 1Password
+# service-account token is fetched inline here (and in the bootstrap module) so
+# it's only pulled when a recipe that actually resolves op:// refs runs.
 [private]
 template file *args:
-    minijinja-cli "{{ file }}" {{ args }} | vals eval -f -
+    minijinja-cli "{{ file }}" {{ args }} \
+        | OP_SERVICE_ACCOUNT_TOKEN="$(op read --account my.1password.eu "op://homecluster/op service token/token")" vals eval -f -
