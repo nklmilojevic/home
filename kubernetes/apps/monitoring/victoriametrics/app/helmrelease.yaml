@@ -211,6 +211,16 @@ spec:
       enabled: true
       # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec
       spec:
+        # Chart default caps vmagent at 200m CPU, which it bursts past during
+        # scrape/remote-write cycles (CPUThrottlingHigh, ~27% throttling). Raise
+        # the limit so it stops getting throttled; request stays modest.
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
         # Drop the volatile `pod` label from rook-ceph-mgr metrics. The mgr is a
         # singleton active daemon; when its pod restarts (same instance IP, new pod
         # name) the old series linger inside the [2d] lookback window and fork the
