@@ -55,3 +55,18 @@ spec:
             - name: device
               value: /dev/sd.*
               isRegex: true
+      # count:up0 counts DOWN scrape targets; when the cluster is healthy it
+      # legitimately emits 0 samples, repeatedly tripping RecordingRulesNoData.
+      - apiVersion: monitoring.giantswarm.io/v1alpha1
+        kind: Silence
+        metadata:
+          name: recording-rules-no-data-count-up0
+          namespace: monitoring
+        spec:
+          matchers:
+            - name: alertname
+              value: RecordingRulesNoData
+              isRegex: false
+            - name: recording
+              value: count:up0
+              isRegex: false
