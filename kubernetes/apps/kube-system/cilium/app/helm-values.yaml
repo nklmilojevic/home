@@ -7,8 +7,14 @@ prometheus:
 dashboards:
   enabled: true
 autoDirectNodeRoutes: true
+bandwidthManager:
+  enabled: true
+  bbr: true
 bpf:
+  datapathMode: netkit
   masquerade: true
+  preallocateMaps: true
+bpfClockProbe: true
 cgroup:
   autoMount:
     enabled: false
@@ -18,20 +24,12 @@ cluster:
   name: home-kubernetes
 cni:
   exclusive: false
+enableIPv4BIGTCP: true
 enableRuntimeDeviceDetection: true
 endpointRoutes:
   enabled: true
 envoy:
-  enabled: true
-  log:
-    accessLogBufferSize: 16384
-    format_json:
-      ts: '%Y-%m-%dT%T.%e'
-      level: '%l'
-      logger: '%n'
-      src: '%g:%#'
-      thread: '%t'
-      msg: '%j'
+  enabled: false
 gatewayAPI:
   enabled: false
 ipam:
@@ -47,8 +45,13 @@ loadBalancer:
   algorithm: maglev
   mode: dsr
 localRedirectPolicy: true
+pmtuDiscovery:
+  enabled: true
+socketLB:
+  enabled: true
+  hostNamespaceOnly: true
 operator:
-  replicas: 1
+  replicas: 2
   rollOutPods: true
   dashboards:
     enabled: true
@@ -64,6 +67,8 @@ securityContext:
       - IPC_LOCK
       - SYS_ADMIN
       - SYS_RESOURCE
+      - PERFMON
+      - BPF
       - DAC_OVERRIDE
       - FOWNER
       - SETGID
@@ -82,7 +87,6 @@ hubble:
       - flow
       - port-distribution
       - icmp
-      - http
     serviceMonitor:
       enabled: true
     dashboards:
