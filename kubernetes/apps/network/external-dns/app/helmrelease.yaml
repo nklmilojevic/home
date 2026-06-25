@@ -27,6 +27,8 @@ spec:
       - --cloudflare-proxied
       - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
       - --crd-source-kind=DNSEndpoint
+      - --zone-id-filter=01b2d7b9da413cc1d735fe22c719a73f
+    triggerLoopOnEvent: true
     policy: sync
     sources:
       - crd
