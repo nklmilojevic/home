@@ -107,6 +107,24 @@ spec:
       # -- Annotations for default rules
       annotations: {}
 
+      # Per-rule overrides (keyed by rule/record name).
+      rules:
+        # RecordingRulesNoData (vmalert source, info severity) fires for ANY
+        # recording rule emitting 0 samples for 30m. On a small/idle cluster many
+        # kube-prometheus rules are legitimately empty in the healthy state —
+        # e.g. count:up0 = count(up == 0) is empty whenever nothing is down — so
+        # this meta-alert is perpetual noise that can't tell "broken" from "fine".
+        # Disable it instead of playing whack-a-mole per rule group (see below).
+        RecordingRulesNoData:
+          create: false
+        # InfoInhibitor (severity=none) is designed to be routed to a null
+        # receiver and used as an Alertmanager inhibit_rule source to suppress
+        # info alerts. We have no inhibit_rules wired up, so it does nothing but
+        # notify constantly. We drop all severity=info notifications at the route
+        # (see alertmanager.config below), making this rule pure dead weight.
+        InfoInhibitor:
+          create: false
+
       # kube-scheduler.rules are histogram-quantile recordings that yield 0 samples
       # whenever the cluster is idle (no pod scheduling), repeatedly tripping
       # RecordingRulesNoData. They only feed the kube-scheduler Grafana dashboard.
@@ -188,6 +206,14 @@ spec:
           repeat_interval: 3h
           receiver: devnull
           routes:
+            # Drop all info-level alerts before they reach the telegram route.
+            # info alerts are noise without warning/critical context, and the
+            # kube-prometheus inhibition machinery that would normally suppress
+            # them (InfoInhibitor + inhibit_rules) is not wired up here.
+            - receiver: blackhole
+              matchers:
+                - "severity=info"
+              continue: false
             - receiver: blackhole
               matchers:
                 - "severity=blackhole"
