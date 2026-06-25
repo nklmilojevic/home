@@ -82,7 +82,7 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.nikola.wtf"
+          - "mass.nikola.wtf"
         parentRefs:
           - name: internal
             namespace: network
