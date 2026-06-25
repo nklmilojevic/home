@@ -18,44 +18,12 @@ spec:
     remediation:
       retries: 3
   values:
-    controllers:
-      multus:
-        type: daemonset
-        pod:
-          automountServiceAccountToken: true
-        initContainers:
-          cni-plugins:
-            image:
-              repository: quay.io/nklmilojevic/cni-plugins
-              tag: 1.9.1
-        containers:
-          multus:
-            image:
-              repository: ghcr.io/k8snetworkplumbingwg/multus-cni
-              tag: v4.3.0@sha256:ec4e5dfe12b675e4dcbf4e9cd14892f7b4c8ac27aa0dc93cf2e9be0bdd7d764a
-            command:
-              - /thin_entrypoint
-            args:
-              - --cleanup-config-on-exit=true
-            resources:
-              requests:
-                cpu: 10m
-              limits:
-                memory: 32Mi
-            securityContext:
-              privileged: true
-    defaultPodOptions:
-      hostNetwork: true
-    persistence:
-      etc-cni-net-d:
-        type: hostPath
-        hostPath: /etc/cni/net.d
-        globalMounts:
-          - path: /host/etc/cni/net.d
-      opt-cni-bin:
-        type: hostPath
-        hostPath: /opt/cni/bin
-        globalMounts:
-          - path: /host/opt/cni/bin
-    serviceAccount:
-      multus: {}
+    cni:
+      binPath: /opt/cni/bin
+      netPath: /etc/cni/net.d
+    multus:
+      resources:
+        requests:
+          cpu: 10m
+        limits:
+          memory: 512Mi
