@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: &app prowlarr
 spec:
+  components:
+    - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
     labels:

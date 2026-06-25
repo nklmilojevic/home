@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: &app recyclarr
 spec:
+  components:
+    - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
     labels:

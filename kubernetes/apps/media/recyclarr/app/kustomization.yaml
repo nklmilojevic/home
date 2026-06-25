@@ -6,7 +6,6 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ./ocirepository.yaml
-  - ../../../../templates/volsync
 configMapGenerator:
   - name: recyclarr-configmap
     files:
