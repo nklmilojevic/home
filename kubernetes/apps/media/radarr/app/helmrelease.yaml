@@ -25,8 +25,36 @@ spec:
               TZ: "Europe/Belgrade"
               PUID: "1000"
               PGID: "1000"
+            probes:
+              liveness:
+                enabled: true
+                spec:
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: 7878
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
+            resources:
+              requests:
+                cpu: 100m
+              limits:
+                memory: 4Gi
             securityContext:
               allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
               capabilities:
                 drop:
                   - ALL
@@ -61,6 +89,8 @@ spec:
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}-config"
+      tmp:
+        type: emptyDir
       media:
         enabled: true
         type: custom

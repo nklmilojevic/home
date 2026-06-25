@@ -39,6 +39,12 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
 
         pod:
           securityContext:
@@ -76,3 +82,5 @@ spec:
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}-config"
+      tmp:
+        type: emptyDir
