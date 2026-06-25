@@ -5,4 +5,5 @@ resources:
   # - ./pvc.yaml
   - ./helmrelease.yaml
   - ./ocirepository.yaml
+  - ./resourceclaimtemplate.yaml
   - ../../../../templates/volsync

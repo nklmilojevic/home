@@ -11,6 +11,11 @@ spec:
     kind: OCIRepository
     name: plex
   values:
+    defaultPodOptions:
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: plex
+
     controllers:
       plex:
         replicas: 1
@@ -31,12 +36,12 @@ spec:
                 drop:
                   - ALL
             resources:
+              claims:
+                - name: gpu
               requests:
-                gpu.intel.com/i915: 1
                 cpu: 200m
                 memory: 256Mi
               limits:
-                gpu.intel.com/i915: 1
                 memory: 4096Mi
 
         pod:

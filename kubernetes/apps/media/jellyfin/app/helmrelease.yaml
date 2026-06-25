@@ -11,6 +11,11 @@ spec:
     kind: OCIRepository
     name: jellyfin
   values:
+    defaultPodOptions:
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: jellyfin
+
     controllers:
       jellyfin:
         replicas: 1
@@ -56,12 +61,12 @@ spec:
               startup:
                 enabled: false
             resources:
+              claims:
+                - name: gpu
               requests:
-                gpu.intel.com/i915: 1
                 cpu: 100m
                 memory: 512Mi
               limits:
-                gpu.intel.com/i915: 1
                 memory: 8Gi
 
         pod:

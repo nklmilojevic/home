@@ -3,14 +3,12 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: intel-device-plugins-gpu
+  name: drm-exporter
 spec:
   interval: 10m
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   ref:
-    tag: 0.34.1
-  url: oci://ghcr.io/home-operations/charts-mirror/intel-device-plugins-gpu
-  verify:
-    provider: cosign
+    tag: 0.2.4
+  url: oci://ghcr.io/home-operations/charts/drm-exporter

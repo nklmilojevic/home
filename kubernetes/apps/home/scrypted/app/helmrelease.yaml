@@ -16,6 +16,9 @@ spec:
     defaultPodOptions:
       nodeSelector:
         kubernetes.io/hostname: icarus003
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: scrypted
 
     controllers:
       scrypted:
@@ -54,11 +57,12 @@ spec:
               readiness:
                 enabled: true
             resources:
+              claims:
+                - name: gpu
               requests:
                 cpu: 136m
                 memory: 1024Mi
               limits:
-                gpu.intel.com/i915: 1
                 memory: 8192Mi
 
     service:
