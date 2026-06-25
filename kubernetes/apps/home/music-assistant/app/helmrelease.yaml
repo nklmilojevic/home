@@ -1,0 +1,101 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: music-assistant
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: music-assistant
+
+  values:
+    controllers:
+      music-assistant:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        pod:
+          # Music Assistant relies on mDNS/UPnP (SSDP) to discover and stream to
+          # players (Chromecast, AirPlay, Sonos, DLNA renderers like the Denon
+          # AVR). Those are L2-broadcast based, so the pod needs an interface on
+          # the IoT VLAN where the players live, mirroring matter-server/otbr.
+          annotations:
+            k8s.v1.cni.cncf.io/networks: |
+              [{
+                "name":"multus-iot",
+                "namespace": "network",
+                "ips": ["10.50.0.244/24"],
+                "mac": "7e:84:d7:6e:5e:15"
+              }]
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+            runAsGroup: 0
+            fsGroup: 0
+            fsGroupChangePolicy: OnRootMismatch
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/music-assistant/server
+              tag: 2.9.3@sha256:fa04f9187e65362d489034d5b4072e94a7bef741c29c47e2b9a36325730605f2
+            env:
+              TZ: Europe/Belgrade
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 8095
+                  initialDelaySeconds: 0
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness: *probes
+              startup:
+                enabled: false
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+
+    service:
+      app:
+        controller: music-assistant
+        ports:
+          http:
+            port: *port
+          stream:
+            port: 8097
+
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.nikola.wtf"
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: music-assistant
+                port: *port
+
+    persistence:
+      data:
+        existingClaim: music-assistant-data
+        globalMounts:
+          - path: /data
+      tmp:
+        type: emptyDir
