@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: &app govee2mqtt
 spec:
+  components:
+    - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
     labels:

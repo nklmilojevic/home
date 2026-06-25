@@ -6,4 +6,3 @@ namespace: security
 resources:
   - ./helmrelease.yaml
   - ./ocirepository.yaml
-  - ../../../../templates/volsync

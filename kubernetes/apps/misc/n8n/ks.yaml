@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: &app n8n
 spec:
+  components:
+    - ../../../../components/volsync
   targetNamespace: misc
   commonMetadata:
     labels:

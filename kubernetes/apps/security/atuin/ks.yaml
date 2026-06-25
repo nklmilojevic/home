@@ -4,6 +4,8 @@ kind: Kustomization
 metadata:
   name: &app atuin
 spec:
+  components:
+    - ../../../../components/volsync
   targetNamespace: security
   path: ./kubernetes/apps/security/atuin/app
   prune: true

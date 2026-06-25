@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: &app wyoming-whisper
 spec:
+  components:
+    - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
     labels:

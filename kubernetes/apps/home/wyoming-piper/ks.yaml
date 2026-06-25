@@ -4,6 +4,8 @@ kind: Kustomization
 metadata:
   name: &app wyoming-piper
 spec:
+  components:
+    - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
     labels:
