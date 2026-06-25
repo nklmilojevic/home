@@ -12,6 +12,7 @@ resources:
   - ./network-ups-tools/ks.yaml
   - ./nut-exporter/ks.yaml
   - ./prometheus-operator-crds/ks.yaml
+  - ./drm-exporter/ks.yaml
   - ./exporters/
   - ./silence-operator/ks.yaml
   - ./unpoller/ks.yaml
