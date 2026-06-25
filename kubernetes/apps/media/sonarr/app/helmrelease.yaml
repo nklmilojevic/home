@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/sonarr
-              tag: 4.0.18.2976
+              tag: 4.0.18.2978
 
             env:
               TZ: "Europe/Belgrade"
