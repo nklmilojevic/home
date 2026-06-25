@@ -73,24 +73,19 @@ spec:
               startup:
                 enabled: false
 
-          code-server:
+          openssh:
             image:
-              repository: ghcr.io/coder/code-server
-              tag: 4.126.0@sha256:e1f03b5faaefd63ba6c7173a5290c6ec0526ac907f23acfe6bc949dd965279e4
-            args:
-              - --auth
-              - none
-              - --disable-telemetry
-              - --disable-update-check
-              - --user-data-dir
-              - /config/.code-server
-              - --extensions-dir
-              - /config/.code-server
-              - --port
-              - "12321"
-              - /config
+              repository: quay.io/nklmilojevic/openssh
+              tag: 3.22.5
             env:
-              HASS_SERVER: http://localhost:8123
+              TZ: "Europe/Belgrade"
+              PUBLIC_KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrYywYsK/kocVOa48LjaOR2X10g7lwsB1PtkyBJX800 id_ed25519"
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
             resources:
               requests:
                 cpu: 10m
@@ -114,8 +109,15 @@ spec:
             port: 5353
             protocol: UDP
             targetPort: 5353
-          code-server:
-            port: 12321
+      ssh:
+        controller: *app
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: "10.40.0.16"
+        ports:
+          ssh:
+            port: 22
+            targetPort: 2222
 
     route:
       app:
@@ -129,17 +131,6 @@ spec:
           - backendRefs:
               - name: *app
                 port: *port
-      code-server:
-        hostnames:
-          - hass-code.nikola.wtf
-        parentRefs:
-          - name: internal
-            namespace: network
-            sectionName: https
-        rules:
-          - backendRefs:
-              - name: *app
-                port: 12321
 
     persistence:
       config:
