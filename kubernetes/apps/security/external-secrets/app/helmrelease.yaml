@@ -13,6 +13,8 @@ spec:
     installCRDs: true
     replicaCount: 1
     leaderElect: true
+    webhook:
+      replicaCount: 2
     serviceMonitor:
       enabled: true
       interval: 1m
