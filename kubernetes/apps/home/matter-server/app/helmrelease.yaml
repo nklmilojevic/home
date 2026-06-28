@@ -42,18 +42,15 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/home-assistant-libs/python-matter-server
-              tag: 8.1.0@sha256:170aa093ce91c76cde4cc390918307590f0f5558fcec93f913af3cb019e6562a
+              repository: ghcr.io/matter-js/matterjs-server
+              tag: 1.1.3@sha256:c136e497324890b307287db2e035cef5e844ac915ea3de7907e2838324c4478e
             args:
               - --storage-path=/data
               - --primary-interface=net1
-              - --log-level=debug
-              - --log-level-sdk=info
             env:
               TZ: Europe/Belgrade
-              MATTER_SERVER__INSTANCE_NAME: matter-server
-              MATTER_SERVER__PORT: &port 5580
-              MATTER_SERVER__LOG_LEVEL: info
+              PORT: &port 5580
+              LOG_LEVEL: info
             securityContext:
               privileged: true
             probes:
@@ -68,7 +65,7 @@ spec:
                 cpu: 10m
                 memory: 64Mi
               limits:
-                memory: 512Mi
+                memory: 1Gi
 
     service:
       app:
