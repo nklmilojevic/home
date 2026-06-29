@@ -55,13 +55,7 @@ spec:
     txtPrefix: k8s.main.
     domainFilters:
       - "nikola.wtf"
-    # The webhook sidecar (port 8080) exposes an unbounded
-    # `external_dns_http_request_duration_seconds` histogram labelled by the
-    # UniFi record UUID (`path`), which grows past vmagent's 16MB maxScrapeSize
-    # and breaks scraping. Disable the chart ServiceMonitor (it scrapes both
-    # ports) and use a dedicated VMServiceScrape that only hits the healthy
-    # external-dns metrics port (7979).
     serviceMonitor:
-      enabled: false
+      enabled: true
     podAnnotations:
       secret.reloader.stakater.com/reload: *secret
