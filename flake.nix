@@ -42,6 +42,8 @@
             talosctl.packages.${system}.default
             vals
             yq-go
+            oxfmt
+            zizmor
           ];
         };
       }
