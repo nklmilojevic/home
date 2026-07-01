@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: koenkk/zigbee2mqtt
-              tag: 2.12.0
+              tag: 2.12.1
               pullPolicy: IfNotPresent
             env:
               ZIGBEE2MQTT_DATA: "/data"
