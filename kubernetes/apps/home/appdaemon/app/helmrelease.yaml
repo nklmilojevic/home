@@ -32,7 +32,7 @@ spec:
               repository: docker.io/acockburn/appdaemon
               tag: 4.5.13
             env:
-              HA_URL: "http://home-assistant:8123"
+              HA_URL: "http://home-assistant-app:8123"
               DASH_URL: "http://0.0.0.0:5050"
             envFrom:
               - secretRef:
