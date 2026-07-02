@@ -45,7 +45,7 @@ spec:
           app:
             image:
               repository: ghcr.io/bjw-s-labs/manyfold
-              tag: 0.145.1
+              tag: 0.146.0
             env:
               TZ: "Europe/Belgrade"
               DATABASE_URL: sqlite3:/data/database/manyfold.sqlite3
