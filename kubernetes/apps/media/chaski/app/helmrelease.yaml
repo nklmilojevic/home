@@ -32,9 +32,9 @@ spec:
       targets:
         telegram:
           apprise:
-            # apprise-go reads the whole bot token from the URL host and PathUnescapes it,
-            # so the token's ":" must be %3A-encoded or it's misparsed as a port.
-            url: tgram://{{ env "TELEGRAM_BOT_TOKEN" | replace ":" "%3A" }}/{{ env "TELEGRAM_CHAT_ID" }}
+            # apprise-go accepts "tgram://{botID}/{tokenHash}/{chatID}": only the numeric
+            # bot ID sits in the host, so split the token's ":" into a "/" path separator.
+            url: tgram://{{ env "TELEGRAM_BOT_TOKEN" | replace ":" "/" }}/{{ env "TELEGRAM_CHAT_ID" }}
       routes:
         # POST target for Radarr:  http://chaski.media.svc.cluster.local:8080/hooks/radarr
         radarr:
