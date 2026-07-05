@@ -139,6 +139,10 @@ spec:
       # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmalertmanagerspec
       spec:
         selectAllByDefault: true
+        # Without this, the telegram VMAlertmanagerConfig route only matches
+        # alerts labeled namespace=monitoring — everything else (kube-system,
+        # flux-system, rook-ceph, ...) silently falls through to devnull.
+        disableNamespaceMatcher: true
         externalURL: ""
         routePrefix: /
       ingress:
@@ -217,6 +221,12 @@ spec:
             - receiver: blackhole
               matchers:
                 - "severity=blackhole"
+              continue: false
+            # Watchdog is a heartbeat (severity=none) — without this it would
+            # reach the telegram route and repeat every 3h.
+            - receiver: blackhole
+              matchers:
+                - "alertname=Watchdog"
               continue: false
         receivers:
           - name: devnull
