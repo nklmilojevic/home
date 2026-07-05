@@ -18,6 +18,9 @@ spec:
           resources:
             requests:
               cpu: 100m
+              # Explicit request — without it k8s defaults request=limit,
+              # reserving 2Gi per proxy pod (4 pods) while usage is ~150Mi.
+              memory: 256Mi
             limits:
               memory: 2Gi
       envoyService:
