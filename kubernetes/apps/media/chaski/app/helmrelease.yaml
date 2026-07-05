@@ -50,7 +50,7 @@ spec:
             {{- end -}}
           message: |-
             <b>{{ .payload.movie.title }} ({{ .payload.movie.year }})</b>
-            {{ .payload.movie.overview | ellipsis 300 }}
+            {{ .payload.movie.overview }}
             <b>Client:</b> {{ .payload.downloadClient | default "unknown" }}
             {{ if .payload.applicationUrl }}<a href="{{ .payload.applicationUrl }}/movie/{{ .payload.movie.tmdbId }}">Open in Radarr</a>{{ end }}
         # POST target for Sonarr:  http://chaski.media.svc.cluster.local:8080/hooks/sonarr
