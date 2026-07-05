@@ -37,9 +37,10 @@ spec:
             url: tgram://{{ env "TELEGRAM_BOT_TOKEN" | replace ":" "/" }}/{{ env "TELEGRAM_CHAT_ID" }}
       routes:
         # POST target for Radarr:  http://chaski.media.svc.cluster.local:8080/hooks/radarr
+        # eventTypes: Grab, Download (import), Download+isUpgrade, Rename, MovieAdded, ManualInteractionRequired
         radarr:
           target: telegram
-          whenExpr: payload.eventType in ["Grab", "Download", "ManualInteractionRequired"]
+          whenExpr: payload.eventType in ["Grab", "Download", "Rename", "MovieAdded", "ManualInteractionRequired"]
           params:
             format: html
           title: >-
@@ -47,20 +48,26 @@ spec:
             ⚠️ Radarr — Manual Interaction Required
             {{- else if eq .payload.eventType "Grab" -}}
             ⬇️ Movie Grabbed
+            {{- else if eq .payload.eventType "Rename" -}}
+            🏷️ Movie Renamed
+            {{- else if eq .payload.eventType "MovieAdded" -}}
+            ➕ Movie Added to Library
             {{- else if .payload.isUpgrade -}}
             ⬆️ Movie Upgraded
             {{- else -}}
-            ✅ Movie Added
+            ✅ Movie Imported
             {{- end -}}
           message: |-
-            <b>{{ .payload.movie.title }} ({{ .payload.movie.year }})</b>
-            {{ .payload.movie.overview }}
-            <b>Client:</b> {{ .payload.downloadClient | default "unknown" }}
-            {{ if .payload.applicationUrl }}<a href="{{ .payload.applicationUrl }}/movie/{{ .payload.movie.tmdbId }}">Open in Radarr</a>{{ end }}
+            <b>{{ .payload.movie.title }} ({{ .payload.movie.year }})</b>{{ with .payload.movie.overview }}
+            {{ . }}{{ end }}{{ with .payload.downloadClient }}
+            <b>Client:</b> {{ . }}{{ end }}{{ with .payload.movie.imdbId }}
+            <a href="https://www.imdb.com/title/{{ . }}/">IMDb</a>{{ end }}{{ with .payload.applicationUrl }}
+            <a href="{{ . }}/movie/{{ $.payload.movie.tmdbId }}">Open in Radarr</a>{{ end }}
         # POST target for Sonarr:  http://chaski.media.svc.cluster.local:8080/hooks/sonarr
+        # eventTypes: Grab, Download (import), Download+isUpgrade, Rename, SeriesAdd, ManualInteractionRequired
         sonarr:
           target: telegram
-          whenExpr: payload.eventType in ["Grab", "Download", "ManualInteractionRequired"]
+          whenExpr: payload.eventType in ["Grab", "Download", "Rename", "SeriesAdd", "ManualInteractionRequired"]
           params:
             format: html
           title: >-
@@ -68,13 +75,18 @@ spec:
             ⚠️ Sonarr — Manual Interaction Required
             {{- else if eq .payload.eventType "Grab" -}}
             ⬇️ Episode Grabbed
+            {{- else if eq .payload.eventType "Rename" -}}
+            🏷️ Series Renamed
+            {{- else if eq .payload.eventType "SeriesAdd" -}}
+            ➕ Series Added to Library
             {{- else if .payload.isUpgrade -}}
             ⬆️ Episode Upgraded
             {{- else -}}
-            ✅ Episode Added
+            ✅ Episode Imported
             {{- end -}}
           message: |-
-            <b>{{ .payload.series.title }} — {{ printf "S%02dE%02d" (toInt (index .payload.episodes 0).seasonNumber) (toInt (index .payload.episodes 0).episodeNumber) }}</b>
-            {{ (index .payload.episodes 0).title }}
-            <b>Client:</b> {{ .payload.downloadClient | default "unknown" }}
-            {{ if .payload.applicationUrl }}<a href="{{ .payload.applicationUrl }}/series/{{ .payload.series.titleSlug }}">Open in Sonarr</a>{{ end }}
+            <b>{{ .payload.series.title }}{{ with .payload.episodes }} — {{ if eq (len .) 1 }}{{ printf "S%02dE%02d" (toInt (index . 0).seasonNumber) (toInt (index . 0).episodeNumber) }}{{ else }}{{ len . }} episodes{{ end }}{{ end }}</b>{{ with .payload.episodes }}{{ if eq (len .) 1 }}
+            {{ (index . 0).title }}{{ end }}{{ end }}{{ with .payload.downloadClient }}
+            <b>Client:</b> {{ . }}{{ end }}{{ with .payload.series.imdbId }}
+            <a href="https://www.imdb.com/title/{{ . }}/">IMDb</a>{{ end }}{{ with .payload.applicationUrl }}
+            <a href="{{ . }}/series/{{ $.payload.series.titleSlug }}">Open in Sonarr</a>{{ end }}
