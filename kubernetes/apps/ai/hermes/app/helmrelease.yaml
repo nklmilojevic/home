@@ -56,7 +56,9 @@ spec:
             image:
               repository: nousresearch/hermes-agent
               tag: v2026.7.1
-            command: ["sleep", "infinity"]
+            # args (CMD), NOT command (ENTRYPOINT) — the image ENTRYPOINT is the
+            # s6 /init supervisor and must run; we only replace its main program.
+            args: ["sleep", "infinity"]
             envFrom:
               - secretRef:
                   name: hermes-secret
