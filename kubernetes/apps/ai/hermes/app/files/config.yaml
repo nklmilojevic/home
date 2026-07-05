@@ -27,12 +27,10 @@ security:
 privacy:
   redact_pii: true
 
-# Persistent semantic memory via memini (MEMINI_URL/MEMINI_API_KEY come from env).
+# Persistent semantic memory via memini (installed as a memory provider by the
+# install-memini-plugin init container; MEMINI_BASE_URL/MEMINI_API_KEY from env).
 memory:
   provider: memini
-plugins:
-  enabled:
-    - memini
 
 dashboard:
   # Declared explicitly so OAuth-less redirect_uri reconstruction is correct
