@@ -5,10 +5,10 @@
 # (e.g. model.default) is preserved on the PVC.
 model:
   # OpenAI Codex — authenticates via device-code OAuth using your ChatGPT/Codex
-  # subscription. There is NO API key. Complete a one-time login (writes
-  # /opt/data/auth.json on the VolSync PVC, then auto-refreshes):
-  #   kubectl exec -n ai deploy/hermes -c dashboard -it -- hermes auth add codex-oauth
-  #   kubectl exec -n ai deploy/hermes -c dashboard -it -- hermes model   # pick OpenAI Codex, set default model
+  # subscription. There is NO API key. Complete a one-time OAuth login from a
+  # headless pod (writes /opt/data/auth.json on the VolSync PVC, then auto-refreshes):
+  #   kubectl exec -n ai deploy/hermes -it -- hermes auth add openai-codex --type oauth --no-browser --manual-paste
+  #   kubectl exec -n ai deploy/hermes -it -- hermes model   # pick OpenAI Codex, set default model
   provider: openai-codex
 
 toolsets:
