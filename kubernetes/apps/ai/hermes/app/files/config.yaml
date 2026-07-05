@@ -10,6 +10,7 @@ model:
   #   kubectl exec -n ai deploy/hermes -it -- hermes auth add openai-codex --type oauth --no-browser --manual-paste
   #   kubectl exec -n ai deploy/hermes -it -- hermes model   # pick OpenAI Codex, set default model
   provider: openai-codex
+  default: gpt-5.5
 
 toolsets:
   - hermes-cli

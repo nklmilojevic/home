@@ -45,14 +45,18 @@ spec:
                   cp /config/config.yaml /opt/data/config.yaml
                 fi
         containers:
-          # Single container: the image's s6 supervisor runs the gateway
-          # (main-hermes) and, with HERMES_DASHBOARD=true, the dashboard.
-          # Do NOT override command/args — that starts a second, conflicting
-          # gateway which makes s6 tear the container down.
+          # Supervised mode, single container. The image's s6 /init runs the
+          # profile reconciler (which starts the supervised gateway), plus the
+          # dashboard service (HERMES_DASHBOARD=true). The container's CMD runs
+          # as /init's main program — so it must be a long-lived keepalive, NOT
+          # a gateway/dashboard subcommand (those collide with the supervised
+          # services and make s6 tear the container down). `sleep infinity` is a
+          # supported invocation. API_SERVER_ENABLED exposes /health for probes.
           app:
             image:
               repository: nousresearch/hermes-agent
               tag: v2026.7.1
+            command: ["sleep", "infinity"]
             envFrom:
               - secretRef:
                   name: hermes-secret
@@ -60,8 +64,25 @@ spec:
               HERMES_HOME: /opt/data
               HOME: /opt/data
               TZ: "Europe/Belgrade"
-              # Enable the supervised dashboard service (binds 0.0.0.0:9119)
               HERMES_DASHBOARD: "true"
+              API_SERVER_ENABLED: "true"
+              API_SERVER_HOST: 0.0.0.0
+              API_SERVER_PORT: &api-port 8642
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *api-port
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 6
+              readiness: *probe
+              startup:
+                enabled: false
             resources:
               requests:
                 cpu: 100m
@@ -70,8 +91,12 @@ spec:
                 memory: 2Gi
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              # s6/cont-init writes to the root fs during startup; the proven
+              # community configs all run with this false.
+              readOnlyRootFilesystem: false
               capabilities:
+                add:
+                  - CHOWN
                 drop:
                   - ALL
     defaultPodOptions:
