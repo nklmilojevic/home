@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: media
 resources:
   - ./namespace.yaml
+  - ./chaski/ks.yaml
   - ./sonarr/ks.yaml
   - ./radarr/ks.yaml
   - ./bazarr/ks.yaml

@@ -1,0 +1,74 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: chaski
+  namespace: media
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: chaski
+  values:
+    replicaCount: 1
+    deploymentAnnotations:
+      reloader.stakater.com/auto: "true"
+    env:
+      TZ: "Europe/Belgrade"
+    envFrom:
+      - secretRef:
+          name: chaski-secret
+    resources:
+      requests:
+        cpu: 10m
+      limits:
+        memory: 128Mi
+    monitoring:
+      serviceMonitor:
+        enabled: true
+    config:
+      logLevel: info
+      targets:
+        telegram:
+          apprise:
+            url: tgram://{{ env "TELEGRAM_BOT_TOKEN" }}/{{ env "TELEGRAM_CHAT_ID" }}
+      routes:
+        # POST target for Radarr:  http://chaski.media.svc.cluster.local:8080/hooks/radarr
+        radarr:
+          target: telegram
+          whenExpr: payload.eventType in ["Download", "ManualInteractionRequired"]
+          params:
+            format: html
+          title: >-
+            {{- if eq .payload.eventType "ManualInteractionRequired" -}}
+            ⚠️ Radarr — Manual Interaction Required
+            {{- else if .payload.isUpgrade -}}
+            ⬆️ Movie Upgraded
+            {{- else -}}
+            ✅ Movie Added
+            {{- end -}}
+          message: |-
+            <b>{{ .payload.movie.title }} ({{ .payload.movie.year }})</b>
+            {{ .payload.movie.overview | ellipsis 300 }}
+            <b>Client:</b> {{ .payload.downloadClient | default "unknown" }}
+            {{ if .payload.applicationUrl }}<a href="{{ .payload.applicationUrl }}/movie/{{ .payload.movie.tmdbId }}">Open in Radarr</a>{{ end }}
+        # POST target for Sonarr:  http://chaski.media.svc.cluster.local:8080/hooks/sonarr
+        sonarr:
+          target: telegram
+          whenExpr: payload.eventType in ["Download", "ManualInteractionRequired"]
+          params:
+            format: html
+          title: >-
+            {{- if eq .payload.eventType "ManualInteractionRequired" -}}
+            ⚠️ Sonarr — Manual Interaction Required
+            {{- else if .payload.isUpgrade -}}
+            ⬆️ Episode Upgraded
+            {{- else -}}
+            ✅ Episode Added
+            {{- end -}}
+          message: |-
+            <b>{{ .payload.series.title }} — {{ printf "S%02dE%02d" (toInt (index .payload.episodes 0).seasonNumber) (toInt (index .payload.episodes 0).episodeNumber) }}</b>
+            {{ (index .payload.episodes 0).title }}
+            <b>Client:</b> {{ .payload.downloadClient | default "unknown" }}
+            {{ if .payload.applicationUrl }}<a href="{{ .payload.applicationUrl }}/series/{{ .payload.series.titleSlug }}">Open in Sonarr</a>{{ end }}
