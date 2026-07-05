@@ -5,12 +5,148 @@ metadata:
   name: telegram-notifications
   namespace: flux-system
 spec:
-  summary: "flux-cluster"
   providerRef:
     name: telegram
   eventSeverity: error
+  eventMetadata:
+    summary: "flux-cluster"
+  # NOTE: eventSources do NOT support namespace wildcards — each namespace
+  # must be listed explicitly. Add new namespaces here when creating them.
   eventSources:
     - kind: GitRepository
       name: "*"
     - kind: Kustomization
       name: "*"
+      namespace: ai
+    - kind: HelmRelease
+      name: "*"
+      namespace: ai
+    - kind: OCIRepository
+      name: "*"
+      namespace: ai
+    - kind: Kustomization
+      name: "*"
+      namespace: cert-manager
+    - kind: HelmRelease
+      name: "*"
+      namespace: cert-manager
+    - kind: OCIRepository
+      name: "*"
+      namespace: cert-manager
+    - kind: Kustomization
+      name: "*"
+      namespace: database
+    - kind: HelmRelease
+      name: "*"
+      namespace: database
+    - kind: OCIRepository
+      name: "*"
+      namespace: database
+    - kind: Kustomization
+      name: "*"
+      namespace: flux-system
+    - kind: HelmRelease
+      name: "*"
+      namespace: flux-system
+    - kind: OCIRepository
+      name: "*"
+      namespace: flux-system
+    - kind: Kustomization
+      name: "*"
+      namespace: home
+    - kind: HelmRelease
+      name: "*"
+      namespace: home
+    - kind: OCIRepository
+      name: "*"
+      namespace: home
+    - kind: Kustomization
+      name: "*"
+      namespace: kube-system
+    - kind: HelmRelease
+      name: "*"
+      namespace: kube-system
+    - kind: OCIRepository
+      name: "*"
+      namespace: kube-system
+    - kind: Kustomization
+      name: "*"
+      namespace: media
+    - kind: HelmRelease
+      name: "*"
+      namespace: media
+    - kind: OCIRepository
+      name: "*"
+      namespace: media
+    - kind: Kustomization
+      name: "*"
+      namespace: misc
+    - kind: HelmRelease
+      name: "*"
+      namespace: misc
+    - kind: OCIRepository
+      name: "*"
+      namespace: misc
+    - kind: Kustomization
+      name: "*"
+      namespace: monitoring
+    - kind: HelmRelease
+      name: "*"
+      namespace: monitoring
+    - kind: OCIRepository
+      name: "*"
+      namespace: monitoring
+    - kind: Kustomization
+      name: "*"
+      namespace: network
+    - kind: HelmRelease
+      name: "*"
+      namespace: network
+    - kind: OCIRepository
+      name: "*"
+      namespace: network
+    - kind: Kustomization
+      name: "*"
+      namespace: openebs-system
+    - kind: HelmRelease
+      name: "*"
+      namespace: openebs-system
+    - kind: OCIRepository
+      name: "*"
+      namespace: openebs-system
+    - kind: Kustomization
+      name: "*"
+      namespace: renovate
+    - kind: HelmRelease
+      name: "*"
+      namespace: renovate
+    - kind: OCIRepository
+      name: "*"
+      namespace: renovate
+    - kind: Kustomization
+      name: "*"
+      namespace: rook-ceph
+    - kind: HelmRelease
+      name: "*"
+      namespace: rook-ceph
+    - kind: OCIRepository
+      name: "*"
+      namespace: rook-ceph
+    - kind: Kustomization
+      name: "*"
+      namespace: security
+    - kind: HelmRelease
+      name: "*"
+      namespace: security
+    - kind: OCIRepository
+      name: "*"
+      namespace: security
+    - kind: Kustomization
+      name: "*"
+      namespace: system-upgrade
+    - kind: HelmRelease
+      name: "*"
+      namespace: system-upgrade
+    - kind: OCIRepository
+      name: "*"
+      namespace: system-upgrade
