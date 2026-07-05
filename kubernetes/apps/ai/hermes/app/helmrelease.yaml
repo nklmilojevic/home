@@ -44,6 +44,38 @@ spec:
                 else
                   cp /config/config.yaml /opt/data/config.yaml
                 fi
+          # Install gh, Go and Homebrew onto the PVC so the agent can build/install
+          # tools at runtime. Idempotent — only downloads on first boot, reused after.
+          install-tools:
+            image:
+              repository: nousresearch/hermes-agent
+              tag: &imageTag v2026.7.1@sha256:b6c019227889e6675424a2b6223b2cafdd36bf7d1048d1ddd8e043b880d6cc0f
+            command:
+              - /bin/sh
+              - -c
+              - |
+                set -e
+                mkdir -p /opt/data/.local/bin /opt/data/.local/go
+
+                if [ ! -f /opt/data/.local/bin/gh ]; then
+                  cd /tmp
+                  curl -fsSL https://github.com/cli/cli/releases/download/v2.61.0/gh_2.61.0_linux_amd64.tar.gz -o gh.tar.gz
+                  tar xzf gh.tar.gz
+                  cp gh_2.61.0_linux_amd64/bin/gh /opt/data/.local/bin/
+                  rm -rf gh.tar.gz gh_2.61.0_linux_amd64
+                fi
+
+                if [ ! -f /opt/data/.local/go/bin/go ]; then
+                  cd /tmp
+                  curl -fsSL https://go.dev/dl/go1.23.5.linux-amd64.tar.gz -o go.tar.gz
+                  tar xzf go.tar.gz
+                  mv go /opt/data/.local/
+                  rm -rf go.tar.gz
+                fi
+
+                if [ ! -f /opt/data/.local/homebrew/bin/brew ]; then
+                  git clone --depth 1 https://github.com/Homebrew/brew /opt/data/.local/homebrew
+                fi
         containers:
           # Supervised mode, single container. The image's s6 /init runs the
           # profile reconciler (which starts the supervised gateway), plus the
@@ -55,7 +87,9 @@ spec:
           app:
             image:
               repository: nousresearch/hermes-agent
-              tag: v2026.7.1
+              # Pinned by digest to match the community-tested builds and avoid
+              # the floating-tag drift that changed API-server behaviour on us.
+              tag: *imageTag
             # args (CMD), NOT command (ENTRYPOINT) — the image ENTRYPOINT is the
             # s6 /init supervisor and must run; we only replace its main program.
             args: ["sleep", "infinity"]
@@ -70,15 +104,27 @@ spec:
               API_SERVER_ENABLED: "true"
               API_SERVER_HOST: 0.0.0.0
               API_SERVER_PORT: &api-port 8642
+              # API_SERVER_KEY arrives via envFrom (hermes-secret)
+              # Tools installed onto the PVC by the install-tools init container
+              PATH: /opt/hermes/bin:/opt/hermes/.venv/bin:/opt/data/.local/bin:/opt/data/.local/go/bin:/opt/data/.local/homebrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+              GOPATH: /opt/data/go
+              HOMEBREW_PREFIX: /opt/data/.local/homebrew
+              HOMEBREW_CELLAR: /opt/data/.local/homebrew/Cellar
+              HOMEBREW_REPOSITORY: /opt/data/.local/homebrew
+              PIP_BREAK_SYSTEM_PACKAGES: "1"
+              # Persistent memory backend (memini). MEMINI_API_KEY via envFrom.
+              MEMINI_URL: http://memini.ai.svc.cluster.local:8080
+              MEMINI_NAMESPACE: hermes
             probes:
+              # TCP, not httpGet /health — the API server requires the key and may
+              # reject unauthenticated GETs; a bound port proves the gateway is up.
               liveness: &probe
                 enabled: true
                 custom: true
                 spec:
-                  httpGet:
-                    path: /health
+                  tcpSocket:
                     port: *api-port
-                  initialDelaySeconds: 30
+                  initialDelaySeconds: 60
                   periodSeconds: 30
                   timeoutSeconds: 5
                   failureThreshold: 6
