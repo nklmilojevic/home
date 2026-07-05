@@ -28,7 +28,7 @@ spec:
       serviceMonitor:
         enabled: true
     config:
-      logLevel: info
+      logLevel: debug
       targets:
         telegram:
           apprise:
@@ -39,7 +39,7 @@ spec:
         # POST target for Radarr:  http://chaski.media.svc.cluster.local:8080/hooks/radarr
         radarr:
           target: telegram
-          whenExpr: payload.eventType in ["Download", "ManualInteractionRequired", "Test"]
+          whenExpr: payload.eventType in ["Download", "ManualInteractionRequired"]
           params:
             format: html
           title: >-
