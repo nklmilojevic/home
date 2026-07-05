@@ -13,7 +13,9 @@ spec:
   values:
     controllers:
       hermes:
-        strategy: RollingUpdate
+        # Recreate, not RollingUpdate: a Telegram bot allows only ONE poller, so
+        # overlapping old+new pods cause getUpdates conflicts on restart.
+        strategy: Recreate
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
@@ -76,6 +78,30 @@ spec:
                 if [ ! -f /opt/data/.local/homebrew/bin/brew ]; then
                   git clone --depth 1 https://github.com/Homebrew/brew /opt/data/.local/homebrew
                 fi
+          # Install the memini memory-provider plugin into HERMES_HOME/plugins (PVC).
+          # Delete /opt/data/plugins/memini to force a re-pull on the next rollout.
+          install-memini-plugin:
+            image:
+              repository: docker.io/alpine/git
+              tag: 2.47.1
+            command:
+              - sh
+              - -c
+              - |
+                set -e
+                if [ ! -d /opt/data/plugins/memini ]; then
+                  mkdir -p /opt/data/plugins
+                  cd /tmp
+                  rm -rf memini-src
+                  git clone --depth 1 --branch main https://github.com/eleboucher/memini memini-src
+                  mv memini-src/integrations/hermes/plugin/memini /opt/data/plugins/memini
+                  rm -rf memini-src
+                fi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
         containers:
           # Supervised mode, single container. The image's s6 /init runs the
           # profile reconciler (which starts the supervised gateway), plus the
@@ -113,7 +139,7 @@ spec:
               HOMEBREW_REPOSITORY: /opt/data/.local/homebrew
               PIP_BREAK_SYSTEM_PACKAGES: "1"
               # Persistent memory backend (memini). MEMINI_API_KEY via envFrom.
-              MEMINI_URL: http://memini.ai.svc.cluster.local:8080
+              MEMINI_BASE_URL: http://memini.ai.svc.cluster.local:8080
               MEMINI_NAMESPACE: hermes
             probes:
               # TCP, not httpGet /health — the API server requires the key and may
