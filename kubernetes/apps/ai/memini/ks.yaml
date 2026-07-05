@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app hermes
+  name: &app memini
 spec:
   components:
     - ../../../../components/volsync
@@ -18,7 +18,9 @@ spec:
       namespace: security
     - name: external-secrets-stores
       namespace: security
-  path: ./kubernetes/apps/ai/hermes/app
+    - name: llmkube-models
+      namespace: ai
+  path: ./kubernetes/apps/ai/memini/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -31,7 +33,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: hermes
-      VOLSYNC_CAPACITY: 10Gi
-      APP_UID: "10000"
-      APP_GID: "10000"
+      VOLSYNC_CLAIM: memini
+      VOLSYNC_CAPACITY: 2Gi

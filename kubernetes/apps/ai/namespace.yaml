@@ -5,3 +5,5 @@ metadata:
   name: ai
   labels:
     kustomize.toolkit.fluxcd.io/prune: disabled
+    # Required for DRA ResourceClaimTemplates that use adminAccess (iGPU sharing)
+    resource.k8s.io/admin-access: "true"

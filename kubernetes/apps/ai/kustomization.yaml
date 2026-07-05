@@ -7,3 +7,5 @@ resources:
   - ./toolhive/ks.yaml
   - ./ha-mcp/ks.yaml
   - ./hermes/ks.yaml
+  - ./llmkube/ks.yaml
+  - ./memini/ks.yaml

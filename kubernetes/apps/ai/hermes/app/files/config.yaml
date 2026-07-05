@@ -27,6 +27,13 @@ security:
 privacy:
   redact_pii: true
 
+# Persistent semantic memory via memini (MEMINI_URL/MEMINI_API_KEY come from env).
+memory:
+  provider: memini
+plugins:
+  enabled:
+    - memini
+
 dashboard:
   # Declared explicitly so OAuth-less redirect_uri reconstruction is correct
   # behind the internal Envoy gateway.
