@@ -39,12 +39,14 @@ spec:
         # POST target for Radarr:  http://chaski.media.svc.cluster.local:8080/hooks/radarr
         radarr:
           target: telegram
-          whenExpr: payload.eventType in ["Download", "ManualInteractionRequired"]
+          whenExpr: payload.eventType in ["Grab", "Download", "ManualInteractionRequired"]
           params:
             format: html
           title: >-
             {{- if eq .payload.eventType "ManualInteractionRequired" -}}
             ⚠️ Radarr — Manual Interaction Required
+            {{- else if eq .payload.eventType "Grab" -}}
+            ⬇️ Movie Grabbed
             {{- else if .payload.isUpgrade -}}
             ⬆️ Movie Upgraded
             {{- else -}}
@@ -58,12 +60,14 @@ spec:
         # POST target for Sonarr:  http://chaski.media.svc.cluster.local:8080/hooks/sonarr
         sonarr:
           target: telegram
-          whenExpr: payload.eventType in ["Download", "ManualInteractionRequired"]
+          whenExpr: payload.eventType in ["Grab", "Download", "ManualInteractionRequired"]
           params:
             format: html
           title: >-
             {{- if eq .payload.eventType "ManualInteractionRequired" -}}
             ⚠️ Sonarr — Manual Interaction Required
+            {{- else if eq .payload.eventType "Grab" -}}
+            ⬇️ Episode Grabbed
             {{- else if .payload.isUpgrade -}}
             ⬆️ Episode Upgraded
             {{- else -}}
