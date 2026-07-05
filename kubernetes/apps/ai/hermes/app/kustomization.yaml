@@ -1,0 +1,17 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ai
+resources:
+  - ./externalsecret.yaml
+  - ./helmrelease.yaml
+  - ./ocirepository.yaml
+configMapGenerator:
+  - name: hermes-config
+    files:
+      - config.yaml=./files/config.yaml
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    # config.yaml is not subject to Flux postBuild var substitution
+    kustomize.toolkit.fluxcd.io/substitute: disabled
