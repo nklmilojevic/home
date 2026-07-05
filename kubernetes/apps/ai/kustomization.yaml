@@ -6,3 +6,4 @@ resources:
   - ./namespace.yaml
   - ./toolhive/ks.yaml
   - ./ha-mcp/ks.yaml
+  - ./hermes/ks.yaml

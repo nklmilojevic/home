@@ -1,0 +1,146 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hermes
+  namespace: ai
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: hermes
+  values:
+    controllers:
+      hermes:
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          # readOnlyRootFilesystem needs /run to be writable and owned by the app uid
+          fix-run:
+            image:
+              repository: docker.io/library/busybox
+              tag: latest
+            command: ["sh", "-c", "chown 10000:10000 /run && chmod 755 /run"]
+            securityContext:
+              runAsUser: 0
+              runAsGroup: 0
+              runAsNonRoot: false
+          # Merge the pinned config over the copy on the PVC (pinned keys win, user edits preserved)
+          init:
+            image:
+              repository: docker.io/mikefarah/yq
+              tag: "4"
+            command:
+              - sh
+              - -c
+              - |
+                set -euo pipefail
+                if [ -f /opt/data/config.yaml ]; then
+                  yq eval-all 'select(fileIndex == 0) * select(fileIndex == 1)' \
+                    /opt/data/config.yaml /config/config.yaml > /tmp/merged.yaml
+                  mv /tmp/merged.yaml /opt/data/config.yaml
+                else
+                  cp /config/config.yaml /opt/data/config.yaml
+                fi
+        containers:
+          app:
+            image: &image
+              repository: nousresearch/hermes-agent
+              tag: v2026.7.1
+            args: ["gateway", "run", "--no-supervise"]
+            envFrom:
+              - secretRef:
+                  name: hermes-secret
+            env:
+              HERMES_HOME: /opt/data
+              HOME: /opt/data
+              TZ: "Europe/Belgrade"
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+          dashboard:
+            image: *image
+            args: ["dashboard", "--host", "0.0.0.0"]
+            envFrom:
+              - secretRef:
+                  name: hermes-secret
+            env:
+              HERMES_HOME: /opt/data
+              HOME: /opt/data
+              TZ: "Europe/Belgrade"
+              GATEWAY_HEALTH_URL: http://localhost:8642
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    defaultPodOptions:
+      terminationGracePeriodSeconds: 600
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10000
+        runAsGroup: 10000
+        fsGroup: 10000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+    service:
+      app:
+        controller: hermes
+        ports:
+          http:
+            port: &gateway-port 8642
+      dashboard:
+        controller: hermes
+        ports:
+          http:
+            port: &dashboard-port 9119
+    route:
+      dashboard:
+        hostnames:
+          - hermes.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: dashboard
+                port: http
+    persistence:
+      data:
+        existingClaim: hermes
+        globalMounts:
+          - path: /opt/data
+      config:
+        type: configMap
+        name: hermes-config
+        globalMounts:
+          - path: /config
+            readOnly: true
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+      run:
+        type: emptyDir
+        globalMounts:
+          - path: /run
