@@ -83,7 +83,7 @@ spec:
           install-memini-plugin:
             image:
               repository: docker.io/alpine/git
-              tag: 2.47.1
+              tag: v2.47.2
             command:
               - sh
               - -c
