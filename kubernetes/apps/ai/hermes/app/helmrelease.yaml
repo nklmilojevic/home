@@ -45,11 +45,14 @@ spec:
                   cp /config/config.yaml /opt/data/config.yaml
                 fi
         containers:
+          # Single container: the image's s6 supervisor runs the gateway
+          # (main-hermes) and, with HERMES_DASHBOARD=true, the dashboard.
+          # Do NOT override command/args — that starts a second, conflicting
+          # gateway which makes s6 tear the container down.
           app:
-            image: &image
+            image:
               repository: nousresearch/hermes-agent
               tag: v2026.7.1
-            args: ["gateway", "run", "--no-supervise"]
             envFrom:
               - secretRef:
                   name: hermes-secret
@@ -57,33 +60,12 @@ spec:
               HERMES_HOME: /opt/data
               HOME: /opt/data
               TZ: "Europe/Belgrade"
+              # Enable the supervised dashboard service (binds 0.0.0.0:9119)
+              HERMES_DASHBOARD: "true"
             resources:
               requests:
                 cpu: 100m
                 memory: 512Mi
-              limits:
-                memory: 2Gi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities:
-                drop:
-                  - ALL
-          dashboard:
-            image: *image
-            args: ["dashboard", "--host", "0.0.0.0"]
-            envFrom:
-              - secretRef:
-                  name: hermes-secret
-            env:
-              HERMES_HOME: /opt/data
-              HOME: /opt/data
-              TZ: "Europe/Belgrade"
-              GATEWAY_HEALTH_URL: http://localhost:8642
-            resources:
-              requests:
-                cpu: 50m
-                memory: 256Mi
               limits:
                 memory: 2Gi
             securityContext:
