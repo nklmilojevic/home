@@ -61,10 +61,10 @@ spec:
 
                 if [ ! -f /opt/data/.local/bin/gh ]; then
                   cd /tmp
-                  curl -fsSL https://github.com/cli/cli/releases/download/v2.96.0/gh_2.61.0_linux_amd64.tar.gz -o gh.tar.gz
+                  curl -fsSL https://github.com/cli/cli/releases/download/v2.96.0/gh_2.96.0_linux_amd64.tar.gz -o gh.tar.gz
                   tar xzf gh.tar.gz
                   cp gh_2.61.0_linux_amd64/bin/gh /opt/data/.local/bin/
-                  rm -rf gh.tar.gz gh_2.61.0_linux_amd64
+                  rm -rf gh.tar.gz gh_2.96.0_linux_amd64
                 fi
 
                 if [ ! -f /opt/data/.local/go/bin/go ]; then
