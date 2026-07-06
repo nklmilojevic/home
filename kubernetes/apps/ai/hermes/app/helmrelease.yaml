@@ -196,6 +196,13 @@ spec:
             port: &dashboard-port 9119
     route:
       dashboard:
+        annotations:
+          # The dashboard 302s / → /auth/login, which 500s under password-only
+          # auth (BasicAuthProvider has no OAuth redirect flow). Probe the public
+          # /login page (200, bypasses the auth gate) so gatus doesn't spam the
+          # logs with tracebacks on every check.
+          gatus.home-operations.com/endpoint: |
+            url: https://hermes.nikola.wtf/login
         hostnames:
           - hermes.nikola.wtf
         parentRefs:
