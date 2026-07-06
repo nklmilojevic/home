@@ -9,8 +9,8 @@ model:
   # headless pod (writes /opt/data/auth.json on the VolSync PVC, then auto-refreshes):
   #   kubectl exec -n ai deploy/hermes -it -- hermes auth add openai-codex --type oauth --no-browser --manual-paste
   #   kubectl exec -n ai deploy/hermes -it -- hermes model   # pick OpenAI Codex, set default model
-  provider: openai-codex
-  default: gpt-5.5
+  provider: opencode-go
+  default: minimax-m3
 
 toolsets:
   - hermes-cli
