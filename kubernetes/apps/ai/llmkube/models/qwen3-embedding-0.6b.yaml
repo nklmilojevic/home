@@ -29,10 +29,10 @@ spec:
   image: ghcr.io/ggml-org/llama.cpp:server-vulkan@sha256:c463658769e2d4a0f166dbaaf1cd71bf9f4c76e85004212334028deba1ea2543
   replicas: 1
   priority: normal
-  contextSize: 8192
+  contextSize: 4096
   parallelSlots: 2
-  batchSize: 4096
-  uBatchSize: 4096
+  batchSize: 2048
+  uBatchSize: 2048
   env:
     - name: ZES_ENABLE_SYSMAN
       value: "1"
