@@ -24,7 +24,10 @@ spec:
             image:
               repository: docker.io/library/busybox
               tag: latest
-            command: ["sh", "-c", "chown 10000:10000 /run && chmod 755 /run"]
+            command:
+              - "sh"
+              - "-c"
+              - "chown 10000:10000 /run && chmod 755 /run"
             securityContext:
               runAsUser: 0
               runAsGroup: 0
@@ -118,7 +121,9 @@ spec:
               tag: *imageTag
             # args (CMD), NOT command (ENTRYPOINT) — the image ENTRYPOINT is the
             # s6 /init supervisor and must run; we only replace its main program.
-            args: ["sleep", "infinity"]
+            args:
+              - "sleep"
+              - "infinity"
             envFrom:
               - secretRef:
                   name: hermes-secret
@@ -141,6 +146,11 @@ spec:
               # Persistent memory backend (memini). MEMINI_API_KEY via envFrom.
               MEMINI_BASE_URL: http://memini.ai.svc.cluster.local:8080
               MEMINI_NAMESPACE: hermes
+              # Web tools: search via self-hosted SearXNG (JSON API enabled in its
+              # settings.yaml; the pod network is in SearXNG's pass_ip so the
+              # limiter allows it), extract via Firecrawl (FIRECRAWL_API_KEY via
+              # envFrom → hermes-secret).
+              SEARXNG_URL: http://searxng.misc.svc.cluster.local:8080
             probes:
               # TCP, not httpGet /health — the API server requires the key and may
               # reject unauthenticated GETs; a bound port proves the gateway is up.
