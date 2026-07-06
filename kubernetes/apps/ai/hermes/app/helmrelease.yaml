@@ -136,6 +136,8 @@ spec:
               API_SERVER_HOST: 0.0.0.0
               API_SERVER_PORT: &api-port 8642
               # API_SERVER_KEY arrives via envFrom (hermes-secret)
+              # OpenCode Zen Go endpoint (OPENCODE_GO_API_KEY arrives via envFrom → hermes-secret).
+              OPENCODE_GO_BASE_URL: https://opencode.ai/zen/go/v1
               # Tools installed onto the PVC by the install-tools init container
               PATH: /opt/hermes/bin:/opt/hermes/.venv/bin:/opt/data/.local/bin:/opt/data/.local/go/bin:/opt/data/.local/homebrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
               GOPATH: /opt/data/go
