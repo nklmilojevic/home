@@ -151,6 +151,10 @@ spec:
               # limiter allows it), extract via Firecrawl (FIRECRAWL_API_KEY via
               # envFrom → hermes-secret).
               SEARXNG_URL: http://searxng.misc.svc.cluster.local:8080
+              # Headless browser runs in an unprivileged container — Chromium's
+              # sandbox needs CAP_SYS_ADMIN it doesn't have, and /dev/shm is too
+              # small under the emptyDir default.
+              AGENT_BROWSER_ARGS: "--no-sandbox,--disable-dev-shm-usage"
             probes:
               # TCP, not httpGet /health — the API server requires the key and may
               # reject unauthenticated GETs; a bound port proves the gateway is up.
