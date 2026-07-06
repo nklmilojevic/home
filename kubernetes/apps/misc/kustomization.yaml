@@ -10,3 +10,4 @@ resources:
   - ./invoicing/ks.yaml
   - ./stirling-pdf/ks.yaml
   - ./manyfold/ks.yaml
+  - ./searxng/ks.yaml
