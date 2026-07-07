@@ -79,6 +79,11 @@ spec:
     route:
       internal:
         enabled: true
+        annotations:
+          # memini has no root route; / returns 404. Treat that as up.
+          gatus.home-operations.com/endpoint: |
+            conditions:
+              - "[STATUS] == 404"
         hostnames:
           - memini.nikola.wtf
         parentRefs:
