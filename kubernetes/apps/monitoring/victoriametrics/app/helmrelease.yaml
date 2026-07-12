@@ -124,6 +124,16 @@ spec:
         # (see alertmanager.config below), making this rule pure dead weight.
         InfoInhibitor:
           create: false
+        # Talos mints ephemeral (<30m TTL) client certs, signed on the fly by
+        # the cluster CA, for its internal apiserver operations during node
+        # upgrades/reboots. Those drag the p01 expiry quantile below the rule's
+        # thresholds for the duration of a rollout, firing warning+critical on
+        # every Talos upgrade. A genuinely expiring cert (e.g. broken kubelet
+        # cert rotation) presents continuously for days, so a longer `for`
+        # still catches the real case while ignoring upgrade bursts.
+        KubeClientCertificateExpiration:
+          spec:
+            for: 1h
 
       # kube-scheduler.rules are histogram-quantile recordings that yield 0 samples
       # whenever the cluster is idle (no pod scheduling), repeatedly tripping

@@ -4,11 +4,27 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: rook-ceph-cluster
+  labels:
+    # Opt out of the centralized rollback remediation (flux/apps.yaml):
+    # Ceph mons stamp one-way incompat feature bits into their store on upgrade,
+    # so a Helm rollback to an older ceph image crashloops the mons permanently.
+    # Never roll back this release; a failed upgrade must be fixed forward.
+    flux.home/helm-defaults: skip
 spec:
   interval: 30m
+  # Mon/OSD rollouts routinely exceed the default 5m wait; a false timeout here
+  # is what previously triggered the destructive rollback.
+  timeout: 20m
   chartRef:
     kind: OCIRepository
     name: rook-ceph-cluster
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 0 # no automatic remediation — never roll back ceph
   values:
     monitoring:
       enabled: true
