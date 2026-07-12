@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/prowlarr
-              tag: 2.5.1.5460@sha256:4ef20efb2ada3459d47a38afac745e52284a7dee6f129a4159e8ad6798092eae
+              tag: 2.5.1.5464@sha256:f324eeb801d3887609af0bc916017d7b23f667df4fa479d2c74552d08940dcc7
             env:
               TZ: "Europe/Belgrade"
             securityContext:
