@@ -37,6 +37,12 @@ spec:
               ZIGBEE2MQTT_CONFIG_SERIAL_RTSCTS: "false"
               ZIGBEE2MQTT_CONFIG_ADVANCED_TRANSMIT_POWER: "20"
               ZIGBEE2MQTT_CONFIG_MQTT_SERVER: "mqtt://mosquitto.home.svc.cluster.local:1883"
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -53,7 +59,7 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-        seccompProfile: {type: RuntimeDefault}
+        seccompProfile: { type: RuntimeDefault }
 
     service:
       app:

@@ -17,6 +17,13 @@ spec:
         envflag.prefix: VM_
         loggerFormat: json
 
+      resources:
+        requests:
+          cpu: 50m
+          memory: 768Mi
+        limits:
+          memory: 2Gi
+
       persistentVolume:
         enabled: true
         accessModes:

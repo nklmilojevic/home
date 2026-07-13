@@ -253,6 +253,16 @@ spec:
         evaluationInterval: 15s
       ingress:
         enabled: false
+    vmsingle:
+      # Chart default requests 500Mi but the working set sits at ~1.3-1.5Gi;
+      # right-size so the scheduler accounts for what vmsingle actually uses.
+      spec:
+        resources:
+          requests:
+            cpu: 150m
+            memory: 1536Mi
+          limits:
+            memory: 3Gi
     vmagent:
       enabled: true
       # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec

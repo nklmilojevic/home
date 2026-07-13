@@ -10,6 +10,13 @@ spec:
     name: descheduler
   values:
     kind: Deployment
+    resources:
+      requests:
+        cpu: 20m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
     deschedulerPolicyAPIVersion: descheduler/v1alpha2
     deschedulerPolicy:
       metricsProviders:
@@ -28,14 +35,18 @@ spec:
               args:
                 metricsUtilization:
                   source: KubernetesMetrics
+                # A node is "underutilized" only when ALL resources are below
+                # thresholds. On a 3-node cluster the old 20/20/20 was
+                # unreachable (every node runs >22 pods and >30% memory), so
+                # the plugin never found an eviction target and did nothing.
                 thresholds:
-                  cpu: 20
-                  memory: 20
-                  pods: 20
+                  cpu: 30
+                  memory: 45
+                  pods: 60
                 targetThresholds:
-                  cpu: 50
-                  memory: 50
-                  pods: 50
+                  cpu: 60
+                  memory: 60
+                  pods: 80
             - name: RemoveFailedPods
               args:
                 reasons:

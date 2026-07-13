@@ -23,6 +23,12 @@ spec:
               tag: 1.6.0@sha256:c10d46618be222f33c3fab3aff4a65c24d7ed6acd3098129c50cfb9016afbd21
             env:
               TZ: "Europe/Belgrade"
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:

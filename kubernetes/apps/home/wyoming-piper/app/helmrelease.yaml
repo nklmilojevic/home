@@ -24,6 +24,12 @@ spec:
               - /data
             env:
               TZ: Europe/Belgrade
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
     service:
       app:
         controller: *app
