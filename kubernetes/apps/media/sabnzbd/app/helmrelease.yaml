@@ -55,7 +55,7 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 100Mi
+                memory: 512Mi
                 ephemeral-storage: 5Gi
               limits:
                 memory: 12Gi

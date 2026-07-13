@@ -30,6 +30,12 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+            resources:
+              requests:
+                cpu: 20m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
         pod:
           topologySpreadConstraints:
             - maxSkew: 1

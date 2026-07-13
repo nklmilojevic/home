@@ -22,6 +22,12 @@ spec:
               tag: 2.5.1.5464@sha256:f324eeb801d3887609af0bc916017d7b23f667df4fa479d2c74552d08940dcc7
             env:
               TZ: "Europe/Belgrade"
+            resources:
+              requests:
+                cpu: 10m
+                memory: 192Mi
+              limits:
+                memory: 512Mi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
