@@ -38,11 +38,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1783279667,
-        "narHash": "sha256-/NAkDSsve+GNM0Bt6tleJdCGfsTlK89nPjkVOzZMo0s=",
+        "lastModified": 1783915482,
+        "narHash": "sha256-FmieJB8/OUvNxbkboi7+IGfIuSXY3nF/hZQm8kD0r50=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "f205b5574fd0cb7da5b702a2da51507b7f4fdd1b",
+        "rev": "6cdc7fc76e8bf7fde9fa43a849fcaaa70e230dee",
         "type": "github"
       },
       "original": {
@@ -111,11 +111,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1782153289,
-        "narHash": "sha256-KS9eTFKxvvWinoqK0xx6SIRxr9LBDqSM1ReKEXVqwYs=",
+        "lastModified": 1783586710,
+        "narHash": "sha256-TJa3ds1OWsICk/vJc+fnVY+NfaE5RSSzRMw0r9dD8Xk=",
         "owner": "nklmilojevic",
         "repo": "talosctl-flake",
-        "rev": "d166194bd179070f0b81c33d33c2c00f12329403",
+        "rev": "bf328ed50e410beeaed9c5d5e5daf63755e6ed4e",
         "type": "github"
       },
       "original": {
