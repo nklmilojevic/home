@@ -257,6 +257,14 @@ spec:
       enabled: true
       # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec
       spec:
+        # The busiest apiserver (icarus002) emits ~17.5MB of /metrics, over the
+        # 16MB default -promscrape.maxScrapeSize. vmagent aborts the scrape before
+        # any relabeling runs (the size cap is checked while reading the raw
+        # response body), so up{job="apiserver"}=0 for that instance and
+        # KubeAPIInstanceUnreachable + TargetDown fire even though the API is
+        # healthy. Raising the cap lets the scrape complete; the metricRelabel
+        # drops below then trim stored cardinality (they don't reduce wire size).
+        maxScrapeSize: "32MB"
         # Chart default caps vmagent at 200m CPU, which it bursts past during
         # scrape/remote-write cycles (CPUThrottlingHigh, ~27% throttling). Raise
         # the limit so it stops getting throttled; request stays modest.
@@ -279,5 +287,14 @@ spec:
           - if: '{job="rook-ceph-mgr"}'
             action: labeldrop
             regex: pod
+          # Drop high-cardinality apiserver/etcd histogram buckets that no rule or
+          # dashboard here consumes. These families dominate the apiserver /metrics
+          # payload (icarus002 was ~17.5MB); trimming them keeps stored series and
+          # ingestion in check. request_duration (dashboards) and sli_duration (SLO
+          # burn-rate rules) buckets are deliberately kept.
+          - if: '{job="apiserver"}'
+            action: drop
+            source_labels: [__name__]
+            regex: "etcd_request_duration_seconds_bucket|apiserver_request_body_size_bytes_bucket|apiserver_watch_list_duration_seconds_bucket|apiserver_response_sizes_bucket|apiserver_watch_cache_read_wait_seconds_bucket|apiserver_watch_events_sizes_bucket"
       ingress:
         enabled: false
