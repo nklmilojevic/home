@@ -258,13 +258,16 @@ spec:
       # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec
       spec:
         # The busiest apiserver (icarus002) emits ~17.5MB of /metrics, over the
-        # 16MB default -promscrape.maxScrapeSize. vmagent aborts the scrape before
+        # 16MiB default -promscrape.maxScrapeSize. vmagent aborts the scrape before
         # any relabeling runs (the size cap is checked while reading the raw
         # response body), so up{job="apiserver"}=0 for that instance and
         # KubeAPIInstanceUnreachable + TargetDown fire even though the API is
         # healthy. Raising the cap lets the scrape complete; the metricRelabel
         # drops below then trim stored cardinality (they don't reduce wire size).
-        maxScrapeSize: "32MB"
+        # NOTE: set via extraArgs, not a `maxScrapeSize` field — the VMAgent CRD
+        # (operator v0.73.1) has no such field and the API server prunes it.
+        extraArgs:
+          promscrape.maxScrapeSize: "32MiB"
         # Chart default caps vmagent at 200m CPU, which it bursts past during
         # scrape/remote-write cycles (CPUThrottlingHigh, ~27% throttling). Raise
         # the limit so it stops getting throttled; request stays modest.
