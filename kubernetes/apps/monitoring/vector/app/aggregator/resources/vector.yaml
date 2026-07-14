@@ -27,6 +27,17 @@ transforms:
     source: |
       .log = parse_json(.message) ?? .message
       del(.message)
+  # Ceph mgr's MgrRootHandler forwards kubernetes-client DEBUG records (full
+  # PodList "response body" dumps, ~580KB/line) with no level gate; they exceed
+  # VictoriaLogs -insert.maxLineSizeBytes and trip TooManyLogs.
+  k8s_filter:
+    type: filter
+    inputs: [k8s_transform]
+    condition:
+      type: vrl
+      source: |
+        msg = string(.log) ?? ""
+        !(.kubernetes.pod_namespace == "rook-ceph" && (contains(msg, "response body:") || length(msg) > 100000))
 
 #
 # Sinks
@@ -52,7 +63,7 @@ sinks:
         Region: "0"
   vlogs:
     type: elasticsearch
-    inputs: [k8s_transform]
+    inputs: [k8s_filter]
     endpoints:
       - http://victorialogs-victoria-logs-single-server.monitoring.svc:9428/insert/elasticsearch/
     mode: bulk
