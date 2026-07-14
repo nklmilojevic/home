@@ -1,0 +1,23 @@
+endpoint = "https://opencode.ai/zen/go/v1"
+default_model = "flash"
+
+[[models]]
+alias = "flash"
+name = "DeepSeek V4 Flash"
+description = "Fast/cheap default for shell queries"
+model = "deepseek-v4-flash"
+
+[[models]]
+alias = "kimi"
+name = "Kimi K2.7 Code"
+description = "Stronger coding model for harder questions"
+model = "kimi-k2.7-code"
+
+[api_key]
+env = "CHAT_API_KEY"
+
+[request.headers]
+Authorization = "Bearer {{api_key}}"
+
+[request.body]
+stream_options = { include_usage = true }
