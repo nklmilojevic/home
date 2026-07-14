@@ -1,0 +1,58 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app privado-socks
+  namespace: network
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: privado-socks
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    controllers:
+      privado-socks:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/gogost/gost
+              tag: 3.2.6
+            args:
+              - -C
+              - /etc/gost/gost.yaml
+            env:
+              TZ: "Europe/Belgrade"
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    service:
+      app:
+        controller: privado-socks
+        type: LoadBalancer
+        externalTrafficPolicy: Cluster
+        annotations:
+          lbipam.cilium.io/ips: "10.40.0.10"
+        ports:
+          socks5:
+            port: 1080
+    persistence:
+      config:
+        type: secret
+        name: privado-socks-secret
+        globalMounts:
+          - path: /etc/gost/gost.yaml
+            subPath: gost.yaml
+            readOnly: true
