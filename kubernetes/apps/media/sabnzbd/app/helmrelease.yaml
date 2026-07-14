@@ -113,8 +113,11 @@ spec:
             app:
               - path: /tmp
       incomplete:
-        type: emptyDir
-        sizeLimit: 80Gi
+        type: custom
+        volumeSpec:
+          nfs:
+            server: "10.5.0.10"
+            path: "/var/nfs/shared/media/Download/incomplete"
         advancedMounts:
           sabnzbd:
             app:
