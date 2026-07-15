@@ -138,6 +138,9 @@ spec:
               # API_SERVER_KEY arrives via envFrom (hermes-secret)
               # OpenCode Zen Go endpoint (OPENCODE_GO_API_KEY arrives via envFrom → hermes-secret).
               OPENCODE_GO_BASE_URL: https://opencode.ai/zen/go/v1
+              # LM Studio on the Windows PC (RTX 5080) — keyless; cluster reaches it
+              # directly over the nodes' bond0.50 IoT-VLAN leg, not through the UDM.
+              LM_BASE_URL: http://10.50.0.81:1234/v1
               # Tools installed onto the PVC by the install-tools init container
               PATH: /opt/hermes/bin:/opt/hermes/.venv/bin:/opt/data/.local/bin:/opt/data/.local/go/bin:/opt/data/.local/homebrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
               GOPATH: /opt/data/go
