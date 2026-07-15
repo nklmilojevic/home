@@ -16,7 +16,7 @@ model:
   # (reverts to the pinned default on pod restart). To go back to hosted:
   # provider: opencode-go, default: minimax-m3.
   provider: lmstudio
-  default: openai/gpt-oss-20b
+  default: google/gemma-4-26b-a4b
 
 toolsets:
   - hermes-cli
