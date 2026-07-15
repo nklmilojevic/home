@@ -57,6 +57,11 @@ spec:
             port: &port 8080
     route:
       app:
+        annotations:
+          # atuin-ai has no root route; / returns 4xx. Treat any non-5xx as up.
+          gatus.home-operations.com/endpoint: |
+            conditions:
+              - "[STATUS] < 500"
         hostnames:
           - atuin-ai.nikola.wtf
         parentRefs:
