@@ -34,10 +34,8 @@ spec:
       http:
         port: 3000
       ssh:
-        type: LoadBalancer
-        port: 2222
-        loadBalancerIP: 10.40.0.40
-        externalTrafficPolicy: Local
+        type: ClusterIP
+        port: 22
 
     resources:
       requests:
@@ -65,18 +63,19 @@ spec:
           ROOT_URL: https://git.nikola.wtf
           DISABLE_SSH: false
           SSH_DOMAIN: ssh.git.nikola.wtf
-          SSH_PORT: 2222
-          SSH_LISTEN_PORT: 2222
+          SSH_PORT: 22 # advertised in clone URLs; reached via the external gateway ssh listener
+          SSH_LISTEN_PORT: 2222 # container binds 2222 (non-privileged); service maps 22 -> 2222
           ENABLE_GZIP: true
           LFS_START_SERVER: true
           OFFLINE_MODE: false # Enable CDN for static files and Gravatar
           LANDING_PAGE: explore # Show explore page for non-authenticated users
         database:
           DB_TYPE: sqlite3
+          PATH: /data/forgejo.db # absolute path on the config PVC; otherwise sqlite resolves relative to the ephemeral GITEA_WORK_DIR (/var/lib/gitea) and is lost on every pod restart
         indexer:
           REPO_INDEXER_ENABLED: true
           REPO_INDEXER_REPO_TYPES: sources,forks,mirrors,templates
-          ISSUE_INDEXER_TYPE: db # Use database for issue indexing (simpler than bleve)
+          ISSUE_INDEXER_TYPE: bleve # bleve index persists under /data/indexers
         queue:
           TYPE: redis
           CONN_STR: redis://redis-forgejo.database.svc.cluster.local:6379
@@ -174,7 +173,7 @@ spec:
           LOG_RETENTION_DAYS: 365
           LOG_COMPRESSION: zstd # Compress action logs
       additionalConfigFromEnvs:
-        # Database - CNPG auto-generated connection string
+        # SECRET_KEY sourced from 1Password via External Secrets (forgejo-secret)
         - name: GITEA__SECURITY__SECRET_KEY
           valueFrom:
             secretKeyRef:
@@ -183,6 +182,12 @@ spec:
       podAnnotations:
         reloader.stakater.com/search: "true"
 
+    tcpRoute:
+      enabled: true
+      parentRefs:
+        - name: external
+          namespace: network
+          sectionName: ssh
     ingress:
       enabled: false
     valkey-cluster:
