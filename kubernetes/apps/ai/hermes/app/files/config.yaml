@@ -9,8 +9,14 @@ model:
   # headless pod (writes /opt/data/auth.json on the VolSync PVC, then auto-refreshes):
   #   kubectl exec -n ai deploy/hermes -it -- hermes auth add openai-codex --type oauth --no-browser --manual-paste
   #   kubectl exec -n ai deploy/hermes -it -- hermes model   # pick OpenAI Codex, set default model
-  provider: opencode-go
-  default: minimax-m3
+  #
+  # Local-LLM trial (2026-07): LM Studio on the Windows PC (10.50.0.81, RTX 5080),
+  # reached via LM_BASE_URL in the HelmRelease env. Also loaded there:
+  # google/gemma-4-26b-a4b and google/gemma-4-e4b — switch with `hermes model`
+  # (reverts to the pinned default on pod restart). To go back to hosted:
+  # provider: opencode-go, default: minimax-m3.
+  provider: lmstudio
+  default: openai/gpt-oss-20b
 
 toolsets:
   - hermes-cli
