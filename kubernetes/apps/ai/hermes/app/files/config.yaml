@@ -15,8 +15,8 @@ model:
   # google/gemma-4-26b-a4b and google/gemma-4-e4b — switch with `hermes model`
   # (reverts to the pinned default on pod restart). To go back to hosted:
   # provider: opencode-go, default: minimax-m3.
-  provider: lmstudio
-  default: openai/gpt-oss-20b
+  provider: opencode-go
+  default: minimax-m3
 
 toolsets:
   - hermes-cli
