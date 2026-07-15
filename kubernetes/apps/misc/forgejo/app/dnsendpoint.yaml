@@ -7,7 +7,7 @@ spec:
   endpoints:
     - dnsName: "ssh.git.nikola.wtf"
       recordType: A
-      targets: ["10.40.0.40"]
+      targets: ["10.40.0.50"]
       providerSpecific:
         - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
           value: "false"
