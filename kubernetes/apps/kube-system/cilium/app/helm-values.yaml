@@ -94,6 +94,10 @@ hubble:
   relay:
     enabled: true
     rollOutPods: true
+  tls:
+    auto:
+      method: cronJob
+      schedule: "0 4 1 * *"
   ui:
     enabled: true
     rollOutPods: true
