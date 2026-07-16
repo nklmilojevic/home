@@ -97,5 +97,13 @@ spec:
         existingClaim: music-assistant-data
         globalMounts:
           - path: /data
+      media:
+        type: custom
+        volumeSpec:
+          nfs:
+            server: "10.5.0.10"
+            path: "/var/nfs/shared/media"
+        globalMounts:
+          - path: "/media"
       tmp:
         type: emptyDir
