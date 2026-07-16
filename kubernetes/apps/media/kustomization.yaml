@@ -5,6 +5,7 @@ namespace: media
 resources:
   - ./namespace.yaml
   - ./chaski/ks.yaml
+  - ./cobalt/ks.yaml
   - ./sonarr/ks.yaml
   - ./radarr/ks.yaml
   - ./bazarr/ks.yaml
