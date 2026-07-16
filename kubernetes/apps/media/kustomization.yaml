@@ -6,6 +6,7 @@ resources:
   - ./namespace.yaml
   - ./chaski/ks.yaml
   - ./cobalt/ks.yaml
+  - ./cobalt-web/ks.yaml
   - ./sonarr/ks.yaml
   - ./radarr/ks.yaml
   - ./bazarr/ks.yaml
