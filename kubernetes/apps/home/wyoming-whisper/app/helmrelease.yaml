@@ -16,10 +16,10 @@ spec:
           app:
             image:
               repository: rhasspy/wyoming-whisper
-              tag: latest
+              tag: 3.5.0
             args:
               - --model
-              - tiny.en
+              - small.en
               - --language
               - en
             env:
@@ -27,9 +27,9 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 512Mi
-              limits:
                 memory: 1Gi
+              limits:
+                memory: 2Gi
     service:
       app:
         controller: *app
