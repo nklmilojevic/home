@@ -1,0 +1,76 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: profilarr
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: profilarr
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+    controllers:
+      profilarr:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/dictionarry-hub/profilarr
+              tag: 2.0.9@sha256:7a9b5112ff227320d17c65ab643a5d875713e6235991ef04a8e482ec51427902
+            env:
+              TZ: Europe/Belgrade
+              PORT: &port 6868
+              ORIGIN: https://profilarr.nikola.wtf
+              PARSER_HOST: localhost
+              PARSER_PORT: "5000"
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 25m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+          parser:
+            image:
+              repository: ghcr.io/dictionarry-hub/profilarr-parser
+              tag: 2.0.9@sha256:16b22ef6485e135cc660cd511697c637d44649753d02397c9374e1317cfaaf0e
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+    service:
+      app:
+        controller: profilarr
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - profilarr.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: profilarr
+                port: *port
+    persistence:
+      config:
+        existingClaim: profilarr
