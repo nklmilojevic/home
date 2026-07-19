@@ -19,7 +19,7 @@ spec:
               tag: 2.1.0
             args:
               - --preload-model
-              - ok_nabu
+              - okay_nabu
             env:
               TZ: Europe/Belgrade
             resources:
