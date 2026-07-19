@@ -12,6 +12,7 @@ resources:
   - ./govee2mqtt/ks.yaml
   - ./esphome/ks.yaml
   - ./go2rtc/ks.yaml
+  - ./wyoming-openwakeword/ks.yaml
   - ./wyoming-piper/ks.yaml
   - ./wyoming-whisper/ks.yaml
   - ./scrypted/ks.yaml
