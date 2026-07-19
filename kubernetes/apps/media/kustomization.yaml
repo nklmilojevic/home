@@ -17,7 +17,7 @@ resources:
   - ./qui/ks.yaml
   - ./sabnzbd/ks.yaml
   - ./unpackerr/ks.yaml
-  - ./recyclarr/ks.yaml
+  - ./profilarr/ks.yaml
   - ./seerr/ks.yaml
   - ./tautulli/ks.yaml
   - ./plex-trakt-sync/ks.yaml
