@@ -1,0 +1,39 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app wyoming-openwakeword
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: wyoming-openwakeword
+  values:
+    controllers:
+      wyoming-openwakeword:
+        containers:
+          app:
+            image:
+              repository: rhasspy/wyoming-openwakeword
+              tag: 2.1.0
+            args:
+              - --preload-model
+              - ok_nabu
+            env:
+              TZ: Europe/Belgrade
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+    service:
+      app:
+        controller: *app
+        ports:
+          openwakeword:
+            enabled: true
+            primary: true
+            port: 10400
+            protocol: TCP
