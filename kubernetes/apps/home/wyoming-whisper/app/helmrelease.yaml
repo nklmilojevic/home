@@ -22,12 +22,14 @@ spec:
               - small.en
               - --language
               - en
+              - --compute-type
+              - int8
             env:
               TZ: Europe/Belgrade
             resources:
               requests:
                 cpu: 10m
-                memory: 1Gi
+                memory: 512Mi
               limits:
                 memory: 2Gi
     service:
