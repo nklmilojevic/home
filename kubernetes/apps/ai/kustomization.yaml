@@ -6,6 +6,7 @@ resources:
   - ./namespace.yaml
   - ./toolhive/ks.yaml
   - ./atuin-ai/ks.yaml
+  - ./grafana-mcp/ks.yaml
   - ./ha-mcp/ks.yaml
   - ./hermes/ks.yaml
   - ./llmkube/ks.yaml
