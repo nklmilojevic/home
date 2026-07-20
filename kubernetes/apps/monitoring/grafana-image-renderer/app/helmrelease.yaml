@@ -28,6 +28,9 @@ spec:
             env:
               TZ: "Europe/Belgrade"
               GOMEMLIMIT: 768MiB
+            envFrom:
+              - secretRef:
+                  name: grafana-image-renderer-secret
             probes:
               liveness:
                 enabled: true

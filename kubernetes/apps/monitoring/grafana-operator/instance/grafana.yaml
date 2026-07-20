@@ -57,6 +57,11 @@ spec:
                       key: admin-password
                 - name: GF_INSTALL_PLUGINS
                   value: grafana-clock-panel,victoriametrics-logs-datasource
+                - name: GF_RENDERING_RENDERER_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: grafana-admin-secret
+                      key: renderer-token
           volumes:
             - name: grafana-data
               persistentVolumeClaim:
