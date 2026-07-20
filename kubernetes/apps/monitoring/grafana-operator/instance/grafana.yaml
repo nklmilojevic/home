@@ -21,6 +21,9 @@ spec:
       enabled: "true"
     news:
       news_feed_enabled: "false"
+    rendering:
+      server_url: "http://grafana-image-renderer.monitoring.svc.cluster.local:8081/render"
+      callback_url: "http://grafana-service.monitoring.svc.cluster.local:3000/"
     plugins:
       # Grafana 12 preinstalls bundled app plugins and tries to auto-update them
       # into the read-only root filesystem (fails for elasticsearch). We install

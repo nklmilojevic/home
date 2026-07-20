@@ -6,6 +6,7 @@ resources:
   - ./namespace.yaml
   - ./victoriametrics/ks.yaml
   - ./grafana-operator/ks.yaml
+  - ./grafana-image-renderer/ks.yaml
   - ./gatus/ks.yaml
   - ./victorialogs/ks.yaml
   - ./vector/ks.yaml
