@@ -9,6 +9,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: external-secrets-stores
+      namespace: security
   path: ./kubernetes/apps/monitoring/grafana-image-renderer/app
   prune: true
   sourceRef:
