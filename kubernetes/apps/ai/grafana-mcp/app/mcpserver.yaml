@@ -1,0 +1,48 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/toolhive.stacklok.dev/mcpserver_v1beta1.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServer
+metadata:
+  name: grafana-mcp
+spec:
+  groupRef:
+    name: mcp-tools
+  image: docker.io/grafana/mcp-grafana:0.17.2
+  transport: streamable-http
+  mcpPort: 8000
+  env:
+    - name: GRAFANA_URL
+      value: http://grafana-service.monitoring.svc.cluster.local:3000
+    - name: GRAFANA_ORG_ID
+      value: "1"
+  secrets:
+    - name: grafana-mcp-secret
+      key: GRAFANA_SERVICE_ACCOUNT_TOKEN
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+  podTemplateSpec:
+    spec:
+      containers:
+        - name: mcp
+          # The image entrypoint hardcodes `--transport sse`; the vMCP gateway
+          # expects streamable-http at /mcp, and the toolhive proxy forwards the
+          # Host header of the in-cluster service, so host validation must be off.
+          command:
+            - /app/mcp-grafana
+            - --transport
+            - streamable-http
+            - --address
+            - 0.0.0.0:8000
+            - --endpoint-path
+            - /mcp
+            - --allowed-hosts
+            - "*"
+          volumeMounts:
+            - name: tmpfs
+              mountPath: /tmp
+      volumes:
+        - name: tmpfs
