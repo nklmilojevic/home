@@ -96,14 +96,16 @@ spec:
             iptables-nft -t nat -C POSTROUTING -o tailscale0 -j MASQUERADE 2>/dev/null \
               || iptables-nft -t nat -A POSTROUTING -o tailscale0 -j MASQUERADE
 
-            echo "[tailscale-gw] clamp TCP MSS to the tailscale path MTU (1280 -> 1240), both directions"
-            # Fixed MSS, not --clamp-mss-to-pmtu: the reverse (server->client) SYN-ACK
-            # egresses net1 (MTU 1500), so clamp-to-pmtu would wrongly pick 1460 and the
-            # client's large uploads black-hole in the 1280 tunnel ("loads title then stalls").
-            iptables-nft -t mangle -C FORWARD -o tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1240 2>/dev/null \
-              || iptables-nft -t mangle -A FORWARD -o tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1240
-            iptables-nft -t mangle -C FORWARD -i tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1240 2>/dev/null \
-              || iptables-nft -t mangle -A FORWARD -i tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1240
+            echo "[tailscale-gw] clamp TCP MSS to 1200 (tailscale MTU 1280), both directions"
+            # Fixed MSS 1200, not --clamp-mss-to-pmtu: (1) the reverse (server->client)
+            # SYN-ACK egresses net1 (MTU 1500) so clamp-to-pmtu would wrongly pick 1460;
+            # (2) 1200 leaves headroom for TCP options (timestamps/SACK) on top of the
+            # 40-byte base header so full segments fit the 1280 tunnel. 1240 was too tight
+            # (worked for small auth, truncated large payloads -> "failed to recognize data").
+            iptables-nft -t mangle -C FORWARD -o tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1200 2>/dev/null \
+              || iptables-nft -t mangle -A FORWARD -o tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1200
+            iptables-nft -t mangle -C FORWARD -i tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1200 2>/dev/null \
+              || iptables-nft -t mangle -A FORWARD -i tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1200
 
             echo "[tailscale-gw] return path: tailnet replies egress $${LAN_IF} via $${LAN_GW}"
             ip route replace default via "$${LAN_GW}" dev "$${LAN_IF}" table 100
