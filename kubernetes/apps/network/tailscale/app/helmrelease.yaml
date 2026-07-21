@@ -75,15 +75,15 @@ spec:
 
             echo "[tailscale-gw] starting tailscaled (ephemeral, in-memory state)"
             tailscaled --state=mem: --tun=tailscale0 --port=41641 &
-            TAILSCALED_PID=$!
+            TAILSCALED_PID=$$!
 
             echo "[tailscale-gw] waiting for control socket"
             until [ -S /var/run/tailscale/tailscaled.sock ]; do sleep 0.5; done
 
             echo "[tailscale-gw] tailscale up (accepting subnet routes)"
             tailscale up \
-              --authkey="${TS_AUTHKEY}" \
-              --hostname="${TS_HOSTNAME}" \
+              --authkey="$${TS_AUTHKEY}" \
+              --hostname="$${TS_HOSTNAME}" \
               --accept-routes \
               --accept-dns=false \
               --reset
@@ -99,12 +99,12 @@ spec:
             iptables -t mangle -C FORWARD -o tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu 2>/dev/null \
               || iptables -t mangle -A FORWARD -o tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
-            echo "[tailscale-gw] return path: tailnet replies egress ${LAN_IF} via ${LAN_GW}"
-            ip route replace default via "${LAN_GW}" dev "${LAN_IF}" table 100
+            echo "[tailscale-gw] return path: tailnet replies egress $${LAN_IF} via $${LAN_GW}"
+            ip route replace default via "$${LAN_GW}" dev "$${LAN_IF}" table 100
             ip rule add iif tailscale0 lookup 100 2>/dev/null || true
 
-            echo "[tailscale-gw] ready; relaying ${REMOTE_ROUTE} to the LAN"
-            wait "${TAILSCALED_PID}"
+            echo "[tailscale-gw] ready; relaying $${REMOTE_ROUTE} to the LAN"
+            wait "$${TAILSCALED_PID}"
     persistence:
       scripts:
         type: configMap
