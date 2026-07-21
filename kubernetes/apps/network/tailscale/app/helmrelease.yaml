@@ -44,6 +44,10 @@ spec:
               REMOTE_ROUTE: "10.4.0.0/24"
               LAN_IF: "net1"
               LAN_GW: "10.5.0.1"
+              # iptables-legacy's nat/filter tables need the iptable_nat kernel
+              # module (not loaded on these Cilium/eBPF Talos nodes); the nf_tables
+              # backend is builtin, so force tailscaled onto nftables.
+              TS_DEBUG_FIREWALL_MODE: "nftables"
             envFrom:
               - secretRef:
                   name: tailscale-secret
@@ -89,12 +93,12 @@ spec:
             until ip link show tailscale0 >/dev/null 2>&1; do sleep 0.5; done
 
             echo "[tailscale-gw] NAT: masquerade LAN clients onto the tailnet"
-            iptables -t nat -C POSTROUTING -o tailscale0 -j MASQUERADE 2>/dev/null \
-              || iptables -t nat -A POSTROUTING -o tailscale0 -j MASQUERADE
+            iptables-nft -t nat -C POSTROUTING -o tailscale0 -j MASQUERADE 2>/dev/null \
+              || iptables-nft -t nat -A POSTROUTING -o tailscale0 -j MASQUERADE
 
             echo "[tailscale-gw] clamp TCP MSS to tailscale path MTU"
-            iptables -t mangle -C FORWARD -o tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu 2>/dev/null \
-              || iptables -t mangle -A FORWARD -o tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+            iptables-nft -t mangle -C FORWARD -o tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu 2>/dev/null \
+              || iptables-nft -t mangle -A FORWARD -o tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
             echo "[tailscale-gw] return path: tailnet replies egress $${LAN_IF} via $${LAN_GW}"
             ip route replace default via "$${LAN_GW}" dev "$${LAN_IF}" table 100
