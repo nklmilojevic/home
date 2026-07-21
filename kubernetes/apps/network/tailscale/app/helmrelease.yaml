@@ -48,14 +48,11 @@ spec:
               - secretRef:
                   name: tailscale-secret
             securityContext:
-              allowPrivilegeEscalation: true
-              readOnlyRootFilesystem: false
-              capabilities:
-                add:
-                  - NET_ADMIN
-                  - NET_RAW
-                drop:
-                  - ALL
+              # Routing/NAT pod: needs a writable /proc/sys (ip_forward) and full
+              # net caps. Talos mounts /proc/sys read-only for non-privileged
+              # containers and ip_forward is a non-safe sysctl, so privileged is
+              # required here (same as otbr).
+              privileged: true
             resources:
               requests:
                 cpu: 10m
