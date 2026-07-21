@@ -1,0 +1,120 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app tailscale
+  namespace: network
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: tailscale
+  values:
+    controllers:
+      tailscale:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          annotations:
+            # LAN presence so UniFi can route 10.4.0.0/24 -> this pod's macvlan IP.
+            k8s.v1.cni.cncf.io/networks: |
+              [{
+                "name":"multus-host",
+                "namespace": "network",
+                "ips": ["10.5.0.253/24"],
+                "mac": "b6:3f:1a:2c:5d:7e"
+              }]
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+            runAsGroup: 0
+        containers:
+          app:
+            image:
+              repository: ghcr.io/tailscale/tailscale
+              tag: v1.98.9
+            command:
+              - /bin/sh
+              - /scripts/entrypoint.sh
+            env:
+              TZ: "Europe/Belgrade"
+              TS_HOSTNAME: "k8s-subnet-gw"
+              # Subnet advertised by the remote tailnet peer that we relay onto the LAN.
+              REMOTE_ROUTE: "10.4.0.0/24"
+              LAN_IF: "net1"
+              LAN_GW: "10.5.0.1"
+            envFrom:
+              - secretRef:
+                  name: tailscale-secret
+            securityContext:
+              allowPrivilegeEscalation: true
+              readOnlyRootFilesystem: false
+              capabilities:
+                add:
+                  - NET_ADMIN
+                  - NET_RAW
+                drop:
+                  - ALL
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+                squat.ai/tun: "1"
+    configMaps:
+      scripts:
+        data:
+          entrypoint.sh: |
+            #!/bin/sh
+            set -eu
+
+            echo "[tailscale-gw] enabling IPv4 forwarding"
+            echo 1 > /proc/sys/net/ipv4/ip_forward
+
+            echo "[tailscale-gw] starting tailscaled (ephemeral, in-memory state)"
+            tailscaled --state=mem: --tun=tailscale0 --port=41641 &
+            TAILSCALED_PID=$!
+
+            echo "[tailscale-gw] waiting for control socket"
+            until [ -S /var/run/tailscale/tailscaled.sock ]; do sleep 0.5; done
+
+            echo "[tailscale-gw] tailscale up (accepting subnet routes)"
+            tailscale up \
+              --authkey="${TS_AUTHKEY}" \
+              --hostname="${TS_HOSTNAME}" \
+              --accept-routes \
+              --accept-dns=false \
+              --reset
+
+            echo "[tailscale-gw] waiting for tailscale0"
+            until ip link show tailscale0 >/dev/null 2>&1; do sleep 0.5; done
+
+            echo "[tailscale-gw] NAT: masquerade LAN clients onto the tailnet"
+            iptables -t nat -C POSTROUTING -o tailscale0 -j MASQUERADE 2>/dev/null \
+              || iptables -t nat -A POSTROUTING -o tailscale0 -j MASQUERADE
+
+            echo "[tailscale-gw] clamp TCP MSS to tailscale path MTU"
+            iptables -t mangle -C FORWARD -o tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu 2>/dev/null \
+              || iptables -t mangle -A FORWARD -o tailscale0 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+
+            echo "[tailscale-gw] return path: tailnet replies egress ${LAN_IF} via ${LAN_GW}"
+            ip route replace default via "${LAN_GW}" dev "${LAN_IF}" table 100
+            ip rule add iif tailscale0 lookup 100 2>/dev/null || true
+
+            echo "[tailscale-gw] ready; relaying ${REMOTE_ROUTE} to the LAN"
+            wait "${TAILSCALED_PID}"
+    persistence:
+      scripts:
+        type: configMap
+        identifier: scripts
+        defaultMode: 0555
+        globalMounts:
+          - path: /scripts/entrypoint.sh
+            subPath: entrypoint.sh
+            readOnly: true
+      run:
+        type: emptyDir
+        globalMounts:
+          - path: /var/run/tailscale
