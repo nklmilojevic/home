@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: docker.io/grafana/grafana-image-renderer
-              tag: v5.10.1
+              tag: v5.10.2
             env:
               TZ: "Europe/Belgrade"
               GOMEMLIMIT: 768MiB
