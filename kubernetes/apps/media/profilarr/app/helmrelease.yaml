@@ -37,7 +37,7 @@ spec:
             resources:
               requests:
                 cpu: 25m
-                memory: 128Mi
+                memory: 448Mi
               limits:
                 memory: 1Gi
           parser:

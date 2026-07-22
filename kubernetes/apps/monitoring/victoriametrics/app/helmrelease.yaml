@@ -260,7 +260,7 @@ spec:
         resources:
           requests:
             cpu: 150m
-            memory: 1536Mi
+            memory: 2Gi
           limits:
             memory: 3Gi
     vmagent:
@@ -286,7 +286,7 @@ spec:
             cpu: 100m
             memory: 200Mi
           limits:
-            cpu: 500m
+            cpu: 1000m
             memory: 500Mi
         # Drop the volatile `pod` label from rook-ceph-mgr metrics. The mgr is a
         # singleton active daemon; when its pod restarts (same instance IP, new pod

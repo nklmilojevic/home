@@ -13,3 +13,9 @@ spec:
   values:
     serviceMonitor:
       create: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 384Mi
+      limits:
+        memory: 512Mi

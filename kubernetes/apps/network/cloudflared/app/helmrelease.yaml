@@ -55,10 +55,11 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 10m
+                memory: 64Mi
               limits:
                 memory: 256Mi
     defaultPodOptions:
@@ -66,7 +67,7 @@ spec:
         runAsNonRoot: true
         runAsUser: 65534
         runAsGroup: 65534
-        seccompProfile: {type: RuntimeDefault}
+        seccompProfile: { type: RuntimeDefault }
     service:
       app:
         controller: cloudflared
