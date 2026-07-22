@@ -55,10 +55,10 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 512Mi
+                memory: 256Mi
                 ephemeral-storage: 5Gi
               limits:
-                memory: 4Gi
+                memory: 2Gi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
