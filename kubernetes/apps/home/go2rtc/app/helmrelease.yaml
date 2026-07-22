@@ -29,6 +29,12 @@ spec:
             image:
               repository: docker.io/alexxit/go2rtc
               tag: 1.9.14@sha256:675c318b23c06fd862a61d262240c9a63436b4050d177ffc68a32710d9e05bae
+            env:
+              # readOnlyRootFilesystem leaves nothing writable; ffmpeg (snapshots,
+              # #audio=opus transcode) needs a scratch dir or it fails with I/O
+              # errors surfaced to HA as go2rtc 400 Bad Request.
+              TMPDIR: /tmp
+              HOME: /tmp
             probes:
               liveness: &probes
                 enabled: true
@@ -97,3 +103,7 @@ spec:
           - path: /config/go2rtc.yaml
             subPath: go2rtc.yaml
             readOnly: true
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
