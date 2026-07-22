@@ -3,15 +3,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: echo-server
+  name: echo
 spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: echo-server
+    name: echo
   values:
     controllers:
-      echo-server:
+      echo:
         pod:
           annotations:
             k8s.v1.cni.cncf.io/networks: |
@@ -25,15 +25,16 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/mendhak/http-https-echo
-              tag: 41
+              repository: ghcr.io/home-operations/echo
+              tag: 0.2.1@sha256:89e18bc031f50b5fc706a4fc85007f4d44635762146d4f16f49d993fcfde2e39
             env:
-              HTTP_PORT: &port 8080
-              LOG_WITHOUT_NEWLINE: true
-              LOG_IGNORE_PATH: /healthz
-              PROMETHEUS_ENABLED: true
+              TZ: "Europe/Belgrade"
+              ECHO_HTTP_PORT: &port 8080
+              ECHO_METRICS_ENABLED: true
+              ECHO_METRICS_PORT: &metricsPort 8081
+              ECHO_LOG_FORMAT: json
             probes:
-              liveness: &probes
+              liveness:
                 enabled: true
                 custom: true
                 spec:
@@ -44,7 +45,23 @@ spec:
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 3
-              readiness: *probes
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /readyz
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
             resources:
               requests:
                 cpu: 10m
@@ -59,20 +76,21 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: echo-server
+        controller: echo
         ports:
           http:
             port: *port
+          metrics:
+            port: *metricsPort
     serviceMonitor:
       app:
-        serviceName: echo-server
+        serviceName: echo
         endpoints:
-          - port: http
+          - port: metrics
             scheme: http
             path: /metrics
             interval: 1m
             scrapeTimeout: 10s
-
     route:
       app:
         hostnames:
@@ -83,5 +101,5 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - name: echo-server
+              - name: echo
                 port: *port
