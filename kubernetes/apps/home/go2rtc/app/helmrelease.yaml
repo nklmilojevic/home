@@ -24,6 +24,18 @@ spec:
         replicas: 1
         annotations:
           reloader.stakater.com/auto: "true"
+        initContainers:
+          # go2rtc persists HA-added streams back to its config file; a configMap
+          # mount is read-only (add -> "read-only file system" -> HTTP 400), so
+          # seed a writable copy that go2rtc can rewrite at runtime.
+          init-config:
+            image:
+              repository: docker.io/alexxit/go2rtc
+              tag: 1.9.14@sha256:675c318b23c06fd862a61d262240c9a63436b4050d177ffc68a32710d9e05bae
+            command:
+              - sh
+              - -c
+              - cp /config-src/go2rtc.yaml /config/go2rtc.yaml
         containers:
           app:
             image:
@@ -96,11 +108,17 @@ spec:
               - identifier: app
                 port: *port
     persistence:
-      config-file:
+      # Writable runtime config (seeded from the configMap by the init container)
+      # so go2rtc can persist streams that Home Assistant adds via the API.
+      config:
+        type: emptyDir
+        globalMounts:
+          - path: /config
+      config-src:
         type: configMap
         name: go2rtc-configmap
         globalMounts:
-          - path: /config/go2rtc.yaml
+          - path: /config-src/go2rtc.yaml
             subPath: go2rtc.yaml
             readOnly: true
       tmp:
