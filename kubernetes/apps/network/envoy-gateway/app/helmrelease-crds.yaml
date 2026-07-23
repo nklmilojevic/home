@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: envoy-gateway-crds
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: envoy-gateway-crds
+  values:
+    crds:
+      envoyGateway:
+        enabled: true
+      # Gateway API CRDs are managed by the gateway-api Kustomization
+      # (kubernetes-sigs/gateway-api experimental channel), not this chart
+      gatewayAPI:
+        enabled: false
