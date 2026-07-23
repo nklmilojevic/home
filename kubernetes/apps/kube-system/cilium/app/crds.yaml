@@ -24,7 +24,10 @@ metadata:
   namespace: flux-system
 spec:
   targetNamespace: kube-system
-  prune: true
+  # being decommissioned: envoy-gateway's chart now owns the Gateway API CRDs;
+  # prune must stay false so deleting this Kustomization can't GC the CRDs
+  suspend: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: gateway-api-crd
