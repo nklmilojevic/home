@@ -9,7 +9,13 @@ spec:
   chartRef:
     kind: OCIRepository
     name: envoy-gateway
+  dependsOn:
+    - name: envoy-gateway-crds
   values:
+    # CRDs come from the envoy-gateway-crds HelmRelease (Envoy Gateway's own)
+    # and the gateway-api Kustomization (Gateway API experimental channel)
+    crds:
+      enabled: false
     global:
       imageRegistry: mirror.gcr.io
     config:
