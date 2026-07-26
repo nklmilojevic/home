@@ -12,15 +12,6 @@ spec:
   values:
     controllers:
       echo:
-        pod:
-          annotations:
-            k8s.v1.cni.cncf.io/networks: |
-              [{
-                "name":"multus-host",
-                "namespace": "network",
-                "ips": ["10.5.0.226/24"],
-                "mac": "7e:84:d7:6e:5e:11"
-              }]
         strategy: RollingUpdate
         containers:
           app:
