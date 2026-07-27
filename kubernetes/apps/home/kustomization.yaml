@@ -15,7 +15,6 @@ resources:
   - ./wyoming-openwakeword/ks.yaml
   - ./wyoming-kokoro/ks.yaml
   - ./wyoming-onnx-asr/ks.yaml
-  - ./wyoming-piper/ks.yaml
   - ./scrypted/ks.yaml
   - ./mosquitto/ks.yaml
   - ./appdaemon/ks.yaml
