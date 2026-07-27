@@ -1,0 +1,39 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app wyoming-kokoro
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: wyoming-kokoro
+  values:
+    controllers:
+      wyoming-kokoro:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/relvacode/kokoro-wyoming
+              tag: v2025.1.1
+            args:
+              - --voice
+              - bm_george
+            env:
+              TZ: Europe/Belgrade
+            resources:
+              requests:
+                cpu: 10m
+                memory: 768Mi
+              limits:
+                memory: 2Gi
+    service:
+      app:
+        controller: *app
+        ports:
+          tts:
+            enabled: true
+            primary: true
+            port: 10210
+            protocol: TCP
