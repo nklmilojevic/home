@@ -18,7 +18,9 @@ spec:
               repository: ghcr.io/tboby/wyoming-onnx-asr
               tag: v0.5.0
             args:
-              - --model-multilingual
+              # --model-en instead of --model-multilingual: upstream _LANGUAGE_CODES
+              # omits "en", so HA grays the engine out for English pipelines
+              - --model-en
               - nemo-parakeet-tdt-0.6b-v3
               - --quantization
               - int8
