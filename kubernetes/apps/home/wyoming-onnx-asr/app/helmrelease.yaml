@@ -20,6 +20,8 @@ spec:
             args:
               - --model-multilingual
               - nemo-parakeet-tdt-0.6b-v3
+              - --quantization
+              - int8
               - --uri
               - tcp://0.0.0.0:10300
             env:
@@ -27,9 +29,9 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 2Gi
+                memory: 1Gi
               limits:
-                memory: 4Gi
+                memory: 3Gi
     service:
       app:
         controller: *app
