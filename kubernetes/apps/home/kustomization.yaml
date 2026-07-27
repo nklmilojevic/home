@@ -13,6 +13,7 @@ resources:
   - ./esphome/ks.yaml
   - ./go2rtc/ks.yaml
   - ./wyoming-openwakeword/ks.yaml
+  - ./wyoming-kokoro/ks.yaml
   - ./wyoming-onnx-asr/ks.yaml
   - ./wyoming-piper/ks.yaml
   - ./scrypted/ks.yaml
