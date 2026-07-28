@@ -106,8 +106,8 @@ spec:
         data:
           slskd.yml: |-
             directories:
-              downloads: /media/downloads/soulseek/complete
-              incomplete: /media/downloads/soulseek/incomplete
+              downloads: /media/Download/soulseek/complete
+              incomplete: /media/Download/soulseek/incomplete
             transfers:
               download:
                 destination:
@@ -120,7 +120,7 @@ spec:
                   max_delay: 60000
             shares:
               directories:
-                - /media/downloads/soulseek/shared
+                - /media/Download/soulseek/shared
               filters:
                 - \.ini$
                 - Thumbs.db$
