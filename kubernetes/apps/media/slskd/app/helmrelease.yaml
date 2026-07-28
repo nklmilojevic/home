@@ -99,7 +99,7 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - name: slskd
+              - name: slskd-app
                 port: *port
     configMaps:
       config:
