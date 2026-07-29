@@ -8,7 +8,7 @@
       matchDatasources: ["docker", "helm"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
-        commitMessageSuffix: ""
+        commitMessageSuffix: "",
       },
     },
     {
@@ -17,12 +17,23 @@
       matchPackageNames: [
         "quay.io/cilium/cilium",
         "quay.io/cilium/operator-generic",
+        "quay.io/cilium/charts/cilium",
         "cilium",
       ],
       matchDatasources: ["helm", "docker"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
-        commitMessageSuffix: ""
+        commitMessageSuffix: "",
+      },
+    },
+    {
+      description: "CoreDNS bootstrap and Flux charts",
+      groupName: "coredns",
+      matchPackageNames: ["coredns", "ghcr.io/coredns/charts/coredns"],
+      matchDatasources: ["helm", "docker"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+        commitMessageSuffix: "",
       },
     },
     {
@@ -35,21 +46,18 @@
       matchDatasources: ["helm", "docker"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
-        commitMessageSuffix: ""
+        commitMessageSuffix: "",
       },
       separateMinorPatch: false,
     },
     {
       description: "Talos",
       groupName: "Talos",
-      matchPackageNames: [
-        "ghcr.io/siderolabs/installer",
-        "ghcr.io/siderolabs/talosctl",
-      ],
+      matchPackageNames: ["ghcr.io/siderolabs/installer", "ghcr.io/siderolabs/talosctl"],
       matchDatasources: ["docker"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
-        commitMessageSuffix: ""
+        commitMessageSuffix: "",
       },
     },
     {
@@ -59,17 +67,17 @@
       matchDatasources: ["docker", "github-releases"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
-        commitMessageSuffix: ""
+        commitMessageSuffix: "",
       },
     },
     {
       description: ["Flux Operator Group"],
       groupName: "Flux Operator",
       matchPackagePatterns: ["flux-operator", "flux-instance"],
-      matchDatasources: ["docker"],
+      matchDatasources: ["docker", "github-releases"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
-        commitMessageSuffix: ""
+        commitMessageSuffix: "",
       },
     },
   ],
