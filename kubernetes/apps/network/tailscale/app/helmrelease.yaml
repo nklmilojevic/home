@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/tailscale/tailscale
-              tag: v1.98.9
+              tag: v1.98.10
             command:
               - /bin/sh
               - /scripts/entrypoint.sh
