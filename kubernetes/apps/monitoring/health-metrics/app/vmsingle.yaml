@@ -1,0 +1,33 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMSingle
+metadata:
+  name: health
+spec:
+  # Deliberately separate from the k8s-stack vmsingle, which runs a 1-month
+  # retention (~13GB on disk for that one month). VictoriaMetrics drops samples
+  # whose timestamp falls outside the retention window at ingestion time
+  # (vm_rows_ignored_total{reason="too_small_timestamp"}), so backfilled Apple
+  # Health history from 2019 cannot land there. Raising that instance's retention
+  # far enough would cost ~1TB, and per-metric retention (-retentionFilter) plus
+  # downsampling are both Enterprise-only. This instance holds ~14k hand-imported
+  # samples (~0.3MB) instead.
+  retentionPeriod: "100y"
+  removePvcAfterDelete: false
+  extraArgs:
+    # Makes re-running the importer idempotent: repeat samples landing on the same
+    # per-night timestamp collapse to the last one instead of stacking up.
+    dedup.minScrapeInterval: 1m
+  storage:
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: ceph-block
+    resources:
+      requests:
+        storage: 1Gi
+  resources:
+    requests:
+      cpu: 10m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
