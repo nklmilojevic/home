@@ -28,6 +28,11 @@ spec:
   resources:
     requests:
       cpu: 10m
-      memory: 128Mi
+      memory: 256Mi
     limits:
-      memory: 512Mi
+      # 512Mi got OOMKilled. The dataset is tiny, but 100y retention means one
+      # monthly partition per month of history (~88 of them for 2019-2026), each
+      # holding index structures, and VictoriaMetrics sizes its caches off the
+      # cgroup limit — so the floor is set by partition count, not sample count.
+      # delete_series reindexing is the peak.
+      memory: 1Gi
