@@ -89,7 +89,7 @@
       },
       "targets": [
         {
-          "refId": "R",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -150,7 +150,7 @@
       },
       "targets": [
         {
-          "refId": "P",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -211,7 +211,7 @@
       },
       "targets": [
         {
-          "refId": "O",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -272,7 +272,7 @@
       },
       "targets": [
         {
-          "refId": "X",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -333,7 +333,7 @@
       },
       "targets": [
         {
-          "refId": "C",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -394,7 +394,7 @@
       },
       "targets": [
         {
-          "refId": "Y",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -470,7 +470,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "Z",
+          "refId": "B",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -482,7 +482,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "A",
+          "refId": "C",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -494,7 +494,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "O",
+          "refId": "D",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -506,7 +506,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "B",
+          "refId": "E",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -566,7 +566,7 @@
       },
       "targets": [
         {
-          "refId": "C",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -578,7 +578,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "C",
+          "refId": "B",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -590,7 +590,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "D",
+          "refId": "C",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -602,7 +602,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "C",
+          "refId": "D",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -646,7 +646,20 @@
             "lineInterpolation": "smooth"
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Latency (min)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "m"
+              }
+            ]
+          }
+        ]
       },
       "options": {
         "legend": {
@@ -662,7 +675,7 @@
       },
       "targets": [
         {
-          "refId": "I",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -674,7 +687,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "J",
+          "refId": "B",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -686,7 +699,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "F",
+          "refId": "C",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -758,7 +771,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "A",
+          "refId": "B",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -770,7 +783,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "B",
+          "refId": "C",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -830,7 +843,7 @@
       },
       "targets": [
         {
-          "refId": "Z",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -842,7 +855,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "Z",
+          "refId": "B",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -854,7 +867,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "A",
+          "refId": "C",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -914,7 +927,7 @@
       },
       "targets": [
         {
-          "refId": "L",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -926,7 +939,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "K",
+          "refId": "B",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -938,7 +951,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "L",
+          "refId": "C",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -998,7 +1011,7 @@
       },
       "targets": [
         {
-          "refId": "K",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -1010,7 +1023,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "E",
+          "refId": "B",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -1070,7 +1083,7 @@
       },
       "targets": [
         {
-          "refId": "E",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -1082,7 +1095,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "I",
+          "refId": "B",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -1094,7 +1107,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "N",
+          "refId": "C",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -1154,7 +1167,7 @@
       },
       "targets": [
         {
-          "refId": "B",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -1166,7 +1179,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "C",
+          "refId": "B",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -1226,7 +1239,7 @@
       },
       "targets": [
         {
-          "refId": "K",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -1238,7 +1251,7 @@
           "editorMode": "code"
         },
         {
-          "refId": "P",
+          "refId": "B",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
@@ -1298,7 +1311,7 @@
       },
       "targets": [
         {
-          "refId": "P",
+          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "health-metrics"
