@@ -12,6 +12,14 @@ spec:
   # Oura publishes one set of values per night, a few minutes after the ring syncs
   # in the morning. Scraping often would only restate the same numbers.
   scrapeInterval: 15m
+  # The operator otherwise injects `prometheus: monitoring/health` as a global
+  # external label, which forks every metric into two series — one from the
+  # importers (no such label) and one from this agent — for the nights both cover.
+  # Panel queries aggregate with avg() so the displayed values stayed correct, but
+  # the series identity did not match, which was the whole point of relabelling
+  # onto the imported metric names. An empty value drops the label.
+  externalLabels:
+    prometheus: ""
   secrets:
     - home-assistant-token
   remoteWrite:
