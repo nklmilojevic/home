@@ -199,7 +199,10 @@ def collect_sessions(path: str) -> list[Session]:
         stage = STAGES.get(value)
         if stage is None:
             continue
-        per_source[elem.get("sourceName") or "unknown"].append(
+        # Apple writes "Apple Watch" with a non-breaking space, which makes any
+        # hand-written {source="...Apple Watch"} selector silently match nothing.
+        source = (elem.get("sourceName") or "unknown").replace(" ", " ")
+        per_source[source].append(
             (parse_ts(elem.get("startDate")), parse_ts(elem.get("endDate")), stage)
         )
 
