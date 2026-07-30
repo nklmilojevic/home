@@ -21,6 +21,26 @@ spec:
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
+  name: health-metrics
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasource:
+    name: HealthMetrics
+    type: prometheus
+    uid: health-metrics
+    access: proxy
+    # Long-retention instance holding backfilled Apple Health history; kept apart
+    # from the 1-month cluster metrics store (see apps/monitoring/health-metrics).
+    url: http://vmsingle-health.monitoring.svc.cluster.local:8428
+    jsonData:
+      prometheusType: Prometheus
+      timeInterval: 1d
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
   name: victorialogs
 spec:
   instanceSelector:
