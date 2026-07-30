@@ -5,6 +5,11 @@ metadata:
   name: sleep
 spec:
   allowCrossNamespaceImport: true
+  # The operator runs --default-resync-period=10m, and for a configMapRef dashboard
+  # nothing re-reads the ConfigMap in between — so a committed dashboard change can
+  # sit invisible in Grafana for up to 10 minutes after Flux applies it. Polling a
+  # local ConfigMap is cheap; 1m keeps edits roughly immediate.
+  resyncPeriod: 1m
   instanceSelector:
     matchLabels:
       dashboards: grafana

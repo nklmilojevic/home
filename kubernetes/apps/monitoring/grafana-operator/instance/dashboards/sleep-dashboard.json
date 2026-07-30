@@ -1123,12 +1123,12 @@
     {
       "id": 15,
       "type": "timeseries",
-      "title": "HRV (SDNN)",
+      "title": "HRV",
       "datasource": {
         "type": "prometheus",
         "uid": "health-metrics"
       },
-      "description": "",
+      "description": "Apple Health carries no Oura HRV at all \u2014 the Oura app writes sleep stages and heart rate into HealthKit but not HRV, so all 10,680 exported HRV records are Apple Watch (SDNN). Oura HRV (rMSSD) only starts with the live Home Assistant feed on 2026-07-30, one point per night. Note the source label on backfilled HRV names the app that recorded the *sleep session*, not the device that measured HRV \u2014 so AutoSleep- and NapBot-labelled HRV is Apple Watch data too.",
       "interval": "1d",
       "gridPos": {
         "h": 8,
