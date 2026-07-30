@@ -7,5 +7,14 @@ resources:
   - ./kubernetes.yaml
   - ./monitoring.yaml
   - ./network.yaml
+  - ./sleep.yaml
   - ./unifi.yaml
   - ./victoriametrics.yaml
+configMapGenerator:
+  - name: sleep-dashboard
+    files:
+      - sleep-dashboard.json
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

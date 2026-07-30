@@ -1,0 +1,1334 @@
+{
+  "uid": "sleep-apple-health",
+  "title": "Sleep",
+  "description": "Sleep history backfilled from Apple Health, plus nightly vitals",
+  "tags": ["health", "sleep"],
+  "timezone": "browser",
+  "editable": true,
+  "graphTooltip": 1,
+  "schemaVersion": 41,
+  "refresh": "",
+  "time": {
+    "from": "now-1y",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "source",
+        "label": "Source",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "health-metrics"
+        },
+        "definition": "label_values(health_sleep_asleep_hours, source)",
+        "query": {
+          "qryType": 1,
+          "query": "label_values(health_sleep_asleep_hours, source)",
+          "refId": "A"
+        },
+        "includeAll": true,
+        "multi": true,
+        "refresh": 1,
+        "sort": 1,
+        "current": {
+          "selected": true,
+          "text": ["All"],
+          "value": ["$__all"]
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Asleep (30d avg)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "h",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "colorMode": "value",
+        "orientation": "auto"
+      },
+      "targets": [
+        {
+          "refId": "R",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_asleep_hours{source=~\"$source\"}[30d]))",
+          "legendFormat": "Asleep (30d avg)",
+          "instant": true,
+          "range": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Deep (30d avg)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "h",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "colorMode": "value",
+        "orientation": "auto"
+      },
+      "targets": [
+        {
+          "refId": "P",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_deep_hours{source=~\"$source\"}[30d]))",
+          "legendFormat": "Deep (30d avg)",
+          "instant": true,
+          "range": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "REM (30d avg)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "h",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "colorMode": "value",
+        "orientation": "auto"
+      },
+      "targets": [
+        {
+          "refId": "O",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_rem_hours{source=~\"$source\"}[30d]))",
+          "legendFormat": "REM (30d avg)",
+          "instant": true,
+          "range": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Efficiency (30d avg)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "colorMode": "value",
+        "orientation": "auto"
+      },
+      "targets": [
+        {
+          "refId": "X",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_efficiency_percent{source=~\"$source\"}[30d]))",
+          "legendFormat": "Efficiency (30d avg)",
+          "instant": true,
+          "range": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "Resting HR (30d avg)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "colorMode": "value",
+        "orientation": "auto"
+      },
+      "targets": [
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_resting_heart_rate_bpm[30d]))",
+          "legendFormat": "Resting HR (30d avg)",
+          "instant": true,
+          "range": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "stat",
+      "title": "Nights in range",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "colorMode": "value",
+        "orientation": "auto"
+      },
+      "targets": [
+        {
+          "refId": "Y",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "sum(count_over_time(health_sleep_asleep_hours{source=~\"$source\"}[$__range]))",
+          "legendFormat": "Nights in range",
+          "instant": true,
+          "range": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Sleep stages per night",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "description": "Stacked hypnogram totals for the main sleep session of each night. Nights before 2022 only carry undifferentiated 'asleep' \u2014 see the note at the bottom.",
+      "interval": "1d",
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "h",
+          "decimals": 2,
+          "custom": {
+            "drawStyle": "bars",
+            "lineWidth": 0,
+            "fillOpacity": 85,
+            "showPoints": "never",
+            "pointSize": 4,
+            "spanNulls": false,
+            "axisSoftMin": null,
+            "lineInterpolation": "linear",
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["mean"]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_deep_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Deep",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "Z",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_rem_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "REM",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_core_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Core / light",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "O",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_asleep_unspecified_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Asleep (unstaged)",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_awake_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Awake",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "Total sleep",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "description": "",
+      "interval": "1d",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "h",
+          "decimals": 2,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 0,
+            "showPoints": "always",
+            "pointSize": 4,
+            "spanNulls": false,
+            "axisSoftMin": null,
+            "lineInterpolation": "smooth"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["mean"]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_asleep_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Asleep",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_asleep_hours{source=~\"$source\"}[7d] offset -12h))",
+          "legendFormat": "7-night avg",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "D",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_asleep_hours{source=~\"$source\"}[30d] offset -12h))",
+          "legendFormat": "30-night avg",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_in_bed_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "In bed",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Efficiency & latency",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "description": "Efficiency = asleep / in bed. Latency = time from getting in bed to first asleep segment.",
+      "interval": "1d",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 13
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 0,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 0,
+            "showPoints": "never",
+            "pointSize": 4,
+            "spanNulls": false,
+            "axisSoftMin": null,
+            "lineInterpolation": "smooth"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["mean"]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "I",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_efficiency_percent{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Efficiency %",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "J",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_efficiency_percent{source=~\"$source\"}[30d] offset -12h))",
+          "legendFormat": "Efficiency % (30-night avg)",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "F",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_latency_minutes{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Latency (min)",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "timeseries",
+      "title": "Deep sleep",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "description": "",
+      "interval": "1d",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 21
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "h",
+          "decimals": 2,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 0,
+            "showPoints": "always",
+            "pointSize": 4,
+            "spanNulls": false,
+            "axisSoftMin": null,
+            "lineInterpolation": "smooth"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["mean"]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_deep_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Deep",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_deep_hours{source=~\"$source\"}[7d] offset -12h))",
+          "legendFormat": "7-night avg",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_deep_hours{source=~\"$source\"}[30d] offset -12h))",
+          "legendFormat": "30-night avg",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "timeseries",
+      "title": "REM sleep",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "description": "",
+      "interval": "1d",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 21
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "h",
+          "decimals": 2,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 0,
+            "showPoints": "always",
+            "pointSize": 4,
+            "spanNulls": false,
+            "axisSoftMin": null,
+            "lineInterpolation": "smooth"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["mean"]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "Z",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_rem_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "REM",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "Z",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_rem_hours{source=~\"$source\"}[7d] offset -12h))",
+          "legendFormat": "7-night avg",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_rem_hours{source=~\"$source\"}[30d] offset -12h))",
+          "legendFormat": "30-night avg",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "type": "timeseries",
+      "title": "Stage share of asleep time",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "description": "",
+      "interval": "1d",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 21
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 0,
+            "showPoints": "never",
+            "pointSize": 4,
+            "spanNulls": false,
+            "axisSoftMin": null,
+            "lineInterpolation": "smooth"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["mean"]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "L",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "100 * avg(avg_over_time(health_sleep_deep_hours{source=~\"$source\"}[1d] offset -12h)) / avg(avg_over_time(health_sleep_asleep_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Deep %",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "K",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "100 * avg(avg_over_time(health_sleep_rem_hours{source=~\"$source\"}[1d] offset -12h)) / avg(avg_over_time(health_sleep_asleep_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "REM %",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "L",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "100 * avg(avg_over_time(health_sleep_core_hours{source=~\"$source\"}[1d] offset -12h)) / avg(avg_over_time(health_sleep_asleep_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Core %",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "type": "timeseries",
+      "title": "Bedtime & wake time",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "description": "Hours relative to midnight of the wake day: 23:30 the previous evening reads as -0.5.",
+      "interval": "1d",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 29
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "h",
+          "decimals": 2,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 0,
+            "showPoints": "always",
+            "pointSize": 4,
+            "spanNulls": false,
+            "axisSoftMin": null,
+            "lineInterpolation": "smooth"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["mean"]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "K",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_bedtime_offset_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Bedtime (h from midnight)",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "E",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_waketime_hours{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Wake time (h after midnight)",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "type": "timeseries",
+      "title": "Heart rate",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "description": "bpm",
+      "interval": "1d",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 29
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 0,
+            "showPoints": "never",
+            "pointSize": 4,
+            "spanNulls": false,
+            "axisSoftMin": null,
+            "lineInterpolation": "smooth"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["mean"]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "E",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_heart_rate_bpm{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Mean during sleep",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "I",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_heart_rate_min_bpm{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Lowest during sleep",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "N",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_resting_heart_rate_bpm[1d] offset -12h))",
+          "legendFormat": "Resting (daily)",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "type": "timeseries",
+      "title": "HRV (SDNN)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "description": "",
+      "interval": "1d",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 37
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "decimals": 0,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 0,
+            "showPoints": "always",
+            "pointSize": 4,
+            "spanNulls": false,
+            "axisSoftMin": null,
+            "lineInterpolation": "smooth"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["mean"]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_hrv_sdnn_ms{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "HRV",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_hrv_sdnn_ms{source=~\"$source\"}[30d] offset -12h))",
+          "legendFormat": "30-night avg",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "type": "timeseries",
+      "title": "Respiration & blood oxygen",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "description": "",
+      "interval": "1d",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 37
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 1,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 0,
+            "showPoints": "never",
+            "pointSize": 4,
+            "spanNulls": false,
+            "axisSoftMin": null,
+            "lineInterpolation": "smooth"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["mean"]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "K",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_respiratory_rate_bpm{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Respiratory rate (/min)",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        },
+        {
+          "refId": "P",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_oxygen_saturation_percent{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "SpO2 %",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "type": "timeseries",
+      "title": "Sleeping wrist temperature",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "description": "",
+      "interval": "1d",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 37
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 2,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 0,
+            "showPoints": "always",
+            "pointSize": 4,
+            "spanNulls": false,
+            "axisSoftMin": null,
+            "lineInterpolation": "smooth"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["mean"]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "P",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "health-metrics"
+          },
+          "expr": "avg(avg_over_time(health_sleep_wrist_temperature_celsius{source=~\"$source\"}[1d] offset -12h))",
+          "legendFormat": "Wrist temp",
+          "instant": false,
+          "range": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "type": "text",
+      "title": "About this data",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "health-metrics"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 45
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "Backfilled from an Apple Health **Export All Health Data** archive into the `vmsingle-health` instance (100y retention) \u2014 see `kubernetes/apps/monitoring/health-metrics`.\n\n- **Nights** run noon-to-noon and are labelled with the **wake-up date**, matching the Health app.\n- Each night uses its **longest sleep session**; extra sessions are counted separately as `health_sleep_nap_hours`.\n- **Stage data (deep/REM/core) only exists from 2022 onward** \u2014 earlier nights came from AutoSleep, which writes undifferentiated `asleep`, and Apple Watch staging needs watchOS 9. Pre-2022 nights therefore appear in the stacked chart as *Asleep (unstaged)*.\n- Sources overlap in time (AutoSleep 2019-2024, Apple Watch 2020-2026, Oura 2026-). Use the **Source** picker to compare one against another; with several selected, values are averaged.\n- Oura writes some nights twice ~29s apart; the importer flattens overlapping segments so stage totals can never exceed the session length."
+      }
+    }
+  ]
+}
