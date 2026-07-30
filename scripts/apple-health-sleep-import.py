@@ -41,7 +41,9 @@ ASLEEP_STAGES = ("core", "deep", "rem", "asleep_unspecified")
 # Nightly quantity types worth carrying alongside the stages.
 QUANTITIES = {
     "HKQuantityTypeIdentifierHeartRate": "heart_rate_bpm",
-    "HKQuantityTypeIdentifierHeartRateVariabilitySDNN": "hrv_sdnn_ms",
+    # Apple reports SDNN, Oura (via the HA feed) reports rMSSD. Same concept,
+    # different algorithm, so the metric name stays source-neutral.
+    "HKQuantityTypeIdentifierHeartRateVariabilitySDNN": "hrv_ms",
     "HKQuantityTypeIdentifierRestingHeartRate": "resting_heart_rate_bpm",
     "HKQuantityTypeIdentifierRespiratoryRate": "respiratory_rate_bpm",
     "HKQuantityTypeIdentifierOxygenSaturation": "oxygen_saturation_percent",
@@ -321,7 +323,7 @@ def build_series(sessions: list[Session], quantities) -> dict[tuple[str, tuple],
         emit("sleep_sessions", source, night, tz, float(len(group)))
 
         for metric in (
-            "heart_rate_bpm", "heart_rate_min_bpm", "hrv_sdnn_ms",
+            "heart_rate_bpm", "heart_rate_min_bpm", "hrv_ms",
             "respiratory_rate_bpm", "oxygen_saturation_percent",
             "wrist_temperature_celsius",
         ):
