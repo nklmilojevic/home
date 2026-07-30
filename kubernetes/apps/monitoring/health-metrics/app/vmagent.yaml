@@ -35,7 +35,7 @@ spec:
         # hass_last_updated_time_seconds bookkeeping for those same entities).
         - action: keep
           source_labels: [entity]
-          regex: sensor\.oura_ring_(total_sleep_duration|deep_sleep_duration|rem_sleep_duration|light_sleep_duration|awake_time|time_in_bed|sleep_latency|sleep_efficiency|average_sleep_heart_rate|lowest_sleep_heart_rate|average_sleep_hrv|sleep_score)
+          regex: sensor\.oura_ring_(total_sleep_duration|deep_sleep_duration|rem_sleep_duration|light_sleep_duration|awake_time|time_in_bed|sleep_latency|sleep_efficiency|average_sleep_heart_rate|lowest_sleep_heart_rate|average_sleep_hrv|sleep_score|breathing_disturbance_index)
         - action: keep
           source_labels: [__name__]
           regex: hass_sensor_(duration_h|duration_min|unit_percent|unit_bpm|unit_ms|state)
@@ -93,6 +93,11 @@ spec:
           regex: sensor\.oura_ring_sleep_score
           target_label: __name__
           replacement: health_sleep_score
+        # Oura-only; Apple Health has no equivalent, so this has no backfilled history.
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_breathing_disturbance_index
+          target_label: __name__
+          replacement: health_sleep_breathing_disturbance_index
         - action: labeldrop
           regex: (entity|friendly_name|domain|area|job|instance)
         # Matches the label the importer writes for HealthKit's Oura samples, so
