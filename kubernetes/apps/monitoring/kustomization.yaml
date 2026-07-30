@@ -5,6 +5,7 @@ namespace: monitoring
 resources:
   - ./namespace.yaml
   - ./victoriametrics/ks.yaml
+  - ./health-metrics/ks.yaml
   - ./grafana-operator/ks.yaml
   - ./grafana-image-renderer/ks.yaml
   - ./gatus/ks.yaml
