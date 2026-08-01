@@ -16,6 +16,5 @@ resources:
   - ./wyoming-onnx-asr/ks.yaml
   - ./scrypted/ks.yaml
   - ./mosquitto/ks.yaml
-  - ./petkit-local/ks.yaml
   - ./appdaemon/ks.yaml
   - ./asterisk/ks.yaml
