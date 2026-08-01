@@ -79,6 +79,8 @@ spec:
             targetPort: 8443
           media:
             port: 9000
+          rtsp:
+            port: 8554
           panel:
             port: *panel-port
     route:
@@ -99,7 +101,7 @@ spec:
         globalMounts:
           - path: /data
       media:
-        type: emptyDir
+        existingClaim: petkit-local-media
         globalMounts:
           - path: /media/petkit
       tmp:
