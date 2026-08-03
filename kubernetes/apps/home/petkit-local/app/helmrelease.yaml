@@ -24,7 +24,11 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/petkit-local
-              tag: 1.6.0
+              # Pinned to the digest of the 1.6.0 build carrying the D4H BLE
+              # provisioning fix (containers#440). The overlay mutates the 1.6.0
+              # tag in place, so the digest is what forces a re-pull. Drop the
+              # digest (back to a plain tag) once the fix is upstream.
+              tag: 1.6.0@sha256:8175ba07b98591528dd10c300e81d409b4de9a2e384f0766c8b29a9891b80c66
             args:
               # The device is handed only the api-url host for MQTT and media
               # uploads, on firmware-fixed ports (443/9000) — so this must stay
