@@ -31,7 +31,7 @@ spec:
               # still 1.6.0 (mutated in place) — the digest is what forces the
               # re-pull and pins exactly the fork build. Back to a plain upstream
               # tag once the fixes land upstream (PRs alex-so-3#11/#12).
-              tag: 1.6.0@sha256:445106e6e328a759e94584bea9fbe0180b34c1eeb6fd6fdd4ecb73e7d1f8e2ad
+              tag: 1.6.0@sha256:5b871a38352e80e2cb4a474be480bd5906aa55a225700fdaecec89c12a2b1173
             args:
               # The device is handed only the api-url host for MQTT and media
               # uploads, on firmware-fixed ports (443/9000) — so this must stay
