@@ -27,10 +27,15 @@ spec:
     matchLabels:
       dashboards: grafana
   datasource:
-    name: HealthMetrics
+    # Named to sort AFTER "VictoriaMetrics": Grafana's datasource-picker variables
+    # list same-type datasources alphabetically and preselect the first, so a name
+    # like "HealthMetrics" silently hijacked every cluster dashboard whenever
+    # Grafana's DB had no saved variable state. Referenced by uid, never by name.
+    name: VictoriaMetrics Health
     type: prometheus
     uid: health-metrics
     access: proxy
+    isDefault: false
     # Long-retention instance holding backfilled Apple Health history; kept apart
     # from the 1-month cluster metrics store (see apps/o11y/health-metrics).
     url: http://vmsingle-health.o11y.svc.cluster.local:8428
