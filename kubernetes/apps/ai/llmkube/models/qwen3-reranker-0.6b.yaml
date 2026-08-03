@@ -57,7 +57,9 @@ spec:
     type: ClusterIP
   resources:
     cpu: 100m
-    memory: 4Gi
+    # RSS sits at 109Mi flat; the multi-GiB working set is mmap'd model pages
+    # and iGPU host buffers, which the kernel reclaims under pressure.
+    memory: 1Gi
   probeOverrides:
     startup:
       httpGet:
