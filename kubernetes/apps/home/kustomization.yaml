@@ -17,5 +17,6 @@ resources:
   - ./scrypted/ks.yaml
   - ./mosquitto/ks.yaml
   - ./petkit-local/ks.yaml
+  - ./onvif-server/ks.yaml
   - ./appdaemon/ks.yaml
   - ./asterisk/ks.yaml

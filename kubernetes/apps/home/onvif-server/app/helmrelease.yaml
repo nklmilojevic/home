@@ -1,0 +1,52 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: onvif-server
+  namespace: home
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: onvif-server
+  values:
+    controllers:
+      onvif-server:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          # macvlan on the main LAN (bond0.1 / 10.5.0.0/24) so the virtual ONVIF
+          # camera has its own MAC + IP on the same L2 as the UDM-SE — required
+          # for UniFi Protect's WS-Discovery multicast to find it. The MAC here
+          # MUST equal the `mac` in the onvif config (the server binds the iface
+          # with that MAC). .207 is free; .206 is scrypted, .253 tailscale.
+          annotations:
+            k8s.v1.cni.cncf.io/networks: |
+              [{
+                "name": "multus-host",
+                "namespace": "network",
+                "ips": ["10.5.0.207/24"],
+                "mac": "a2:07:20:03:00:07"
+              }]
+        containers:
+          app:
+            image:
+              repository: ghcr.io/daniela-hase/onvif-server
+              tag: latest@sha256:22cb34ce3707c12db4a49f29b1432437833d553fa723cdcb268a8e9f5522cd96
+            env:
+              TZ: "Europe/Belgrade"
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 128Mi
+    persistence:
+      config:
+        type: configMap
+        name: onvif-server-config
+        globalMounts:
+          - path: /onvif.yaml
+            subPath: onvif.yaml
+            readOnly: true
