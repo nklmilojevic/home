@@ -30,3 +30,7 @@ wiki
 .claude/settings.json
 .claude/settings.local.json
 oura-models-enc/
+
+# local scratch (Oura work, not part of the cluster repo)
+/open_oura
+/oura-models
