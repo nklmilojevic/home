@@ -6,5 +6,11 @@
       matchPackageNames: ["ghcr.io/linuxserver/calibre-web"],
       allowedVersions: "<1",
     },
+    {
+      description: "CoreDNS 1.14.3+ cache-prefetch regression breaks autopath+cache (stale AAAA-only answers, coredns/coredns#7944 / commit 31e16025e); hold chart on 1.46.x (app 1.13.1) until a fixed release ships",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/coredns/charts/coredns"],
+      allowedVersions: "<1.47.0",
+    },
   ],
 }
