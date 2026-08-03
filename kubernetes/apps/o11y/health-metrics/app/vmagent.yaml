@@ -1,0 +1,114 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAgent
+metadata:
+  name: health
+spec:
+  # The scrape config is inline rather than a VMScrapeConfig CR on purpose: the
+  # k8s-stack vmagent runs selectAllByDefault, so a CR here would also be scraped
+  # by that agent and these series would additionally land in the 1-month cluster
+  # instance under a second identity.
+  selectAllByDefault: false
+  # Oura publishes one set of values per night, a few minutes after the ring syncs
+  # in the morning. Scraping often would only restate the same numbers.
+  scrapeInterval: 15m
+  # The operator otherwise injects `prometheus: o11y/health` as a global
+  # external label, which forks every metric into two series — one from the
+  # importers (no such label) and one from this agent — for the nights both cover.
+  # Panel queries aggregate with avg() so the displayed values stayed correct, but
+  # the series identity did not match, which was the whole point of relabelling
+  # onto the imported metric names. An empty value drops the label.
+  externalLabels:
+    prometheus: ""
+  secrets:
+    - home-assistant-token
+  remoteWrite:
+    - url: http://vmsingle-health.o11y.svc.cluster.local:8428/api/v1/write
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      memory: 192Mi
+  inlineScrapeConfig: |
+    - job_name: home-assistant-oura
+      metrics_path: /api/prometheus
+      bearer_token_file: /etc/vm/secrets/home-assistant-token/token
+      static_configs:
+        - targets:
+            - home-assistant-app.home.svc.cluster.local:8123
+      metric_relabel_configs:
+        # HA exports ~13k series; keep only the Oura sleep entities, then only the
+        # value families (dropping hass_entity_available / hass_state_change /
+        # hass_last_updated_time_seconds bookkeeping for those same entities).
+        - action: keep
+          source_labels: [entity]
+          regex: sensor\.oura_ring_(total_sleep_duration|deep_sleep_duration|rem_sleep_duration|light_sleep_duration|awake_time|time_in_bed|sleep_latency|sleep_efficiency|average_sleep_heart_rate|lowest_sleep_heart_rate|average_sleep_hrv|sleep_score|breathing_disturbance_index)
+        - action: keep
+          source_labels: [__name__]
+          regex: hass_sensor_(duration_h|duration_min|unit_percent|unit_bpm|unit_ms|state)
+        # Rewrite onto the same metric names the Apple Health backfill uses, so the
+        # dashboard panels carry straight on from the imported history.
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_total_sleep_duration
+          target_label: __name__
+          replacement: health_sleep_asleep_hours
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_deep_sleep_duration
+          target_label: __name__
+          replacement: health_sleep_deep_hours
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_rem_sleep_duration
+          target_label: __name__
+          replacement: health_sleep_rem_hours
+        # Oura calls it "light", Apple calls the same stage "core".
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_light_sleep_duration
+          target_label: __name__
+          replacement: health_sleep_core_hours
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_awake_time
+          target_label: __name__
+          replacement: health_sleep_awake_hours
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_time_in_bed
+          target_label: __name__
+          replacement: health_sleep_in_bed_hours
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_sleep_latency
+          target_label: __name__
+          replacement: health_sleep_latency_minutes
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_sleep_efficiency
+          target_label: __name__
+          replacement: health_sleep_efficiency_percent
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_average_sleep_heart_rate
+          target_label: __name__
+          replacement: health_sleep_heart_rate_bpm
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_lowest_sleep_heart_rate
+          target_label: __name__
+          replacement: health_sleep_heart_rate_min_bpm
+        # Oura reports rMSSD here while Apple Health reports SDNN — same idea,
+        # different algorithm, hence the source-neutral metric name. Compare within
+        # a source, not across them.
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_average_sleep_hrv
+          target_label: __name__
+          replacement: health_sleep_hrv_ms
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_sleep_score
+          target_label: __name__
+          replacement: health_sleep_score
+        # Oura-only; Apple Health has no equivalent, so this has no backfilled history.
+        - source_labels: [entity]
+          regex: sensor\.oura_ring_breathing_disturbance_index
+          target_label: __name__
+          replacement: health_sleep_breathing_disturbance_index
+        - action: labeldrop
+          regex: (entity|friendly_name|domain|area|job|instance)
+        # Matches the label the importer writes for HealthKit's Oura samples, so
+        # live nights extend the same series instead of forking a new one.
+        - target_label: source
+          replacement: Oura

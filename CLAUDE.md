@@ -46,7 +46,7 @@ Repo root also contains `bootstrap/` (helmfile + kustomize for pre-Flux bootstra
 
 - `home` - Home automation (Home Assistant, Z2MQTT, ESPHome, go2rtc, mosquitto, etc.)
 - `media` - Media services (Plex, Sonarr, Radarr, Sabnzbd, Qbittorrent, etc.)
-- `monitoring` - Observability (VictoriaMetrics, VictoriaLogs, Vector, Grafana operator, gatus, NUT)
+- `o11y` - Observability (VictoriaMetrics, VictoriaLogs, Vector, Grafana operator, gatus, NUT)
 - `network` - Networking (Cilium, Envoy Gateway, external-dns, cloudflared, multus)
 - `security` - Secrets and backups (external-secrets, onepassword-connect, volsync, snapshot-controller, atuin)
 - `database` - Redis (redis-operator + per-app instances)
@@ -77,6 +77,7 @@ A HelmRelease that needs different remediation opts out by carrying the label `f
 1. Create directory: `kubernetes/apps/{namespace}/{app}/app/`
 
 2. Create `{app}/ks.yaml` (Flux Kustomization). Wire in the volsync Component, set `namespace:` on every `dependsOn` and `sourceRef`, and provide postBuild substitution vars:
+
 ```yaml
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -118,11 +119,12 @@ spec:
 ```
 
 3. Create `app/kustomization.yaml` (lists the app's own resources; the volsync resources come from the Component in `ks.yaml`, not here):
+
 ```yaml
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: {namespace}
+namespace: { namespace }
 resources:
   - ./helmrelease.yaml
   - ./ocirepository.yaml
@@ -131,14 +133,15 @@ resources:
 ```
 
 4. Create `app/ocirepository.yaml` (per-app app-template chart source; Renovate keeps the tag current):
+
 ```yaml
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: {app-name}
-  namespace: {namespace}
+  name: { app-name }
+  namespace: { namespace }
 spec:
   interval: 10m
   layerSelector:
@@ -218,7 +221,9 @@ spec:
 ## Common Patterns
 
 ### Security Context
+
 Pod-level security context goes under `defaultPodOptions.securityContext`; container-level under `controllers.{app}.containers.{name}.securityContext`:
+
 ```yaml
 defaultPodOptions:
   securityContext:
@@ -228,7 +233,7 @@ defaultPodOptions:
     fsGroup: 1000
     fsGroupChangePolicy: OnRootMismatch
 controllers:
-  {app}:
+  { app }:
     containers:
       app:
         securityContext:
@@ -240,6 +245,7 @@ controllers:
 ```
 
 ### NFS Media Mount
+
 ```yaml
 persistence:
   media:
@@ -253,6 +259,7 @@ persistence:
 ```
 
 ### LoadBalancer with Cilium
+
 ```yaml
 service:
   app:
@@ -262,9 +269,10 @@ service:
 ```
 
 ### Multus Network Attachment (e.g. for IoT/IoT-VLAN)
+
 ```yaml
 controllers:
-  {app}:
+  { app }:
     pod:
       annotations:
         k8s.v1.cni.cncf.io/networks: |
@@ -277,6 +285,7 @@ controllers:
 ```
 
 ### External Secrets
+
 ```yaml
 ---
 apiVersion: external-secrets.io/v1
@@ -296,9 +305,10 @@ spec:
 ```
 
 ### CronJob Controller
+
 ```yaml
 controllers:
-  {app}:
+  { app }:
     type: cronjob
     cronjob:
       schedule: "0 0 * * *"
@@ -309,6 +319,7 @@ controllers:
 ## Template Variables
 
 Available via `postBuild.substitute` in `ks.yaml` (consumed by the volsync Component):
+
 - `${APP}` - Application name
 - `${VOLSYNC_CLAIM}` - PVC name for backups
 - `${VOLSYNC_CAPACITY}` - Storage size

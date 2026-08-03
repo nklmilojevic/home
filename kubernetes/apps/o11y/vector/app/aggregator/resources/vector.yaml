@@ -1,0 +1,81 @@
+---
+data_dir: /vector-data-dir
+api:
+  enabled: true
+  address: 0.0.0.0:8686
+
+#
+# Sources
+#
+sources:
+  mikrotik_source:
+    type: vector
+    version: "2"
+    address: 0.0.0.0:6000
+  k8s_source:
+    type: vector
+    version: "2"
+    address: 0.0.0.0:6001
+
+#
+# Transforms
+#
+transforms:
+  k8s_transform:
+    type: remap
+    inputs: [k8s_source]
+    source: |
+      .log = parse_json(.message) ?? .message
+      del(.message)
+  # Ceph mgr's MgrRootHandler forwards kubernetes-client DEBUG records (full
+  # PodList "response body" dumps, ~580KB/line) with no level gate; they exceed
+  # VictoriaLogs -insert.maxLineSizeBytes and trip TooManyLogs.
+  k8s_filter:
+    type: filter
+    inputs: [k8s_transform]
+    condition:
+      type: vrl
+      source: |
+        msg = string(.log) ?? ""
+        !(.kubernetes.pod_namespace == "rook-ceph" && (contains(msg, "response body:") || length(msg) > 100000))
+
+#
+# Sinks
+#
+sinks:
+  mikrotik:
+    inputs: ["mikrotik_source"]
+    type: elasticsearch
+    endpoints:
+      - http://victorialogs-victoria-logs-single-server.o11y.svc:9428/insert/elasticsearch/
+    mode: "bulk"
+    compression: gzip
+    api_version: "v8"
+    healthcheck:
+      enabled: false
+    request:
+      headers:
+        VL-Time-Field: timestamp
+        VL-Stream-Fields: hostname
+        VL-Msg-Field: message,msg,_msg,log.msg,log.message,log
+        AccountID: "0"
+        ProjectID: "1"
+        Region: "0"
+  vlogs:
+    type: elasticsearch
+    inputs: [k8s_filter]
+    endpoints:
+      - http://victorialogs-victoria-logs-single-server.o11y.svc:9428/insert/elasticsearch/
+    mode: bulk
+    api_version: v8
+    compression: gzip
+    healthcheck:
+      enabled: false
+    request:
+      headers:
+        VL-Time-Field: timestamp
+        VL-Stream-Fields: stream,kubernetes.pod_name,kubernetes.container_name,kubernetes.pod_namespace
+        VL-Msg-Field: message,msg,_msg,log.msg,log.message,log
+        AccountID: "0"
+        ProjectID: "0"
+        Region: "0"

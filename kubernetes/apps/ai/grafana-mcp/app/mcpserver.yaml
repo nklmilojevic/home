@@ -12,7 +12,7 @@ spec:
   mcpPort: 8000
   env:
     - name: GRAFANA_URL
-      value: http://grafana-service.monitoring.svc.cluster.local:3000
+      value: http://grafana-service.o11y.svc.cluster.local:3000
     - name: GRAFANA_ORG_ID
       value: "1"
   secrets:

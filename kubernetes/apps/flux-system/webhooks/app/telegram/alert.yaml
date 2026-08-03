@@ -89,13 +89,13 @@ spec:
       namespace: misc
     - kind: Kustomization
       name: "*"
-      namespace: monitoring
+      namespace: o11y
     - kind: HelmRelease
       name: "*"
-      namespace: monitoring
+      namespace: o11y
     - kind: OCIRepository
       name: "*"
-      namespace: monitoring
+      namespace: o11y
     - kind: Kustomization
       name: "*"
       namespace: network
