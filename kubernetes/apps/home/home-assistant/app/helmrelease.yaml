@@ -147,6 +147,12 @@ spec:
         existingClaim: "home-assistant-cache"
         globalMounts:
           - path: /config/.venv
+      media:
+        existingClaim: home-assistant-media
+        advancedMounts:
+          home-assistant:
+            app:
+              - path: /media
       tmpfs:
         type: emptyDir
         advancedMounts:
