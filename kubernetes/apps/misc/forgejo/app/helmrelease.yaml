@@ -135,7 +135,7 @@ spec:
           ENABLED: true
           serviceMonitor:
             enabled: true
-            namespace: monitoring
+            namespace: o11y
         time:
           DEFAULT_UI_LOCATION: Europe/Belgrade
         ui:
