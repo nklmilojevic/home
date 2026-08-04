@@ -8,5 +8,4 @@ metadata:
     # Allows drm-exporter's DRA monitor ResourceClaim (adminAccess: true).
     resource.kubernetes.io/admin-access: "true"
   annotations:
-    kopiur.home-operations.com/privileged-movers: "true"
     volsync.backube/privileged-movers: "true"

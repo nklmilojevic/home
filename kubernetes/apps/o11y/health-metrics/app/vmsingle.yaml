@@ -22,10 +22,6 @@ spec:
     accessModes:
       - ReadWriteOnce
     storageClassName: miroir
-    dataSourceRef:
-      apiGroup: kopiur.home-operations.com
-      kind: Restore
-      name: vmsingle-health
     resources:
       requests:
         storage: 1Gi
