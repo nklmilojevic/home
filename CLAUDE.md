@@ -341,6 +341,8 @@ There are no global cluster variable ConfigMaps/Secrets in this repo; domains an
 - Each app carries its own `ocirepository.yaml`; there is no centralized app-template OCIRepository
 - Do not repeat HelmRelease `install`/`upgrade` remediation — it is injected by `flux/apps.yaml` (opt out with label `flux.home/helm-defaults: skip`)
 - Use the canonical `bjw-s-labs` HelmRelease schema URL (not the old `bjw-s` org, which redirects)
+- Backup/restore contract (learned at the miroir cutover): the kopiur mover uid MUST match the volume-owning uid (`APP_UID`/`APP_GID`); set `KOPIUR_CACHE_CAPACITY` to ~20% of `KOPIUR_CAPACITY` for volumes over 20Gi (plex uses 10Gi); the descheduler is configured to never evict kopiur movers; chart-created PVCs without `existingClaim` escape the backup net — the nightly `kopiur-coverage-check` CronJob (kopiur-system) fails when a persistent miroir PVC has neither a SnapshotPolicy nor an explicit exemption, update its `EXEMPT` regex for deliberate fresh-start volumes
+- Some pvc.yaml manifests keep an inert `dataSourceRef` to a pruned kopiur `Restore` (mosquitto, home-assistant-media, petkit-local-media): harmless while Bound, but if such a PVC is ever recreated, drop the `dataSourceRef` first or recreate the Restore
 - Timezone is `Europe/Belgrade`
 - Standard dependencies: `miroir-config` (ns `miroir-system`), `kopiur` (ns `kopiur-system`), `external-secrets-stores` (ns `security`)
 
