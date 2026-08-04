@@ -55,6 +55,13 @@ machine:
       - net.ifnames=1
     image: factory.talos.dev/installer/{{ ENV.SCHEMATIC }}:v1.13.4
     wipe: false
+  kernel:
+    modules:
+      - name: dm_thin_pool # Miroir lvmthin backend
+      - name: drbd # Miroir replication (from the siderolabs/drbd extension)
+        parameters:
+          - usermode_helper=disabled
+      - name: drbd_transport_tcp
   kubelet:
     defaultRuntimeSeccompProfileEnabled: true
     disableManifestsDirectory: true
@@ -63,6 +70,9 @@ machine:
         - net.ipv6.conf.*
       imageGCHighThresholdPercent: 70
       imageGCLowThresholdPercent: 55
+      # Miroir/DRBD needs movers and replicas demoted cleanly on shutdown
+      shutdownGracePeriod: 90s
+      shutdownGracePeriodCriticalPods: 60s
     extraMounts:
       - destination: /var/openebs/local
         type: bind
@@ -193,3 +203,19 @@ cluster:
   serviceAccount:
     key: ref+op://homecluster/talos/CLUSTER_SERVICEACCOUNT_KEY
   {% endif %}
+# --- Miroir raw volume (rook-ceph → miroir cutover) ---
+# DO NOT UNCOMMENT while rook-ceph still owns the data NVMe: the disk carries a
+# raw bluestore signature (no GPT) and Talos volume provisioning must never race
+# live OSD data. At cutover: tear down rook-ceph, `talosctl wipe disk` the data
+# NVMe on each node, then uncomment and apply. Creates partlabel `r-miroir`
+# (consumed by MiroirNodeGroup as /dev/disk/by-partlabel/r-miroir).
+# The RS1D0TSSD710 model selector matches the dedicated 1TB data NVMe on all
+# three nodes regardless of device naming (icarus003's enumerates as nvme0n1).
+# ---
+# apiVersion: v1alpha1
+# kind: RawVolumeConfig
+# name: miroir
+# provisioning:
+#   diskSelector:
+#     match: disk.model == "RS1D0TSSD710" && !system_disk
+#   minSize: 1TB
