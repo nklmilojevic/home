@@ -44,6 +44,10 @@ kind: Restore
 metadata:
   name: petkit-local-media
 spec:
+  mover:
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
   policy:
     onMissingSnapshot: Continue
   source:

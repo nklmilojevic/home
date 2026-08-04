@@ -5,6 +5,10 @@ kind: Restore
 metadata:
   name: "${APP}-bootstrap"
 spec:
+  mover:
+    securityContext:
+      runAsUser: ${APP_UID:-1000}
+      runAsGroup: ${APP_GID:-1000}
   policy:
     onMissingSnapshot: Continue
   source:
