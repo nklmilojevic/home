@@ -4,8 +4,12 @@ kind: PersistentVolumeClaim
 metadata:
   name: mosquitto-data
 spec:
+  dataSourceRef:
+    apiGroup: kopiur.home-operations.com
+    kind: Restore
+    name: mosquitto
   accessModes: ["ReadWriteOnce"]
   resources:
     requests:
       storage: 1Gi
-  storageClassName: ceph-block
+  storageClassName: miroir
