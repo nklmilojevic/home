@@ -6,6 +6,7 @@ metadata:
   name: &app shelfmark
 spec:
   components:
+    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
@@ -16,6 +17,8 @@ spec:
       namespace: rook-ceph
     - name: volsync
       namespace: security
+    - name: kopiur
+      namespace: kopiur-system
   path: ./kubernetes/apps/media/shelfmark/app
   prune: true
   sourceRef:

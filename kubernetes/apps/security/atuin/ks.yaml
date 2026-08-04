@@ -5,8 +5,12 @@ metadata:
   name: &app atuin
 spec:
   components:
+    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: security
+  dependsOn:
+    - name: kopiur
+      namespace: kopiur-system
   path: ./kubernetes/apps/security/atuin/app
   prune: true
   sourceRef:

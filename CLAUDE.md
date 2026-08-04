@@ -9,7 +9,7 @@ This is a Kubernetes homelab repository using Flux CD for GitOps, managing ~40 a
 - **Helm Charts**: bjw-s app-template (v5.0.1) for most apps, declared per-app via `OCIRepository`
 - **Secrets**: External Secrets + 1Password Connect (runtime app secrets); bootstrap secrets injected via `vals` from `ref+op://` 1Password service-account refs (no SOPS)
 - **Storage**: Rook-Ceph (distributed), OpenEBS (local), NFS (shared media)
-- **Backups**: VolSync with R2 backend, wired in via a shared Kustomize Component
+- **Backups**: kopiur (kopia snapshots to the `r2` ClusterRepository) via the `components/kopiur/backup` Component, running alongside legacy VolSync restic during the rook-ceph → miroir migration
 - **Automation**: `just` (recipe runner; modules under `.just/`), Renovate (Mend app + `.renovate/` config)
 - **Dev shell**: Nix flake (`flake.nix`); pre-commit via `lefthook.yml` (yamlfmt + yamllint)
 
@@ -30,7 +30,10 @@ kubernetes/
 │   │           ├── externalsecret.yaml  # (optional)
 │   │           └── pvc.yaml             # (optional, extra PVCs beyond the volsync one)
 ├── components/
-│   └── volsync/             # Reusable Kustomize Component (kind: Component), wired via ks.yaml `components:`
+│   ├── kopiur/
+│   │   ├── backup/          # SnapshotPolicy + SnapshotSchedule per app, wired via ks.yaml `components:`
+│   │   └── secret/          # kopiur-repository ExternalSecret, wired once per namespace kustomization
+│   └── volsync/             # Legacy Component (kind: Component), wired via ks.yaml `components:`
 │       ├── kustomization.yaml
 │       ├── externalsecret.yaml
 │       ├── pvc.yaml
@@ -87,6 +90,7 @@ metadata:
   name: &app {app-name}
 spec:
   components:
+    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: {namespace}
   commonMetadata:
@@ -97,6 +101,8 @@ spec:
       namespace: rook-ceph
     - name: volsync
       namespace: security
+    - name: kopiur
+      namespace: kopiur-system
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/{namespace}/{app}/app
@@ -336,7 +342,8 @@ There are no global cluster variable ConfigMaps/Secrets in this repo; domains an
 ## Important Notes
 
 - Never commit secret material — bootstrap secrets are plaintext YAML carrying `ref+op://` vals references (resolved from 1Password at apply time, no actual secret values), and runtime app secrets come from External Secrets + 1Password Connect
-- Backups are wired in via the volsync Kustomize Component (`components:` in `ks.yaml`), not by listing resources in `app/kustomization.yaml`
+- Backups are wired in via the kopiur/backup and volsync Kustomize Components (`components:` in `ks.yaml`), not by listing resources in `app/kustomization.yaml`; both run in parallel during the rook-ceph → miroir migration (kopiur is the go-forward system)
+- A namespace with kopiur-backed apps must include `../../components/kopiur/secret` in its `kustomization.yaml` (movers read `kopiur-repository-secret` from their own namespace); kopiur reuses the `VOLSYNC_*` postBuild vars until the volsync component is retired
 - Use YAML anchors (`&app`, `&port`) for DRY configuration
 - Each app carries its own `ocirepository.yaml`; there is no centralized app-template OCIRepository
 - Do not repeat HelmRelease `install`/`upgrade` remediation — it is injected by `flux/apps.yaml` (opt out with label `flux.home/helm-defaults: skip`)
