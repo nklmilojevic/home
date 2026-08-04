@@ -6,6 +6,10 @@ metadata:
   name: "${APP}-bootstrap"
 spec:
   mover:
+    cache:
+      capacity: "${KOPIUR_CACHE_CAPACITY:-1Gi}"
+      mode: Persistent
+      storageClassName: "${KOPIUR_CACHE_STORAGECLASS:-openebs-hostpath}"
     securityContext:
       runAsUser: ${APP_UID:-1000}
       runAsGroup: ${APP_GID:-1000}
