@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: &app seerr
 spec:
+  components:
+    - ../../../../components/kopiur/backup
   targetNamespace: media
   commonMetadata:
     labels:
@@ -14,6 +16,8 @@ spec:
       namespace: rook-ceph
     - name: volsync
       namespace: security
+    - name: kopiur
+      namespace: kopiur-system
   path: ./kubernetes/apps/media/seerr/app
   prune: true
   sourceRef:

@@ -6,3 +6,4 @@ resources:
   - ./grafana.yaml
   - ./grafanadatasource.yaml
   - ./dashboards
+  - ./snapshotpolicy.yaml
