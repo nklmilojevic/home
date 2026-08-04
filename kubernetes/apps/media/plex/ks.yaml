@@ -33,3 +33,4 @@ spec:
       APP: *app
       KOPIUR_CLAIM: plex-config
       KOPIUR_CAPACITY: 50Gi
+      KOPIUR_CACHE_CAPACITY: 10Gi
