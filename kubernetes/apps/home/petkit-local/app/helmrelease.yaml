@@ -31,7 +31,10 @@ spec:
               # camera_enable so feed snapshots + eat clips are recorded, and
               # (nkl.9) the bucket-cert fix (CA:TRUE + IP-as-DNS SAN) so the
               # cloud uploader's strict TLS verify accepts the cert and the
-              # clips actually upload. The containers pipeline strips the fork's -nkl.N
+              # clips actually upload, and (nkl.10) feed-total counters +
+              # feedSound remap + a cacert patcher that dedups the CA bundle so
+              # the duplicate-cert collision that broke uploads cannot recur.
+              # The containers pipeline strips the fork's -nkl.N
               # prerelease suffix, so the image tag is still 1.6.0 (mutated in
               # place) — the digest is what forces the re-pull and pins exactly
               # the fork build. Back to a plain upstream tag once the fixes land
