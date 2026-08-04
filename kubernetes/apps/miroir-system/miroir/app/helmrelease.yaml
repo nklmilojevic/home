@@ -11,6 +11,13 @@ spec:
     kind: OCIRepository
     name: miroir
   values:
+    # Rebuild a dead node's replica legs on the spare node after 1h
+    # (safety-gated: single dead node, clean survivors, no snapshot pins).
+    autoEvictAfter: 1h
+    drbd:
+      # DRBD activity-log extents (default 1237): fewer hot-extent metadata
+      # updates under scattered random writes, longer post-crash resync.
+      alExtents: 6007
     groupSnapshots:
       enabled: true
     monitoring:
