@@ -13,8 +13,8 @@ spec:
       mode: Persistent
       storageClassName: openebs-hostpath
     securityContext:
-      runAsUser: 0
-      runAsGroup: 0
+      runAsUser: 472
+      runAsGroup: 10001
   repository:
     kind: ClusterRepository
     name: r2
