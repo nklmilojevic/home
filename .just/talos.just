@@ -1,9 +1,10 @@
-set unstable := true
-set quiet := true
+set unstable
+set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
 talos_dir := justfile_directory() / 'talos'
+tuppr_dir := justfile_directory() / 'kubernetes/apps/system-upgrade/tuppr/upgrades'
 
 [private]
 default:
@@ -15,6 +16,8 @@ default:
 render-config node:
     export CONTROLPLANE="$(just talos machine-controller {{ node }})"
     export SCHEMATIC="$(just talos schematic-id)"
+    export TALOS_VERSION="$(yq -e '.spec.talos.version' "{{ tuppr_dir }}/talosupgrade.yaml")"
+    export KUBERNETES_VERSION="$(yq -e '.spec.kubernetes.version' "{{ tuppr_dir }}/kubernetesupgrade.yaml")"
     talosctl machineconfig patch <(just template "{{ talos_dir }}/machineconfig.yaml.j2") \
         -p @<(just template "{{ talos_dir }}/nodes/{{ node }}.yaml.j2")
 
@@ -80,4 +83,6 @@ machine-controller node:
 [script]
 machine-image:
     export SCHEMATIC="$(just talos schematic-id)"
+    export TALOS_VERSION="$(yq -e '.spec.talos.version' "{{ tuppr_dir }}/talosupgrade.yaml")"
+    export KUBERNETES_VERSION="$(yq -e '.spec.kubernetes.version' "{{ tuppr_dir }}/kubernetesupgrade.yaml")"
     minijinja-cli "{{ talos_dir }}/machineconfig.yaml.j2" | yq -e 'select(.machine) | .machine.install.image'

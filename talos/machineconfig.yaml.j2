@@ -53,7 +53,7 @@ machine:
   install:
     extraKernelArgs:
       - net.ifnames=1
-    image: factory.talos.dev/installer/{{ ENV.SCHEMATIC }}:v1.13.4
+    image: factory.talos.dev/installer/{{ ENV.SCHEMATIC }}:{{ ENV.TALOS_VERSION }}
     wipe: false
   kernel:
     modules:
@@ -81,7 +81,7 @@ machine:
           - bind
           - rshared
           - rw
-    image: ghcr.io/siderolabs/kubelet:v1.36.2
+    image: ghcr.io/siderolabs/kubelet:{{ ENV.KUBERNETES_VERSION }}
     nodeIP:
       validSubnets:
         - 10.40.0.0/24
@@ -160,11 +160,11 @@ cluster:
     disablePodSecurityPolicy: true
     extraArgs:
       enable-aggregator-routing: "true"
-    image: registry.k8s.io/kube-apiserver:v1.36.2
+    image: registry.k8s.io/kube-apiserver:{{ ENV.KUBERNETES_VERSION }}
   controllerManager:
     extraArgs:
       bind-address: 0.0.0.0
-    image: registry.k8s.io/kube-controller-manager:v1.36.2
+    image: registry.k8s.io/kube-controller-manager:{{ ENV.KUBERNETES_VERSION }}
   coreDNS:
     disabled: true
   etcd:
@@ -177,7 +177,7 @@ cluster:
       listen-metrics-urls: http://0.0.0.0:2381
   proxy:
     disabled: true
-    image: registry.k8s.io/kube-proxy:v1.36.2
+    image: registry.k8s.io/kube-proxy:{{ ENV.KUBERNETES_VERSION }}
   scheduler:
     config:
       apiVersion: kubescheduler.config.k8s.io/v1
@@ -198,7 +198,7 @@ cluster:
                     whenUnsatisfiable: ScheduleAnyway
     extraArgs:
       bind-address: 0.0.0.0
-    image: registry.k8s.io/kube-scheduler:v1.36.2
+    image: registry.k8s.io/kube-scheduler:{{ ENV.KUBERNETES_VERSION }}
   secretboxEncryptionSecret: ref+op://homecluster/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
   serviceAccount:
     key: ref+op://homecluster/talos/CLUSTER_SERVICEACCOUNT_KEY
