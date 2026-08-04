@@ -44,6 +44,8 @@ kind: Restore
 metadata:
   name: vmsingle-health
 spec:
+  mover:
+    privilegedMode: true
   policy:
     onMissingSnapshot: Continue
   source:
