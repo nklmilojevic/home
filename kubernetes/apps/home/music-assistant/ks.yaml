@@ -38,3 +38,5 @@ spec:
       APP: *app
       VOLSYNC_CLAIM: music-assistant-data
       VOLSYNC_CAPACITY: 5Gi
+      APP_UID: "0"
+      APP_GID: "0"
