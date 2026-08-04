@@ -6,11 +6,15 @@ metadata:
   name: &app wyoming-onnx-asr
 spec:
   components:
+    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: kopiur
+      namespace: kopiur-system
   path: ./kubernetes/apps/home/wyoming-onnx-asr/app
   prune: true
   sourceRef:

@@ -6,6 +6,7 @@ metadata:
   name: &app memini
 spec:
   components:
+    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: ai
   commonMetadata:
@@ -16,6 +17,8 @@ spec:
       namespace: rook-ceph
     - name: volsync
       namespace: security
+    - name: kopiur
+      namespace: kopiur-system
     - name: external-secrets-stores
       namespace: security
     - name: llmkube-models
