@@ -7,7 +7,6 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
-    - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
     labels:
@@ -15,6 +14,8 @@ spec:
   dependsOn:
     - name: kopiur
       namespace: kopiur-system
+    - name: miroir-config
+      namespace: miroir-system
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/home/scrypted/app
@@ -30,5 +31,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: scrypted-config
-      VOLSYNC_CAPACITY: 5Gi
+      KOPIUR_CLAIM: scrypted-config
+      KOPIUR_CAPACITY: 5Gi

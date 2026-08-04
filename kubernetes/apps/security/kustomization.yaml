@@ -7,6 +7,5 @@ components:
 resources:
   - ./namespace.yaml
   - ./external-secrets/ks.yaml
-  - ./volsync/ks.yaml
   - ./snapshot-controller/ks.yaml
   - ./atuin/ks.yaml
