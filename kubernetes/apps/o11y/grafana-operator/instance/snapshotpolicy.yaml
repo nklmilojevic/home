@@ -12,6 +12,9 @@ spec:
       capacity: 1Gi
       mode: Persistent
       storageClassName: openebs-hostpath
+    podSecurityContext:
+      fsGroup: 10001
+      fsGroupChangePolicy: Always
     securityContext:
       runAsUser: 472
       runAsGroup: 10001
