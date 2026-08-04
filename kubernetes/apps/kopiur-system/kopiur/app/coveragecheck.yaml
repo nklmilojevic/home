@@ -59,7 +59,7 @@ spec:
             runAsGroup: 65534
           containers:
             - name: check
-              image: docker.io/alpine/k8s:1.33.13
+              image: docker.io/alpine/k8s:1.36.2
               env:
                 - name: EXEMPT
                   # Deliberately unbacked volumes (fresh-start-by-design):
