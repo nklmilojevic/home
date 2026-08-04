@@ -38,3 +38,5 @@ spec:
       APP: *app
       VOLSYNC_CLAIM: otbr-data
       VOLSYNC_CAPACITY: 1Gi
+      APP_UID: "0"
+      APP_GID: "0"
