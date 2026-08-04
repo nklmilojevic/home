@@ -7,18 +7,15 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
-    - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-    - name: volsync
-      namespace: security
     - name: kopiur
       namespace: kopiur-system
+    - name: miroir-config
+      namespace: miroir-system
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/media/prowlarr/app
@@ -36,4 +33,4 @@ spec:
       APP: *app
       APP_UID: "1000"
       APP_GID: "1000"
-      VOLSYNC_CLAIM: prowlarr-config
+      KOPIUR_CLAIM: prowlarr-config

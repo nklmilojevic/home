@@ -7,7 +7,6 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
-    - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
     labels:
@@ -15,8 +14,8 @@ spec:
   dependsOn:
     - name: kopiur
       namespace: kopiur-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: miroir-config
+      namespace: miroir-system
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/media/qui/app
@@ -32,5 +31,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: qui
-      VOLSYNC_CAPACITY: 2Gi
+      KOPIUR_CLAIM: qui
+      KOPIUR_CAPACITY: 2Gi

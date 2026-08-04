@@ -9,16 +9,20 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: ceph-block
+  storageClassName: miroir
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: home-assistant-media
 spec:
+  dataSourceRef:
+    apiGroup: kopiur.home-operations.com
+    kind: Restore
+    name: home-assistant-media
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
-  storageClassName: ceph-block
+  storageClassName: miroir

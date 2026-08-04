@@ -8,8 +8,8 @@ This is a Kubernetes homelab repository using Flux CD for GitOps, managing ~40 a
 - **GitOps**: Flux v2 (Flux Operator + FluxInstance, not the legacy `flux-system` bootstrap)
 - **Helm Charts**: bjw-s app-template (v5.0.1) for most apps, declared per-app via `OCIRepository`
 - **Secrets**: External Secrets + 1Password Connect (runtime app secrets); bootstrap secrets injected via `vals` from `ref+op://` 1Password service-account refs (no SOPS)
-- **Storage**: Rook-Ceph (distributed), OpenEBS (local), NFS (shared media)
-- **Backups**: kopiur (kopia snapshots to the `r2` ClusterRepository) via the `components/kopiur/backup` Component, running alongside legacy VolSync restic during the rook-ceph → miroir migration
+- **Storage**: miroir (DRBD9-replicated lvmthin CSI, `miroir`/`miroir-local` classes), OpenEBS (local), NFS (shared media)
+- **Backups**: kopiur (kopia snapshots to the `r2` ClusterRepository) via the `components/kopiur/backup` Component; PVCs self-restore through the `Restore` volume populator (`dataSourceRef`)
 - **Automation**: `just` (recipe runner; modules under `.just/`), Renovate (Mend app + `.renovate/` config)
 - **Dev shell**: Nix flake (`flake.nix`); pre-commit via `lefthook.yml` (yamlfmt + yamllint)
 
@@ -22,23 +22,17 @@ kubernetes/
 │   │   ├── namespace.yaml
 │   │   ├── kustomization.yaml       # lists ./namespace.yaml + ./{app}/ks.yaml
 │   │   └── {app}/
-│   │       ├── ks.yaml              # Flux Kustomization (pulls in the volsync Component)
+│   │       ├── ks.yaml              # Flux Kustomization (pulls in the kopiur Component)
 │   │       └── app/
 │   │           ├── kustomization.yaml   # lists helmrelease.yaml, ocirepository.yaml, [externalsecret.yaml], [pvc.yaml]
 │   │           ├── helmrelease.yaml
 │   │           ├── ocirepository.yaml   # per-app app-template OCIRepository
 │   │           ├── externalsecret.yaml  # (optional)
-│   │           └── pvc.yaml             # (optional, extra PVCs beyond the volsync one)
+│   │           └── pvc.yaml             # (optional, extra PVCs beyond the kopiur one)
 ├── components/
-│   ├── kopiur/
-│   │   ├── backup/          # SnapshotPolicy + SnapshotSchedule per app, wired via ks.yaml `components:`
-│   │   └── secret/          # kopiur-repository ExternalSecret, wired once per namespace kustomization
-│   └── volsync/             # Legacy Component (kind: Component), wired via ks.yaml `components:`
-│       ├── kustomization.yaml
-│       ├── externalsecret.yaml
-│       ├── pvc.yaml
-│       ├── replicationdestination.yaml
-│       └── replicationsource.yaml
+│   └── kopiur/
+│       ├── backup/          # PVC (populator) + Restore + SnapshotPolicy + SnapshotSchedule per app, wired via ks.yaml `components:`
+│       └── secret/          # kopiur-repository ExternalSecret, wired once per namespace kustomization
 └── flux/
     └── apps.yaml            # Root Flux Kustomization `cluster-apps`; injects HelmRelease defaults (see below)
 ```
@@ -51,9 +45,10 @@ Repo root also contains `bootstrap/` (helmfile + kustomize for pre-Flux bootstra
 - `media` - Media services (Plex, Sonarr, Radarr, Sabnzbd, Qbittorrent, etc.)
 - `o11y` - Observability (VictoriaMetrics, VictoriaLogs, Vector, Grafana operator, gatus, NUT)
 - `network` - Networking (Cilium, Envoy Gateway, external-dns, cloudflared, multus)
-- `security` - Secrets and backups (external-secrets, onepassword-connect, volsync, snapshot-controller, atuin)
+- `security` - Secrets (external-secrets, onepassword-connect, snapshot-controller, atuin)
 - `database` - Redis (redis-operator + per-app instances)
-- `rook-ceph` - Distributed storage (rook-ceph operator + cluster + ceph-csi-drivers)
+- `miroir-system` - Replicated block storage (miroir CSI: MiroirNodeGroup + StorageClasses)
+- `kopiur-system` - Backups (kopiur operator + `r2` ClusterRepository)
 - `ai` - AI tooling (toolhive, ha-mcp)
 - `misc` - Misc apps (paperless, forgejo, n8n, manyfold, stirling-pdf, invoicing)
 - `cert-manager`, `kube-system`, `openebs-system`, `renovate`, `system-upgrade`, `flux-system` - cluster infrastructure
@@ -79,7 +74,7 @@ A HelmRelease that needs different remediation opts out by carrying the label `f
 
 1. Create directory: `kubernetes/apps/{namespace}/{app}/app/`
 
-2. Create `{app}/ks.yaml` (Flux Kustomization). Wire in the volsync Component, set `namespace:` on every `dependsOn` and `sourceRef`, and provide postBuild substitution vars:
+2. Create `{app}/ks.yaml` (Flux Kustomization). Wire in the kopiur backup Component, set `namespace:` on every `dependsOn` and `sourceRef`, and provide postBuild substitution vars:
 
 ```yaml
 ---
@@ -91,18 +86,15 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
-    - ../../../../components/volsync
   targetNamespace: {namespace}
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-    - name: volsync
-      namespace: security
     - name: kopiur
       namespace: kopiur-system
+    - name: miroir-config
+      namespace: miroir-system
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/{namespace}/{app}/app
@@ -118,13 +110,13 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: {app}-config
-      VOLSYNC_CAPACITY: 1Gi
+      KOPIUR_CLAIM: {app}-config
+      KOPIUR_CAPACITY: 1Gi
       APP_UID: "1000"
       APP_GID: "1000"
 ```
 
-3. Create `app/kustomization.yaml` (lists the app's own resources; the volsync resources come from the Component in `ks.yaml`, not here):
+3. Create `app/kustomization.yaml` (lists the app's own resources; the PVC and backup resources come from the kopiur Component in `ks.yaml`, not here):
 
 ```yaml
 ---
@@ -324,12 +316,13 @@ controllers:
 
 ## Template Variables
 
-Available via `postBuild.substitute` in `ks.yaml` (consumed by the volsync Component):
+Available via `postBuild.substitute` in `ks.yaml` (consumed by the kopiur Component):
 
 - `${APP}` - Application name
-- `${VOLSYNC_CLAIM}` - PVC name for backups
-- `${VOLSYNC_CAPACITY}` - Storage size
-- `${APP_UID}` / `${APP_GID}` - User/group IDs (default: 1000)
+- `${KOPIUR_CLAIM}` - PVC name (default `${APP}`; backed up and restored via the populator)
+- `${KOPIUR_CAPACITY}` - Storage size
+- `${KOPIUR_STORAGECLASS}` / `${KOPIUR_SNAPSHOTCLASS}` - default `miroir`
+- `${APP_UID}` / `${APP_GID}` - User/group IDs the backup mover runs as; MUST match the app's runtime uid (default: 1000; root apps need `"0"` plus the namespace `kopiur.home-operations.com/privileged-movers: "true"` annotation)
 
 There are no global cluster variable ConfigMaps/Secrets in this repo; domains and network values are hardcoded per app (`*.nikola.wtf`, `10.40.0.x` LBs, `10.50.0.x` IoT).
 
@@ -342,24 +335,22 @@ There are no global cluster variable ConfigMaps/Secrets in this repo; domains an
 ## Important Notes
 
 - Never commit secret material — bootstrap secrets are plaintext YAML carrying `ref+op://` vals references (resolved from 1Password at apply time, no actual secret values), and runtime app secrets come from External Secrets + 1Password Connect
-- Backups are wired in via the kopiur/backup and volsync Kustomize Components (`components:` in `ks.yaml`), not by listing resources in `app/kustomization.yaml`; both run in parallel during the rook-ceph → miroir migration (kopiur is the go-forward system)
-- A namespace with kopiur-backed apps must include `../../components/kopiur/secret` in its `kustomization.yaml` (movers read `kopiur-repository-secret` from their own namespace); kopiur reuses the `VOLSYNC_*` postBuild vars until the volsync component is retired
+- Backups and the config PVC are wired in via the kopiur/backup Component (`components:` in `ks.yaml`), not by listing resources in `app/kustomization.yaml`; new PVCs self-populate from the latest kopia snapshot (empty when none exists)
+- A namespace with kopiur-backed apps must include `../../components/kopiur/secret` in its `kustomization.yaml` (movers read `kopiur-repository-secret` from their own namespace)
 - Use YAML anchors (`&app`, `&port`) for DRY configuration
 - Each app carries its own `ocirepository.yaml`; there is no centralized app-template OCIRepository
 - Do not repeat HelmRelease `install`/`upgrade` remediation — it is injected by `flux/apps.yaml` (opt out with label `flux.home/helm-defaults: skip`)
 - Use the canonical `bjw-s-labs` HelmRelease schema URL (not the old `bjw-s` org, which redirects)
 - Timezone is `Europe/Belgrade`
-- Standard dependencies: `rook-ceph-cluster` (ns `rook-ceph`), `volsync` (ns `security`), `external-secrets-stores` (ns `security`)
+- Standard dependencies: `miroir-config` (ns `miroir-system`), `kopiur` (ns `kopiur-system`), `external-secrets-stores` (ns `security`)
 
 ## Useful Commands
 
 ```bash
-just                         # List all recipes (modules: bootstrap, kube, talos, rook, volsync)
+just                         # List all recipes (modules: bootstrap, kube, talos)
 just kube reconcile          # Force a cluster reconcile from Git
 just kube apply-ks {ns} {app} # Apply a Kustomization locally
 just kube sync hr            # Force-sync all HelmReleases
-just volsync snapshot {ns} {app}   # Trigger a VolSync snapshot
-just volsync restore {ns} {app}    # Restore an app PVC from VolSync
 just talos render-config {node}  # Render a node's Talos machine config
 flux get ks -A               # List all Kustomizations
 ```

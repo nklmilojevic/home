@@ -7,22 +7,17 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
-    - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-    - name: volsync
-      namespace: security
     - name: kopiur
       namespace: kopiur-system
+    - name: miroir-config
+      namespace: miroir-system
     - name: openebs
       namespace: openebs-system
-    - name: volsync
-      namespace: security
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/media/sabnzbd/app
@@ -38,4 +33,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: sabnzbd-config
+      KOPIUR_CLAIM: sabnzbd-config

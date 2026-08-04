@@ -203,19 +203,17 @@ cluster:
   serviceAccount:
     key: ref+op://homecluster/talos/CLUSTER_SERVICEACCOUNT_KEY
   {% endif %}
-# --- Miroir raw volume (rook-ceph → miroir cutover) ---
-# DO NOT UNCOMMENT while rook-ceph still owns the data NVMe: the disk carries a
-# raw bluestore signature (no GPT) and Talos volume provisioning must never race
-# live OSD data. At cutover: tear down rook-ceph, `talosctl wipe disk` the data
-# NVMe on each node, then uncomment and apply. Creates partlabel `r-miroir`
-# (consumed by MiroirNodeGroup as /dev/disk/by-partlabel/r-miroir).
-# The RS1D0TSSD710 model selector matches the dedicated 1TB data NVMe on all
-# three nodes regardless of device naming (icarus003's enumerates as nvme0n1).
-# ---
-# apiVersion: v1alpha1
-# kind: RawVolumeConfig
-# name: miroir
-# provisioning:
-#   diskSelector:
-#     match: disk.model == "RS1D0TSSD710" && !system_disk
-#   minSize: 1TB
+---
+# --- Miroir raw volume ---
+# Provisions on the dedicated 1TB data NVMe (wiped of rook-ceph at cutover).
+# Creates partlabel `r-miroir`, consumed by the MiroirNodeGroup as
+# /dev/disk/by-partlabel/r-miroir. The RS1D0TSSD710 model selector matches the
+# data disk on all three nodes regardless of device naming (icarus003's
+# enumerates as nvme0n1).
+apiVersion: v1alpha1
+kind: RawVolumeConfig
+name: miroir
+provisioning:
+  diskSelector:
+    match: disk.model == "RS1D0TSSD710" && !system_disk
+  minSize: 1TB

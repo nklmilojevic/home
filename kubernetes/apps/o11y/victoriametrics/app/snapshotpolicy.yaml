@@ -24,7 +24,7 @@ spec:
   sources:
     - pvc:
         name: vmsingle-vmetrics-victoria-metrics-k8s-stack
-  volumeSnapshotClassName: csi-ceph-blockpool
+  volumeSnapshotClassName: miroir
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
 apiVersion: kopiur.home-operations.com/v1alpha1

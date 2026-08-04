@@ -7,18 +7,15 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
-    - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-    - name: volsync
-      namespace: security
     - name: kopiur
       namespace: kopiur-system
+    - name: miroir-config
+      namespace: miroir-system
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/media/qbittorrent/app
@@ -34,5 +31,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: qbittorrent-config
-      VOLSYNC_CAPACITY: 2Gi
+      KOPIUR_CLAIM: qbittorrent-config
+      KOPIUR_CAPACITY: 2Gi

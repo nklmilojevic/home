@@ -7,18 +7,15 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
-    - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-    - name: volsync
-      namespace: security
     - name: kopiur
       namespace: kopiur-system
+    - name: miroir-config
+      namespace: miroir-system
     - name: home-assistant
       namespace: home
     - name: external-secrets-stores
@@ -36,7 +33,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CLAIM: appdaemon-config
-      VOLSYNC_CAPACITY: 10Gi
+      KOPIUR_CLAIM: appdaemon-config
+      KOPIUR_CAPACITY: 10Gi
       APP_UID: "1000"
       APP_GID: "1000"
