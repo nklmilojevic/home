@@ -26,12 +26,15 @@ spec:
               repository: quay.io/nklmilojevic/petkit-local
               # Built from the nklmilojevic/petkit-local fork (containers#442),
               # carrying the D4H fixes: BLE provisioning, camera feeder IP,
-              # desiccant countdown, battery-installed. The containers pipeline
-              # strips the fork's -nkl.N prerelease suffix, so the image tag is
-              # still 1.6.0 (mutated in place) — the digest is what forces the
-              # re-pull and pins exactly the fork build. Back to a plain upstream
-              # tag once the fixes land upstream (PRs alex-so-3#11/#12).
-              tag: 1.6.0@sha256:c48944147edefe3e4cd46b3a9c1a4361cd37b2d2e3aa5f547914021ad6ef2618
+              # desiccant countdown, battery-installed, feed-clip upload chain,
+              # and (nkl.8) the cameraMultiNew schedule-object fix that finally
+              # sets camera_enable so feed snapshots + eat clips record and
+              # upload. The containers pipeline strips the fork's -nkl.N
+              # prerelease suffix, so the image tag is still 1.6.0 (mutated in
+              # place) — the digest is what forces the re-pull and pins exactly
+              # the fork build. Back to a plain upstream tag once the fixes land
+              # upstream (PRs alex-so-3#11/#12).
+              tag: 1.6.0@sha256:11c1eece3ab324bb3a3f2e8ae3d60a635ed334d5370dccfe1e46e4877c38e9d1
             args:
               # The device is handed only the api-url host for MQTT and media
               # uploads, on firmware-fixed ports (443/9000) — so this must stay
