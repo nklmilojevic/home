@@ -21,7 +21,11 @@ spec:
   storage:
     accessModes:
       - ReadWriteOnce
-    storageClassName: miroir
+    storageClassName: ceph-block
+    dataSourceRef:
+      apiGroup: volsync.backube
+      kind: ReplicationDestination
+      name: vmsingle-health-bootstrap
     resources:
       requests:
         storage: 1Gi

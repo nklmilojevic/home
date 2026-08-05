@@ -6,7 +6,6 @@ metadata:
   name: &app wyoming-onnx-asr
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
@@ -15,10 +14,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   path: ./kubernetes/apps/home/wyoming-onnx-asr/app
   prune: true
   sourceRef:
@@ -31,4 +28,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CAPACITY: 5Gi
+      VOLSYNC_CAPACITY: 5Gi

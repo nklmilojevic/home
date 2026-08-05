@@ -6,7 +6,6 @@ metadata:
   name: &app hermes
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: ai
   commonMetadata:
@@ -15,10 +14,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/ai/hermes/app
@@ -34,7 +31,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CLAIM: hermes
-      KOPIUR_CAPACITY: 10Gi
+      VOLSYNC_CLAIM: hermes
+      VOLSYNC_CAPACITY: 10Gi
       APP_UID: "10000"
       APP_GID: "10000"

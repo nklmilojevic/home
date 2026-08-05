@@ -20,8 +20,8 @@ spec:
     repository: home-assistant-media-volsync-r2
     retain:
       daily: 7
-    storageClassName: miroir-local
-    volumeSnapshotClassName: miroir
+    storageClassName: ceph-block
+    volumeSnapshotClassName: csi-ceph-blockpool
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1.json
 apiVersion: external-secrets.io/v1
@@ -46,3 +46,28 @@ spec:
   dataFrom:
     - extract:
         key: volsync-r2-template
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/volsync.backube/replicationdestination_v1alpha1.json
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: home-assistant-media-bootstrap
+spec:
+  trigger:
+    manual: restore-once
+  restic:
+    accessModes: ["ReadWriteOnce"]
+    cacheCapacity: 2Gi
+    cacheStorageClassName: openebs-hostpath
+    capacity: 5Gi
+    cleanupCachePVC: true
+    cleanupTempPVC: true
+    enableFileDeletion: true
+    copyMethod: Snapshot
+    moverSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+    repository: home-assistant-media-volsync-r2
+    storageClassName: ceph-block
+    volumeSnapshotClassName: csi-ceph-blockpool

@@ -6,7 +6,6 @@ metadata:
   name: &app unpackerr
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
@@ -15,10 +14,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   path: ./kubernetes/apps/media/unpackerr/app
   prune: true
   sourceRef:
@@ -32,4 +29,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CLAIM: unpackerr-config
+      VOLSYNC_CLAIM: unpackerr-config

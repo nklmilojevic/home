@@ -6,7 +6,6 @@ metadata:
   name: &app plex
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
@@ -22,10 +21,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: external-secrets-stores
       namespace: security
   interval: 30m
@@ -34,6 +31,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CLAIM: plex-config
-      KOPIUR_CAPACITY: 50Gi
-      KOPIUR_CACHE_CAPACITY: 10Gi
+      VOLSYNC_CLAIM: plex-config
+      VOLSYNC_CAPACITY: 50Gi
+      VOLSYNC_CACHE_CAPACITY: 10Gi

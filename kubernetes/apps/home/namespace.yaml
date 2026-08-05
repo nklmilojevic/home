@@ -6,5 +6,4 @@ metadata:
   labels:
     kustomize.toolkit.fluxcd.io/prune: disabled
   annotations:
-    kopiur.home-operations.com/privileged-movers: "true"
     volsync.backube/privileged-movers: "true"

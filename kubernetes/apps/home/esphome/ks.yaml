@@ -6,7 +6,6 @@ metadata:
   name: &app esphome
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
@@ -17,10 +16,8 @@ spec:
       namespace: network
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/home/esphome/app
@@ -36,5 +33,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CLAIM: esphome-config
-      KOPIUR_CAPACITY: 10Gi
+      VOLSYNC_CLAIM: esphome-config
+      VOLSYNC_CAPACITY: 10Gi

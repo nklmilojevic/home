@@ -20,8 +20,8 @@ spec:
     repository: gatus-volsync-r2
     retain:
       daily: 7
-    storageClassName: miroir-local
-    volumeSnapshotClassName: miroir
+    storageClassName: ceph-block
+    volumeSnapshotClassName: csi-ceph-blockpool
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1.json
 apiVersion: external-secrets.io/v1

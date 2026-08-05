@@ -73,7 +73,7 @@ spec:
       resources:
         requests:
           storage: 5Gi
-      storageClassName: miroir
+      storageClassName: ceph-block
   httpRoute:
     spec:
       hostnames:

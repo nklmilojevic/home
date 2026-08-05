@@ -5,11 +5,11 @@ metadata:
   name: petkit-local-media
 spec:
   dataSourceRef:
-    apiGroup: kopiur.home-operations.com
-    kind: Restore
-    name: petkit-local-media
+    apiGroup: volsync.backube
+    kind: ReplicationDestination
+    name: petkit-local-media-bootstrap
   accessModes: ["ReadWriteOnce"]
   resources:
     requests:
       storage: 20Gi
-  storageClassName: miroir
+  storageClassName: ceph-block
