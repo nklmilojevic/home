@@ -5,16 +5,13 @@ metadata:
   name: &app atuin
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: security
   dependsOn:
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   path: ./kubernetes/apps/security/atuin/app
   prune: true
   sourceRef:
@@ -27,7 +24,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CLAIM: atuin-config
-      KOPIUR_CAPACITY: 10Gi
+      VOLSYNC_CLAIM: atuin-config
+      VOLSYNC_CAPACITY: 10Gi
       APP_UID: "1000"
       APP_GID: "1000"

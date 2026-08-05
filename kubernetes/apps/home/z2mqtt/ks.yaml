@@ -6,7 +6,6 @@ metadata:
   name: &app z2mqtt
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
@@ -22,10 +21,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: external-secrets-stores
       namespace: security
     - name: mosquitto
@@ -36,5 +33,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CLAIM: z2mqtt-config
-      KOPIUR_CAPACITY: 2Gi
+      VOLSYNC_CLAIM: z2mqtt-config
+      VOLSYNC_CAPACITY: 2Gi

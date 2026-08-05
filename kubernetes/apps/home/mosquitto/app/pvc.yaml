@@ -5,11 +5,11 @@ metadata:
   name: mosquitto-data
 spec:
   dataSourceRef:
-    apiGroup: kopiur.home-operations.com
-    kind: Restore
-    name: mosquitto
+    apiGroup: volsync.backube
+    kind: ReplicationDestination
+    name: mosquitto-bootstrap
   accessModes: ["ReadWriteOnce"]
   resources:
     requests:
       storage: 1Gi
-  storageClassName: miroir
+  storageClassName: ceph-block

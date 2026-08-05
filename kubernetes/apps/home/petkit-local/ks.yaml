@@ -6,7 +6,6 @@ metadata:
   name: &app petkit-local
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
@@ -15,10 +14,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/home/petkit-local/app
@@ -34,7 +31,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CLAIM: petkit-local-config
-      KOPIUR_CAPACITY: 2Gi
+      VOLSYNC_CLAIM: petkit-local-config
+      VOLSYNC_CAPACITY: 2Gi
       APP_UID: "1000"
       APP_GID: "1000"
