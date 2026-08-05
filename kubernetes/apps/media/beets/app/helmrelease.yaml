@@ -143,8 +143,10 @@ spec:
             directory: /media/Music/Music/library
             library: /config/beets/musiclibrary.db
 
-            # Discogs user_token, rendered from 1Password by the ExternalSecret
-            include: secrets.yaml
+            # Discogs user_token, rendered from 1Password by the ExternalSecret.
+            # Must be a list: beets calls .sequence() on it.
+            include:
+              - secrets.yaml
 
             plugins:
               - musicbrainz
