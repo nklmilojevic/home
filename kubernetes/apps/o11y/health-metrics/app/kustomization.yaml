@@ -6,3 +6,4 @@ resources:
   - ./externalsecret.yaml
   - ./vmsingle.yaml
   - ./vmagent.yaml
+  - ./replicationsource.yaml

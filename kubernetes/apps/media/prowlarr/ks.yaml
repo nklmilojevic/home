@@ -7,11 +7,14 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
+    - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: volsync
+      namespace: security
     - name: kopiur
       namespace: kopiur-system
     - name: miroir-config

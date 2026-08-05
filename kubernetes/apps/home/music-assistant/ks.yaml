@@ -7,6 +7,7 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
+    - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
     labels:
@@ -14,6 +15,8 @@ spec:
   dependsOn:
     - name: multus-config
       namespace: network
+    - name: volsync
+      namespace: security
     - name: kopiur
       namespace: kopiur-system
     - name: miroir-config
