@@ -21,6 +21,11 @@ spec:
   retention:
     keepLatest: 3
     keepDaily: 7
+  staging:
+    # 36 policies fire in the same midnight hour; under concurrent DRBD
+    # lockstep snapshots (or a post-reboot resync) staging can exceed the
+    # 10m default and fail the whole backup.
+    timeout: 30m
   sources:
     - pvc:
         name: "${KOPIUR_CLAIM:-${APP}}"
