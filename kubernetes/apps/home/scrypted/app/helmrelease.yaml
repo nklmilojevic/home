@@ -11,8 +11,6 @@ spec:
     name: scrypted
   values:
     defaultPodOptions:
-      nodeSelector:
-        kubernetes.io/hostname: icarus003
       resourceClaims:
         - name: gpu
           resourceClaimTemplateName: scrypted
@@ -90,12 +88,6 @@ spec:
                 subPath: cache
               - path: /.npm
                 subPath: npm-cache
-      usb:
-        type: hostPath
-        hostPath: /dev/bus/usb
-        hostPathType: Directory
-        globalMounts:
-          - path: /dev/bus/usb
 
     route:
       app:
