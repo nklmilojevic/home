@@ -46,12 +46,17 @@ spec:
             # Upstream's entrypoint starts as root only to remap its beetle user to
             # USER_ID/GROUP_ID; beetle is already 1000:1000 in the image and owns
             # /config, /logs and /repo, so launch the server directly as 1000 instead.
+            # entrypoint_user_scripts.sh is upstream's extension point: it installs
+            # /config/requirements.txt (the discogs client) into the venv on boot.
             command:
               - /bin/bash
               - -c
-              - cd /repo && source /venv/bin/activate && ./entrypoint.sh
+              - cd /repo && source /venv/bin/activate && ./entrypoint_user_scripts.sh && ./entrypoint.sh
             env:
               TZ: "Europe/Belgrade"
+              # Normally set by the `su beetle` we skip; uv's cache and the web
+              # terminal's tmux both need it.
+              HOME: /home/beetle
             probes:
               liveness:
                 enabled: true
@@ -113,12 +118,18 @@ spec:
     configMaps:
       config:
         data:
+          requirements.txt: |-
+            python3-discogs-client>=2.3.15
           beets.yaml: |-
             directory: /media/Music/Music/library
             library: /config/beets/musiclibrary.db
 
+            # Discogs user_token, rendered from 1Password by the ExternalSecret
+            include: secrets.yaml
+
             plugins:
               - musicbrainz
+              - discogs
               - info
               - fetchart
               - ftintitle
@@ -182,6 +193,16 @@ spec:
             readOnly: true
           - path: /config/beets-flask/config.yaml
             subPath: beets-flask.yaml
+            readOnly: true
+          - path: /config/requirements.txt
+            subPath: requirements.txt
+            readOnly: true
+      secret-files:
+        type: secret
+        name: beets-secret
+        globalMounts:
+          - path: /config/beets/secrets.yaml
+            subPath: secrets.yaml
             readOnly: true
       media:
         type: custom
