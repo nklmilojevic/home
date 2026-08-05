@@ -8,5 +8,5 @@ spec:
   policyRef:
     name: "${APP}"
   schedule:
-    cron: "H 0 * * *"
+    cron: "H * * * *"
     timezone: Europe/Belgrade
