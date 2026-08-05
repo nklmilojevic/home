@@ -19,6 +19,7 @@ resources:
   - ./qui/ks.yaml
   - ./sabnzbd/ks.yaml
   - ./slskd/ks.yaml
+  - ./beets/ks.yaml
   - ./unpackerr/ks.yaml
   - ./profilarr/ks.yaml
   - ./seerr/ks.yaml
