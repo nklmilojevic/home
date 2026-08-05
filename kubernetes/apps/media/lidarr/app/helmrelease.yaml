@@ -1,0 +1,103 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: lidarr
+  namespace: media
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: lidarr
+
+  values:
+    controllers:
+      lidarr:
+        replicas: 1
+
+        containers:
+          app:
+            image:
+              repository: quay.io/nklmilojevic/lidarr
+              tag: 3.1.3.4987@sha256:8a0f2c148e55b05859b6ada073795048cb8f99ee3f733a046fa85389c22934f2
+            env:
+              TZ: "Europe/Belgrade"
+              PUID: "1000"
+              PGID: "1000"
+            probes:
+              liveness:
+                enabled: true
+                spec:
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: 8686
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
+            resources:
+              requests:
+                cpu: 20m
+                memory: 384Mi
+              limits:
+                memory: 2Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        controller: lidarr
+        ports:
+          http:
+            port: &port 8686
+
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.nikola.wtf"
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: lidarr
+                port: *port
+
+    persistence:
+      config:
+        existingClaim: "{{ .Release.Name }}-config"
+      tmp:
+        type: emptyDir
+      media:
+        enabled: true
+        type: custom
+        volumeSpec:
+          nfs:
+            server: "10.5.0.10"
+            path: "/var/nfs/shared/media"
+        globalMounts:
+          - path: "/media"
