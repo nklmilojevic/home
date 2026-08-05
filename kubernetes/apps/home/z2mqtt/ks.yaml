@@ -7,6 +7,7 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur/backup
+    - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
     labels:
@@ -19,6 +20,8 @@ spec:
     namespace: flux-system
   wait: false
   dependsOn:
+    - name: volsync
+      namespace: security
     - name: kopiur
       namespace: kopiur-system
     - name: miroir-config
