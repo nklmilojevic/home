@@ -23,9 +23,29 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
+          # kubelet creates /config/beets and /config/beets-flask as root:root to host the
+          # nested config.yaml mounts, and fsGroup only covers volume content that already
+          # exists at mount time. Both dirs need to be writable by the app: beets puts its
+          # library db and state in the first, beets-flask its sqlite db in the second.
+          # Not recursive — the mounted config files themselves are read-only.
+          01-fix-permissions:
+            image:
+              repository: docker.io/library/busybox
+              tag: 1.37.0
+            command:
+              - sh
+              - -c
+              - |
+                set -eu
+                mkdir -p /config/beets /config/beets-flask
+                chown 1000:1000 /config/beets /config/beets-flask
+            securityContext:
+              runAsUser: 0
+              runAsGroup: 0
+              runAsNonRoot: false
           # Seed the existing 19k-track library on first start; the db on the share
           # already carries paths rewritten from the old /srv/dev-disk-by-label-storage01 root.
-          seed-library:
+          02-seed-library:
             image:
               repository: docker.io/library/busybox
               tag: 1.37.0
@@ -35,7 +55,6 @@ spec:
               - |
                 set -eu
                 if [ ! -f /config/beets/musiclibrary.db ]; then
-                  mkdir -p /config/beets
                   cp /media/Music/Music/musiclibrary.beets-flask.db /config/beets/musiclibrary.db
                 fi
         containers:
