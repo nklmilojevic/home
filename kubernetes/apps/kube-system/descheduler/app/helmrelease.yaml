@@ -26,14 +26,6 @@ spec:
           pluginConfig:
             - name: DefaultEvictor
               args:
-                # Kopiur backup/restore movers are one-shot Jobs; a mid-restore
-                # eviction fails the whole Restore (LowNodeUtilization killed
-                # the 50Gi plex restore repeatedly during the miroir cutover).
-                labelSelector:
-                  matchExpressions:
-                    - key: app.kubernetes.io/managed-by
-                      operator: NotIn
-                      values: ["kopiur"]
                 podProtections:
                   defaultDisabled:
                     - FailedBarePods

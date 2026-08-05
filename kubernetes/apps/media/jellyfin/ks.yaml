@@ -6,7 +6,6 @@ metadata:
   name: &app jellyfin
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
@@ -22,10 +21,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: external-secrets-stores
       namespace: security
   interval: 30m
@@ -34,5 +31,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CLAIM: jellyfin-config
-      KOPIUR_CAPACITY: 20Gi
+      VOLSYNC_CLAIM: jellyfin-config
+      VOLSYNC_CAPACITY: 20Gi

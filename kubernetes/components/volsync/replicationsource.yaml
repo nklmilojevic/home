@@ -5,14 +5,14 @@ kind: ReplicationSource
 metadata:
   name: ${APP}-r2
 spec:
-  sourcePVC: "${KOPIUR_CLAIM:-${APP}}"
+  sourcePVC: "${VOLSYNC_CLAIM:-${APP}}"
   trigger:
     schedule: "0 0 * * *"
   restic:
     cacheAccessModes:
       - "${VOLSYNC_CACHE_ACCESSMODES:-ReadWriteOnce}"
-    cacheCapacity: "${KOPIUR_CACHE_CAPACITY:-1Gi}"
-    cacheStorageClassName: "${KOPIUR_CACHE_STORAGECLASS:-openebs-hostpath}"
+    cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:-1Gi}"
+    cacheStorageClassName: "${VOLSYNC_CACHE_SNAPSHOTCLASS:-openebs-hostpath}"
     copyMethod: Snapshot
     moverSecurityContext:
       runAsUser: ${APP_UID:-1000}
@@ -22,5 +22,5 @@ spec:
     repository: ${APP}-volsync-r2
     retain:
       daily: 7
-    storageClassName: "${VOLSYNC_STORAGECLASS:-miroir-local}"
-    volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-miroir}"
+    storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
+    volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}"

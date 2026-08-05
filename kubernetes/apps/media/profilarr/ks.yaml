@@ -6,7 +6,6 @@ metadata:
   name: &app profilarr
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
@@ -15,10 +14,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   path: ./kubernetes/apps/media/profilarr/app
   prune: true
   sourceRef:
@@ -31,4 +28,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CAPACITY: 2Gi
+      VOLSYNC_CAPACITY: 2Gi

@@ -6,7 +6,6 @@ metadata:
   name: &app seerr
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: media
   commonMetadata:
@@ -15,10 +14,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   path: ./kubernetes/apps/media/seerr/app
   prune: true
   sourceRef:
@@ -32,5 +29,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CLAIM: seerr-config
-      KOPIUR_CAPACITY: 15Gi
+      VOLSYNC_CLAIM: seerr-config
+      VOLSYNC_CAPACITY: 15Gi

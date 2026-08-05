@@ -9,7 +9,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: miroir
+  storageClassName: ceph-block
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -17,12 +17,12 @@ metadata:
   name: home-assistant-media
 spec:
   dataSourceRef:
-    apiGroup: kopiur.home-operations.com
-    kind: Restore
-    name: home-assistant-media
+    apiGroup: volsync.backube
+    kind: ReplicationDestination
+    name: home-assistant-media-bootstrap
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
-  storageClassName: miroir
+  storageClassName: ceph-block

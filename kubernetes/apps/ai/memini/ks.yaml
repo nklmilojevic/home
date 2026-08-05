@@ -6,7 +6,6 @@ metadata:
   name: &app memini
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: ai
   commonMetadata:
@@ -15,10 +14,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: external-secrets-stores
       namespace: security
     - name: llmkube-models
@@ -36,5 +33,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CLAIM: memini
-      KOPIUR_CAPACITY: 2Gi
+      VOLSYNC_CLAIM: memini
+      VOLSYNC_CAPACITY: 2Gi

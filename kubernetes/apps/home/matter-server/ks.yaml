@@ -6,7 +6,6 @@ metadata:
   name: &app matter-server
 spec:
   components:
-    - ../../../../components/kopiur/backup
     - ../../../../components/volsync
   targetNamespace: home
   commonMetadata:
@@ -17,10 +16,8 @@ spec:
       namespace: network
     - name: volsync
       namespace: security
-    - name: kopiur
-      namespace: kopiur-system
-    - name: miroir-config
-      namespace: miroir-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/home/matter-server/app
@@ -36,7 +33,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KOPIUR_CLAIM: matter-server-data
-      KOPIUR_CAPACITY: 1Gi
+      VOLSYNC_CLAIM: matter-server-data
+      VOLSYNC_CAPACITY: 1Gi
       APP_UID: "0"
       APP_GID: "0"
