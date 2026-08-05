@@ -14,6 +14,11 @@ spec:
     # Rebuild a dead node's replica legs on the spare node after 1h
     # (safety-gated: single dead node, clean survivors, no snapshot pins).
     autoEvictAfter: 1h
+    # Convert a diskless primary that has settled on a node for 15m into a
+    # local diskful replica: stops paying network I/O AND makes the volume
+    # snapshottable again — CSI snapshots silently hang on diskless primaries
+    # (8/36 backups failed this way after failover-test pod shuffling).
+    autoDiskfulAfter: 15m
     drbd:
       # DRBD activity-log extents (default 1237): fewer hot-extent metadata
       # updates under scattered random writes, longer post-crash resync.
