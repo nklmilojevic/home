@@ -20,6 +20,7 @@ spec:
     name: r2
   retention:
     keepLatest: 3
+    keepHourly: 24
     keepDaily: 7
   staging:
     # 36 policies fire in the same midnight hour; under concurrent DRBD
