@@ -55,13 +55,6 @@ machine:
       - net.ifnames=1
     image: factory.talos.dev/installer/{{ ENV.SCHEMATIC }}:{{ ENV.TALOS_VERSION }}
     wipe: false
-  kernel:
-    modules:
-      - name: dm_thin_pool # Miroir lvmthin backend
-      - name: drbd # Miroir replication (from the siderolabs/drbd extension)
-        parameters:
-          - usermode_helper=disabled
-      - name: drbd_transport_tcp
   kubelet:
     defaultRuntimeSeccompProfileEnabled: true
     disableManifestsDirectory: true
@@ -70,7 +63,7 @@ machine:
         - net.ipv6.conf.*
       imageGCHighThresholdPercent: 70
       imageGCLowThresholdPercent: 55
-      # Miroir/DRBD needs movers and replicas demoted cleanly on shutdown
+      # Give workloads (ceph OSDs, movers) time to stop cleanly on reboot
       shutdownGracePeriod: 90s
       shutdownGracePeriodCriticalPods: 60s
     extraMounts:
