@@ -20,7 +20,7 @@ spec:
     repository: home-assistant-media-volsync-r2
     retain:
       daily: 7
-    storageClassName: miroir
+    storageClassName: miroir-local
     volumeSnapshotClassName: miroir
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1.json

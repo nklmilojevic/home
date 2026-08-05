@@ -22,7 +22,7 @@ spec:
     repository: ${APP}-volsync-r2
     retain:
       daily: 7
-    storageClassName: "${VOLSYNC_STORAGECLASS:-miroir}"
+    storageClassName: "${VOLSYNC_STORAGECLASS:-miroir-local}"
     volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-miroir}"
     moverAffinity:
       podAntiAffinity:
