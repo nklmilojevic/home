@@ -107,18 +107,11 @@ spec:
       storage:
         useAllNodes: true
         useAllDevices: false
+        # Data disks are all the same model; match by stable by-id path since
+        # /dev/nvmeXnY enumeration shifts across reboots (icarus003 is nvme0n1)
+        devicePathFilter: "^/dev/disk/by-id/nvme-RS1D0TSSD710_.*"
         config:
           osdsPerDevice: "1"
-        nodes:
-          - name: "icarus001"
-            devices:
-              - name: "/dev/nvme1n1"
-          - name: "icarus002"
-            devices:
-              - name: "/dev/nvme1n1"
-          - name: "icarus003"
-            devices:
-              - name: "/dev/nvme1n1"
     cephBlockPools:
       - name: ceph-blockpool
         spec:
