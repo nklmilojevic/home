@@ -7,6 +7,10 @@ metadata:
   namespace: kopiur-system
 spec:
   interval: 5m
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
   chartRef:
     kind: OCIRepository
     name: kopiur

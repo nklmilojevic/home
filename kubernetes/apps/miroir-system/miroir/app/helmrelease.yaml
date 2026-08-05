@@ -7,6 +7,10 @@ metadata:
   namespace: miroir-system
 spec:
   interval: 5m
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
   chartRef:
     kind: OCIRepository
     name: miroir
