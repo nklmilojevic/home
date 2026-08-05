@@ -1,0 +1,201 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: beets
+  namespace: media
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: beets
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    controllers:
+      beets:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          # Seed the existing 19k-track library on first start; the db on the share
+          # already carries paths rewritten from the old /srv/dev-disk-by-label-storage01 root.
+          seed-library:
+            image:
+              repository: docker.io/library/busybox
+              tag: 1.37.0
+            command:
+              - sh
+              - -c
+              - |
+                set -eu
+                if [ ! -f /config/beets/musiclibrary.db ]; then
+                  mkdir -p /config/beets
+                  cp /media/Music/Music/musiclibrary.beets-flask.db /config/beets/musiclibrary.db
+                fi
+        containers:
+          app:
+            image:
+              repository: docker.io/pspitzner/beets-flask
+              tag: v2.0.0-rc5@sha256:b7f063859fb84df726733fb014629f1c9ef66c1f40f10951699088aebaac0994
+            # Upstream's entrypoint starts as root only to remap its beetle user to
+            # USER_ID/GROUP_ID; beetle is already 1000:1000 in the image and owns
+            # /config, /logs and /repo, so launch the server directly as 1000 instead.
+            command:
+              - /bin/bash
+              - -c
+              - cd /repo && source /venv/bin/activate && ./entrypoint.sh
+            env:
+              TZ: "Europe/Belgrade"
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: &port 5001
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: *port
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: *port
+                  failureThreshold: 60
+                  periodSeconds: 10
+            resources:
+              requests:
+                cpu: 50m
+                memory: 512Mi
+              limits:
+                memory: 4Gi
+            # No readOnlyRootFilesystem: the bundled redis writes its dump into
+            # /repo/backend and the entrypoint creates directories outside /config.
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+    service:
+      app:
+        controller: beets
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.nikola.wtf"
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: beets
+                port: *port
+    configMaps:
+      config:
+        data:
+          beets.yaml: |-
+            directory: /media/Music/Music/library
+            library: /config/beets/musiclibrary.db
+
+            plugins:
+              - musicbrainz
+              - info
+              - fetchart
+              - ftintitle
+              - fromfilename
+              - edit
+              - duplicates
+              - missing
+              - mbsync
+
+            import:
+              copy: yes
+              move: no
+              write: yes
+              detail: yes
+              duplicate_action: ask
+              log: /config/beets/import.log
+
+            # Reconstructed from the existing library layout, e.g.
+            # "16 Horsepower/(1997) Low Estate/11 Dead Run.mp3"
+            paths:
+              default: $albumartist/%if{$year,($year) }$album/$track $title
+              comp: $albumartist/%if{$year,($year) }$album/$track $title
+              singleton: $artist/$title
+
+            asciify_paths: no
+            per_disc_numbering: no
+
+            fetchart:
+              auto: yes
+              cover_names:
+                - cover
+                - front
+                - folder
+
+            ui:
+              color: yes
+          beets-flask.yaml: |-
+            gui:
+              num_preview_workers: 4
+              library:
+                artist_separators: [",", ";", "&"]
+              terminal:
+                start_path: /media/Download/soulseek/complete
+              inbox:
+                folders:
+                  soulseek:
+                    name: Soulseek
+                    path: /media/Download/soulseek/complete
+                    autotag: "preview"
+    persistence:
+      config:
+        existingClaim: beets-config
+        globalMounts:
+          - path: /config
+      config-files:
+        type: configMap
+        identifier: config
+        globalMounts:
+          - path: /config/beets/config.yaml
+            subPath: beets.yaml
+            readOnly: true
+          - path: /config/beets-flask/config.yaml
+            subPath: beets-flask.yaml
+            readOnly: true
+      media:
+        type: custom
+        volumeSpec:
+          nfs:
+            server: "10.5.0.10"
+            path: "/var/nfs/shared/media"
+        globalMounts:
+          - path: /media
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /logs
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
