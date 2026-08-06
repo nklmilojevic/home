@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+# Replaces the vendored kube-prometheus alertmanager group (disabled in the HR),
+# whose rules hardcode job="alertmanager-main"/namespace="monitoring" and the
+# clustering rules that never apply to a single-replica alertmanager.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: alertmanager-rules
+spec:
+  groups:
+    - name: alertmanager.rules
+      rules:
+        - alert: AlertmanagerFailedReload
+          expr: |-
+            max_over_time(alertmanager_config_last_reload_successful{job="vmalertmanager-vmetrics-victoria-metrics-k8s-stack"}[5m]) == 0
+          for: 10m
+          annotations:
+            summary: >-
+              Alertmanager failed to reload its configuration
+          labels:
+            severity: critical
+        - alert: AlertmanagerFailedToSendAlerts
+          expr: |-
+            rate(alertmanager_notifications_failed_total{job="vmalertmanager-vmetrics-victoria-metrics-k8s-stack"}[5m])
+            /
+            rate(alertmanager_notifications_total{job="vmalertmanager-vmetrics-victoria-metrics-k8s-stack"}[5m])
+            > 0.01
+          for: 5m
+          annotations:
+            summary: >-
+              Alertmanager is failing to send {{ $labels.integration }} notifications
+          labels:
+            severity: warning

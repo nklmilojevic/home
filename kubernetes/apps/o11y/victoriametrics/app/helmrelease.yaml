@@ -84,6 +84,24 @@ spec:
     grafana:
       enabled: false
 
+    kube-state-metrics:
+      # Expose KSM's own health metrics (kube_state_metrics_list_total etc.) so
+      # the KubeStateMetrics* alerts can actually see them — if KSM breaks, every
+      # kube_*-based alert goes blind with it.
+      selfMonitor:
+        enabled: true
+      vmScrape:
+        spec:
+          endpoints:
+            # Overriding the list replaces it: keep the chart's default endpoint.
+            - port: http
+              honorLabels: true
+              metricRelabelConfigs:
+                - action: labeldrop
+                  regex: (uid|container_id|image_id)
+            - port: metrics
+              honorLabels: true
+
     victoria-metrics-operator:
       enabled: true
       operator:
@@ -134,12 +152,37 @@ spec:
         KubeClientCertificateExpiration:
           spec:
             for: 1h
+        # Talos has no systemd and no mdraid — these can never fire.
+        NodeSystemdServiceFailed:
+          create: false
+        NodeSystemdServiceCrashlooping:
+          create: false
+        NodeRAIDDegraded:
+          create: false
+        NodeRAIDDiskFailure:
+          create: false
+        # Talos etcd doesn't expose grpc_server_handling_seconds histograms.
+        etcdGRPCRequestsSlow:
+          create: false
+        # kubelet serverTLSBootstrap is off — no cert renewal metrics exist.
+        KubeletServerCertificateRenewalErrors:
+          create: false
+        # Stream aggregation is not used; vm_streamaggr_* metrics never exist.
+        StreamAggrFlushTimeout:
+          create: false
+        StreamAggrDedupFlushTimeout:
+          create: false
 
       # kube-scheduler.rules are histogram-quantile recordings that yield 0 samples
       # whenever the cluster is idle (no pod scheduling), repeatedly tripping
       # RecordingRulesNoData. They only feed the kube-scheduler Grafana dashboard.
       groups:
         kubeScheduler:
+          enabled: false
+        # Vendored kube-prometheus rules hardcode job="alertmanager-main",
+        # namespace="monitoring" — can never match our vmalertmanager in o11y.
+        # Replaced by alertmanager-prometheusrule.yaml with correct selectors.
+        alertmanager:
           enabled: false
 
     alertmanager:
