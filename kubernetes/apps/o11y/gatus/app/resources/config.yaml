@@ -4,7 +4,54 @@ connectivity:
     target: 1.1.1.1:53
     interval: 1m
 
+# Gatus alerts Telegram directly — independent of the vmalert->alertmanager
+# chain, so it still fires when the monitoring stack itself is down.
+alerting:
+  telegram:
+    token: "${GATUS_TELEGRAM_TOKEN}"
+    id: "104243855"
+    default-alert:
+      enabled: true
+      failure-threshold: 3
+      success-threshold: 2
+      send-on-resolved: true
+
 endpoints:
+  - name: vmsingle-vmetrics
+    group: monitoring
+    url: http://vmsingle-vmetrics-victoria-metrics-k8s-stack.o11y.svc.cluster.local:8428/health
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: telegram
+
+  - name: vmsingle-health
+    group: monitoring
+    url: http://vmsingle-health.o11y.svc.cluster.local:8429/health
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: telegram
+
+  - name: vmalert
+    group: monitoring
+    url: http://vmalert-vmetrics-victoria-metrics-k8s-stack.o11y.svc.cluster.local:8080/health
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: telegram
+
+  - name: alertmanager
+    group: monitoring
+    url: http://vmalertmanager-vmetrics-victoria-metrics-k8s-stack.o11y.svc.cluster.local:9093/-/healthy
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: telegram
   - name: Cloudflare
     group: connectivity
     url: icmp://1.1.1.1

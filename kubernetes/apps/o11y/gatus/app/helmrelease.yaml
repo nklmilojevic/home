@@ -16,6 +16,12 @@ spec:
       delayStartSeconds: "5"
       env:
         TZ: Europe/Belgrade
+      extraEnv:
+        - name: GATUS_TELEGRAM_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: vmalert-telegram-token
+              key: token
     sidecar:
       kinds:
         httproute:
