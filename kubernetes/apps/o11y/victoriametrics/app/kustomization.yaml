@@ -6,5 +6,6 @@ resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
   - ./vmalertmanager.yaml
+  - ./alertmanager-prometheusrule.yaml
   - ./httproute.yaml
   - ./replicationsource.yaml
