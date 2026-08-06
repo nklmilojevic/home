@@ -7,5 +7,4 @@ resources:
   - ./externalsecret.yaml
   - ./vmalertmanager.yaml
   - ./alertmanager-prometheusrule.yaml
-  - ./httproute.yaml
   - ./replicationsource.yaml
