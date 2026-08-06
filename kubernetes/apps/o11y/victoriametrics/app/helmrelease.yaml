@@ -167,6 +167,10 @@ spec:
         # kubelet serverTLSBootstrap is off — no cert renewal metrics exist.
         KubeletServerCertificateRenewalErrors:
           create: false
+        # This KSM version no longer exports kube_state_metrics_list_total
+        # (list accounting folded into watch_total, which WatchErrors covers).
+        KubeStateMetricsListErrors:
+          create: false
         # Stream aggregation is not used; vm_streamaggr_* metrics never exist.
         StreamAggrFlushTimeout:
           create: false
@@ -188,6 +192,14 @@ spec:
     alertmanager:
       enabled: true
       annotations: {}
+      route:
+        enabled: true
+        parentRefs: &route-parent
+          - name: internal
+            namespace: network
+            sectionName: https
+        hostnames:
+          - alertmanager.nikola.wtf
       # spec for VMAlertmanager crd
       # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmalertmanagerspec
       spec:
@@ -288,6 +300,11 @@ spec:
     vmalert:
       enabled: true
       remoteWriteVMAgent: false
+      route:
+        enabled: true
+        parentRefs: *route-parent
+        hostnames:
+          - vmalert.nikola.wtf
       # spec for VMAlert crd
       # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmalertspec
       spec:
@@ -297,6 +314,12 @@ spec:
       ingress:
         enabled: false
     vmsingle:
+      route:
+        enabled: true
+        parentRefs: *route-parent
+        hostnames:
+          - vm.nikola.wtf
+          - vmsingle.nikola.wtf
       # Chart default requests 500Mi but the working set sits at ~1.3-1.5Gi;
       # right-size so the scheduler accounts for what vmsingle actually uses.
       spec:
@@ -308,6 +331,11 @@ spec:
             memory: 3Gi
     vmagent:
       enabled: true
+      route:
+        enabled: true
+        parentRefs: *route-parent
+        hostnames:
+          - vmagent.nikola.wtf
       # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec
       spec:
         # The busiest apiserver (icarus002) emits ~17.5MB of /metrics, over the
