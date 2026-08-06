@@ -5,4 +5,3 @@ kind: Kustomization
 resources:
   - ./smartctl-exporter/ks.yaml
   - ./blackbox-exporter/ks.yaml
-  - ./mqtt-exporter/ks.yaml
