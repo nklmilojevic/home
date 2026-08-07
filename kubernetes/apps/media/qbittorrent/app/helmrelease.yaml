@@ -24,18 +24,44 @@ spec:
 
             env:
               TZ: "Europe/Belgrade"
+              QBT_WEBUI_PORT: &port 8080
+              QBT_TORRENTING_PORT: &torrentPort 50413
+            probes:
+              liveness:
+                enabled: true
+                spec:
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v2/app/version
+                    port: *port
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
             resources:
               requests:
                 cpu: 20m
-                memory: 256Mi
+                memory: 512Mi
               limits:
-                memory: 1Gi
+                memory: 4Gi
             securityContext:
               allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
               capabilities:
                 drop:
                   - ALL
         pod:
+          terminationGracePeriodSeconds: 300
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -46,17 +72,21 @@ spec:
     service:
       app:
         controller: qbittorrent
+        forceRename: "{{ .Release.Name }}"
+        primary: true
+        ports:
+          http:
+            port: *port
+      bittorrent:
+        controller: qbittorrent
         type: LoadBalancer
         annotations:
           lbipam.cilium.io/ips: "10.40.0.9"
-        externalTrafficPolicy: Cluster
+        externalTrafficPolicy: Local
         ports:
-          http:
-            port: &port 8080
           bittorrent-tcp:
-            port: 50413
+            port: *torrentPort
             protocol: TCP
-            targetPort: 50413
 
     route:
       app:
@@ -74,6 +104,8 @@ spec:
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}-config"
+      tmp:
+        type: emptyDir
       media:
         enabled: true
         type: custom
