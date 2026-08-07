@@ -129,7 +129,10 @@ spec:
             - discard
           parameters:
             imageFormat: "2"
-            imageFeatures: layering,exclusive-lock,object-map,fast-diff
+            # layering ONLY. exclusive-lock+object-map+fast-diff caused ongoing
+            # data corruption around snapshot lock transitions with krbd
+            # (2026-08-05..07 incident) — do not re-enable.
+            imageFeatures: layering
             csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
             csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
             csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
