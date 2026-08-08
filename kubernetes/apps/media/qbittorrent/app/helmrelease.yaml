@@ -61,6 +61,8 @@ spec:
                 drop:
                   - ALL
         pod:
+          annotations:
+            descheduler.alpha.kubernetes.io/prefer-no-eviction: "true"
           terminationGracePeriodSeconds: 300
           securityContext:
             runAsUser: 1000

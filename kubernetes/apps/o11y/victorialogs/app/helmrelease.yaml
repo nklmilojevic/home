@@ -12,6 +12,8 @@ spec:
   values:
     server:
       enabled: true
+      podAnnotations:
+        descheduler.alpha.kubernetes.io/prefer-no-eviction: "true"
       extraArgs:
         envflag.enable: "true"
         envflag.prefix: VM_
