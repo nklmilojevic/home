@@ -46,6 +46,7 @@ spec:
 
         pod:
           annotations:
+            descheduler.alpha.kubernetes.io/prefer-no-eviction: "true"
             k8s.v1.cni.cncf.io/networks: |
               [{
                 "name":"multus-iot",

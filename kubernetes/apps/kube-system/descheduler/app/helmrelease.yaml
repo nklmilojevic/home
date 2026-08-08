@@ -26,6 +26,10 @@ spec:
           pluginConfig:
             - name: DefaultEvictor
               args:
+                # Hard-exclude pods annotated with
+                # descheduler.alpha.kubernetes.io/prefer-no-eviction
+                # (stateful singletons like home-assistant).
+                noEvictionPolicy: Mandatory
                 podProtections:
                   defaultDisabled:
                     - FailedBarePods
@@ -39,14 +43,20 @@ spec:
                 # thresholds. On a 3-node cluster the old 20/20/20 was
                 # unreachable (every node runs >22 pods and >30% memory), so
                 # the plugin never found an eviction target and did nothing.
+                # targetThresholds must sit well above steady-state actual
+                # usage (~65% memory): kube-scheduler places pods by requests,
+                # so a tight target makes evicted pods land back on the same
+                # node and loop forever (evicted HA & co every 5m, 2026-08-08).
                 thresholds:
                   cpu: 30
                   memory: 45
                   pods: 60
                 targetThresholds:
-                  cpu: 60
-                  memory: 60
+                  cpu: 70
+                  memory: 75
                   pods: 80
+                evictionLimits:
+                  node: 3
             - name: RemoveFailedPods
               args:
                 reasons:
