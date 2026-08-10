@@ -33,10 +33,11 @@ spec:
       targets:
         telegram:
           apprise:
-            # apprise-go accepts "tgram://{botID}/{tokenHash}/{chatID}": only the numeric
-            # bot ID sits in the host, so split the token's ":" into a "/" path separator.
+            # apprise-go >=0.3.0 requires the full "botID:hash" token in the host field, but
+            # chaski's url.Parse rejects a raw ":" there — carry the token as userinfo on the
+            # canonical tgram.local authority instead, which both parsers accept.
             # ?preview=true enables Telegram web-page previews (apprise-go disables them by default).
-            url: tgram://{{ env "TELEGRAM_BOT_TOKEN" | replace ":" "/" }}/{{ env "TELEGRAM_CHAT_ID" }}?preview=true
+            url: tgram://{{ env "TELEGRAM_BOT_TOKEN" }}@tgram.local/{{ env "TELEGRAM_CHAT_ID" }}?preview=true
       routes:
         # POST target for Radarr:  http://chaski.media.svc.cluster.local:8080/hooks/radarr
         # eventTypes: Grab, Download (import), Download+isUpgrade, Rename, MovieAdded, ManualInteractionRequired
