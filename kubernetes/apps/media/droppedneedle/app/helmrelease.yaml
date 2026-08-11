@@ -99,10 +99,8 @@ spec:
         existingClaim: "{{ .Release.Name }}-config"
         globalMounts:
           - path: /app/config
-      cache:
-        type: emptyDir
-        globalMounts:
           - path: /app/cache
+            subPath: cache
       tmp:
         type: emptyDir
       media:
