@@ -19,8 +19,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/headphones
-              tag: 0.6.4
-              pullPolicy: Always
+              tag: 0.6.4@sha256:8d9ccf1bad66a997de185996d7ce9c007ae7303731e6b0d351accaca0743beab
 
             env:
               TZ: "Europe/Belgrade"
