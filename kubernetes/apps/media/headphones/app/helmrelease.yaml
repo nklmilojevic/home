@@ -23,6 +23,7 @@ spec:
 
             env:
               TZ: "Europe/Belgrade"
+              HOME: /config
             probes:
               liveness:
                 enabled: true
