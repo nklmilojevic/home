@@ -51,8 +51,6 @@ machine:
         rsize=1048576
         wsize=1048576
   install:
-    extraKernelArgs:
-      - net.ifnames=1
     image: factory.talos.dev/installer/{{ ENV.SCHEMATIC }}:{{ ENV.TALOS_VERSION }}
     wipe: false
   kubelet:
