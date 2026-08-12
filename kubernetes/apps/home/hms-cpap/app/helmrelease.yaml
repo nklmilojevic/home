@@ -1,0 +1,63 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hms-cpap
+  namespace: home
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: hms-cpap
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    controllers:
+      hms-cpap:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/hms-homelab/hms-cpap
+              tag: latest@sha256:e4d67b0d9354ccb0d598d78e1fe892b9617301c651b5ad3318214e1614798e31
+            env:
+              TZ: "Europe/Belgrade"
+              WEB_PORT: &port 8893
+              MQTT_BROKER: "mosquitto.home.svc.cluster.local"
+              MQTT_PORT: "1883"
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+    service:
+      app:
+        controller: hms-cpap
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - cpap.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: hms-cpap
+                port: *port
+    persistence:
+      config:
+        existingClaim: hms-cpap-config
+        globalMounts:
+          - path: /config
+            subPath: config
+          - path: /data
+            subPath: data
