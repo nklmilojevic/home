@@ -19,3 +19,4 @@ resources:
   - ./petkit-local/ks.yaml
   - ./appdaemon/ks.yaml
   - ./asterisk/ks.yaml
+  - ./hms-cpap/ks.yaml
