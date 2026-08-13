@@ -27,8 +27,16 @@ spec:
                 cpu: 10m
                 memory: 32Mi
             image:
-              repository: ghcr.io/hms-homelab/hms-cpap
-              tag: latest@sha256:e4d67b0d9354ccb0d598d78e1fe892b9617301c651b5ad3318214e1614798e31
+              repository: quay.io/nklmilojevic/hms-cpap
+              # Built from the nklmilojevic/hms-cpap fork (containers#471),
+              # carrying the multi-EVE sidecar fix (upstream hms-cpap#22) and
+              # cpapdash-parser v2026.1.10-nkl.1 (multi-BRP timestamp collision
+              # fixed upstream in v2026.1.10 but shipped images pin stale
+              # v2026.1.3 — hms-cpapdash-parser#1). The containers pipeline
+              # strips the -nkl.N prerelease suffix, so the tag is 4.9.9 and
+              # the digest pins the exact fork build. Back to ghcr.io/
+              # hms-homelab once the fixes land upstream.
+              tag: 4.9.9@sha256:c93786ccfde5662e8cd66ce298022130d1ef566cd2c5cb76b982b32dcbd4d454
             env:
               TZ: "Europe/Belgrade"
               WEB_PORT: &port 8893
