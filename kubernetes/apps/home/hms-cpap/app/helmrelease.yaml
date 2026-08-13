@@ -35,7 +35,7 @@ spec:
               # strips the -nkl.N prerelease suffix, so the tag is 4.9.9 and
               # the digest pins the exact fork build. Back to ghcr.io/
               # hms-homelab once the fixes land upstream.
-              tag: 4.9.9@sha256:1e043236dfc0e57d471a2f44a9c1eca8b6386577ab8427e9abb4323a41675d08
+              tag: 4.9.9@sha256:1ff0e8ce4dae9499ccaaccd1cedbf3f8f2c2052b3a336cee048915d81dfe35af
             env:
               TZ: "Europe/Belgrade"
               WEB_PORT: &port 8893
