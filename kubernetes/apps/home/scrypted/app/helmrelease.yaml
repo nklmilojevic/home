@@ -43,8 +43,6 @@ spec:
 
         containers:
           app:
-            securityContext:
-              allowPrivilegeEscalation: false
             image:
               repository: ghcr.io/bjw-s-labs/scrypted
               tag: 0.141.0@sha256:c9e82faec2e27debeba03fd8d4bdb2aa53cdaf0f3f8aa77c04312a047db4c2ea
