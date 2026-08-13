@@ -1,0 +1,14 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: kyverno
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - inputName: DS_PROMETHEUS_KYVERNO
+      datasourceName: VictoriaMetrics
+  url: https://raw.githubusercontent.com/kyverno/kyverno/v1.18.2/charts/kyverno/charts/grafana/dashboard/kyverno-dashboard.json
