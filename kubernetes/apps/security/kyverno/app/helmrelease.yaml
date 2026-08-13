@@ -1,0 +1,50 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kyverno
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: kyverno
+  values:
+    crds:
+      install: true
+
+    admissionController:
+      replicas: 3
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 2
+      serviceMonitor:
+        enabled: true
+        interval: 1m
+
+    backgroundController:
+      replicas: 2
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 1
+      serviceMonitor:
+        enabled: true
+        interval: 1m
+
+    cleanupController:
+      replicas: 2
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 1
+      serviceMonitor:
+        enabled: true
+        interval: 1m
+
+    reportsController:
+      replicas: 2
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 1
+      serviceMonitor:
+        enabled: true
+        interval: 1m
