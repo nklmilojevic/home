@@ -29,6 +29,12 @@ spec:
           # mount is read-only (add -> "read-only file system" -> HTTP 400), so
           # seed a writable copy that go2rtc can rewrite at runtime.
           init-config:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+            securityContext:
+              allowPrivilegeEscalation: false
             image:
               repository: docker.io/alexxit/go2rtc
               tag: 1.9.14@sha256:675c318b23c06fd862a61d262240c9a63436b4050d177ffc68a32710d9e05bae

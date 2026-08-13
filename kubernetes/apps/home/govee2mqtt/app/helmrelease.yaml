@@ -26,9 +26,13 @@ spec:
               }]
         containers:
           app:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
             image:
               repository: ghcr.io/wez/govee2mqtt
-              tag: 2025.01.04-abbd0b48
+              tag: 2025.01.04-abbd0b48@sha256:954a77361dd846ab468a4934d579c784416f2cd7c177ce183249e8a62ae2ad99
               pullPolicy: IfNotPresent
             env:
               GOVEE_MQTT_HOST: "mosquitto.home.svc"

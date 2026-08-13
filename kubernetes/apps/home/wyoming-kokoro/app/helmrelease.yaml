@@ -14,9 +14,11 @@ spec:
       wyoming-kokoro:
         containers:
           app:
+            securityContext:
+              allowPrivilegeEscalation: false
             image:
               repository: ghcr.io/relvacode/kokoro-wyoming
-              tag: v2025.1.1
+              tag: v2025.1.1@sha256:ff15cfb276045bd61662162d9f70c2596c1cb5acd345c3f62835b2aea397ba69
             env:
               TZ: Europe/Belgrade
             resources:

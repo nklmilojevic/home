@@ -15,6 +15,8 @@ spec:
       stirling-pdf:
         containers:
           app:
+            securityContext:
+              allowPrivilegeEscalation: false
             image:
               repository: ghcr.io/stirling-tools/s-pdf
               tag: 2.14.3@sha256:3b3670fce70b396ec56ba380a3cc7858e0abf83fe13f31c88f7737847763a396
