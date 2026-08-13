@@ -28,7 +28,7 @@ spec:
                 memory: 32Mi
             image:
               repository: quay.io/nklmilojevic/hms-cpap
-              # Built from the nklmilojevic/hms-cpap fork (containers#473),
+              # Built from the nklmilojevic/hms-cpap fork (containers#474),
               # carrying the multi-EVE sidecar fix (upstream hms-cpap#22),
               # SQLite/MySQL sleep-day lookup used by AI summaries, and
               # cpapdash-parser v2026.1.10-nkl.1. The containers pipeline
