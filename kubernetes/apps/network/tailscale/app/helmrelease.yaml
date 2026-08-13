@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/tailscale/tailscale
-              tag: v1.102.2
+              tag: v1.102.2@sha256:321ce041508c19079b57a28b6666c8d81ab0b08accc0a2585b3ab663d557ac24
             command:
               - /bin/sh
               - /scripts/entrypoint.sh

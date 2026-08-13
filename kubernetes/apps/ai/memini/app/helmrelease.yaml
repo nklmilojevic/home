@@ -67,6 +67,13 @@ spec:
           schedule: "0 5 * * *"
         containers:
           fsck:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+            image:
+              repository: docker.io/curlimages/curl
+              tag: 8.21.0@sha256:7c12af72ceb38b7432ab85e1a265cff6ae58e06f95539d539b654f2cfa64bb13
             env:
               MEMINI_API_KEY:
                 valueFrom:

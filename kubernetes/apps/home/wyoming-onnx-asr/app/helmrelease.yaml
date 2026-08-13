@@ -14,9 +14,11 @@ spec:
       wyoming-onnx-asr:
         containers:
           app:
+            securityContext:
+              allowPrivilegeEscalation: false
             image:
               repository: ghcr.io/tboby/wyoming-onnx-asr
-              tag: v0.5.0
+              tag: v0.5.0@sha256:9b2ccdd52c7aa83e36a2d674de749c4c01bd6bb1e23ea45dd85befb9fc013340
             args:
               # --model-en instead of --model-multilingual: upstream _LANGUAGE_CODES
               # omits "en", so HA grays the engine out for English pipelines
