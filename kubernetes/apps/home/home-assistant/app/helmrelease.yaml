@@ -59,6 +59,8 @@ spec:
 
         containers:
           app:
+            securityContext:
+              allowPrivilegeEscalation: false
             image:
               repository: quay.io/nklmilojevic/home-assistant
               tag: 2026.8.1@sha256:57770480ac97e839182a77948cfa793bb1bdd284f0e6cf7e43ef03718ea2e179
@@ -84,7 +86,7 @@ spec:
           openssh:
             image:
               repository: quay.io/nklmilojevic/openssh
-              tag: 3.24.1
+              tag: 3.24.1@sha256:aff17c0c3f44667a777cab37fb72ee8a553bdc900ea6200794393f95cde2a62e
             env:
               TZ: "Europe/Belgrade"
               PUBLIC_KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrYywYsK/kocVOa48LjaOR2X10g7lwsB1PtkyBJX800 id_ed25519"

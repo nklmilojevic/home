@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/imputnet/cobalt
-              tag: 11.7.1
+              tag: 11.7.1@sha256:63186dd68afd57ce3bb1f62cc4c139f5fa95b9c3e87a3cf5c6e4c7a570523f62
             env:
               TZ: "Europe/Belgrade"
               API_URL: "https://cobalt-api.nikola.wtf/"

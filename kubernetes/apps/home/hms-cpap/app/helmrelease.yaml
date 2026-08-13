@@ -22,6 +22,10 @@ spec:
       hms-cpap:
         containers:
           app:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
             image:
               repository: ghcr.io/hms-homelab/hms-cpap
               tag: latest@sha256:e4d67b0d9354ccb0d598d78e1fe892b9617301c651b5ad3318214e1614798e31

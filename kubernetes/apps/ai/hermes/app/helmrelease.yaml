@@ -21,22 +21,33 @@ spec:
         initContainers:
           # readOnlyRootFilesystem needs /run to be writable and owned by the app uid
           fix-run:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
             image:
               repository: docker.io/library/busybox
-              tag: latest
+              tag: latest@sha256:dc2d74b28e4cf8984fa52af1f39bc7c3d9c73760b41a74d629f5d11b1ab28616
             command:
               - "sh"
               - "-c"
               - "chown 10000:10000 /run && chmod 755 /run"
             securityContext:
+              allowPrivilegeEscalation: false
               runAsUser: 0
               runAsGroup: 0
               runAsNonRoot: false
           # Merge the pinned config over the copy on the PVC (pinned keys win, user edits preserved)
           init:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+            securityContext:
+              allowPrivilegeEscalation: false
             image:
               repository: docker.io/mikefarah/yq
-              tag: "4"
+              tag: "4@sha256:11a1f0b604b13dbbdc662260d8db6f644b22d8553122a25c1b5b2e8713ca6977"
             command:
               - sh
               - -c
@@ -52,6 +63,12 @@ spec:
           # Install gh, Go and Homebrew onto the PVC so the agent can build/install
           # tools at runtime. Idempotent — only downloads on first boot, reused after.
           install-tools:
+            resources:
+              requests:
+                cpu: 25m
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
             image:
               repository: nousresearch/hermes-agent
               tag: &imageTag v2026.8.3@sha256:16788311e2fa3035456bdc1bafb8ec2b1777db64ebf020af9bb7eb73c3712c9e
@@ -84,9 +101,13 @@ spec:
           # Install the memini memory-provider plugin into HERMES_HOME/plugins (PVC).
           # Delete /opt/data/plugins/memini to force a re-pull on the next rollout.
           install-memini-plugin:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
             image:
               repository: docker.io/alpine/git
-              tag: v2.54.0
+              tag: v2.54.0@sha256:3b44767883ac77bddae0160cc27b6b039345e23fa3504f4159efaa32264ab57f
             command:
               - sh
               - -c

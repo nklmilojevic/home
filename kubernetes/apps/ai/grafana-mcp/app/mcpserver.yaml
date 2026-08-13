@@ -7,7 +7,7 @@ metadata:
 spec:
   groupRef:
     name: mcp-tools
-  image: docker.io/grafana/mcp-grafana:1.1.0
+  image: docker.io/grafana/mcp-grafana:1.1.0@sha256:f21a19cebbfa7c3a76ef1746171e5ffc3601064e432f593e7c6cb526e5216e5f
   transport: streamable-http
   mcpPort: 8000
   env:

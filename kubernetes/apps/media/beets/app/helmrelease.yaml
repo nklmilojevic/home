@@ -29,9 +29,13 @@ spec:
           # library db and state in the first, beets-flask its sqlite db in the second.
           # Not recursive — the mounted config files themselves are read-only.
           01-fix-permissions:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
             image:
               repository: docker.io/library/busybox
-              tag: 1.38.0
+              tag: 1.38.0@sha256:dc2d74b28e4cf8984fa52af1f39bc7c3d9c73760b41a74d629f5d11b1ab28616
             command:
               - sh
               - -c
@@ -40,15 +44,22 @@ spec:
                 mkdir -p /config/beets /config/beets-flask
                 chown 1000:1000 /config/beets /config/beets-flask
             securityContext:
+              allowPrivilegeEscalation: false
               runAsUser: 0
               runAsGroup: 0
               runAsNonRoot: false
           # Seed the existing 19k-track library on first start; the db on the share
           # already carries paths rewritten from the old /srv/dev-disk-by-label-storage01 root.
           02-seed-library:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+            securityContext:
+              allowPrivilegeEscalation: false
             image:
               repository: docker.io/library/busybox
-              tag: 1.38.0
+              tag: 1.38.0@sha256:dc2d74b28e4cf8984fa52af1f39bc7c3d9c73760b41a74d629f5d11b1ab28616
             command:
               - sh
               - -c
