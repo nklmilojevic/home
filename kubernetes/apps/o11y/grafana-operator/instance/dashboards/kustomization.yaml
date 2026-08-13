@@ -5,6 +5,7 @@ resources:
   - ./ceph.yaml
   - ./apps.yaml
   - ./kubernetes.yaml
+  - ./kyverno.yaml
   - ./monitoring.yaml
   - ./network.yaml
   - ./sleep.yaml
