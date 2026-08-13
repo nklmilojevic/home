@@ -1,33 +1,28 @@
 {
-  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: [
-    'github>nklmilojevic/renovate-config',
-    'github>nklmilojevic/renovate-config:automerge-github-actions',
-    'github>nklmilojevic/home//.renovate/groups.json5',
-    'github>nklmilojevic/home//.renovate/allowedVersions.json5',
-    'github>nklmilojevic/home//.renovate/versioning.json5',
-    'github>nklmilojevic/home//.renovate/autoMerge.json5',
-    'github>nklmilojevic/home//.renovate/grafanaDashboards.json5',
-    'github>nklmilojevic/home//.renovate/customManagers.json5',
-    'github>nklmilojevic/home//.renovate/customDatasources.json5',
+    "github>nklmilojevic/renovate-config",
+    "github>nklmilojevic/renovate-config:automerge-github-actions",
+    "github>nklmilojevic/home//.renovate/groups.json5",
+    "github>nklmilojevic/home//.renovate/allowedVersions.json5",
+    "github>nklmilojevic/home//.renovate/versioning.json5",
+    "github>nklmilojevic/home//.renovate/autoMerge.json5",
+    "github>nklmilojevic/home//.renovate/grafanaDashboards.json5",
+    "github>nklmilojevic/home//.renovate/customManagers.json5",
+    "github>nklmilojevic/home//.renovate/customDatasources.json5",
   ],
   ignorePaths: [
-    '.archive/**',
-    'kubernetes/apps/misc/invoicing/**',
+    ".archive/**",
+    "kubernetes/apps/misc/invoicing/**",
+    "kubernetes/apps/security/kyverno/policies/policies.yaml",
   ],
   flux: {
-    managerFilePatterns: [
-      '/^kubernetes/.+\\.ya?ml$/',
-    ],
+    managerFilePatterns: ["/^kubernetes/.+\\.ya?ml$/"],
   },
-  'helm-values': {
-    managerFilePatterns: [
-      '/^kubernetes/.+\\.ya?ml$/',
-    ],
+  "helm-values": {
+    managerFilePatterns: ["/^kubernetes/.+\\.ya?ml$/"],
   },
   kubernetes: {
-    managerFilePatterns: [
-      '/^kubernetes/.+\\.ya?ml$/',
-    ],
+    managerFilePatterns: ["/^kubernetes/.+\\.ya?ml$/"],
   },
 }
