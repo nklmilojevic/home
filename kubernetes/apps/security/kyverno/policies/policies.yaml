@@ -9,7 +9,6 @@ metadata:
     policies.kyverno.io/severity: medium
     policies.kyverno.io/subject: Pod
 spec:
-  validationFailureAction: Audit
   background: true
   emitWarning: true
   rules:
@@ -20,6 +19,7 @@ spec:
               kinds:
                 - Pod
       validate:
+        failureAction: Audit
         message: CPU and memory requests are required for all containers.
         pattern:
           spec:
@@ -49,7 +49,6 @@ metadata:
     policies.kyverno.io/severity: high
     policies.kyverno.io/subject: Pod
 spec:
-  validationFailureAction: Audit
   background: true
   emitWarning: true
   rules:
@@ -60,6 +59,7 @@ spec:
               kinds:
                 - Pod
       validate:
+        failureAction: Audit
         message: Privileged containers are not allowed.
         pattern:
           spec:
@@ -79,6 +79,7 @@ spec:
               kinds:
                 - Pod
       validate:
+        failureAction: Audit
         message: Privilege escalation must be explicitly disabled.
         pattern:
           spec:
@@ -102,7 +103,6 @@ metadata:
     policies.kyverno.io/severity: medium
     policies.kyverno.io/subject: Pod
 spec:
-  validationFailureAction: Audit
   background: true
   emitWarning: true
   rules:
@@ -113,6 +113,7 @@ spec:
               kinds:
                 - Pod
       validate:
+        failureAction: Audit
         message: Pod or container security contexts must explicitly require a non-root user.
         anyPattern:
           - spec:
@@ -148,7 +149,6 @@ metadata:
     policies.kyverno.io/severity: medium
     policies.kyverno.io/subject: Pod
 spec:
-  validationFailureAction: Audit
   background: true
   emitWarning: true
   rules:
@@ -159,6 +159,7 @@ spec:
               kinds:
                 - Pod
       validate:
+        failureAction: Audit
         message: Container images must be pinned to immutable digests.
         pattern:
           spec:
