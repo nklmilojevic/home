@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: ghcr.io/habirabbu/droppedneedle
-              tag: v2.3.0@sha256:2a64f2cad5e531efb4895df08aec08123e5aa7215658a1a57109bd66588941b6
+              tag: v2.5.0@sha256:fd30506c5891b25d9f7a17dc8ba45a2307a29d4d062c19113479e958b7a840d3
 
             env:
               TZ: "Europe/Belgrade"
