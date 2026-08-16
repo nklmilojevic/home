@@ -24,22 +24,17 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/petkit-local
-              # Built from the nklmilojevic/petkit-local fork (containers#442),
-              # carrying the D4H fixes: BLE provisioning, camera feeder IP,
-              # desiccant countdown, battery-installed, feed-clip upload chain,
-              # (nkl.8) the cameraMultiNew schedule-object fix that sets
-              # camera_enable so feed snapshots + eat clips are recorded, and
-              # (nkl.9) the bucket-cert fix (CA:TRUE + IP-as-DNS SAN) so the
-              # cloud uploader's strict TLS verify accepts the cert and the
-              # clips actually upload, and (nkl.10) feed-total counters +
-              # feedSound remap + a cacert patcher that dedups the CA bundle so
-              # the duplicate-cert collision that broke uploads cannot recur.
-              # The containers pipeline strips the fork's -nkl.N
-              # prerelease suffix, so the image tag is still 1.6.0 (mutated in
-              # place) — the digest is what forces the re-pull and pins exactly
-              # the fork build. Back to a plain upstream tag once the fixes land
-              # upstream (PRs alex-so-3#11/#12).
-              tag: 1.6.0@sha256:61f2e67d0a035883f8996ff4b81694f09aae2e6959c718a8bb0381f10fc1c09a
+              # Upstream alex-so-3/petkit-local: all the fork's D4H fixes
+              # (BLE provisioning, camera feeder IP, desiccant countdown,
+              # feed-clip upload chain, cameraMultiNew schedule objects,
+              # bucket-cert SAN, feed totals, feedSound, cacert dedup) landed
+              # by v2.1.0, so the nklmilojevic fork is retired. Known gaps vs
+              # the fork: the D4H "Food Low" binary sensor is inverted again
+              # (upstream has never captured a real D4H; fork nkl.11 derived
+              # foodLow from food==0), feedState totals reset on restart
+              # (nkl.12 persisted them), and battery_installed is gone rather
+              # than derived (nkl.3).
+              tag: 2.1.0@sha256:bd3faa463877b5d5653e126e659dba1b834959202e0b4ec5ef6a19653ee3afe4
             args:
               # The device is handed only the api-url host for MQTT and media
               # uploads, on firmware-fixed ports (443/9000) — so this must stay
