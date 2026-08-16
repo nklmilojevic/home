@@ -15,6 +15,7 @@ resources:
   - ./wyoming-kokoro/ks.yaml
   - ./wyoming-onnx-asr/ks.yaml
   - ./scrypted/ks.yaml
+  - ./homebridge/ks.yaml
   - ./mosquitto/ks.yaml
   - ./petkit-local/ks.yaml
   - ./roborock-local-server/ks.yaml
