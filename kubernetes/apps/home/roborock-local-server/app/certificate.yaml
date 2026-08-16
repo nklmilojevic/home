@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: roborock-local-server
+spec:
+  secretName: roborock-local-server-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: api-rr.nikola.wtf
+  dnsNames:
+    - api-rr.nikola.wtf

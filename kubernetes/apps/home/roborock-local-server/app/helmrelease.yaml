@@ -1,0 +1,88 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app roborock-local-server
+  namespace: home
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: roborock-local-server
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    controllers:
+      roborock-local-server:
+        annotations:
+          secret.reloader.stakater.com/reload: roborock-local-server-secret
+        containers:
+          app:
+            image:
+              repository: ghcr.io/python-roborock/local_roborock_server
+              tag: 1.0.2@sha256:86fa005391569f4419e9b3f891d2388b63a87bd16a2dbb412390e7819542339d
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /admin
+                    port: &https-port 555
+                    scheme: HTTPS
+                  initialDelaySeconds: 10
+                  periodSeconds: 10
+                  timeoutSeconds: 2
+                  failureThreshold: 6
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+    service:
+      app:
+        controller: *app
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: "10.40.0.34"
+        ports:
+          https:
+            port: *https-port
+          mqtts:
+            port: 8881
+    persistence:
+      data:
+        existingClaim: roborock-local-server-data
+        globalMounts:
+          - path: /data
+      config:
+        type: secret
+        name: roborock-local-server-secret
+        globalMounts:
+          - path: /app/config.toml
+            subPath: config.toml
+            readOnly: true
+      tls:
+        type: secret
+        name: roborock-local-server-tls
+        globalMounts:
+          - path: /cert
+            readOnly: true
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
