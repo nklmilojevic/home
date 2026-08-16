@@ -10,11 +10,6 @@ spec:
     kind: OCIRepository
     name: homebridge
   values:
-    defaultPodOptions:
-      resourceClaims:
-        - name: gpu
-          resourceClaimTemplateName: homebridge
-
     controllers:
       homebridge:
         annotations:
@@ -35,12 +30,6 @@ spec:
             runAsGroup: 1000
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups:
-              - 20
-              - 44
-              - 105
-              - 100
-              - 109
 
         containers:
           app:
@@ -81,8 +70,6 @@ spec:
                   timeoutSeconds: 5
                   failureThreshold: 30
             resources:
-              claims:
-                - name: gpu
               requests:
                 cpu: 50m
                 memory: 512Mi
