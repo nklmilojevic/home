@@ -13,6 +13,13 @@ This is a Kubernetes homelab repository using Flux CD for GitOps, managing ~40 a
 - **Automation**: `just` (recipe runner; modules under `.just/`), Renovate (Mend app + `.renovate/` config)
 - **Dev shell**: Nix flake (`flake.nix`); pre-commit via `lefthook.yml` (yamlfmt + yamllint)
 
+## GitOps Mutation Boundary
+
+- All persistent cluster changes MUST be made in this repository, committed, pushed, and reconciled by Flux.
+- NEVER use `kubectl apply`, `kubectl create`, `kubectl delete`, `kubectl edit`, `kubectl patch`, `kubectl replace`, or `kubectl rollout restart`.
+- NEVER apply locally rendered manifests or imperatively create Flux resources. `kubectl` is read-only for inspection and verification.
+- After pushing desired state, use `just kube reconcile` to request reconciliation through Flux.
+
 ## Directory Structure
 
 ```
@@ -118,7 +125,7 @@ spec:
       APP_GID: "1000"
 ```
 
-3. Create `app/kustomization.yaml` (lists the app's own resources; the volsync resources come from the Component in `ks.yaml`, not here):
+1. Create `app/kustomization.yaml` (lists the app's own resources; the volsync resources come from the Component in `ks.yaml`, not here):
 
 ```yaml
 ---
@@ -132,7 +139,7 @@ resources:
   # - ./pvc.yaml              # for extra PVCs
 ```
 
-4. Create `app/ocirepository.yaml` (per-app app-template chart source; Renovate keeps the tag current):
+1. Create `app/ocirepository.yaml` (per-app app-template chart source; Renovate keeps the tag current):
 
 ```yaml
 ---
@@ -152,9 +159,9 @@ spec:
   url: oci://ghcr.io/bjw-s-labs/helm/app-template
 ```
 
-5. Create `app/helmrelease.yaml` using the app-template pattern below.
+1. Create `app/helmrelease.yaml` using the app-template pattern below.
 
-6. Add `- ./{app}/ks.yaml` to the namespace's `kustomization.yaml`.
+2. Add `- ./{app}/ks.yaml` to the namespace's `kustomization.yaml`.
 
 ## HelmRelease Pattern
 
@@ -349,7 +356,6 @@ There are no global cluster variable ConfigMaps/Secrets in this repo; domains an
 ```bash
 just                         # List all recipes (modules: bootstrap, kube, talos, rook, volsync)
 just kube reconcile          # Force a cluster reconcile from Git
-just kube apply-ks {ns} {app} # Apply a Kustomization locally
 just kube sync hr            # Force-sync all HelmReleases
 just volsync snapshot {ns} {app}   # Trigger a VolSync snapshot
 just volsync restore {ns} {app}    # Restore an app PVC from VolSync
