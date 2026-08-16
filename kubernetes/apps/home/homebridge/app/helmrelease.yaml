@@ -1,0 +1,140 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: homebridge
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: homebridge
+  values:
+    controllers:
+      homebridge:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        pod:
+          annotations:
+            k8s.v1.cni.cncf.io/networks: |
+              [{
+                "name":"multus-host",
+                "namespace":"network",
+                "ips":["10.5.0.207/24"],
+                "mac":"02:48:4d:42:00:01"
+              }]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+
+        initContainers:
+          seed-unifi-protect-plugin:
+            image:
+              repository: docker.io/homebridge/homebridge
+              tag: 2026-08-11@sha256:f2f5b3282a2ea4125f104bf6536b7c132cf331c23bfa7b407313bc3bf04589f7
+            env:
+              HOME: /homebridge
+              npm_config_cache: /homebridge/.npm
+            securityContext:
+              allowPrivilegeEscalation: false
+              runAsNonRoot: true
+              capabilities:
+                drop:
+                  - ALL
+            command:
+              - sh
+              - -c
+              - |
+                if [ ! -f /homebridge/package.json ]; then
+                  printf '%s\n' '{"dependencies":{"homebridge-unifi-protect":"8.1.0"}}' > /homebridge/package.json
+                elif ! jq -e '.dependencies["homebridge-unifi-protect"]' /homebridge/package.json >/dev/null; then
+                  jq '.dependencies["homebridge-unifi-protect"] = "8.1.0"' /homebridge/package.json > /tmp/package.json
+                  mv /tmp/package.json /homebridge/package.json
+                fi
+                npm --prefix /homebridge install --omit=dev
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+
+        containers:
+          app:
+            image:
+              repository: docker.io/homebridge/homebridge
+              tag: 2026-08-11@sha256:f2f5b3282a2ea4125f104bf6536b7c132cf331c23bfa7b407313bc3bf04589f7
+            command:
+              - hb-service
+            args:
+              - run
+              - --user-storage-path
+              - /homebridge
+              - --stdout
+            env:
+              HOME: /homebridge
+              TZ: Europe/Belgrade
+              UIX_CUSTOM_PLUGIN_PATH: /homebridge/node_modules
+            securityContext:
+              allowPrivilegeEscalation: false
+              runAsNonRoot: true
+              capabilities:
+                drop:
+                  - ALL
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 8581
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 30
+            resources:
+              requests:
+                cpu: 50m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+
+    service:
+      app:
+        controller: homebridge
+        ports:
+          http:
+            port: *port
+            primary: true
+
+    persistence:
+      config:
+        existingClaim: homebridge-config
+        globalMounts:
+          - path: /homebridge
+
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.nikola.wtf"
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
