@@ -24,17 +24,16 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/petkit-local
-              # Upstream alex-so-3/petkit-local: all the fork's D4H fixes
-              # (BLE provisioning, camera feeder IP, desiccant countdown,
-              # feed-clip upload chain, cameraMultiNew schedule objects,
-              # bucket-cert SAN, feed totals, feedSound, cacert dedup) landed
-              # by v2.1.0, so the nklmilojevic fork is retired. Known gaps vs
-              # the fork: the D4H "Food Low" binary sensor is inverted again
-              # (upstream has never captured a real D4H; fork nkl.11 derived
-              # foodLow from food==0), feedState totals reset on restart
-              # (nkl.12 persisted them), and battery_installed is gone rather
-              # than derived (nkl.3).
-              tag: 2.1.0@sha256:bd3faa463877b5d5653e126e659dba1b834959202e0b4ec5ef6a19653ee3afe4
+              # Fork build (nklmilojevic/petkit-local, v2.1.0-nkl.1) — upstream
+              # v2.1.0 plus the K3 HTTP piggyback fix (alex-so-3/petkit-local#21):
+              # a T4's unpatchable ESP32 can't do MQTT, so the K3 spray's
+              # battery/liquid never reached the bridge — the HTTP path now
+              # extracts them from dev_state_report/dev_event_report state
+              # blocks. Revert to plain upstream once #21 lands. Other known
+              # remaining gaps vs the retired D4H fork: food_low inversion
+              # (nkl.11), feedState totals reset on restart (nkl.12),
+              # battery_installed removed (nkl.3).
+              tag: 2.1.0@sha256:51c5e6bab96af8ad4a93d65963e4accb82edfcca54682c96e488cfc2ba185653
             args:
               # The device is handed only the api-url host for MQTT and media
               # uploads, on firmware-fixed ports (443/9000) — so this must stay
