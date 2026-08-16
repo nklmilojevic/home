@@ -10,6 +10,11 @@ spec:
     kind: OCIRepository
     name: homebridge
   values:
+    defaultPodOptions:
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: homebridge
+
     controllers:
       homebridge:
         annotations:
@@ -30,53 +35,23 @@ spec:
             runAsGroup: 1000
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
-
-        initContainers:
-          seed-unifi-protect-plugin:
-            image:
-              repository: docker.io/homebridge/homebridge
-              tag: 2026-08-11@sha256:f2f5b3282a2ea4125f104bf6536b7c132cf331c23bfa7b407313bc3bf04589f7
-            env:
-              HOME: /homebridge
-              npm_config_cache: /homebridge/.npm
-            securityContext:
-              allowPrivilegeEscalation: false
-              runAsNonRoot: true
-              capabilities:
-                drop:
-                  - ALL
-            command:
-              - sh
-              - -c
-              - |
-                if [ ! -f /homebridge/package.json ]; then
-                  printf '%s\n' '{"dependencies":{"homebridge-unifi-protect":"8.1.0"}}' > /homebridge/package.json
-                elif ! jq -e '.dependencies["homebridge-unifi-protect"]' /homebridge/package.json >/dev/null; then
-                  jq '.dependencies["homebridge-unifi-protect"] = "8.1.0"' /homebridge/package.json > /tmp/package.json
-                  mv /tmp/package.json /homebridge/package.json
-                fi
-                npm --prefix /homebridge install --omit=dev
-            resources:
-              requests:
-                cpu: 10m
-                memory: 32Mi
+            supplementalGroups:
+              - 20
+              - 44
+              - 105
+              - 100
+              - 109
 
         containers:
           app:
             image:
-              repository: docker.io/homebridge/homebridge
-              tag: 2026-08-11@sha256:f2f5b3282a2ea4125f104bf6536b7c132cf331c23bfa7b407313bc3bf04589f7
-            command:
-              - hb-service
-            args:
-              - run
-              - --user-storage-path
-              - /homebridge
-              - --stdout
+              # Rootless build with homebridge-unifi-protect baked in;
+              # jellyfin-ffmpeg included for QSV via the plugin's
+              # videoProcessor option (containers repo).
+              repository: quay.io/nklmilojevic/homebridge
+              tag: 2.4.0@sha256:df29d103ae51cb9a4c96e338ea9943a3ee41e9c216f9c1a473f60ff9281e48ca
             env:
-              HOME: /homebridge
               TZ: Europe/Belgrade
-              UIX_CUSTOM_PLUGIN_PATH: /homebridge/node_modules
             securityContext:
               allowPrivilegeEscalation: false
               runAsNonRoot: true
@@ -89,7 +64,7 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /
+                    path: /health
                     port: &port 8581
                   periodSeconds: 30
                   timeoutSeconds: 5
@@ -100,12 +75,14 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /
+                    path: /health
                     port: *port
                   periodSeconds: 10
                   timeoutSeconds: 5
                   failureThreshold: 30
             resources:
+              claims:
+                - name: gpu
               requests:
                 cpu: 50m
                 memory: 512Mi
@@ -124,7 +101,7 @@ spec:
       config:
         existingClaim: homebridge-config
         globalMounts:
-          - path: /homebridge
+          - path: /config
 
     route:
       app:
