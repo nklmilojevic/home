@@ -40,6 +40,20 @@ spec:
               # uploads, on firmware-fixed ports (443/9000) — so this must stay
               # the LoadBalancer IP, and the MQTT TLS listener is remapped from
               # 443 by the Service so the pod never binds a privileged port.
+              #
+              # ESP32 devices (T4 Pura Max) additionally need TWO UniFi-side
+              # things or they silently rejoin PetKit's real cloud (their
+              # stored Aliyun registration stays valid, so the cloud MQTT auth
+              # SUCCEEDS and they never fall back to our HTTP heartbeat):
+              #   1. Static DNS: *.petkt.com, *.petkit.com, *.eu-pet.com,
+              #      *.petktasia.com and a54dw3GX0NZ.iot-as-mqtt.eu-central-1
+              #      .aliyuncs.com -> 10.40.0.33
+              #   2. Zone firewall policy "Block Petkit T4 to Internet"
+              #      (IoT client cc:db:a7:88:f5:b8 -> External, BLOCK)
+              # Diagnosed live 2026-08-16: with both in place the T4 runs
+              # ota_check/signup/iot against us, fails our TLS broker (ESP32
+              # is unpatchable), and settles into ~11s HTTP heartbeat polling,
+              # which is the transport that carries its commands.
               - --data-dir=/data
               - --port=8080
               - --api-url=http://10.40.0.33/6/
