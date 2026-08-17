@@ -17,8 +17,25 @@ spec:
   issuerRef:
     name: mosquitto-selfsigned
     kind: Issuer
-  commonName: vdmpmqtt.vesync.com
+  # Mimic the real VeSync broker leaf cert (CN=vesync_server_new, SAN *.vesync.com)
+  # so a device that only validates the leaf subject/SAN accepts it. If the
+  # device verifies the chain up to vesyncRoot, no self-signed cert can pass.
+  commonName: vesync_server_new
+  subject:
+    organizations:
+      - vesync
+    organizationalUnits:
+      - vesync
+    countries:
+      - us
+    provinces:
+      - ca
+    localities:
+      - ca
   dnsNames:
+    - "*.vesync.com"
+    - "*.vesyncapi.com"
+    - device-broker-v2-eu.vesync.com
     - vdmpmqtt.vesync.com
   duration: 8760h
   renewBefore: 720h
