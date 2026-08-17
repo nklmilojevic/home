@@ -27,15 +27,12 @@ spec:
                 cpu: 10m
                 memory: 32Mi
             image:
-              repository: quay.io/nklmilojevic/hms-cpap
-              # Built from the nklmilojevic/hms-cpap fork (containers#474),
-              # carrying the multi-EVE sidecar fix (upstream hms-cpap#22),
-              # SQLite/MySQL sleep-day lookup used by AI summaries, and
-              # cpapdash-parser v2026.1.10-nkl.1. The containers pipeline
-              # strips the -nkl.N prerelease suffix, so the tag is 4.9.9 and
-              # the digest pins the exact fork build. Back to ghcr.io/
-              # hms-homelab once the fixes land upstream.
-              tag: 4.9.9@sha256:1ff0e8ce4dae9499ccaaccd1cedbf3f8f2c2052b3a336cee048915d81dfe35af
+              # Back on upstream: v4.9.10 carries the multi-EVE fix (#22) and
+              # the zip-upload STR.edf drop fix (#23), v4.10.0 the SQLite
+              # sleep-day lookup — everything the quay.io/nklmilojevic fork
+              # existed for.
+              repository: ghcr.io/hms-homelab/hms-cpap
+              tag: 5.0.1
             env:
               TZ: "Europe/Belgrade"
               WEB_PORT: &port 8893
