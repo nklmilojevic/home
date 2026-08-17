@@ -51,6 +51,8 @@ spec:
     service:
       app:
         controller: mosquitto
+        # keep the historical service name now that a second service exists
+        forceRename: mosquitto
         type: LoadBalancer
         annotations:
           lbipam.cilium.io/ips: "10.40.0.8"
