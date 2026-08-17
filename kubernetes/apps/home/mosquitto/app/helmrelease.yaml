@@ -72,6 +72,12 @@ spec:
           mqtts:
             port: 1883
             targetPort: 8883
+          mqtts-alt:
+            port: 8883
+            targetPort: 8883
+          mqtts-https:
+            port: 443
+            targetPort: 8883
 
     configMaps:
       config:
