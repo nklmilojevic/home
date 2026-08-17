@@ -351,6 +351,10 @@ There are no global cluster variable ConfigMaps/Secrets in this repo; domains an
 - Timezone is `Europe/Belgrade`
 - Standard dependencies: `rook-ceph-cluster` (ns `rook-ceph`), `volsync` (ns `security`), `external-secrets-stores` (ns `security`)
 
+## Home Assistant Automations
+
+- In `telegram_bot.*` actions, never put `target:` inside `data:` — it is deprecated and removed in HA 2026.9.0. Use `data.chat_id: 104243855` (or an action-level `target.entity_id: notify.telegram_bot_...` notify entity, as the P1S `send_photo` automations do). All existing automations were migrated 2026-08-17.
+
 ## Useful Commands
 
 ```bash
