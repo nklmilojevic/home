@@ -21,8 +21,7 @@ spec:
     controllers:
       mosquitto:
         annotations:
-          configmap.reloader.stakater.com/reload: "mosquitto"
-          secret.reloader.stakater.com/reload: "mosquitto-vesync-tls"
+          configmap.reloader.stakater.com/reload: "mosqutto-config"
         containers:
           app:
             image:
@@ -51,8 +50,6 @@ spec:
     service:
       app:
         controller: mosquitto
-        # keep the historical service name now that a second service exists
-        forceRename: mosquitto
         type: LoadBalancer
         annotations:
           lbipam.cilium.io/ips: "10.40.0.8"
@@ -60,28 +57,6 @@ spec:
         ports:
           http:
             port: 1883
-      # VeSync/Levoit devices dial vdmpmqtt.vesync.com:1883 speaking TLS and
-      # skip certificate validation, so a self-signed cert on a dedicated LB IP
-      # (DNS-rewritten in UniFi) captures them locally.
-      vesync:
-        controller: mosquitto
-        type: LoadBalancer
-        annotations:
-          lbipam.cilium.io/ips: "10.40.0.35"
-        ports:
-          mqtts:
-            port: 1883
-            targetPort: 8883
-          mqtts-alt:
-            port: 8883
-            targetPort: 8883
-          # Levoit Vital 200S dials device-broker-v2-eu.vesync.com:2883
-          mqtts-v2:
-            port: 2883
-            targetPort: 8883
-          mqtts-https:
-            port: 443
-            targetPort: 8883
 
     configMaps:
       config:
@@ -94,19 +69,10 @@ spec:
             per_listener_settings false
             persistence true
             persistence_location /data
-            listener 8883
-            certfile /tls/tls.crt
-            keyfile /tls/tls.key
 
     persistence:
       data:
         existingClaim: mosquitto-data
-      tls:
-        type: secret
-        name: mosquitto-vesync-tls
-        globalMounts:
-          - path: /tls
-            readOnly: true
       config-file:
         type: configMap
         name: mosquitto
