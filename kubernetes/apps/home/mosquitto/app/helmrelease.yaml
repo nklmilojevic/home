@@ -75,6 +75,10 @@ spec:
           mqtts-alt:
             port: 8883
             targetPort: 8883
+          # Levoit Vital 200S dials device-broker-v2-eu.vesync.com:2883
+          mqtts-v2:
+            port: 2883
+            targetPort: 8883
           mqtts-https:
             port: 443
             targetPort: 8883
