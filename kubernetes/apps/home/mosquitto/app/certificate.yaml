@@ -1,0 +1,27 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/cert-manager.io/issuer_v1.json
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: mosquitto-selfsigned
+spec:
+  selfSigned: {}
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: mosquitto-vesync
+spec:
+  secretName: mosquitto-vesync-tls
+  issuerRef:
+    name: mosquitto-selfsigned
+    kind: Issuer
+  commonName: vdmpmqtt.vesync.com
+  dnsNames:
+    - vdmpmqtt.vesync.com
+  duration: 8760h
+  renewBefore: 720h
+  privateKey:
+    algorithm: RSA
+    size: 2048
