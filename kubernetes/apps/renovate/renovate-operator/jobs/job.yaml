@@ -8,7 +8,7 @@ metadata:
 spec:
   discoveryFilters:
     - nklmilojevic/*
-  image: ghcr.io/renovatebot/renovate:44.32.6
+  image: ghcr.io/renovatebot/renovate:44.33.1
   parallelism: 3
   provider:
     name: github
