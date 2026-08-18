@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/plex
-              tag: 1.43.3.10861@sha256:b7e573711a85c96a99e627edefd901784b858331c746d5148af17741d22f7d21
+              tag: 1.43.3.10896@sha256:684a269c0dc809acfd62dd89abe25dd6bd8dfe83d9602628d54902a2d0bd50fa
             env:
               TZ: "Europe/Belgrade"
               VERSION: "docker"
