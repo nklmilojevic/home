@@ -32,6 +32,8 @@ spec:
               UP_UNIFI_DEFAULT_URL: https://10.5.0.1
               UP_PROMETHEUS_HTTP_LISTEN: 0.0.0.0:80
               UP_INFLUXDB_DISABLE: true
+              UP_UNAS_ENABLE: true
+              UP_UNAS_DEVICE_0_URL: https://10.5.0.10
             envFrom:
               - secretRef:
                   name: unpoller-secret
