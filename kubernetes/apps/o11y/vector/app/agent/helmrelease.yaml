@@ -69,6 +69,17 @@ spec:
           mikrotik:
             port: 1514
             protocol: UDP
+          metrics:
+            port: 9598
+    serviceMonitor:
+      app:
+        serviceName: vector-agent
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 30s
     serviceAccount:
       vector-agent:
         enabled: true
