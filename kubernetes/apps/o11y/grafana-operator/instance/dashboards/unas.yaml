@@ -1,0 +1,14 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: unas
+spec:
+  allowCrossNamespaceImport: true
+  resyncPeriod: 1m
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  configMapRef:
+    name: unas-dashboard
+    key: unas-dashboard.json
