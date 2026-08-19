@@ -48,7 +48,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(network_ups_tools_ups_status{flag=\"OL\"}) + 2 * sum(network_ups_tools_ups_status{flag=\"OB\"}) + 4 * sum(network_ups_tools_ups_status{flag=\"LB\"}) + 8 * sum(network_ups_tools_ups_status{flag=\"FSD\"})",
+          "expr": "max(network_ups_tools_ups_status{flag=\"OL\"}) + 2 * max(network_ups_tools_ups_status{flag=\"OB\"}) + 4 * max(network_ups_tools_ups_status{flag=\"LB\"}) + 8 * max(network_ups_tools_ups_status{flag=\"FSD\"})",
           "legendFormat": "status",
           "refId": "A"
         }
@@ -136,7 +136,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_battery_charge",
+          "expr": "max(network_ups_tools_battery_charge)",
           "legendFormat": "charge",
           "refId": "A"
         }
@@ -189,7 +189,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_battery_runtime",
+          "expr": "max(network_ups_tools_battery_runtime)",
           "legendFormat": "runtime",
           "refId": "A"
         }
@@ -243,7 +243,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_ups_load",
+          "expr": "max(network_ups_tools_ups_load)",
           "legendFormat": "load",
           "refId": "A"
         }
@@ -299,7 +299,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_ups_realpower",
+          "expr": "max(network_ups_tools_ups_realpower)",
           "legendFormat": "real power",
           "refId": "A"
         }
@@ -353,7 +353,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_ups_temperature",
+          "expr": "max(network_ups_tools_ups_temperature)",
           "legendFormat": "temp",
           "refId": "A"
         }
@@ -420,7 +420,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_ups_realpower",
+          "expr": "max(network_ups_tools_ups_realpower)",
           "legendFormat": "real (W)",
           "refId": "A"
         },
@@ -429,7 +429,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_ups_power",
+          "expr": "max(network_ups_tools_ups_power)",
           "legendFormat": "apparent (VA)",
           "refId": "B"
         }
@@ -487,7 +487,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_ups_realpower / network_ups_tools_ups_realpower_nominal",
+          "expr": "max(network_ups_tools_ups_realpower) / max(network_ups_tools_ups_realpower_nominal)",
           "legendFormat": "used",
           "refId": "A"
         }
@@ -540,7 +540,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg_over_time(network_ups_tools_ups_realpower[24h]) * 24 / 1000",
+          "expr": "max(avg_over_time(network_ups_tools_ups_realpower[24h]) * 24 / 1000)",
           "legendFormat": "kWh",
           "refId": "A"
         }
@@ -586,7 +586,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_output_powerfactor",
+          "expr": "max(network_ups_tools_output_powerfactor)",
           "legendFormat": "pf",
           "refId": "A"
         }
@@ -641,7 +641,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_output_current",
+          "expr": "max(network_ups_tools_output_current)",
           "legendFormat": "current",
           "refId": "A"
         }
@@ -712,7 +712,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_battery_charge",
+          "expr": "max(network_ups_tools_battery_charge)",
           "legendFormat": "charge",
           "refId": "A"
         },
@@ -721,7 +721,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_battery_low",
+          "expr": "max(network_ups_tools_battery_low)",
           "legendFormat": "low threshold",
           "refId": "B"
         }
@@ -808,7 +808,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_battery_runtime",
+          "expr": "max(network_ups_tools_battery_runtime)",
           "legendFormat": "runtime",
           "refId": "A"
         }
@@ -866,7 +866,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_battery_voltage",
+          "expr": "max(network_ups_tools_battery_voltage)",
           "legendFormat": "voltage",
           "refId": "A"
         }
@@ -937,7 +937,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_input_voltage",
+          "expr": "max(network_ups_tools_input_voltage)",
           "legendFormat": "input",
           "refId": "A"
         },
@@ -946,7 +946,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_output_voltage",
+          "expr": "max(network_ups_tools_output_voltage)",
           "legendFormat": "output",
           "refId": "B"
         },
@@ -955,7 +955,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_input_transfer_high",
+          "expr": "max(network_ups_tools_input_transfer_high)",
           "legendFormat": "transfer high",
           "refId": "C"
         },
@@ -964,7 +964,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_input_transfer_low",
+          "expr": "max(network_ups_tools_input_transfer_low)",
           "legendFormat": "transfer low",
           "refId": "D"
         }
@@ -1049,7 +1049,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_input_frequency",
+          "expr": "max(network_ups_tools_input_frequency)",
           "legendFormat": "input",
           "refId": "A"
         },
@@ -1058,7 +1058,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_output_frequency",
+          "expr": "max(network_ups_tools_output_frequency)",
           "legendFormat": "output",
           "refId": "B"
         }
@@ -1116,7 +1116,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "network_ups_tools_ups_status{flag=~\"OL|OB|LB|CHRG|DISCHRG|BYPASS|OVER\"}",
+          "expr": "max by (flag) (network_ups_tools_ups_status{flag=~\"OL|OB|LB|CHRG|DISCHRG|BYPASS|OVER\"})",
           "legendFormat": "{{flag}}",
           "refId": "A"
         }
