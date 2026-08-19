@@ -1,0 +1,14 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: ups
+spec:
+  allowCrossNamespaceImport: true
+  resyncPeriod: 1m
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  configMapRef:
+    name: ups-dashboard
+    key: ups-dashboard.json
