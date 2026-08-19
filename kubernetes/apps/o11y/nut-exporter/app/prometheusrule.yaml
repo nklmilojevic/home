@@ -1,0 +1,51 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: nut-exporter-rules
+spec:
+  groups:
+    - name: nut-exporter.rules
+      rules:
+        - alert: UPSOnBattery
+          annotations:
+            summary: UPS is running on battery power.
+          expr: network_ups_tools_ups_status{flag="OB"} == 1
+          for: 1m
+          labels:
+            severity: critical
+        - alert: UPSLowBattery
+          annotations:
+            summary: UPS battery is low; shutdown imminent.
+          expr: network_ups_tools_ups_status{flag="LB"} == 1
+          labels:
+            severity: critical
+        - alert: UPSLowRuntime
+          annotations:
+            summary: UPS runtime dropped below 10 minutes ({{ $value }}s left).
+          expr: network_ups_tools_battery_runtime < 600
+          for: 2m
+          labels:
+            severity: warning
+        - alert: UPSHighLoad
+          annotations:
+            summary: UPS load is above 80% ({{ $value }}%).
+          expr: network_ups_tools_ups_load > 80
+          for: 5m
+          labels:
+            severity: warning
+        - alert: UPSHighTemperature
+          annotations:
+            summary: UPS temperature is above 40°C ({{ $value }}°C).
+          expr: network_ups_tools_ups_temperature > 40
+          for: 5m
+          labels:
+            severity: warning
+        - alert: UPSMetricsAbsent
+          annotations:
+            summary: No UPS metrics for 10 minutes — NUT relay or exporter is down.
+          expr: absent(network_ups_tools_ups_status)
+          for: 10m
+          labels:
+            severity: warning
