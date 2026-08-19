@@ -1,5 +1,5 @@
-set unstable := true
-set quiet := true
+set unstable
+set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
@@ -50,6 +50,11 @@ sync resource:
         kubectl -n "$ns" annotate --field-manager flux-client-side-apply --overwrite {{ resource }} "$name" \
             "reconcile.fluxcd.io/requestedAt=$(date +%s)"
     done
+
+# Force one ExternalSecret to re-pull from 1Password (e.g. after editing an item)
+[doc('Force-refresh an ExternalSecret from its provider')]
+sync-secret ns name:
+    kubectl -n {{ ns }} annotate externalsecret {{ name }} "force-sync=$(date +%s)" --overwrite
 
 # Open a shell into a PVC
 [doc('Browse a PVC')]
