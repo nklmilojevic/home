@@ -8,12 +8,16 @@ resources:
   - ./monitoring.yaml
   - ./network.yaml
   - ./sleep.yaml
+  - ./unas.yaml
   - ./unifi.yaml
   - ./victoriametrics.yaml
 configMapGenerator:
   - name: sleep-dashboard
     files:
       - sleep-dashboard.json
+  - name: unas-dashboard
+    files:
+      - unas-dashboard.json
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
