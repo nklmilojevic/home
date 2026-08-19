@@ -23,7 +23,7 @@ spec:
             env:
               TZ: "Europe/Belgrade"
               NUT_EXPORTER_SERVER: "network-ups-tools.o11y.svc"
-              NUT_EXPORTER_VARIABLES: "battery.charge,battery.runtime,battery.voltage,battery.voltage.nominal,input.voltage,input.voltage.nominal,ups.load,ups.status"
+              NUT_EXPORTER_VARIABLES: "battery.charge,battery.low,battery.runtime,battery.voltage,battery.voltage.nominal,input.voltage,input.voltage.nominal,input.frequency,input.transfer.high,input.transfer.low,output.voltage,output.current,output.frequency,output.powerfactor,ups.load,ups.power,ups.power.nominal,ups.realpower,ups.realpower.nominal,ups.temperature,ups.status"
             resources:
               requests:
                 cpu: 15m
