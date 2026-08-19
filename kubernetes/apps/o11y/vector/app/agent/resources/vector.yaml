@@ -11,6 +11,8 @@ sources:
       - 10.0.0.0/8
   k8s_source:
     type: kubernetes_logs
+  internal_metrics_source:
+    type: internal_metrics
 sinks:
   mikrotik:
     type: vector
@@ -24,3 +26,7 @@ sinks:
     version: "2"
     address: vector-aggregator.o11y.svc.cluster.local:6001
     inputs: ["k8s_source"]
+  prometheus_exporter:
+    type: prometheus_exporter
+    inputs: ["internal_metrics_source"]
+    address: 0.0.0.0:9598

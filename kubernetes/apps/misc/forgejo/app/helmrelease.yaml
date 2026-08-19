@@ -132,11 +132,6 @@ spec:
         cron.cleanup_actions:
           ENABLED: true
           SCHEDULE: "@midnight"
-        metrics:
-          ENABLED: true
-          serviceMonitor:
-            enabled: true
-            namespace: o11y
         time:
           DEFAULT_UI_LOCATION: Europe/Belgrade
         ui:
@@ -173,6 +168,12 @@ spec:
           ARTIFACT_RETENTION_DAYS: 90
           LOG_RETENTION_DAYS: 365
           LOG_COMPRESSION: zstd # Compress action logs
+      # Chart-level metrics switch: sets app.ini [metrics] ENABLED and renders the
+      # ServiceMonitor. Not the same as config.metrics, which only writes app.ini.
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
       additionalConfigFromEnvs:
         # SECRET_KEY sourced from 1Password via External Secrets (forgejo-secret)
         - name: GITEA__SECURITY__SECRET_KEY

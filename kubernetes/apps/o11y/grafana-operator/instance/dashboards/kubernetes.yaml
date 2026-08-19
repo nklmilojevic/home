@@ -148,3 +148,17 @@ spec:
     - inputName: DS_PROMETHEUS
       datasourceName: VictoriaMetrics
   url: https://raw.githubusercontent.com/kubernetes-sigs/node-feature-discovery/master/examples/grafana-dashboard.json
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: spegel
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: VictoriaMetrics
+  url: https://raw.githubusercontent.com/spegel-org/spegel/main/charts/spegel/monitoring/grafana-dashboard.json

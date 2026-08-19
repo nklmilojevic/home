@@ -142,3 +142,71 @@ spec:
   grafanaCom:
     id: 25156
     revision: 1
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: unpackerr
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: VictoriaMetrics
+  # renovate: dashboardName="Unpackerr"
+  grafanaCom:
+    id: 18817
+    revision: 1
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: forgejo
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: VictoriaMetrics
+  # renovate: dashboardName="Gitea Dashbaord"
+  grafanaCom:
+    id: 17802
+    revision: 3
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: gatus
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: VictoriaMetrics
+  # renovate: dashboardName="Gatus"
+  grafanaCom:
+    id: 24379
+    revision: 1
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: redis
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - inputName: DS_PROM
+      datasourceName: VictoriaMetrics
+  # renovate: dashboardName="Redis Dashboard for Prometheus Redis Exporter 1.x"
+  grafanaCom:
+    id: 763
+    revision: 6

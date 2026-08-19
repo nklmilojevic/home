@@ -6,3 +6,4 @@ namespace: database
 resources:
   - ./ocirepository.yaml
   - ./helmrelease.yaml
+  - ./podmonitor.yaml

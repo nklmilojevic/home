@@ -58,6 +58,17 @@ spec:
             port: 6000
           k8s:
             port: 6001
+          metrics:
+            port: 9598
+    serviceMonitor:
+      app:
+        serviceName: vector-aggregator
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 30s
     persistence:
       config:
         type: configMap

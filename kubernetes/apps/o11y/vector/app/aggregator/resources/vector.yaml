@@ -16,6 +16,8 @@ sources:
     type: vector
     version: "2"
     address: 0.0.0.0:6001
+  internal_metrics_source:
+    type: internal_metrics
 
 #
 # Transforms
@@ -79,3 +81,7 @@ sinks:
         AccountID: "0"
         ProjectID: "0"
         Region: "0"
+  prometheus_exporter:
+    type: prometheus_exporter
+    inputs: ["internal_metrics_source"]
+    address: 0.0.0.0:9598

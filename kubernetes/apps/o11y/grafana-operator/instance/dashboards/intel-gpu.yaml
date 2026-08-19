@@ -1,0 +1,14 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: intel-gpu
+spec:
+  allowCrossNamespaceImport: true
+  resyncPeriod: 1m
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  configMapRef:
+    name: intel-gpu-dashboard
+    key: intel-gpu-dashboard.json
