@@ -892,7 +892,7 @@
         "defaults": {
           "decimals": 0,
           "min": 0,
-          "max": 100,
+          "max": 5,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -902,11 +902,11 @@
               },
               {
                 "color": "yellow",
-                "value": 80
+                "value": 3
               },
               {
                 "color": "green",
-                "value": 95
+                "value": 5
               }
             ]
           },
