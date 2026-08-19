@@ -21,6 +21,11 @@ spec:
     remediation:
       retries: 5
   values:
+    # Upstream re-pushed the 0.25.0 chart with an AvoidCommandLinePassword
+    # feature gate the v0.25.0 image binary does not know; null-delete it
+    # until a chart/image pair >=0.26.0 is published.
+    featureGates:
+      AvoidCommandLinePassword: null
     manager:
       config:
         kubeClientTimeout: ""
