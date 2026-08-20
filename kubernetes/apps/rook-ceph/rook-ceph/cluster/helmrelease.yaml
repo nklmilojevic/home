@@ -65,6 +65,28 @@ spec:
         urlPrefix: /
         ssl: false
         prometheusEndpoint: http://vmsingle-vmetrics-victoria-metrics-k8s-stack.o11y.svc.cluster.local:8429
+      # Tentacle marks legacy "aes" cephx keys insecure. Daemon keys (osd/mgr)
+      # rotate to aes256k in userspace; bump keyGeneration to rotate again.
+      # CSI/client keys must STAY aes until the nodes run a kernel with
+      # aes256k cephx support (Linux 7.0+; Talos is on 6.18) — krbd does cephx
+      # in-kernel, so rotating those keys now would break all RBD mounts.
+      # Mute the remaining auth warnings until then, plus the mgr crash spam
+      # from prometheus get_hardware_metrics() -> rook orch
+      # node_proxy_fullreport() NotImplementedError (open rook/ceph Tentacle
+      # bug, crashes every 15s scrape). Unmute after kernel 7.0 + client key
+      # rotation / upstream fix.
+      healthCheck:
+        muteHealthWarning:
+          AUTH_INSECURE_CLIENT_KEY_TYPE:
+            policy: mute
+          AUTH_INSECURE_KEYS_ALLOWED:
+            policy: mute
+          AUTH_INSECURE_KEYS_CREATABLE:
+            policy: mute
+          AUTH_INSECURE_ROTATING_SERVICE_KEY_TYPE:
+            policy: mute
+          RECENT_MGR_MODULE_CRASH:
+            policy: mute
       mgr:
         modules:
           - name: diskprediction_local
@@ -104,6 +126,11 @@ spec:
             memory: 128Mi
           limits:
             memory: 256Mi
+      security:
+        cephx:
+          daemon:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
       storage:
         useAllNodes: true
         useAllDevices: false
