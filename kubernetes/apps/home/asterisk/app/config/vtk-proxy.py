@@ -223,12 +223,12 @@ def on_doorbell():
     threading.Thread(target=session_supervisor, args=(sess,), daemon=True).start()
 
 
-def ensure_tap(ds):
+def ensure_tap(ds, ptt=True):
     """Manual tap: originate the channel-holder call, wait for monitor login."""
     with LOCK:
         s = STATE["session"]
     if s and not s.closed and s.ctrl:
-        _send_code(s, ds)
+        _send_code(s, ds, ptt)
         return s
     now = time.time()
     if now < STATE.get("tap_cooldown_until", 0.0):
@@ -269,7 +269,7 @@ def ensure_tap(ds):
     deadline = time.time() + LOGIN_WAIT
     while time.time() < deadline and not sess.closed:
         if sess.ctrl:
-            _send_code(sess, ds)
+            _send_code(sess, ds, ptt)
             return sess
         time.sleep(0.3)
     log("tap: monitor never logged in")
@@ -281,12 +281,12 @@ def _clear_pending(sess):
     return None
 
 
-def _send_code(sess, ds):
+def _send_code(sess, ds, ptt=True):
     code = DS_CODES.get(ds, DS_CODES[1])
     if sess.ctrl:
         try:
-            send_ctrl_frames(sess.ctrl, code)
-            log(f"sent relay code {code} + P2T")
+            send_ctrl_frames(sess.ctrl, code, ptt)
+            log(f"sent relay code {code}" + (" + P2T" if ptt else " (no P2T)"))
             return
         except OSError:
             pass
@@ -327,15 +327,18 @@ def end_session(sess):
     log(f"session {sess.mode} ended ({len(sess.h264)} h264 bytes)")
 
 
-def send_ctrl_frames(conn, tap_code):
-    """Open the video relay, then engage press-to-talk like the app's
+def send_ctrl_frames(conn, tap_code, ptt=True):
+    """Open the video relay, then optionally engage press-to-talk like the app's
     "speaking" button — the monitor keeps streaming a blue placeholder until
-    the P2T command (ctlcode 4, "9#") starts the real 2-wire session."""
+    the P2T command (ctlcode 4, "9#") starts the real 2-wire session. P2T also
+    appears to hold the half-duplex path in the talk direction, which mutes the
+    door station mic, so it is switchable."""
     relay = bytes([16, 16, 1, 0, 2, 0]) + tap_code.encode()
-    p2t = bytes([16, 16, 1, 0, 4, 0]) + b"9#"
     conn.sendall(relay)
+    if not ptt:
+        return
     time.sleep(0.5)
-    conn.sendall(p2t)
+    conn.sendall(bytes([16, 16, 1, 0, 4, 0]) + b"9#")
 
 
 # ---------------------------------------------------------------- ctrl plane
@@ -584,10 +587,26 @@ class Handler(BaseHTTPRequestHandler):
                 })
             if u.path == "/tap":
                 ds = int(q.get("ds", ["1"])[0])
-                sess = ensure_tap(ds)
+                ptt = q.get("ptt", ["1"])[0] not in ("0", "false", "off")
+                sess = ensure_tap(ds, ptt)
                 if sess:
                     return self._json({"ok": True, "mode": sess.mode})
                 return self._json({"ok": False, "error": "tap failed"}, 503)
+            if u.path == "/ctrl":
+                # Control-frame probe for the codes the vendor app sends:
+                # 2 = open video relay, 4 = press-to-talk. Unlock (1) is
+                # deliberately excluded; it has its own endpoint.
+                code = int(q.get("code", ["4"])[0])
+                payload = q.get("payload", ["9#"])[0]
+                if code in (0, 1):
+                    return self._json({"ok": False, "error": "code not allowed"}, 400)
+                sess = current()
+                if not sess or not sess.ctrl or sess.closed:
+                    return self._json({"ok": False, "error": "no active session"}, 409)
+                frame = bytes([16, 16, 1, 0, code, 0]) + payload.encode()
+                ok = sess.send_ctrl(frame)
+                log(f"ctrl probe code={code} payload={payload!r} -> {ok}")
+                return self._json({"ok": ok, "code": code, "payload": payload})
             if u.path == "/unlock":
                 lock = int(q.get("lock", ["1"])[0])
                 sess = current()
