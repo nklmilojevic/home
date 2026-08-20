@@ -82,6 +82,7 @@ STATE = {
     "doorbells": 0,
 }
 LOCK = threading.Lock()
+TAP_LOCK = threading.Lock()   # serialise tap origination (/video and /audio race)
 
 
 def current():
@@ -226,6 +227,12 @@ def on_doorbell():
 
 
 def ensure_tap(ds, ptt=True):
+    """Serialised entry point: concurrent consumers must not double-originate."""
+    with TAP_LOCK:
+        return _ensure_tap(ds, ptt)
+
+
+def _ensure_tap(ds, ptt=True):
     """Manual tap: originate the channel-holder call, wait for monitor login."""
     with LOCK:
         s = STATE["session"]
@@ -725,7 +732,14 @@ class Handler(BaseHTTPRequestHandler):
 
     def stream_audio(self, ds):
         """Raw door station mic payload; go2rtc muxes it alongside /video."""
+        # The video source normally establishes the session; wait for it rather
+        # than originating a competing tap, and only fall back for a lone
+        # audio consumer. Audio RTP itself starts P2T_DELAY after the relay.
         sess = current()
+        deadline = time.time() + P2T_DELAY + 8
+        while (not sess or not sess.ctrl or sess.closed) and time.time() < deadline:
+            time.sleep(0.3)
+            sess = current()
         if not sess or not sess.ctrl or sess.closed:
             sess = ensure_tap(ds)
         if not sess:
