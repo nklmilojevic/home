@@ -158,7 +158,9 @@ class Ami(threading.Thread):
         """Call the monitor (auto-answers) and park it on TAP_EXTEN."""
         if not self.wait_ready():
             return None
+        tag = str(time.time_ns())
         with self.ev_cond:
+            self.events = [e for e in self.events if e.get("ActionID") != tag]
             self.events = [e for e in self.events if e.get("Response") != "Success"]
         self.action({
             "Action": "Originate",
