@@ -17,7 +17,8 @@ data:
         ServerPath: "/ws",
         SipDomain: "asterisk.nikola.wtf",
         SipUsername: "101",
-        SipPassword: "hass123"
+        SipPassword: "hass123",
+        WelcomeScreenAccept: "yes"
       };
       Object.keys(settings).forEach(function (k) {
         localStorage.setItem(k, settings[k]);
