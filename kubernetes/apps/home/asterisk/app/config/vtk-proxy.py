@@ -223,7 +223,7 @@ def on_doorbell():
     threading.Thread(target=session_supervisor, args=(sess,), daemon=True).start()
 
 
-def ensure_tap(ds, ptt=True):
+def ensure_tap(ds, ptt=False):
     """Manual tap: originate the channel-holder call, wait for monitor login."""
     with LOCK:
         s = STATE["session"]
@@ -281,7 +281,7 @@ def _clear_pending(sess):
     return None
 
 
-def _send_code(sess, ds, ptt=True):
+def _send_code(sess, ds, ptt=False):
     code = DS_CODES.get(ds, DS_CODES[1])
     if sess.ctrl:
         try:
@@ -327,12 +327,15 @@ def end_session(sess):
     log(f"session {sess.mode} ended ({len(sess.h264)} h264 bytes)")
 
 
-def send_ctrl_frames(conn, tap_code, ptt=True):
-    """Open the video relay, then optionally engage press-to-talk like the app's
-    "speaking" button — the monitor keeps streaming a blue placeholder until
-    the P2T command (ctlcode 4, "9#") starts the real 2-wire session. P2T also
-    appears to hold the half-duplex path in the talk direction, which mutes the
-    door station mic, so it is switchable."""
+def send_ctrl_frames(conn, tap_code, ptt=False):
+    """Open the video relay for the door station.
+
+    The 2-wire path is half-duplex and press-to-talk (ctlcode 4, "9#") holds it
+    in the TALK direction, which hard-mutes the door station mic: audio RTP then
+    carries constant 0xFF (G.711 µ-law digital silence). Leaving P2T alone keeps
+    the path in the LISTEN direction, and video is real either way, so listening
+    is the default. Engaging P2T appears to be one-way — re-sending "9#" does not
+    release it, only ending the session does."""
     relay = bytes([16, 16, 1, 0, 2, 0]) + tap_code.encode()
     conn.sendall(relay)
     if not ptt:
@@ -587,7 +590,7 @@ class Handler(BaseHTTPRequestHandler):
                 })
             if u.path == "/tap":
                 ds = int(q.get("ds", ["1"])[0])
-                ptt = q.get("ptt", ["1"])[0] not in ("0", "false", "off")
+                ptt = q.get("ptt", ["0"])[0] not in ("0", "false", "off")
                 sess = ensure_tap(ds, ptt)
                 if sess:
                     return self._json({"ok": True, "mode": sess.mode})

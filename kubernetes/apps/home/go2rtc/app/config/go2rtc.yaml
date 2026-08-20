@@ -19,6 +19,10 @@ streams:
   entrance:
     - rtspx://10.5.0.1:7441/7h9l4fCP4Ekos4KY
   # DT intercom door station via vtk-proxy (asterisk pod). The tap session
-  # starts on first stream open and ends when ffmpeg disconnects.
+  # starts on first stream open and ends when ffmpeg disconnects. Audio is a
+  # second source: the monitor relays the door station mic as raw G.711 µ-law
+  # (8kHz mono, no container), and go2rtc muxes both tracks into one stream.
+  # opus for WebRTC consumers, aac for HLS/RTSP ones.
   intercom_ds1:
     - ffmpeg:http://asterisk.home.svc.cluster.local:8851/video?ds=1#video=copy
+    - ffmpeg:http://asterisk.home.svc.cluster.local:8851/audio?ds=1#input=-f mulaw -ar 8000 -ac 1#audio=opus#audio=aac
