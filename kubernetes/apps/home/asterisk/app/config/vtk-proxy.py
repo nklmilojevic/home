@@ -13,6 +13,7 @@ Protocol (reverse-engineered from the VDP Connect APK and DX470 firmware):
 """
 
 import json
+import math
 import random
 import re
 import socket
@@ -59,6 +60,7 @@ class Session:
         self.audio_pt = None
         self.audio_peer = None
         self.audio_tx = 0
+        self.talk = bytearray()     # µ-law queued for the door station speaker
         self.ptt_sent = False
         self.consumers = 0
         self.last_rtp = 0.0
@@ -542,10 +544,35 @@ def audio_listener():
             sess.cond.notify_all()
 
 
+def lin2ulaw(sample):
+    """16-bit signed PCM to G.711 µ-law (ITU-T G.711, the standard table)."""
+    BIAS, CLIP = 0x84, 32635
+    sign = 0x80 if sample < 0 else 0x00
+    if sign:
+        sample = -sample
+    if sample > CLIP:
+        sample = CLIP
+    sample += BIAS
+    exponent = 7
+    mask = 0x4000
+    while exponent > 0 and not sample & mask:
+        exponent -= 1
+        mask >>= 1
+    mantissa = (sample >> (exponent + 3)) & 0x0F
+    return ~(sign | (exponent << 4) | mantissa) & 0xFF
+
+
+def tone_ulaw(secs, hz, level):
+    n = int(min(max(secs, 0.1), 10.0) * 8000)
+    return bytes(lin2ulaw(int(level * math.sin(2 * math.pi * hz * i / 8000)))
+                 for i in range(n))
+
+
 def audio_sender(sess):
-    """Symmetric RTP. The monitor gates the door station mic until it sees a
-    reverse stream (the vendor proxy relays both directions), so push µ-law
-    silence at its source port. Also the hook for two-way talk later."""
+    """Reverse RTP toward the monitor, which relays it to the door station
+    speaker: this is the talk direction. It runs continuously because the
+    monitor only starts sending the door station mic once it sees a reverse
+    stream, so it carries µ-law silence until /talk queues something."""
     sock = STATE.get("audio_sock")
     peer = sess.audio_peer
     if not sock or not peer:
@@ -556,9 +583,16 @@ def audio_sender(sess):
     silence = b"\xff" * AUDIO_FRAME
     next_tick = time.time()
     while not sess.closed:
+        payload = silence
+        if sess.talk:
+            with sess.cond:
+                chunk = bytes(sess.talk[:AUDIO_FRAME])
+                del sess.talk[:AUDIO_FRAME]
+            if chunk:
+                payload = chunk + silence[len(chunk):]
         hdr = struct.pack(">BBHII", 0x80, AUDIO_PT, seq & 0xFFFF, ts & 0xFFFFFFFF, ssrc)
         try:
-            sock.sendto(hdr + silence, peer)
+            sock.sendto(hdr + payload, peer)
         except OSError:
             return
         sess.audio_tx += 1
@@ -605,6 +639,7 @@ class Handler(BaseHTTPRequestHandler):
                         "audio_bytes": len(s.audio),
                         "audio_pt": s.audio_pt,
                         "audio_tx": s.audio_tx,
+                        "talk_queued": len(s.talk),
                     },
                     "taps": STATE["taps"],
                     "doorbells": STATE["doorbells"],
@@ -616,6 +651,21 @@ class Handler(BaseHTTPRequestHandler):
                 if sess:
                     return self._json({"ok": True, "mode": sess.mode})
                 return self._json({"ok": False, "error": "tap failed"}, 503)
+            if u.path == "/talk":
+                # Queue audio for the door station speaker (talk direction).
+                # A tone is enough to prove the path; swap in µ-law speech
+                # (e.g. TTS) by extending this to accept a request body.
+                secs = float(q.get("secs", ["2"])[0])
+                hz = float(q.get("hz", ["1000"])[0])
+                level = int(q.get("level", ["8000"])[0])
+                sess = current()
+                if not sess or sess.closed:
+                    return self._json({"ok": False, "error": "no active session"}, 409)
+                buf = tone_ulaw(secs, hz, level)
+                with sess.cond:
+                    sess.talk.extend(buf)
+                log(f"talk: queued {len(buf)}B ({hz:.0f}Hz, level {level})")
+                return self._json({"ok": True, "queued_bytes": len(buf), "hz": hz})
             if u.path == "/ctrl":
                 # Control-frame probe for the codes the vendor app sends:
                 # 2 = open video relay, 4 = press-to-talk. Unlock (1) is
