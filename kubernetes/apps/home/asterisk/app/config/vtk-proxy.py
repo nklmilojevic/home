@@ -49,6 +49,7 @@ class Session:
         self.call_channel = None    # AMI channel name when we originated it
         self.tap_code = None
         self.h264 = bytearray()
+        self.consumers = 0
         self.last_rtp = 0.0
         self.cond = threading.Condition()
         self.closed = False
@@ -508,6 +509,7 @@ class Handler(BaseHTTPRequestHandler):
         if not sess:
             self._json({"ok": False, "error": "no session"}, 503)
             return
+        sess.consumers += 1
         # start at an IDR boundary if we can find one
         pos = 0
         start = 0
@@ -528,7 +530,27 @@ class Handler(BaseHTTPRequestHandler):
         sent = start
         idle = 0
         try:
-            while not sess.closed:
+            while True:
+                sess = current()
+                if not sess or sess.closed:
+                    # monitor BYEd the channel-holder call (firmware tap-session
+                    # limit); refresh the tap while a consumer is still attached
+                    sess = ensure_tap(ds)
+                    if not sess:
+                        break
+                    sess.consumers += 1
+                    with sess.cond:
+                        data = bytes(sess.h264)
+                    sent = 0
+                    pos = 0
+                    while pos < len(data):
+                        if data[pos:pos + 4] == b"\x00\x00\x00\x01":
+                            if len(data) > pos + 4 and (data[pos + 4] & 0x1F) in (5, 7):
+                                sent = pos
+                                break
+                            pos += 4
+                        else:
+                            pos += 1
                 with sess.cond:
                     sess.cond.wait(1.0)
                     data = bytes(sess.h264)
@@ -545,8 +567,10 @@ class Handler(BaseHTTPRequestHandler):
         except (BrokenPipeError, ConnectionResetError):
             pass
         finally:
-            if sess.mode == "tap" and sess.call_channel:
-                end_session(sess)
+            if sess:
+                sess.consumers -= 1
+                if sess.mode == "tap" and sess.call_channel and sess.consumers <= 0:
+                    end_session(sess)
 
 
 def main():
