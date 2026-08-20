@@ -88,6 +88,9 @@ spec:
         ports:
           http:
             port: *port
+          rtsp:
+            port: 554
+            protocol: TCP
       streams:
         type: LoadBalancer
         annotations:
