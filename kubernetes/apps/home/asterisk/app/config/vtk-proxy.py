@@ -224,6 +224,7 @@ def ensure_tap(ds):
     sess = Session("tap")
     sess.tap_code = DS_CODES.get(ds, DS_CODES[1])
     with LOCK:
+        STATE["tap_pending"] = sess
         STATE["session"] = sess
     STATE["taps"] += 1
 
@@ -243,7 +244,8 @@ def ensure_tap(ds):
         return None
     sess.call_channel = ch
     log(f"tap: channel {ch} up, waiting for monitor proxy login")
-    threading.Thread(target=session_supervisor, args=(sess,), daemon=True).start()
+    with LOCK:
+        _clear_pending(sess)
     deadline = time.time() + LOGIN_WAIT
     while time.time() < deadline and not sess.closed:
         if sess.ctrl:
@@ -252,6 +254,10 @@ def ensure_tap(ds):
         time.sleep(0.3)
     log("tap: monitor never logged in")
     end_session(sess)
+
+def _clear_pending(sess):
+    if STATE.get("tap_pending") is sess:
+        STATE["tap_pending"] = None
     return None
 
 
@@ -371,6 +377,18 @@ def ctrl_conn(conn, addr):
             if sess.mode == "tap" and sess.tap_code:
                 send_ctrl_frames(conn, sess.tap_code)
                 log(f"ctrl: sent tap code {sess.tap_code}")
+        elif STATE.get("tap_pending"):
+            # A tap is originating right now but its session object hasn't been
+            # replaced yet (old one still closing). Attach to the pending tap.
+            sess = STATE["tap_pending"]
+            sess.ctrl = conn
+            sess.ctrl_addr = addr
+            with sess.cond:
+                sess.cond.notify_all()
+            if sess.tap_code:
+                send_ctrl_frames(conn, sess.tap_code)
+            log("ctrl: attached login to pending tap session")
+            threading.Thread(target=session_supervisor, args=(sess,), daemon=True).start()
         else:
             # Login outside a tracked session (e.g. divert before detection):
             # adopt it as a divert session and relay DS1.
