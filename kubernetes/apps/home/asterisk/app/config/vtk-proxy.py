@@ -731,53 +731,67 @@ class Handler(BaseHTTPRequestHandler):
                     end_session(sess)
 
     def stream_audio(self, ds):
-        """Raw door station mic payload; go2rtc muxes it alongside /video."""
-        # The video source normally establishes the session; wait for it rather
-        # than originating a competing tap, and only fall back for a lone
-        # audio consumer. Audio RTP itself starts P2T_DELAY after the relay.
-        sess = current()
-        deadline = time.time() + P2T_DELAY + 8
-        while (not sess or not sess.ctrl or sess.closed) and time.time() < deadline:
-            time.sleep(0.3)
-            sess = current()
-        if not sess or not sess.ctrl or sess.closed:
-            sess = ensure_tap(ds)
-        if not sess:
-            self._json({"ok": False, "error": "no session"}, 503)
-            return
-        sess.consumers += 1
+        """Door station mic as raw G.711 µ-law, muxed by go2rtc alongside /video.
+
+        The response starts immediately with paced µ-law silence rather than
+        waiting for the monitor: audio RTP only begins P2T_DELAY after the relay
+        code, and a consumer that sees no bytes at connect time (go2rtc probing
+        its sources, then answering RTSP DESCRIBE) would publish a video-only
+        stream. Silence keeps the track present from the first byte, and paces at
+        one 20ms frame per 20ms so the switch to real audio keeps its timing.
+        Streaming across tap refreshes also keeps the audio track continuous."""
         self.send_response(200)
         self.send_header("Content-Type", "application/octet-stream")
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
-        with sess.cond:
-            sent = len(sess.audio)   # live only, skip the backlog
+
+        silence = b"\xff" * AUDIO_FRAME
+        sess = None
+        sent = 0
+        requested = False
         idle = 0
+        next_tick = time.time()
         try:
             while True:
                 s = current()
-                if not s or s.closed:
+                if s and s.ctrl and not s.closed:
+                    if s is not sess:                     # first attach or refresh
+                        if sess:
+                            sess.consumers -= 1
+                        sess = s
+                        sess.consumers += 1
+                        with sess.cond:
+                            sent = len(sess.audio)
+                    with sess.cond:
+                        data = bytes(sess.audio)
+                    if len(data) > sent:
+                        self.wfile.write(data[sent:])
+                        sent = len(data)
+                        idle = 0
+                        next_tick = time.time()           # real audio paces itself
+                        continue
+                elif not requested:
+                    # lone audio consumer: bring a session up without blocking
+                    requested = True
+                    threading.Thread(target=ensure_tap, args=(ds,), daemon=True).start()
+
+                self.wfile.write(silence)
+                idle += 1
+                if idle > 50 * 60:        # a minute of nothing but silence
                     break
-                if s is not sess:      # tap refreshed under us
-                    sess.consumers -= 1
-                    sess = s
-                    sess.consumers += 1
-                    sent = 0
-                with sess.cond:
-                    sess.cond.wait(1.0)
-                    data = bytes(sess.audio)
-                if len(data) > sent:
-                    self.wfile.write(data[sent:])
-                    sent = len(data)
-                    idle = 0
+                next_tick += 0.02
+                delay = next_tick - time.time()
+                if delay > 0:
+                    time.sleep(delay)
                 else:
-                    idle += 1
-                    if idle > 30:
-                        break
+                    next_tick = time.time()
         except (BrokenPipeError, ConnectionResetError):
             pass
         finally:
-            sess.consumers -= 1
+            if sess:
+                sess.consumers -= 1
+                if sess.mode == "tap" and sess.call_channel and sess.consumers <= 0:
+                    end_session(sess)
 
 
 def main():
