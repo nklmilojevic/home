@@ -65,15 +65,22 @@ spec:
         urlPrefix: /
         ssl: false
         prometheusEndpoint: http://vmsingle-vmetrics-victoria-metrics-k8s-stack.o11y.svc.cluster.local:8429
-      # Tentacle marks legacy "aes" cephx keys insecure. Daemon keys (osd/mgr)
-      # rotate to aes256k in userspace; bump keyGeneration to rotate again.
+      # Tentacle (CVE-2025-30156) marks legacy "aes" cephx keys insecure. The
+      # daemon keys (mon/mgr/osd/exporter/crash/admin) are already rotated to
+      # aes256k at keyGeneration 2 and the monmap issues aes256k service
+      # tickets (auth_service_cipher aes256k), so the two _ERR checks and
+      # AUTH_INSECURE_ROTATING_SERVICE_KEY_TYPE do not fire — no mute needed.
       # CSI/client keys must STAY aes until the nodes run a kernel with
-      # aes256k cephx support (Linux 7.0+; Talos is on 6.18) — krbd does cephx
-      # in-kernel, so rotating those keys now would break all RBD mounts.
-      # Mute the remaining auth warnings until then. RECENT_MGR_MODULE_CRASH
-      # stays muted as a backstop for the archived rook-module crash spam (see
-      # mgr.modules below); the crashes themselves are gone once that module is
-      # disabled. Unmute after kernel 7.0 + client key rotation.
+      # aes256k cephx support (krbd does cephx in-kernel; support landed in
+      # Linux 7.0, Talos is on 6.18) — rotating them now breaks every RBD
+      # mount. That keeps "aes" in monmap auth_allowed_ciphers, which is what
+      # the three mutes below cover; upstream explicitly recommends muting
+      # AUTH_INSECURE_CLIENT_KEY_TYPE while legacy clients exist.
+      # RECENT_MGR_MODULE_CRASH stays muted as a backstop for the rook-module
+      # crash spam (see mgr.modules below) so it cannot fail the tuppr
+      # CephCluster health gate; the mute does not hide the Prometheus alert,
+      # which reads ceph_health_detail regardless of mutes.
+      # Unmute the AUTH_* ones after kernel 7.0 + client key rotation.
       healthCheck:
         muteHealthWarning:
           AUTH_INSECURE_CLIENT_KEY_TYPE:
@@ -81,8 +88,6 @@ spec:
           AUTH_INSECURE_KEYS_ALLOWED:
             policy: mute
           AUTH_INSECURE_KEYS_CREATABLE:
-            policy: mute
-          AUTH_INSECURE_ROTATING_SERVICE_KEY_TYPE:
             policy: mute
           RECENT_MGR_MODULE_CRASH:
             policy: mute
