@@ -44,6 +44,7 @@ TAP_MAX_SECONDS = 180.0  # cap on one refresh chain: never pin the monitor forev
 TAP_COOLDOWN = 30.0      # after the cap, leave the monitor alone this long
 AUDIO_PT = 48           # monitor's G.711 µ-law payload type (nonstandard)
 AUDIO_FRAME = 160       # 20ms @ 8kHz mono
+P2T_DELAY = 5.0         # s after the relay code before P2T opens the audio path
 
 
 class Session:
@@ -58,6 +59,7 @@ class Session:
         self.audio_pt = None
         self.audio_peer = None
         self.audio_tx = 0
+        self.ptt_sent = False
         self.consumers = 0
         self.last_rtp = 0.0
         self.cond = threading.Condition()
@@ -223,7 +225,7 @@ def on_doorbell():
     threading.Thread(target=session_supervisor, args=(sess,), daemon=True).start()
 
 
-def ensure_tap(ds, ptt=False):
+def ensure_tap(ds, ptt=True):
     """Manual tap: originate the channel-holder call, wait for monitor login."""
     with LOCK:
         s = STATE["session"]
@@ -281,11 +283,11 @@ def _clear_pending(sess):
     return None
 
 
-def _send_code(sess, ds, ptt=False):
+def _send_code(sess, ds, ptt=True):
     code = DS_CODES.get(ds, DS_CODES[1])
     if sess.ctrl:
         try:
-            send_ctrl_frames(sess.ctrl, code, ptt)
+            send_ctrl_frames(sess.ctrl, code, sess, ptt)
             log(f"sent relay code {code}" + (" + P2T" if ptt else " (no P2T)"))
             return
         except OSError:
@@ -327,21 +329,33 @@ def end_session(sess):
     log(f"session {sess.mode} ended ({len(sess.h264)} h264 bytes)")
 
 
-def send_ctrl_frames(conn, tap_code, ptt=False):
-    """Open the video relay for the door station.
+def send_ctrl_frames(conn, tap_code, sess=None, ptt=True):
+    """Open the video relay for the door station, then open the audio path.
 
-    The 2-wire path is half-duplex and press-to-talk (ctlcode 4, "9#") holds it
-    in the TALK direction, which hard-mutes the door station mic: audio RTP then
-    carries constant 0xFF (G.711 µ-law digital silence). Leaving P2T alone keeps
-    the path in the LISTEN direction, and video is real either way, so listening
-    is the default. Engaging P2T appears to be one-way — re-sending "9#" does not
-    release it, only ending the session does."""
-    relay = bytes([16, 16, 1, 0, 2, 0]) + tap_code.encode()
-    conn.sendall(relay)
-    if not ptt:
+    Video starts as soon as the relay code (ctlcode 2, "0x3X#") lands. The door
+    station mic stays shut until press-to-talk (ctlcode 4, "9#") is sent, and the
+    timing matters: sent immediately after the relay the path comes up hard-muted
+    (audio RTP carries constant 0xFF, G.711 mu-law digital silence), so it is
+    scheduled P2T_DELAY seconds later, once the media session has settled.
+
+    P2T must be sent exactly ONCE per session -- re-sending "9#" on a session
+    whose audio is already open mutes it again -- hence the per-session guard."""
+    conn.sendall(bytes([16, 16, 1, 0, 2, 0]) + tap_code.encode())
+    if not ptt or sess is None or sess.ptt_sent:
         return
-    time.sleep(0.5)
-    conn.sendall(bytes([16, 16, 1, 0, 4, 0]) + b"9#")
+    sess.ptt_sent = True
+
+    def open_audio():
+        time.sleep(P2T_DELAY)
+        if sess.closed:
+            return
+        try:
+            conn.sendall(bytes([16, 16, 1, 0, 4, 0]) + b"9#")
+            log("sent P2T: audio path open")
+        except OSError:
+            pass
+
+    threading.Thread(target=open_audio, daemon=True).start()
 
 
 # ---------------------------------------------------------------- ctrl plane
@@ -403,7 +417,7 @@ def ctrl_conn(conn, addr):
             with sess.cond:
                 sess.cond.notify_all()
             if sess.mode == "tap" and sess.tap_code:
-                send_ctrl_frames(conn, sess.tap_code)
+                send_ctrl_frames(conn, sess.tap_code, sess)
                 log(f"ctrl: sent tap code {sess.tap_code}")
         elif STATE.get("tap_pending"):
             # A tap is originating right now but its session object hasn't been
@@ -414,7 +428,7 @@ def ctrl_conn(conn, addr):
             with sess.cond:
                 sess.cond.notify_all()
             if sess.tap_code:
-                send_ctrl_frames(conn, sess.tap_code)
+                send_ctrl_frames(conn, sess.tap_code, sess)
             log("ctrl: attached login to pending tap session")
             threading.Thread(target=session_supervisor, args=(sess,), daemon=True).start()
         else:
@@ -426,7 +440,7 @@ def ctrl_conn(conn, addr):
             sess.last_rtp = 0
             with LOCK:
                 STATE["session"] = sess
-            send_ctrl_frames(conn, DS_CODES[1])
+            send_ctrl_frames(conn, DS_CODES[1], sess)
             log("ctrl: adopted untracked login as divert session, sent DS1 code")
             threading.Thread(target=session_supervisor, args=(sess,), daemon=True).start()
 
@@ -590,7 +604,7 @@ class Handler(BaseHTTPRequestHandler):
                 })
             if u.path == "/tap":
                 ds = int(q.get("ds", ["1"])[0])
-                ptt = q.get("ptt", ["0"])[0] not in ("0", "false", "off")
+                ptt = q.get("ptt", ["1"])[0] not in ("0", "false", "off")
                 sess = ensure_tap(ds, ptt)
                 if sess:
                     return self._json({"ok": True, "mode": sess.mode})
