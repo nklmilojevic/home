@@ -58,7 +58,7 @@ spec:
           vtk-proxy:
             image:
               repository: python
-              tag: 3.13-alpine
+              tag: 3.14-alpine
             command: ["python3", "/vtk-proxy/vtk-proxy.py"]
             securityContext:
               allowPrivilegeEscalation: false
