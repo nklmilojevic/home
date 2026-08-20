@@ -749,8 +749,9 @@ class Handler(BaseHTTPRequestHandler):
         sess = None
         sent = 0
         requested = False
-        idle = 0
-        next_tick = time.time()
+        t_start = time.time()
+        written = 0
+        last_real = 0.0
         try:
             while True:
                 s = current()
@@ -763,28 +764,32 @@ class Handler(BaseHTTPRequestHandler):
                         with sess.cond:
                             sent = len(sess.audio)
                     with sess.cond:
+                        if len(sess.audio) <= sent:
+                            sess.cond.wait(0.02)
                         data = bytes(sess.audio)
                     if len(data) > sent:
-                        self.wfile.write(data[sent:])
+                        chunk = data[sent:]
+                        self.wfile.write(chunk)
                         sent = len(data)
-                        idle = 0
-                        next_tick = time.time()           # real audio paces itself
+                        written += len(chunk)
+                        last_real = time.time()
                         continue
                 elif not requested:
                     # lone audio consumer: bring a session up without blocking
                     requested = True
                     threading.Thread(target=ensure_tap, args=(ds,), daemon=True).start()
 
-                self.wfile.write(silence)
-                idle += 1
-                if idle > 50 * 60:        # a minute of nothing but silence
-                    break
-                next_tick += 0.02
-                delay = next_tick - time.time()
-                if delay > 0:
-                    time.sleep(delay)
-                else:
-                    next_tick = time.time()
+                # Emit silence only to cover the gap between the 8kHz schedule and
+                # what has actually been written, so it tops up the pre-roll and
+                # tap-refresh holes without doubling the rate once the mic is live.
+                owed = int((time.time() - t_start) * 8000) - written
+                if owed >= AUDIO_FRAME:
+                    self.wfile.write(silence)
+                    written += AUDIO_FRAME
+                    continue
+                if time.time() - (last_real or t_start) > 90:
+                    break                                  # mic never opened
+                time.sleep(0.005)
         except (BrokenPipeError, ConnectionResetError):
             pass
         finally:
