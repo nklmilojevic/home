@@ -47,7 +47,7 @@ spec:
               allowPrivilegeEscalation: false
             image:
               repository: docker.io/mikefarah/yq
-              tag: "4@sha256:5e3e1eb7c67c030ed6d95f5bb6603b04fccff31155a056b8d59c79da5bbfb9be"
+              tag: "4@sha256:cfc4eee658595834ef304eadb0c3ea721f3b7cb6404ad8b7cb909cc5b5145b23"
             command:
               - sh
               - -c
