@@ -218,6 +218,8 @@ def ensure_tap(ds):
     if s and not s.closed and s.ctrl:
         _send_code(s, ds)
         return s
+    sess = Session("tap")
+    sess.tap_code = DS_CODES.get(ds, DS_CODES[1])
     with LOCK:
         STATE["session"] = sess
     STATE["taps"] += 1
