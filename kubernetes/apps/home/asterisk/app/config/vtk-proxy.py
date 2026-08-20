@@ -147,9 +147,17 @@ class Ami(threading.Thread):
         msg = "".join(f"{k}: {v}\r\n" for k, v in fields.items()) + "\r\n"
         self.sock.sendall(msg.encode())
 
+
+    def wait_ready(self, timeout=60):
+        deadline = time.time() + timeout
+        while time.time() < deadline and self.sock is None:
+            time.sleep(1)
+        return self.sock is not None
+
     def originate_tap(self):
         """Call the monitor (auto-answers) and park it on TAP_EXTEN."""
-        tag = str(time.time_ns())
+        if not self.wait_ready():
+            return None
         with self.ev_cond:
             self.events = [e for e in self.events if e.get("Response") != "Success"]
         self.action({
