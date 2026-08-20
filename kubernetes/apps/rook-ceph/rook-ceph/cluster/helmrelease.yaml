@@ -70,11 +70,10 @@ spec:
       # CSI/client keys must STAY aes until the nodes run a kernel with
       # aes256k cephx support (Linux 7.0+; Talos is on 6.18) — krbd does cephx
       # in-kernel, so rotating those keys now would break all RBD mounts.
-      # Mute the remaining auth warnings until then, plus the mgr crash spam
-      # from prometheus get_hardware_metrics() -> rook orch
-      # node_proxy_fullreport() NotImplementedError (open rook/ceph Tentacle
-      # bug, crashes every 15s scrape). Unmute after kernel 7.0 + client key
-      # rotation / upstream fix.
+      # Mute the remaining auth warnings until then. RECENT_MGR_MODULE_CRASH
+      # stays muted as a backstop for the archived rook-module crash spam (see
+      # mgr.modules below); the crashes themselves are gone once that module is
+      # disabled. Unmute after kernel 7.0 + client key rotation.
       healthCheck:
         muteHealthWarning:
           AUTH_INSECURE_CLIENT_KEY_TYPE:
@@ -95,8 +94,21 @@ spec:
             enabled: true
           - name: pg_autoscaler
             enabled: true
+          # The rook orchestrator module is disabled on purpose. It has caused
+          # two separate outages on Tentacle: its 15s PodList poll floods the
+          # mgr recent-events ring (see log_max_recent above), and every
+          # prometheus scrape calls get_hardware_metrics() ->
+          # node_proxy_fullreport(), which the rook backend does not implement.
+          # Each NotImplementedError is recorded as a crash report (~3.3k in
+          # 16h), and the crash module then dies iterating its own growing dict
+          # ("dictionary changed size during iteration") -> MGR_MODULE_ERROR ->
+          # HEALTH_ERR, which blocks the tuppr CephCluster health check and
+          # stalls Kubernetes/Talos upgrades. Nothing in the provisioning path
+          # needs this module; only the dashboard's host/inventory pages and
+          # `ceph orch` lose function. Re-enable once upstream implements (or
+          # stubs) node_proxy_fullreport for the rook backend.
           - name: rook
-            enabled: true
+            enabled: false
       network:
         provider: host
         connections:
