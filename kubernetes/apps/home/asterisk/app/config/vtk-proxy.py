@@ -227,7 +227,13 @@ def ensure_tap(ds):
         STATE["session"] = sess
     STATE["taps"] += 1
 
-    ch = AMI.originate_tap()
+    ch = None
+    for attempt in range(6):
+        ch = AMI.originate_tap()
+        if ch:
+            break
+        time.sleep(3 + attempt * 3)   # monitor rejects calls while tearing down
+                                            # the previous session; back off
     if not ch:
         log("tap: originate failed")
         sess.closed = True
