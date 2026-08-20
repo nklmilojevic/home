@@ -5,6 +5,7 @@ resources:
   - ./helmrelease.yaml
   - ./ocirepository.yaml
   - ./externalsecret.yaml
+  - ./browser-phone.yaml
 configMapGenerator:
   - name: asterisk-config
     files:
