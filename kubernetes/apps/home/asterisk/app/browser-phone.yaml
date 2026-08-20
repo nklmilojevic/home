@@ -7,6 +7,7 @@ data:
   # Seeds Browser-Phone settings on first visit so the setup wizard is skipped.
   # Loaded by index.html before phone.js (injected by the init container).
   provision.js: |
+    // Seed once; delete the profileUserID localStorage key to re-provision.
     (function () {
       if (localStorage.getItem("profileUserID") !== null) return;
       var settings = {
