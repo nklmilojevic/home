@@ -39,6 +39,8 @@ AMI_USER, AMI_PASS = "admin", "hass123"
 DS_CODES = {1: "0x34#", 2: "0x35#", 3: "0x36#", 4: "0x37#"}
 RTP_TIMEOUT = 6.0       # s without RTP -> session over
 LOGIN_WAIT = 15.0
+TAP_MAX_SECONDS = 180.0  # cap on one refresh chain: never pin the monitor forever
+TAP_COOLDOWN = 30.0      # after the cap, leave the monitor alone this long
 
 
 class Session:
@@ -49,6 +51,8 @@ class Session:
         self.call_channel = None    # AMI channel name when we originated it
         self.tap_code = None
         self.h264 = bytearray()
+        self.audio = bytearray()
+        self.audio_pt = None
         self.consumers = 0
         self.last_rtp = 0.0
         self.cond = threading.Condition()
@@ -221,6 +225,17 @@ def ensure_tap(ds):
     if s and not s.closed and s.ctrl:
         _send_code(s, ds)
         return s
+    now = time.time()
+    if now < STATE.get("tap_cooldown_until", 0.0):
+        log("tap refused: cooling down after cap")
+        return None
+    chain = STATE.get("tap_chain_start") or now
+    if now - chain > TAP_MAX_SECONDS:
+        STATE["tap_cooldown_until"] = now + TAP_COOLDOWN
+        STATE["tap_chain_start"] = None
+        log(f"tap refused: {TAP_MAX_SECONDS:.0f}s cap hit, cooling down {TAP_COOLDOWN:.0f}s")
+        return None
+    STATE["tap_chain_start"] = chain
     sess = Session("tap")
     sess.tap_code = DS_CODES.get(ds, DS_CODES[1])
     with LOCK:
@@ -302,6 +317,8 @@ def end_session(sess):
     with LOCK:
         if STATE["session"] is sess:
             STATE["session"] = None
+    if sess.mode == "tap" and sess.consumers <= 0:
+        STATE["tap_chain_start"] = None
     log(f"session {sess.mode} ended ({len(sess.h264)} h264 bytes)")
 
 
@@ -460,6 +477,34 @@ def rtp_listener():
             sess.cond.notify_all()
 
 
+# ---------------------------------------------------------------- RTP audio
+
+def audio_listener():
+    """The monitor streams the door station mic to the audio port advertised in
+    the login response. Payload is raw G.711/G.722 frames; PT is logged once per
+    session so the go2rtc ffmpeg input format can match it."""
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind(("", AUDIO_PORT))
+    log(f"audio rtp listening on :{AUDIO_PORT}")
+    while True:
+        d, addr = sock.recvfrom(65535)
+        sess = current()
+        if not sess or sess.closed or len(d) < 12:
+            continue
+        if addr[0] != MONITOR_IP:
+            continue
+        cc = d[0] & 0x0F
+        payload = d[12 + 4 * cc:]
+        if not payload:
+            continue
+        if sess.audio_pt is None:
+            sess.audio_pt = d[1] & 0x7F
+            log(f"audio rtp: pt={sess.audio_pt}, {len(payload)}B frames from {addr[0]}")
+        with sess.cond:
+            sess.audio += payload
+            sess.cond.notify_all()
+
+
 # ---------------------------------------------------------------- HTTP API
 
 class Handler(BaseHTTPRequestHandler):
@@ -517,6 +562,9 @@ class Handler(BaseHTTPRequestHandler):
             if u.path == "/video":
                 ds = int(q.get("ds", ["1"])[0])
                 return self.stream_video(ds)
+            if u.path == "/audio":
+                ds = int(q.get("ds", ["1"])[0])
+                return self.stream_audio(ds)
             return self._json({"error": "not found"}, 404)
         except BrokenPipeError:
             pass
@@ -596,10 +644,53 @@ class Handler(BaseHTTPRequestHandler):
                 if sess.mode == "tap" and sess.call_channel and sess.consumers <= 0:
                     end_session(sess)
 
+    def stream_audio(self, ds):
+        """Raw door station mic payload; go2rtc muxes it alongside /video."""
+        sess = current()
+        if not sess or not sess.ctrl or sess.closed:
+            sess = ensure_tap(ds)
+        if not sess:
+            self._json({"ok": False, "error": "no session"}, 503)
+            return
+        sess.consumers += 1
+        self.send_response(200)
+        self.send_header("Content-Type", "application/octet-stream")
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        with sess.cond:
+            sent = len(sess.audio)   # live only, skip the backlog
+        idle = 0
+        try:
+            while True:
+                s = current()
+                if not s or s.closed:
+                    break
+                if s is not sess:      # tap refreshed under us
+                    sess.consumers -= 1
+                    sess = s
+                    sess.consumers += 1
+                    sent = 0
+                with sess.cond:
+                    sess.cond.wait(1.0)
+                    data = bytes(sess.audio)
+                if len(data) > sent:
+                    self.wfile.write(data[sent:])
+                    sent = len(data)
+                    idle = 0
+                else:
+                    idle += 1
+                    if idle > 30:
+                        break
+        except (BrokenPipeError, ConnectionResetError):
+            pass
+        finally:
+            sess.consumers -= 1
+
 
 def main():
     threading.Thread(target=ctrl_server, daemon=True).start()
     threading.Thread(target=rtp_listener, daemon=True).start()
+    threading.Thread(target=audio_listener, daemon=True).start()
     AMI.start()
     srv = ThreadingHTTPServer(("0.0.0.0", HTTP_PORT), Handler)
     log(f"http listening on :{HTTP_PORT}")
