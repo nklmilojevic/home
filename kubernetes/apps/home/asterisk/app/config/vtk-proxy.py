@@ -210,8 +210,6 @@ def ensure_tap(ds):
     if s and not s.closed and s.ctrl:
         _send_code(s, ds)
         return s
-    sess = Session("tap")
-    sess.tap_code = DS_CODES.get(ds, DS_CODES[1])
     with LOCK:
         STATE["session"] = sess
     STATE["taps"] += 1
@@ -315,8 +313,12 @@ def ctrl_conn(conn, addr):
         rsp[4:4 + len(acct)] = acct
         rsp[36:36 + len(pwd)] = pwd
         rsp[52:52 + len(rel)] = rel
-        rsp[84:86] = struct.pack(">H", AUDIO_PORT)
-        rsp[86:88] = struct.pack(">H", VIDEO_PORT)
+        # ports are little-endian in the V2 response (matches the working
+        # manual test and the app's convertShort(hi, lo) parsing)
+        rsp[84] = AUDIO_PORT & 0xFF
+        rsp[85] = (AUDIO_PORT >> 8) & 0xFF
+        rsp[86] = VIDEO_PORT & 0xFF
+        rsp[87] = (VIDEO_PORT >> 8) & 0xFF
         conn.sendall(bytes(rsp))
 
         with LOCK:
