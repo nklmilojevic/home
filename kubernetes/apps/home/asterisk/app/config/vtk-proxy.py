@@ -13,6 +13,7 @@ Protocol (reverse-engineered from the VDP Connect APK and DX470 firmware):
 """
 
 import json
+import random
 import re
 import socket
 import struct
@@ -41,6 +42,8 @@ RTP_TIMEOUT = 6.0       # s without RTP -> session over
 LOGIN_WAIT = 15.0
 TAP_MAX_SECONDS = 180.0  # cap on one refresh chain: never pin the monitor forever
 TAP_COOLDOWN = 30.0      # after the cap, leave the monitor alone this long
+AUDIO_PT = 48           # monitor's G.711 µ-law payload type (nonstandard)
+AUDIO_FRAME = 160       # 20ms @ 8kHz mono
 
 
 class Session:
@@ -53,6 +56,8 @@ class Session:
         self.h264 = bytearray()
         self.audio = bytearray()
         self.audio_pt = None
+        self.audio_peer = None
+        self.audio_tx = 0
         self.consumers = 0
         self.last_rtp = 0.0
         self.cond = threading.Condition()
@@ -485,6 +490,7 @@ def audio_listener():
     session so the go2rtc ffmpeg input format can match it."""
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(("", AUDIO_PORT))
+    STATE["audio_sock"] = sock
     log(f"audio rtp listening on :{AUDIO_PORT}")
     while True:
         d, addr = sock.recvfrom(65535)
@@ -493,6 +499,10 @@ def audio_listener():
             continue
         if addr[0] != MONITOR_IP:
             continue
+        if sess.audio_peer is None:
+            sess.audio_peer = addr
+            threading.Thread(target=audio_sender, args=(sess,), daemon=True).start()
+            log(f"audio peer {addr[0]}:{addr[1]}, starting reverse stream")
         cc = d[0] & 0x0F
         payload = d[12 + 4 * cc:]
         if not payload:
@@ -503,6 +513,36 @@ def audio_listener():
         with sess.cond:
             sess.audio += payload
             sess.cond.notify_all()
+
+
+def audio_sender(sess):
+    """Symmetric RTP. The monitor gates the door station mic until it sees a
+    reverse stream (the vendor proxy relays both directions), so push µ-law
+    silence at its source port. Also the hook for two-way talk later."""
+    sock = STATE.get("audio_sock")
+    peer = sess.audio_peer
+    if not sock or not peer:
+        return
+    seq = 0
+    ts = 0
+    ssrc = random.getrandbits(32)
+    silence = b"\xff" * AUDIO_FRAME
+    next_tick = time.time()
+    while not sess.closed:
+        hdr = struct.pack(">BBHII", 0x80, AUDIO_PT, seq & 0xFFFF, ts & 0xFFFFFFFF, ssrc)
+        try:
+            sock.sendto(hdr + silence, peer)
+        except OSError:
+            return
+        sess.audio_tx += 1
+        seq += 1
+        ts += AUDIO_FRAME
+        next_tick += 0.02
+        delay = next_tick - time.time()
+        if delay > 0:
+            time.sleep(delay)
+        else:
+            next_tick = time.time()
 
 
 # ---------------------------------------------------------------- HTTP API
@@ -535,6 +575,9 @@ class Handler(BaseHTTPRequestHandler):
                         "ctrl": bool(s.ctrl),
                         "h264_bytes": len(s.h264),
                         "last_rtp_ago": s.last_rtp and round(time.time() - s.last_rtp, 1),
+                        "audio_bytes": len(s.audio),
+                        "audio_pt": s.audio_pt,
+                        "audio_tx": s.audio_tx,
                     },
                     "taps": STATE["taps"],
                     "doorbells": STATE["doorbells"],
