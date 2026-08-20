@@ -250,9 +250,14 @@ def ensure_tap(ds):
 
 def _send_code(sess, ds):
     code = DS_CODES.get(ds, DS_CODES[1])
-    frame = bytes([16, 16, 1, 0, 2, 0]) + code.encode()
-    ok = sess.send_ctrl(frame)
-    log(f"sent relay code {code} -> {ok}")
+    if sess.ctrl:
+        try:
+            send_ctrl_frames(sess.ctrl, code)
+            log(f"sent relay code {code} + P2T")
+            return
+        except OSError:
+            pass
+    log(f"send relay code {code} failed: no ctrl conn")
 
 
 def session_supervisor(sess):
@@ -285,6 +290,17 @@ def end_session(sess):
         if STATE["session"] is sess:
             STATE["session"] = None
     log(f"session {sess.mode} ended ({len(sess.h264)} h264 bytes)")
+
+
+def send_ctrl_frames(conn, tap_code):
+    """Open the video relay, then engage press-to-talk like the app's
+    "speaking" button — the monitor keeps streaming a blue placeholder until
+    the P2T command (ctlcode 4, "9#") starts the real 2-wire session."""
+    relay = bytes([16, 16, 1, 0, 2, 0]) + tap_code.encode()
+    p2t = bytes([16, 16, 1, 0, 4, 0]) + b"9#"
+    conn.sendall(relay)
+    time.sleep(0.5)
+    conn.sendall(p2t)
 
 
 # ---------------------------------------------------------------- ctrl plane
@@ -346,8 +362,7 @@ def ctrl_conn(conn, addr):
             with sess.cond:
                 sess.cond.notify_all()
             if sess.mode == "tap" and sess.tap_code:
-                frame = bytes([16, 16, 1, 0, 2, 0]) + sess.tap_code.encode()
-                conn.sendall(frame)
+                send_ctrl_frames(conn, sess.tap_code)
                 log(f"ctrl: sent tap code {sess.tap_code}")
         else:
             # Login outside a tracked session (e.g. divert before detection):
@@ -358,8 +373,7 @@ def ctrl_conn(conn, addr):
             sess.last_rtp = 0
             with LOCK:
                 STATE["session"] = sess
-            frame = bytes([16, 16, 1, 0, 2, 0]) + DS_CODES[1].encode()
-            conn.sendall(frame)
+            send_ctrl_frames(conn, DS_CODES[1])
             log("ctrl: adopted untracked login as divert session, sent DS1 code")
             threading.Thread(target=session_supervisor, args=(sess,), daemon=True).start()
 
