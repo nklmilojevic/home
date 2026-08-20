@@ -4,22 +4,25 @@ kind: ConfigMap
 metadata:
   name: browser-phone-config
 data:
-  config.js: |
-    var config = {
-      wssServer: "wss://asterisk.nikola.wtf/ws",
-      ServerPath: "/ws",
-      SipUsername: "101",
-      SipPassword: "hass123",
-      SipDomain: "asterisk.nikola.wtf",
-      StunServer: "stun:stun.l.google.com:19302",
-      VoiceMailNumber: "*97",
-      SubscribeToVoicemail: false,
-      ShowCallAnswerConfirmation: false,
-      AutoAnswerEnabled: false,
-      DoNotDisturbEnabled: false,
-      StartVideoFullScreen: true,
-      SelectRingingLine: true,
-    };
+  # Seeds Browser-Phone settings on first visit so the setup wizard is skipped.
+  # Loaded by index.html before phone.js (injected by the init container).
+  provision.js: |
+    (function () {
+      if (localStorage.getItem("profileUserID") !== null) return;
+      var settings = {
+        profileUserID: "8d68b3efd8b94a85a9f92ab2c0f16c4b",
+        profileName: "Browser Phone",
+        wssServer: "asterisk.nikola.wtf",
+        WebSocketPort: "443",
+        ServerPath: "/ws",
+        SipDomain: "asterisk.nikola.wtf",
+        SipUsername: "101",
+        SipPassword: "hass123"
+      };
+      Object.keys(settings).forEach(function (k) {
+        localStorage.setItem(k, settings[k]);
+      });
+    })();
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -35,16 +38,36 @@ spec:
       labels:
         app: browser-phone
     spec:
+      initContainers:
+        - name: fetch
+          image: alpine:3.22
+          command:
+            - sh
+            - -ec
+            - |
+              SHA=33902782876259957b18f9ca71f811ae0f29b6b3
+              wget -qO- "https://github.com/InnovateAsterisk/Browser-Phone/archive/${SHA}.tar.gz" \
+                | tar xz -C /tmp
+              cp -r "/tmp/Browser-Phone-${SHA}/Phone/." /html/
+              sed -i 's|<script type="text/javascript" src="phone.js"></script>|<script type="text/javascript" src="provision.js"></script><script type="text/javascript" src="phone.js"></script>|' /html/index.html
+              grep -q provision.js /html/index.html
+          volumeMounts:
+            - name: html
+              mountPath: /html
       containers:
         - name: browser-phone
           image: nginx:alpine
           ports:
             - containerPort: 80
           volumeMounts:
+            - name: html
+              mountPath: /usr/share/nginx/html
             - name: config
-              mountPath: /usr/share/nginx/html/config.js
-              subPath: config.js
+              mountPath: /usr/share/nginx/html/provision.js
+              subPath: provision.js
       volumes:
+        - name: html
+          emptyDir: {}
         - name: config
           configMap:
             name: browser-phone-config
