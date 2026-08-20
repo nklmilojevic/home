@@ -15,7 +15,7 @@ spec:
     image:
       registry: code.forgejo.org
       repository: forgejo/forgejo
-      tag: 16.0.2
+      tag: 16.0.3
       digest: sha256:23ccc146e6dc2cd1f5c5435909baae64db873201717f1726490dae649283e6cd
       rootless: true
 
