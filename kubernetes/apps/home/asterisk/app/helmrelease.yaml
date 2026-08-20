@@ -55,6 +55,22 @@ spec:
                 memory: 64Mi
               limits:
                 memory: 256Mi
+          vtk-proxy:
+            image:
+              repository: python
+              tag: 3.13-alpine
+            command: ["python3", "/vtk-proxy/vtk-proxy.py"]
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+            env:
+              TZ: Europe/Belgrade
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
 
     service:
       sip:
@@ -79,6 +95,9 @@ spec:
             protocol: UDP
           ami:
             port: 5038
+            protocol: TCP
+          vtk-proxy:
+            port: 8851
             protocol: TCP
 
     route:
@@ -122,4 +141,11 @@ spec:
         globalMounts:
           - path: /etc/asterisk/extensions.conf
             subPath: extensions_custom.conf
+            readOnly: true
+      config-vtk-proxy:
+        type: configMap
+        name: asterisk-config
+        globalMounts:
+          - path: /vtk-proxy/vtk-proxy.py
+            subPath: vtk-proxy.py
             readOnly: true

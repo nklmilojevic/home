@@ -11,6 +11,7 @@ configMapGenerator:
     files:
       - config/options.json
       - config/manager.conf
+      - config/vtk-proxy.py
       - config/pjsip_custom.conf
       - config/extensions_custom.conf
 generatorOptions:
