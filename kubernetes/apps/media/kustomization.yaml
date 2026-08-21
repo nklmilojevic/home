@@ -18,7 +18,6 @@ resources:
   - ./sabnzbd/ks.yaml
   - ./slskd/ks.yaml
   - ./beets/ks.yaml
-  - ./droppedneedle/ks.yaml
   - ./unpackerr/ks.yaml
   - ./profilarr/ks.yaml
   - ./seerr/ks.yaml
