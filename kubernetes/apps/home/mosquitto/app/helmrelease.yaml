@@ -20,8 +20,9 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     controllers:
       mosquitto:
-        annotations:
-          configmap.reloader.stakater.com/reload: "mosqutto-config"
+        pod:
+          annotations:
+            descheduler.alpha.kubernetes.io/prefer-no-eviction: "true"
         containers:
           app:
             image:
