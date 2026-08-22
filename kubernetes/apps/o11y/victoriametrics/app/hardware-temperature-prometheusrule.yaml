@@ -215,7 +215,7 @@ spec:
               last 30 days - cooling or airflow may be degrading
           expr: |-
             (
-              node:hwmon_temp_celsius:p95_2d{chip=~"platform_coretemp.*|nvme.*",sensor="temp1"}
+              last_over_time(node:hwmon_temp_celsius:p95_2d{chip=~"platform_coretemp.*|nvme.*",sensor="temp1"}[30m])
               -
               min_over_time(
                 node:hwmon_temp_celsius:p95_2d{chip=~"platform_coretemp.*|nvme.*",sensor="temp1"}[30d]
