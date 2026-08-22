@@ -8,6 +8,13 @@
 # inside the baseline: a deviation therefore means "hotter than this sensor's
 # own busiest hours", not "hotter than idle".
 #
+# The alerts read the baseline through `last_over_time(...[30m])`, which is
+# load-bearing: vmalert aligns each query to its group interval, so the 15m
+# baseline group stamps its samples on 15m boundaries - up to 15m old by the
+# time the 1m alert group runs, i.e. outside the 5m default staleness window.
+# A bare reference silently evaluates to nothing (observed on first deploy).
+# The 30m window also rides out a missed evaluation across a vmalert restart.
+#
 # Thresholds were backtested against 14d of history (2026-08-08..08-22) and are
 # the smallest values that produce ZERO firings over that window:
 #   CPU package  +10C / 30m avg   (max observed sustained deviation 8C)
@@ -95,7 +102,7 @@ spec:
               )
             )
             -
-            node:hwmon_temp_celsius:p95_7d{chip=~"platform_coretemp.*",sensor="temp1"}
+            last_over_time(node:hwmon_temp_celsius:p95_7d{chip=~"platform_coretemp.*",sensor="temp1"}[30m])
             > 10
           for: 30m
           labels:
@@ -113,7 +120,7 @@ spec:
               )
             )
             -
-            node:hwmon_temp_celsius:p95_7d{chip=~"nvme.*",sensor="temp1"}
+            last_over_time(node:hwmon_temp_celsius:p95_7d{chip=~"nvme.*",sensor="temp1"}[30m])
             > 6
           for: 20m
           labels:
@@ -131,7 +138,7 @@ spec:
               )
             )
             -
-            node:hwmon_temp_celsius:p95_7d{chip=~"target.*"}
+            last_over_time(node:hwmon_temp_celsius:p95_7d{chip=~"target.*"}[30m])
             > 6
           for: 20m
           labels:
@@ -149,7 +156,7 @@ spec:
               )
             )
             -
-            node:hwmon_temp_celsius:p95_7d{chip=~"platform_nct6775.*",sensor="temp2"}
+            last_over_time(node:hwmon_temp_celsius:p95_7d{chip=~"platform_nct6775.*",sensor="temp2"}[30m])
             > 10
           for: 20m
           labels:
@@ -195,7 +202,7 @@ spec:
               )
             )
             -
-            unifi:device_temp_celsius:p95_7d
+            last_over_time(unifi:device_temp_celsius:p95_7d[30m])
             > 6
           for: 20m
           labels:
@@ -224,7 +231,7 @@ spec:
               )
             )
             -
-            unas:cpu_temp_celsius:p95_7d
+            last_over_time(unas:cpu_temp_celsius:p95_7d[30m])
             > 6
           for: 20m
           labels:
@@ -252,7 +259,7 @@ spec:
               )
             )
             -
-            unas:disk_temp_celsius:p95_7d
+            last_over_time(unas:disk_temp_celsius:p95_7d[30m])
             > 6
           for: 20m
           labels:
@@ -282,7 +289,7 @@ spec:
               )
             )
             -
-            ups:temp_celsius:p95_7d
+            last_over_time(ups:temp_celsius:p95_7d[30m])
             > 6
           for: 20m
           labels:
