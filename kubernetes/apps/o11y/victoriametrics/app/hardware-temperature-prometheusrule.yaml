@@ -1,0 +1,289 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+#
+# Hardware temperature baselines + deviation alerts.
+#
+# Baseline = rolling 7d p95 per sensor, recomputed every 15m and remote-written
+# to vmsingle by vmalert. p95 (not mean) so that normal load peaks are already
+# inside the baseline: a deviation therefore means "hotter than this sensor's
+# own busiest hours", not "hotter than idle".
+#
+# Thresholds were backtested against 14d of history (2026-08-08..08-22) and are
+# the smallest values that produce ZERO firings over that window:
+#   CPU package  +10C / 30m avg   (max observed sustained deviation 8C)
+#   NVMe         +6C  / 15m avg   (max observed 5C, p95 sd < 3C)
+#   SATA         +6C  / 15m avg   (max observed 3.2C)
+#   Board CPUTIN +10C / 15m avg   (max observed 9.2C)
+#   UniFi/UNAS   +6C  / 15m avg   (these sensors sit within +-1C, sd <= 0.9C)
+#
+# Deliberately NOT alerted on deviation (they are in the recorded baseline for
+# dashboards, but are too noisy or plain wrong to page on):
+#   * per-core coretemp sensors    - burst to +15C over p95 on ordinary load;
+#                                    the package sensor plus the crit-margin
+#                                    rule below already cover a real problem.
+#   * NVMe "Sensor 1/2/3" (temp2+) - bimodal firmware sensors; icarus001 nvme0
+#                                    steps 54C <-> 84C with no thermal event,
+#                                    and they expose no crit threshold.
+#   * nct6798 SYSTIN/AUXTIN*/PCH_* - unconnected thermistors on icarus003:
+#                                    pinned near 100C, 0C or -25C.
+#   * thermal_zone acpitz          - frozen at 27.8C on all three nodes;
+#                                    x86_pkg_temp duplicates coretemp temp1.
+#   * smartctl_device_temperature  - the exporter's only identity label is a
+#                                    pod IP, so a restart forks the series;
+#                                    hwmon covers the same NVMe Composite
+#                                    sensor with stable labels.
+#
+# Downward deviations are not alerted: cold means idle or rebooted, not broken.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: hardware-temperature-rules
+spec:
+  groups:
+    - name: hardware-temperature.baseline
+      interval: 15m
+      rules:
+        # Whitelisted chips only - see the exclusion list above. The
+        # node_uname_info join swaps the scrape-target IP for the node name.
+        - record: node:hwmon_temp_celsius:p95_7d
+          expr: |-
+            quantile_over_time(0.95, (
+              avg by (nodename,chip,sensor) (
+                (
+                    node_hwmon_temp_celsius{chip=~"platform_coretemp.*|nvme.*|target.*"}
+                  or
+                    node_hwmon_temp_celsius{chip=~"platform_nct6775.*",sensor="temp2"}
+                ) * on (instance) group_left(nodename) node_uname_info
+              )
+            )[7d:5m])
+        # `> 0` drops the empty NAS bays, the DAC-cabled SFP ports and the
+        # zero sample a UniFi device reports while it is booting.
+        - record: unifi:device_temp_celsius:p95_7d
+          expr: |-
+            quantile_over_time(0.95, (
+              avg by (name,temp_area,temp_type) (unpoller_device_temperature_celsius > 0)
+            )[7d:5m])
+        - record: unas:cpu_temp_celsius:p95_7d
+          expr: |-
+            quantile_over_time(0.95, (
+              avg by (name) (unpoller_unas_cpu_temperature_celsius > 0)
+            )[7d:5m])
+        - record: unas:disk_temp_celsius:p95_7d
+          expr: |-
+            quantile_over_time(0.95, (
+              avg by (name,slot_id) (unpoller_unas_disk_temperature_celsius > 0)
+            )[7d:5m])
+        - record: ups:temp_celsius:p95_7d
+          expr: |-
+            quantile_over_time(0.95, (
+              avg by (job) (network_ups_tools_ups_temperature > 0)
+            )[7d:5m])
+
+    - name: hardware-temperature.rules
+      interval: 1m
+      rules:
+        - alert: NodeCPUPackageTemperatureDeviation
+          annotations:
+            summary: >-
+              CPU package on {{ $labels.nodename }} is {{ $value | printf "%.1f" }}°C
+              above its 7-day p95 baseline
+          expr: |-
+            (
+              avg by (nodename,chip,sensor) (
+                avg_over_time(node_hwmon_temp_celsius{chip=~"platform_coretemp.*",sensor="temp1"}[30m])
+                  * on (instance) group_left(nodename) node_uname_info
+              )
+            )
+            -
+            node:hwmon_temp_celsius:p95_7d{chip=~"platform_coretemp.*",sensor="temp1"}
+            > 10
+          for: 30m
+          labels:
+            severity: warning
+        - alert: NodeNvmeTemperatureDeviation
+          annotations:
+            summary: >-
+              NVMe {{ $labels.chip }} on {{ $labels.nodename }} is
+              {{ $value | printf "%.1f" }}°C above its 7-day p95 baseline
+          expr: |-
+            (
+              avg by (nodename,chip,sensor) (
+                avg_over_time(node_hwmon_temp_celsius{chip=~"nvme.*",sensor="temp1"}[15m])
+                  * on (instance) group_left(nodename) node_uname_info
+              )
+            )
+            -
+            node:hwmon_temp_celsius:p95_7d{chip=~"nvme.*",sensor="temp1"}
+            > 6
+          for: 20m
+          labels:
+            severity: warning
+        - alert: NodeSataDiskTemperatureDeviation
+          annotations:
+            summary: >-
+              SATA disk on {{ $labels.nodename }} is {{ $value | printf "%.1f" }}°C
+              above its 7-day p95 baseline
+          expr: |-
+            (
+              avg by (nodename,chip,sensor) (
+                avg_over_time(node_hwmon_temp_celsius{chip=~"target.*"}[15m])
+                  * on (instance) group_left(nodename) node_uname_info
+              )
+            )
+            -
+            node:hwmon_temp_celsius:p95_7d{chip=~"target.*"}
+            > 6
+          for: 20m
+          labels:
+            severity: warning
+        - alert: NodeBoardTemperatureDeviation
+          annotations:
+            summary: >-
+              Board sensor CPUTIN on {{ $labels.nodename }} is
+              {{ $value | printf "%.1f" }}°C above its 7-day p95 baseline
+          expr: |-
+            (
+              avg by (nodename,chip,sensor) (
+                avg_over_time(node_hwmon_temp_celsius{chip=~"platform_nct6775.*",sensor="temp2"}[15m])
+                  * on (instance) group_left(nodename) node_uname_info
+              )
+            )
+            -
+            node:hwmon_temp_celsius:p95_7d{chip=~"platform_nct6775.*",sensor="temp2"}
+            > 10
+          for: 20m
+          labels:
+            severity: warning
+        # Absolute backstop for the slow drift a rolling baseline absorbs.
+        # Vendor limit, not a guess: coretemp crit is Tjmax (100C), NVMe
+        # Composite crit is 79.85-89.85C per drive. Worst 10m average in the
+        # backtest window sat 4.5C under (crit - 5). The SATA disk is excluded:
+        # its drivetemp crit is 55C while it idles at 52C, so a crit margin is
+        # meaningless there - the deviation rule above covers it.
+        - alert: NodeTemperatureNearCritical
+          annotations:
+            summary: >-
+              {{ $labels.chip }}/{{ $labels.sensor }} on {{ $labels.nodename }} is
+              {{ $value | printf "%.1f" }}°C, within 5°C of its critical limit
+          expr: |-
+            (
+              avg by (nodename,chip,sensor) (
+                avg_over_time(node_hwmon_temp_celsius{chip=~"platform_coretemp.*|nvme.*"}[10m])
+                  * on (instance) group_left(nodename) node_uname_info
+              )
+            )
+            >
+            (
+              avg by (nodename,chip,sensor) (
+                (node_hwmon_temp_crit_celsius{chip=~"platform_coretemp.*|nvme.*"} - 5)
+                  * on (instance) group_left(nodename) node_uname_info
+              )
+            )
+          for: 10m
+          labels:
+            severity: critical
+        - alert: UnifiDeviceTemperatureDeviation
+          annotations:
+            summary: >-
+              {{ $labels.name }} {{ $labels.temp_type }} sensor
+              {{ if $labels.temp_area }}({{ $labels.temp_area }}) {{ end }}is
+              {{ $value | printf "%.1f" }}°C above its 7-day p95 baseline
+          expr: |-
+            (
+              avg by (name,temp_area,temp_type) (
+                avg_over_time((unpoller_device_temperature_celsius > 0)[15m:1m])
+              )
+            )
+            -
+            unifi:device_temp_celsius:p95_7d
+            > 6
+          for: 20m
+          labels:
+            severity: warning
+        - alert: UnifiDeviceTemperatureHigh
+          annotations:
+            summary: >-
+              {{ $labels.name }} {{ $labels.temp_type }} sensor is
+              {{ $value | printf "%.1f" }}°C
+          expr: |-
+            avg by (name,temp_area,temp_type) (
+              avg_over_time((unpoller_device_temperature_celsius > 0)[10m:1m])
+            ) > 90
+          for: 10m
+          labels:
+            severity: critical
+        - alert: UnasCpuTemperatureDeviation
+          annotations:
+            summary: >-
+              {{ $labels.name }} CPU is {{ $value | printf "%.1f" }}°C above its
+              7-day p95 baseline
+          expr: |-
+            (
+              avg by (name) (
+                avg_over_time((unpoller_unas_cpu_temperature_celsius > 0)[15m:1m])
+              )
+            )
+            -
+            unas:cpu_temp_celsius:p95_7d
+            > 6
+          for: 20m
+          labels:
+            severity: warning
+        - alert: UnasCpuTemperatureHigh
+          annotations:
+            summary: >-
+              {{ $labels.name }} CPU is {{ $value | printf "%.1f" }}°C
+          expr: |-
+            avg by (name) (
+              avg_over_time((unpoller_unas_cpu_temperature_celsius > 0)[10m:1m])
+            ) > 85
+          for: 10m
+          labels:
+            severity: critical
+        - alert: UnasDiskTemperatureDeviation
+          annotations:
+            summary: >-
+              {{ $labels.name }} disk in slot {{ $labels.slot_id }} is
+              {{ $value | printf "%.1f" }}°C above its 7-day p95 baseline
+          expr: |-
+            (
+              avg by (name,slot_id) (
+                avg_over_time((unpoller_unas_disk_temperature_celsius > 0)[15m:1m])
+              )
+            )
+            -
+            unas:disk_temp_celsius:p95_7d
+            > 6
+          for: 20m
+          labels:
+            severity: warning
+        # Spinning disks want <= 60C; the array idles at 50C.
+        - alert: UnasDiskTemperatureHigh
+          annotations:
+            summary: >-
+              {{ $labels.name }} disk in slot {{ $labels.slot_id }} is
+              {{ $value | printf "%.1f" }}°C
+          expr: |-
+            avg by (name,slot_id) (
+              avg_over_time((unpoller_unas_disk_temperature_celsius > 0)[10m:1m])
+            ) > 58
+          for: 10m
+          labels:
+            severity: critical
+        - alert: UpsTemperatureDeviation
+          annotations:
+            summary: >-
+              UPS internal temperature is {{ $value | printf "%.1f" }}°C above its
+              7-day p95 baseline
+          expr: |-
+            (
+              avg by (job) (
+                avg_over_time((network_ups_tools_ups_temperature > 0)[15m:1m])
+              )
+            )
+            -
+            ups:temp_celsius:p95_7d
+            > 6
+          for: 20m
+          labels:
+            severity: warning
