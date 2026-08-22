@@ -3,10 +3,19 @@
 #
 # Hardware temperature baselines + deviation alerts.
 #
-# Baseline = rolling 7d p95 per sensor, recomputed every 15m and remote-written
+# Baseline = rolling 2d p95 per sensor, recomputed every 15m and remote-written
 # to vmsingle by vmalert. p95 (not mean) so that normal load peaks are already
 # inside the baseline: a deviation therefore means "hotter than this sensor's
 # own busiest hours", not "hotter than idle".
+#
+# The window is 2d, not 7d, because cooling hardware changes underneath it.
+# icarus001 was re-pasted and its fan repaired at 2026-08-21 23:50 (its package
+# 1h median dropped 20.5C, p50 89 -> 73, E-core p95 84 -> 62); a 7d window kept
+# quoting the broken-cooling p95 of 92C for six more days, which put its
+# deviation trigger above Tjmax, i.e. no coverage at all. 2d re-learns a
+# hardware change in two days and, over the 14d backtest, cost nothing: every
+# rule below still produces zero firings. What 2d gives up is slow drift - that
+# is what NodeCoolingHeadroomDegraded and the crit-margin rule are for.
 #
 # The alerts read the baseline through `last_over_time(...[30m])`, which is
 # load-bearing: vmalert aligns each query to its group interval, so the 15m
@@ -17,7 +26,7 @@
 #
 # Thresholds were backtested against 14d of history (2026-08-08..08-22) and are
 # the smallest values that produce ZERO firings over that window:
-#   CPU package  +10C / 30m avg   (max observed sustained deviation 8C)
+#   CPU package  +12C / 30m avg   (2d window; +11 is the zero-firing floor)
 #   NVMe         +6C  / 15m avg   (max observed 5C, p95 sd < 3C)
 #   SATA         +6C  / 15m avg   (max observed 3.2C)
 #   Board CPUTIN +10C / 15m avg   (max observed 9.2C)
@@ -52,7 +61,7 @@ spec:
       rules:
         # Whitelisted chips only - see the exclusion list above. The
         # node_uname_info join swaps the scrape-target IP for the node name.
-        - record: node:hwmon_temp_celsius:p95_7d
+        - record: node:hwmon_temp_celsius:p95_2d
           expr: |-
             quantile_over_time(0.95, (
               avg by (nodename,chip,sensor) (
@@ -62,29 +71,29 @@ spec:
                     node_hwmon_temp_celsius{chip=~"platform_nct6775.*",sensor="temp2"}
                 ) * on (instance) group_left(nodename) node_uname_info
               )
-            )[7d:5m])
+            )[2d:5m])
         # `> 0` drops the empty NAS bays, the DAC-cabled SFP ports and the
         # zero sample a UniFi device reports while it is booting.
-        - record: unifi:device_temp_celsius:p95_7d
+        - record: unifi:device_temp_celsius:p95_2d
           expr: |-
             quantile_over_time(0.95, (
               avg by (name,temp_area,temp_type) (unpoller_device_temperature_celsius > 0)
-            )[7d:5m])
-        - record: unas:cpu_temp_celsius:p95_7d
+            )[2d:5m])
+        - record: unas:cpu_temp_celsius:p95_2d
           expr: |-
             quantile_over_time(0.95, (
               avg by (name) (unpoller_unas_cpu_temperature_celsius > 0)
-            )[7d:5m])
-        - record: unas:disk_temp_celsius:p95_7d
+            )[2d:5m])
+        - record: unas:disk_temp_celsius:p95_2d
           expr: |-
             quantile_over_time(0.95, (
               avg by (name,slot_id) (unpoller_unas_disk_temperature_celsius > 0)
-            )[7d:5m])
-        - record: ups:temp_celsius:p95_7d
+            )[2d:5m])
+        - record: ups:temp_celsius:p95_2d
           expr: |-
             quantile_over_time(0.95, (
               avg by (job) (network_ups_tools_ups_temperature > 0)
-            )[7d:5m])
+            )[2d:5m])
 
     - name: hardware-temperature.rules
       interval: 1m
@@ -93,7 +102,7 @@ spec:
           annotations:
             summary: >-
               CPU package on {{ $labels.nodename }} is {{ $value | printf "%.1f" }}°C
-              above its 7-day p95 baseline
+              above its 2-day p95 baseline
           expr: |-
             (
               avg by (nodename,chip,sensor) (
@@ -102,8 +111,8 @@ spec:
               )
             )
             -
-            last_over_time(node:hwmon_temp_celsius:p95_7d{chip=~"platform_coretemp.*",sensor="temp1"}[30m])
-            > 10
+            last_over_time(node:hwmon_temp_celsius:p95_2d{chip=~"platform_coretemp.*",sensor="temp1"}[30m])
+            > 12
           for: 30m
           labels:
             severity: warning
@@ -111,7 +120,7 @@ spec:
           annotations:
             summary: >-
               NVMe {{ $labels.chip }} on {{ $labels.nodename }} is
-              {{ $value | printf "%.1f" }}°C above its 7-day p95 baseline
+              {{ $value | printf "%.1f" }}°C above its 2-day p95 baseline
           expr: |-
             (
               avg by (nodename,chip,sensor) (
@@ -120,7 +129,7 @@ spec:
               )
             )
             -
-            last_over_time(node:hwmon_temp_celsius:p95_7d{chip=~"nvme.*",sensor="temp1"}[30m])
+            last_over_time(node:hwmon_temp_celsius:p95_2d{chip=~"nvme.*",sensor="temp1"}[30m])
             > 6
           for: 20m
           labels:
@@ -129,7 +138,7 @@ spec:
           annotations:
             summary: >-
               SATA disk on {{ $labels.nodename }} is {{ $value | printf "%.1f" }}°C
-              above its 7-day p95 baseline
+              above its 2-day p95 baseline
           expr: |-
             (
               avg by (nodename,chip,sensor) (
@@ -138,7 +147,7 @@ spec:
               )
             )
             -
-            last_over_time(node:hwmon_temp_celsius:p95_7d{chip=~"target.*"}[30m])
+            last_over_time(node:hwmon_temp_celsius:p95_2d{chip=~"target.*"}[30m])
             > 6
           for: 20m
           labels:
@@ -147,7 +156,7 @@ spec:
           annotations:
             summary: >-
               Board sensor CPUTIN on {{ $labels.nodename }} is
-              {{ $value | printf "%.1f" }}°C above its 7-day p95 baseline
+              {{ $value | printf "%.1f" }}°C above its 2-day p95 baseline
           expr: |-
             (
               avg by (nodename,chip,sensor) (
@@ -156,7 +165,7 @@ spec:
               )
             )
             -
-            last_over_time(node:hwmon_temp_celsius:p95_7d{chip=~"platform_nct6775.*",sensor="temp2"}[30m])
+            last_over_time(node:hwmon_temp_celsius:p95_2d{chip=~"platform_nct6775.*",sensor="temp2"}[30m])
             > 10
           for: 20m
           labels:
@@ -189,12 +198,39 @@ spec:
           for: 10m
           labels:
             severity: critical
+        # The 2d baseline follows a slow degradation, so compare it against the
+        # best 2d window of the last 30d instead: "this sensor no longer reaches
+        # the temperature it used to reach". Replayed over 14d this fires only on
+        # icarus001's package, whose p95_2d stepped 84C -> 92C on 2026-08-17 and
+        # held there until the 08-21 re-paste - i.e. it would have caught the
+        # failing cooling four days before it was noticed. Every other package
+        # and NVMe stayed under +10 (icarus002 peaked at +9 on load swings).
+        # Load is a confounder: a genuinely busier week reads as lost headroom,
+        # hence 6h of persistence and warning, not critical.
+        - alert: NodeCoolingHeadroomDegraded
+          annotations:
+            summary: >-
+              {{ $labels.chip }} on {{ $labels.nodename }} now peaks
+              {{ $value | printf "%.1f" }}°C above its best 2-day window of the
+              last 30 days - cooling or airflow may be degrading
+          expr: |-
+            (
+              node:hwmon_temp_celsius:p95_2d{chip=~"platform_coretemp.*|nvme.*",sensor="temp1"}
+              -
+              min_over_time(
+                node:hwmon_temp_celsius:p95_2d{chip=~"platform_coretemp.*|nvme.*",sensor="temp1"}[30d]
+              )
+            )
+            > 10
+          for: 6h
+          labels:
+            severity: warning
         - alert: UnifiDeviceTemperatureDeviation
           annotations:
             summary: >-
               {{ $labels.name }} {{ $labels.temp_type }} sensor
               {{ if $labels.temp_area }}({{ $labels.temp_area }}) {{ end }}is
-              {{ $value | printf "%.1f" }}°C above its 7-day p95 baseline
+              {{ $value | printf "%.1f" }}°C above its 2-day p95 baseline
           expr: |-
             (
               avg by (name,temp_area,temp_type) (
@@ -202,7 +238,7 @@ spec:
               )
             )
             -
-            last_over_time(unifi:device_temp_celsius:p95_7d[30m])
+            last_over_time(unifi:device_temp_celsius:p95_2d[30m])
             > 6
           for: 20m
           labels:
@@ -223,7 +259,7 @@ spec:
           annotations:
             summary: >-
               {{ $labels.name }} CPU is {{ $value | printf "%.1f" }}°C above its
-              7-day p95 baseline
+              2-day p95 baseline
           expr: |-
             (
               avg by (name) (
@@ -231,7 +267,7 @@ spec:
               )
             )
             -
-            last_over_time(unas:cpu_temp_celsius:p95_7d[30m])
+            last_over_time(unas:cpu_temp_celsius:p95_2d[30m])
             > 6
           for: 20m
           labels:
@@ -251,7 +287,7 @@ spec:
           annotations:
             summary: >-
               {{ $labels.name }} disk in slot {{ $labels.slot_id }} is
-              {{ $value | printf "%.1f" }}°C above its 7-day p95 baseline
+              {{ $value | printf "%.1f" }}°C above its 2-day p95 baseline
           expr: |-
             (
               avg by (name,slot_id) (
@@ -259,7 +295,7 @@ spec:
               )
             )
             -
-            last_over_time(unas:disk_temp_celsius:p95_7d[30m])
+            last_over_time(unas:disk_temp_celsius:p95_2d[30m])
             > 6
           for: 20m
           labels:
@@ -281,7 +317,7 @@ spec:
           annotations:
             summary: >-
               UPS internal temperature is {{ $value | printf "%.1f" }}°C above its
-              7-day p95 baseline
+              2-day p95 baseline
           expr: |-
             (
               avg by (job) (
@@ -289,7 +325,7 @@ spec:
               )
             )
             -
-            last_over_time(ups:temp_celsius:p95_7d[30m])
+            last_over_time(ups:temp_celsius:p95_2d[30m])
             > 6
           for: 20m
           labels:
