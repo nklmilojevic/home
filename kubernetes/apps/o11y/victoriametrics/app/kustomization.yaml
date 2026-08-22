@@ -7,4 +7,5 @@ resources:
   - ./externalsecret.yaml
   - ./vmalertmanager.yaml
   - ./alertmanager-prometheusrule.yaml
+  - ./hardware-temperature-prometheusrule.yaml
   - ./replicationsource.yaml
