@@ -103,7 +103,7 @@ spec:
               limits:
                 memory: 4Gi
     service:
-      app:
+      immich:
         controller: immich
         ports:
           http:
