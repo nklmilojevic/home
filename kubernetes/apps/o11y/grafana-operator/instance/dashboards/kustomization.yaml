@@ -29,6 +29,9 @@ configMapGenerator:
   - name: intel-gpu-dashboard
     files:
       - intel-gpu-dashboard.json
+  - name: immich-dashboard
+    files:
+      - immich-dashboard.json
   - name: home-assistant-dashboard
     files:
       - home-assistant-dashboard.json
