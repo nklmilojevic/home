@@ -5,17 +5,17 @@ metadata:
   name: immich
 spec:
   allowCrossNamespaceImport: true
+  resyncPeriod: 1m
   instanceSelector:
     matchLabels:
       dashboards: grafana
   datasources:
     - inputName: DS_PROMETHEUS
       datasourceName: VictoriaMetrics
-    # VictoriaLogs is not Loki-compatible; the couple of log panels in this
-    # dashboard will stay empty, the metric panels all use DS_PROMETHEUS.
-    - inputName: DS_LOKI
-      datasourceName: VictoriaLogs
-  # renovate: dashboardName="Immich Overview"
-  grafanaCom:
-    id: 22555
-    revision: 1
+  # Vendored from grafana.com dashboard 22555 rev 1 ("Immich Overview") with
+  # two fixes: service_name is "immich" here (not the helm chart's
+  # "immich-server"), and the Loki log panel is removed (VictoriaLogs is not
+  # LogQL-compatible).
+  configMapRef:
+    name: immich-dashboard
+    key: immich-dashboard.json
