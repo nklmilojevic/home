@@ -1,0 +1,71 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/postgresql.cnpg.io/cluster_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: immich-pg
+  namespace: photos
+  annotations:
+    # Required for seamless bootstrap with WAL archiving enabled:
+    # https://github.com/cloudnative-pg/cloudnative-pg/issues/5778
+    cnpg.io/skipEmptyWalArchiveCheck: "enabled"
+spec:
+  # Single instance: Ceph already replicates the volume; more instances only
+  # add write amplification on top of replicated storage.
+  instances: 1
+  # Immich requires the VectorChord extension; stock CNPG images lack it.
+  # The VectorChord version range is constrained by the Immich release, so
+  # this image is bumped manually alongside Immich upgrades.
+  # renovate: datasource=docker depName=ghcr.io/tensorchord/cloudnative-vectorchord enabled=false
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:18.0-0.5.3@sha256:267f6cbb32af6e109e138a143c7e9dd5d44d68433ec2303f0c30e745c788d1a9
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 10Gi
+    storageClass: ceph-block
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: immich-pg-secret
+  postgresql:
+    shared_preload_libraries:
+      - vchord.so
+    parameters:
+      max_connections: "200"
+      shared_buffers: 512MB
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      memory: 2Gi
+  monitoring:
+    enablePodMonitor: true
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: immich-pg
+        serverName: immich-pg-v1
+  # When rebuilding the cluster from the R2 backup, replace the bootstrap
+  # block below with this recovery block and bump serverName above
+  # (e.g. immich-pg-v2) so the new WAL archive does not clash with the old one.
+  #
+  # bootstrap:
+  #   recovery:
+  #     source: &recoveryServer immich-pg-v1
+  # externalClusters:
+  #   - name: *recoveryServer
+  #     plugin:
+  #       name: barman-cloud.cloudnative-pg.io
+  #       parameters:
+  #         barmanObjectName: immich-pg
+  #         serverName: *recoveryServer
+  #
+  bootstrap:
+    initdb:
+      database: immich
+      owner: immich
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
+        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
+        # Immich runs ALTER EXTENSION on upgrades, which needs superuser.
+        - ALTER USER immich WITH SUPERUSER;

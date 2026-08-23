@@ -1,0 +1,154 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: immich
+  namespace: photos
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: immich
+  values:
+    defaultPodOptions:
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: immich-gpu
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 44
+          - 105
+    controllers:
+      immich:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/immich-app/immich-server
+              tag: v3.1.0@sha256:b434cb9287eea1471c9974845914d4dd328c9c2d652e446ed4930f99944f0ceb
+            env:
+              TZ: "Europe/Belgrade"
+              IMMICH_MEDIA_LOCATION: &mediaLocation /library
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: immich-pg-app
+                    key: uri
+              REDIS_HOSTNAME: redis-immich.database.svc.cluster.local
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+            resources:
+              claims:
+                - name: gpu
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 4Gi
+      machine-learning:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/immich-app/immich-machine-learning
+              tag: v3.1.0-openvino@sha256:4b6ef958e7749fc548377bb23ee219c09c74da8decee080d76dc6a388c39b013
+            env:
+              TZ: "Europe/Belgrade"
+              IMMICH_MEDIA_LOCATION: *mediaLocation
+              MPLCONFIGDIR: /cache/matplotlib
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: &mlPort 3003
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: *mlPort
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 60
+            resources:
+              claims:
+                - name: gpu
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                memory: 4Gi
+    service:
+      app:
+        controller: immich
+        ports:
+          http:
+            port: &port 2283
+      machine-learning:
+        controller: machine-learning
+        ports:
+          http:
+            port: *mlPort
+    route:
+      app:
+        hostnames:
+          - immich.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: immich
+                port: *port
+    persistence:
+      library:
+        type: nfs
+        server: 10.5.0.10
+        path: /var/nfs/shared/photos
+        advancedMounts:
+          immich:
+            app:
+              - path: *mediaLocation
+      ml-cache:
+        existingClaim: immich-ml-cache
+        advancedMounts:
+          machine-learning:
+            app:
+              - path: /cache
+                subPath: cache
+              - path: /.cache
+                subPath: dot-cache
+      tmp:
+        type: emptyDir
+        advancedMounts:
+          immich:
+            app:
+              - path: /usr/src/app/.reverse-geocoding-dump
+                subPath: geocoding
+              - path: /usr/src/app/.transformers_cache
+                subPath: transformers
