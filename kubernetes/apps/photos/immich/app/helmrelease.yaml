@@ -42,6 +42,7 @@ spec:
                     name: immich-pg-app
                     key: uri
               REDIS_HOSTNAME: redis-immich.database.svc.cluster.local
+              IMMICH_TELEMETRY_INCLUDE: all
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
@@ -108,11 +109,25 @@ spec:
         ports:
           http:
             port: &port 2283
+          metrics-api:
+            port: 8081
+          metrics-ms:
+            port: 8082
       machine-learning:
         controller: machine-learning
         ports:
           http:
             port: *mlPort
+    serviceMonitor:
+      app:
+        serviceName: immich
+        endpoints:
+          - port: metrics-api
+            scheme: http
+            path: /metrics
+          - port: metrics-ms
+            scheme: http
+            path: /metrics
     route:
       app:
         hostnames:
