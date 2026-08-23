@@ -5,3 +5,5 @@ metadata:
   name: photos
   labels:
     kustomize.toolkit.fluxcd.io/prune: disabled
+    # Required for the shared iGPU DRA claim (adminAccess: true) in components/gpu
+    resource.kubernetes.io/admin-access: "true"
