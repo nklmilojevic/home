@@ -60,6 +60,7 @@ Repo root also contains `bootstrap/` (helmfile + kustomize for pre-Flux bootstra
 - `rook-ceph` - Distributed storage (rook-ceph operator + cluster + ceph-csi-drivers)
 - `ai` - AI tooling (toolhive, ha-mcp)
 - `misc` - Misc apps (paperless, forgejo, n8n, manyfold, stirling-pdf, invoicing)
+- `photos` - Immich (app-template) + its CloudNativePG cluster (barman-cloud plugin backups to R2); operators live in `database`
 - `cert-manager`, `kube-system`, `openebs-system`, `renovate`, `system-upgrade`, `flux-system` - cluster infrastructure
 
 ## File Naming Conventions

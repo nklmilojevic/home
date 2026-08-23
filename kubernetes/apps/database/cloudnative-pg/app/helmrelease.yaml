@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cloudnative-pg
+  namespace: database
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: cloudnative-pg
+  values:
+    crds:
+      create: true
+    monitoring:
+      podMonitorEnabled: true

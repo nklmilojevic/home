@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/barmancloud.cnpg.io/objectstore_v1.json
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: immich-pg
+  namespace: photos
+spec:
+  retentionPolicy: 30d
+  instanceSidecarConfiguration:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+  configuration:
+    destinationPath: s3://immich
+    endpointURL: https://08d762fa335f39a89d3dad15db551e2f.r2.cloudflarestorage.com
+    s3Credentials:
+      accessKeyId:
+        name: immich-pg-secret
+        key: aws-access-key-id
+      secretAccessKey:
+        name: immich-pg-secret
+        key: aws-secret-access-key
+    wal:
+      compression: zstd
+    data:
+      compression: gzip
