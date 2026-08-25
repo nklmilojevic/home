@@ -98,34 +98,6 @@ spec:
                 if [ ! -f /opt/data/.local/homebrew/bin/brew ]; then
                   git clone --depth 1 https://github.com/Homebrew/brew /opt/data/.local/homebrew
                 fi
-          # Install the memini memory-provider plugin into HERMES_HOME/plugins (PVC).
-          # Delete /opt/data/plugins/memini to force a re-pull on the next rollout.
-          install-memini-plugin:
-            resources:
-              requests:
-                cpu: 10m
-                memory: 32Mi
-            image:
-              repository: docker.io/alpine/git
-              tag: v2.54.0@sha256:6f8eae2205a85c51106a9650e574a37fb1d5e4f645e5f6ea57cb57b9462cd4cf
-            command:
-              - sh
-              - -c
-              - |
-                set -e
-                if [ ! -d /opt/data/plugins/memini ]; then
-                  mkdir -p /opt/data/plugins
-                  cd /tmp
-                  rm -rf memini-src
-                  git clone --depth 1 --branch main https://github.com/eleboucher/memini memini-src
-                  mv memini-src/integrations/hermes/plugin/memini /opt/data/plugins/memini
-                  rm -rf memini-src
-                fi
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities:
-                drop:
-                  - ALL
         containers:
           # Supervised mode, single container. The image's s6 /init runs the
           # profile reconciler (which starts the supervised gateway), plus the
@@ -169,9 +141,6 @@ spec:
               HOMEBREW_CELLAR: /opt/data/.local/homebrew/Cellar
               HOMEBREW_REPOSITORY: /opt/data/.local/homebrew
               PIP_BREAK_SYSTEM_PACKAGES: "1"
-              # Persistent memory backend (memini). MEMINI_API_KEY via envFrom.
-              MEMINI_BASE_URL: http://memini.ai.svc.cluster.local:8080
-              MEMINI_NAMESPACE: hermes
               # Web tools: search via self-hosted SearXNG (JSON API enabled in its
               # settings.yaml; the pod network is in SearXNG's pass_ip so the
               # limiter allows it), extract via Firecrawl (FIRECRAWL_API_KEY via
