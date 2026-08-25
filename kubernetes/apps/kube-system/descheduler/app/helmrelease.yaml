@@ -44,16 +44,21 @@ spec:
                 # unreachable (every node runs >22 pods and >30% memory), so
                 # the plugin never found an eviction target and did nothing.
                 # targetThresholds must sit well above steady-state actual
-                # usage (~65% memory): kube-scheduler places pods by requests,
-                # so a tight target makes evicted pods land back on the same
-                # node and loop forever (evicted HA & co every 5m, 2026-08-08).
+                # usage: kube-scheduler places pods by requests, so a tight
+                # target makes evicted pods land back on the same node and
+                # loop forever (evicted HA & co every 5m, 2026-08-08).
+                # 2026-08-25: raised memory 75 -> 85. The qwen3 model servers
+                # lifted icarus001/002 steady-state to ~77-81% actual memory,
+                # which re-armed the loop on 2026-08-19 (~40-690 evictions/day
+                # for 6 days, ~1200 churned pod names/day) and tripled
+                # VictoriaMetrics daily series, filling the vmsingle disk.
                 thresholds:
                   cpu: 30
                   memory: 45
                   pods: 60
                 targetThresholds:
                   cpu: 70
-                  memory: 75
+                  memory: 85
                   pods: 80
                 evictionLimits:
                   node: 3
