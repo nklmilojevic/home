@@ -329,6 +329,17 @@ spec:
             memory: 2Gi
           limits:
             memory: 3Gi
+        # Chart default is 20Gi; pod-churn storms (descheduler eviction loop +
+        # kubelet MemoryPressure evictions, 2026-08-19..25) tripled daily series
+        # (466k -> 1.2M) and pushed usage to 81% (DiskRunsOutOfSpace). The bloated
+        # index ages out only with the 1-month retention, so grow the volume for
+        # merge headroom. ceph-block allows in-place expansion.
+        storage:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 30Gi
     vmagent:
       enabled: true
       route:
