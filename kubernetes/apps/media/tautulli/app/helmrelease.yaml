@@ -20,7 +20,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/tautulli
-              tag: 2.17.2@sha256:928344153ad29859eaaa9aac219c043c97f8bef53a36f9f7621776bf23c89400
+              tag: 2.18.0@sha256:8775b6fc50ecafb65eb9d9a2af4810b04586a76d014e28ef38ca7363a8382d6f
             probes:
               liveness: &probes
                 enabled: true
