@@ -1,10 +1,5 @@
 ---
 customization:
-  # BIOS leaves ASPM off on all PCIe links (NVMe/NIC), which blocks package
-  # C-states deeper than PC2 regardless of the BIOS C-state limit. Nodes boot
-  # via SDBoot/UKI, so kernel args must be baked in here, not in machineconfig.
-  extraKernelArgs:
-    - pcie_aspm.policy=powersupersave
   systemExtensions:
     officialExtensions:
       - siderolabs/i915
