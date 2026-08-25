@@ -46,6 +46,16 @@ upgrade-k8s version:
     controller="$(talosctl config info --output json | jq -r '.endpoints[0]')"
     talosctl --nodes "${controller}" upgrade-k8s --to "{{ version }}"
 
+# Defragment etcd on every node, one member at a time
+[doc('Defragment etcd on all nodes')]
+[script]
+etcd-defrag:
+    for node in $(talosctl config info --output json | jq -r '.nodes[]'); do
+        echo "==> defragmenting etcd on ${node}"
+        talosctl --nodes "${node}" etcd defrag
+    done
+    talosctl --nodes "$(talosctl config info --output json | jq -r '.nodes | join(",")')" etcd status
+
 # Reboot a node [node]
 [confirm('Reboot the node? [y/N]')]
 [doc('Reboot a node')]
