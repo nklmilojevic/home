@@ -74,6 +74,16 @@ spec:
             )[2d:5m])
         # `> 0` drops the empty NAS bays, the DAC-cabled SFP ports and the
         # zero sample a UniFi device reports while it is booting.
+        # Idle-temp companion to the p95 baseline, used only by the
+        # NodeCoolingHeadroomDegraded gate below, hence the narrower chip list.
+        - record: node:hwmon_temp_celsius:p05_2d
+          expr: |-
+            quantile_over_time(0.05, (
+              avg by (nodename,chip,sensor) (
+                node_hwmon_temp_celsius{chip=~"platform_coretemp.*|nvme.*",sensor="temp1"}
+                  * on (instance) group_left(nodename) node_uname_info
+              )
+            )[2d:5m])
         - record: unifi:device_temp_celsius:p95_2d
           expr: |-
             quantile_over_time(0.95, (
@@ -206,7 +216,18 @@ spec:
         # failing cooling four days before it was noticed. Every other package
         # and NVMe stayed under +10 (icarus002 peaked at +9 on load swings).
         # Load is a confounder: a genuinely busier week reads as lost headroom,
-        # hence 6h of persistence and warning, not critical.
+        # hence 6h of persistence and warning, not critical. The 6h persistence
+        # alone is not enough: a single multi-hour batch job (Immich ML ran 5h
+        # at ~70% CPU on 2026-08-25) holds p95_2d up for the full 2d window and
+        # fired this on icarus003 on 08-26 while its cooling was fine (idle temp
+        # was at its 30d LOW). Degraded cooling raises idle temps too - the
+        # icarus001 fan failure moved p05_2d 59 -> 88C (+29 over its 30d min) -
+        # so the alert additionally requires the idle baseline to be elevated.
+        # Gate threshold +8: icarus002's p05_2d drifts at most +6 over its 30d
+        # min on slow load-pattern shifts; the one real event measured +29.
+        # Trade-off: a failure that only shows under load (fan that idles fine
+        # but cannot ramp) is suppressed here - the package deviation and
+        # crit-margin rules above still cover that case at load time.
         - alert: NodeCoolingHeadroomDegraded
           annotations:
             summary: >-
@@ -215,13 +236,24 @@ spec:
               last 30 days - cooling or airflow may be degrading
           expr: |-
             (
-              last_over_time(node:hwmon_temp_celsius:p95_2d{chip=~"platform_coretemp.*|nvme.*",sensor="temp1"}[30m])
-              -
-              min_over_time(
-                node:hwmon_temp_celsius:p95_2d{chip=~"platform_coretemp.*|nvme.*",sensor="temp1"}[30d]
+              (
+                last_over_time(node:hwmon_temp_celsius:p95_2d{chip=~"platform_coretemp.*|nvme.*",sensor="temp1"}[30m])
+                -
+                min_over_time(
+                  node:hwmon_temp_celsius:p95_2d{chip=~"platform_coretemp.*|nvme.*",sensor="temp1"}[30d]
+                )
               )
+              > 10
             )
-            > 10
+            and on (nodename,chip,sensor)
+            (
+              (
+                last_over_time(node:hwmon_temp_celsius:p05_2d[30m])
+                -
+                min_over_time(node:hwmon_temp_celsius:p05_2d[30d])
+              )
+              > 8
+            )
           for: 6h
           labels:
             severity: warning
