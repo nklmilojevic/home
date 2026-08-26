@@ -18,3 +18,14 @@ spec:
           parse_mode: "HTML"
           send_resolved: true
           message: '{{ template "telegram.message" . }}'
+      # Second destination on the SAME receiver, so alert routing stays in one
+      # place: Alertmanager attempts each config independently, and a webhook
+      # that is down cannot stop the Telegram message from going out.
+      # Drives AWTRIX indicator 1 + an ALERT screen; Telegram remains the
+      # source of truth for which alert fired, since 32x8 px cannot show a name.
+      webhook_configs:
+        - url_secret:
+            key: url
+            name: vmalert-ha-webhook
+          send_resolved: true
+          max_alerts: 0
