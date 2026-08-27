@@ -3,15 +3,17 @@ apiVersion: tuppr.home-operations.com/v1alpha1
 kind: TalosUpgrade
 metadata:
   name: talos
+  annotations:
+    # Clears a terminal Failed phase and restarts the roll. Bump this value to
+    # retry once the cause is fixed; editing .spec is not enough when the spec
+    # itself is unchanged (boolean/default fields do not bump .metadata.generation).
+    tuppr.home-operations.com/reset: "2026-08-27T11:52:00Z"
 spec:
   talos:
     # renovate: datasource=custom.talos-factory depName=siderolabs/talos
     version: v1.14.0-rc.2
   policy:
     rebootMode: powercycle
-    # Explicit: draining is required, so upgrades surface blocked evictions instead
-    # of killing pods. Apps must keep drains satisfiable (see immich-pg enablePDB).
-    nodrain: false
   healthChecks:
     - apiVersion: volsync.backube/v1alpha1
       kind: ReplicationSource
