@@ -25,4 +25,4 @@ spec:
       enabled: true
       image: quay.io/oliver006/redis_exporter
       # renovate: datasource=docker depName=quay.io/oliver006/redis_exporter
-      tag: v1.89.0
+      tag: v1.90.0
