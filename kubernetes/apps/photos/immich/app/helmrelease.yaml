@@ -140,6 +140,57 @@ spec:
           - backendRefs:
               - name: immich
                 port: *port
+      share:
+        hostnames:
+          - share.nikola.wtf
+        parentRefs:
+          - name: external
+            namespace: network
+            sectionName: https
+        rules:
+          # Deny-list: Envoy answers these with a direct 404, no backendRefs.
+          # Longer PathPrefix wins in Gateway API, so these outrank the catch-all.
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /auth
+              - path:
+                  type: PathPrefix
+                  value: /admin
+              - path:
+                  type: PathPrefix
+                  value: /api/auth
+              - path:
+                  type: PathPrefix
+                  value: /api/admin
+              - path:
+                  type: PathPrefix
+                  value: /api/oauth
+              - path:
+                  type: PathPrefix
+                  value: /api/users
+              - path:
+                  type: PathPrefix
+                  value: /api/sessions
+              - path:
+                  type: PathPrefix
+                  value: /api/api-keys
+              - path:
+                  type: PathPrefix
+                  value: /api/socket.io
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: gateway.envoyproxy.io
+                  kind: HTTPRouteFilter
+                  name: immich-share-deny
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - name: immich
+                port: *port
     persistence:
       library:
         type: nfs
