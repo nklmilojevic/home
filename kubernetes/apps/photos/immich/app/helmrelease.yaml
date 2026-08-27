@@ -141,6 +141,11 @@ spec:
               - name: immich
                 port: *port
       share:
+        annotations:
+          # rules[0] matches /auth first and the sidecar probes the first path it
+          # finds, which Envoy answers with a direct 404. Probe the app instead.
+          gatus.home-operations.com/endpoint: |
+            path: /api/server/ping
         hostnames:
           - share.nikola.wtf
         parentRefs:
@@ -149,8 +154,12 @@ spec:
             sectionName: https
         rules:
           # Deny-list: Envoy answers these with a direct 404, no backendRefs.
-          # Longer PathPrefix wins in Gateway API, so these outrank the catch-all.
+          # Exact / and longer PathPrefixes outrank the catch-all in Gateway API,
+          # so the app shell is only reachable from a share link, not the root.
           - matches:
+              - path:
+                  type: Exact
+                  value: /
               - path:
                   type: PathPrefix
                   value: /auth
