@@ -9,4 +9,5 @@ resources:
   - ./scheduledbackup.yaml
   - ./pvc.yaml
   - ./helmrelease.yaml
+  - ./httproutefilter.yaml
   - ./ocirepository.yaml
