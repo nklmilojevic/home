@@ -16,6 +16,34 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
+        initContainers:
+          # Most of /data is still owned by uid 65532 from an earlier non-root era of
+          # this app (fsGroup 0 keeps it writable, which is why it went unnoticed).
+          # Since 2.10.0 the server hardens its WebRTC key with fchmod on startup,
+          # and chmod of a file owned by another uid needs CAP_FOWNER, which the app
+          # container drops -> EPERM -> crash loop. Take ownership instead of handing
+          # the long-running container the capability. Also re-fixes ownership after a
+          # VolSync restore, whose restic snapshots carry the old uid.
+          01-fix-permissions:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+            image:
+              repository: docker.io/library/busybox
+              tag: 1.38.0@sha256:dc2d74b28e4cf8984fa52af1f39bc7c3d9c73760b41a74d629f5d11b1ab28616
+            command:
+              - sh
+              - -c
+              - |
+                set -eu
+                chown -R 0:0 /data
+            securityContext:
+              allowPrivilegeEscalation: false
+              runAsUser: 0
+              runAsGroup: 0
+              runAsNonRoot: false
+
         pod:
           # Music Assistant relies on mDNS/UPnP (SSDP) to discover and stream to
           # players (Chromecast, AirPlay, Sonos, DLNA renderers like the Denon
