@@ -13,6 +13,11 @@ spec:
   # Single instance: Ceph already replicates the volume; more instances only
   # add write amplification on top of replicated storage.
   instances: 1
+  # With instances: 1 the CNPG-managed PDB guards the primary at minAvailable: 1,
+  # so allowed disruptions is permanently 0 and any node drain blocks forever
+  # (stalled the Talos v1.14.0-rc.2 roll on icarus002). No PDB means a drain can
+  # evict Postgres; a single-instance cluster has no HA to protect anyway.
+  enablePDB: false
   # Immich requires the VectorChord extension; stock CNPG images lack it.
   # The VectorChord version range is constrained by the Immich release, so
   # this image is bumped manually alongside Immich upgrades.
