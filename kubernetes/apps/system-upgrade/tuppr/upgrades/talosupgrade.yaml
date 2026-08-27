@@ -3,11 +3,12 @@ apiVersion: tuppr.home-operations.com/v1alpha1
 kind: TalosUpgrade
 metadata:
   name: talos
-  annotations:
-    # Clears a terminal Failed phase and restarts the roll. Bump this value to
-    # retry once the cause is fixed; editing .spec is not enough when the spec
-    # itself is unchanged (boolean/default fields do not bump .metadata.generation).
-    tuppr.home-operations.com/reset: "2026-08-27T11:52:00Z"
+  # To retry after a terminal Failed phase, apply the reset annotation directly:
+  #   kubectl annotate talosupgrade talos tuppr.home-operations.com/reset="$(date)"
+  # Do NOT commit that annotation here: tuppr deletes it once consumed, so Flux
+  # would keep re-adding it every reconcile and reset the roll mid-flight.
+  # Editing .spec is not a substitute — fields matching CRD defaults do not bump
+  # .metadata.generation, so tuppr keeps skipping as terminal.
 spec:
   talos:
     # renovate: datasource=custom.talos-factory depName=siderolabs/talos
