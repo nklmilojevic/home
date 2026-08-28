@@ -40,6 +40,17 @@ spec:
             env:
               TZ: Europe/Belgrade
               VGW_HEALTH: /healthz
+              # The posix backend stores S3 object metadata in xattrs by default
+              # and refuses to start without them ("xattr check failed: xattrs are
+              # not supported on this filesystem") — the UNAS NFS export has none.
+              # The sidecar store keeps that metadata as plain files mirroring the
+              # object namespace instead. It must be a sibling of the data dir,
+              # not inside it, or it would surface as a bucket named "meta" and
+              # collide with the sidecar's own layout.
+              VGW_META_SIDECAR: /meta
+              # New objects are written via O_TMPFILE, which NFS has no protocol
+              # support for; without this every PUT fails.
+              VGW_DISABLE_OTMP: "true"
             envFrom:
               - secretRef:
                   name: versitygw-secret
@@ -87,12 +98,21 @@ spec:
     persistence:
       # The share is named "garage" from an earlier plan to run Garage here;
       # the gateway in front of it is versitygw. Path kept as created.
+      # Buckets and sidecar metadata are siblings under the share root, and both
+      # directories must already exist — versitygw stats the sidecar dir at
+      # startup and will not create it.
       data:
         type: nfs
         server: "10.5.0.10"
-        path: "/var/nfs/shared/garage"
+        path: "/var/nfs/shared/garage/data"
         globalMounts:
           - path: /data
+      meta:
+        type: nfs
+        server: "10.5.0.10"
+        path: "/var/nfs/shared/garage/meta"
+        globalMounts:
+          - path: /meta
       tmp:
         type: emptyDir
         globalMounts:
