@@ -24,18 +24,25 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/petkit-local
-              # Fork build (nklmilojevic/petkit-local, v2.1.0-nkl.2) — upstream
-              # v2.1.0 plus both open upstream PRs: the K3 HTTP piggyback fix
-              # (alex-so-3/petkit-local#28, half of #21): a T4's unpatchable
+              # Fork build (nklmilojevic/petkit-local, v2.1.0-nkl.3) — upstream
+              # v2.1.0 plus the three open upstream PRs: the K3 HTTP piggyback
+              # fix (alex-so-3/petkit-local#28, half of #21): a T4's unpatchable
               # ESP32 can't do MQTT, so the K3 spray's battery/liquid never
               # reached the bridge — the HTTP path now extracts them from
-              # dev_state_report/dev_event_report state blocks; and the D4H
+              # dev_state_report/dev_event_report state blocks; the D4H
               # food-low derivation (#27): Food Low derived from hopper
-              # presence instead of the inverted raw flag. Revert to plain
-              # upstream once #21/#27 land. Other known remaining gaps vs the
-              # retired D4H fork: feedState totals reset on restart (nkl.12),
-              # battery_installed removed (nkl.3).
-              tag: 2.1.0@sha256:2c1b404bd02075473487a67dcb95db7cda973e8a6023c680a1a468b82da50518
+              # presence instead of the inverted raw flag; and T4 Times Used
+              # (#32): the box sends litter.usedTimes pinned at 0 (209 stored
+              # state snapshots over 13 days, against 41 recorded visits), so
+              # the sensor read "0 uses today" on a litter box in daily use —
+              # the count is now derived from its own visit events. Revert to
+              # plain upstream once #21/#27/#32 land. Other known remaining
+              # gaps vs the retired D4H fork: feedState totals reset on restart
+              # (nkl.12), battery_installed removed (nkl.3).
+              #
+              # The digest is not decoration: this tag is rebuilt in place, and
+              # spegel serves the cached layers for an unchanged tag forever.
+              tag: 2.1.0@sha256:a51d03038d758414ba77061447d29a1fd2299a86422036aecf5331163a1f1df2
             args:
               # The device is handed only the api-url host for MQTT and media
               # uploads, on firmware-fixed ports (443/9000) — so this must stay
