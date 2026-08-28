@@ -10,7 +10,11 @@ default:
     @just --list volsync
 
 # Unlock all restic source repos
-[doc('Unlock all restic repos')]
+# Declarative path: the operator runs `restic unlock` at the start of each
+# source's NEXT sync. Nothing happens until that sync runs, and a repo whose
+# lock is blocking a RESTORE is not covered — ReplicationDestination has no
+# unlock field. Use `unlock-repo` for either of those cases.
+[doc('Unlock all restic repos (takes effect on each app next sync)')]
 [script]
 unlock:
     kubectl get replicationsources -A --no-headers -o=jsonpath='{range .items[*]}{.metadata.namespace},{.metadata.name}{"\n"}{end}' \
@@ -18,6 +22,24 @@ unlock:
             kubectl -n "$ns" patch --field-manager=flux-client-side-apply replicationsources "$name" \
                 --type merge --patch "{\"spec\":{\"restic\":{\"unlock\":\"$(date +%s)\"}}}"
         done
+
+# Unlock one app's restic repo now [ns] [app] [remove_all=0]
+# Runs restic directly against the R2 repo instead of waiting for a sync.
+# The default removes only STALE locks and is safe to run any time. Pass
+# remove_all=1 to also remove locks held by a RUNNING mover — only do that
+# once you have confirmed no volsync-src/dst job for the app is alive.
+[doc('Unlock a single app restic repo now (remove_all=1 also drops live locks)')]
+[script]
+unlock-repo ns app remove_all='0':
+    export NS="{{ ns }}" APP="{{ app }}" REMOVE_ALL="{{ remove_all }}"
+    job="volsync-unlock-${APP}"
+    minijinja-cli "{{ resources }}/unlock.yaml.j2" | kubectl apply --server-side -f -
+    until kubectl -n "${NS}" get "job/${job}" &>/dev/null; do sleep 5; done
+    status=0
+    kubectl -n "${NS}" wait "job/${job}" --for=condition=complete --timeout=10m || status=1
+    stern -n "${NS}" "job/${job}" --no-follow
+    kubectl -n "${NS}" delete "job/${job}"
+    exit "${status}"
 
 # List snapshots for an app [ns] [app]
 [doc('List VolSync snapshots for an app')]
@@ -48,7 +70,10 @@ restore ns app previous='0':
     export NS="{{ ns }}" APP="{{ app }}" PREVIOUS="{{ previous }}"
     controller="$(kubectl -n "${NS}" get deployment "${APP}" &>/dev/null && echo deployment || echo statefulset)"
     export CLAIM="$(kubectl -n "${NS}" get "replicationsources/${APP}-r2" -o=jsonpath='{.spec.sourcePVC}')"
-    export ACCESS_MODES="$(kubectl -n "${NS}" get "replicationsources/${APP}-r2" -o=jsonpath='{.spec.restic.accessModes}')"
+    # accessModes comes from the target PVC: the volsync Component sets it on the
+    # bootstrap ReplicationDestination, never on the ReplicationSource, so reading
+    # it from the source renders `accessModes: null` and the CRD rejects the apply.
+    export ACCESS_MODES="$(kubectl -n "${NS}" get "pvc/${CLAIM}" -o=jsonpath='{.spec.accessModes}')"
     export STORAGE_CLASS_NAME="$(kubectl -n "${NS}" get "replicationsources/${APP}-r2" -o=jsonpath='{.spec.restic.storageClassName}')"
     export PUID="$(kubectl -n "${NS}" get "replicationsources/${APP}-r2" -o=jsonpath='{.spec.restic.moverSecurityContext.runAsUser}')"
     export PGID="$(kubectl -n "${NS}" get "replicationsources/${APP}-r2" -o=jsonpath='{.spec.restic.moverSecurityContext.runAsGroup}')"
