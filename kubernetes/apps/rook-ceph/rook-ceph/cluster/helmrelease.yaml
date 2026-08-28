@@ -173,11 +173,20 @@ spec:
             - discard
           parameters:
             imageFormat: "2"
-            # Restored to the full feature set on 2026-08-28. The 2026-08-05..07
-            # corruption came from running `rbd feature enable` against images
-            # that were still MAPPED AND IN USE, not from the features
-            # themselves; existing images were converted while unmapped, with
-            # `rbd status` confirming zero watchers before each change.
+            # ON TRIAL as of 2026-08-28 — re-enabled deliberately, NOT settled.
+            # The 2026-08-05..07 incident was worse than "enabled them wrong":
+            # with these features active, fresh corruption kept appearing
+            # BETWEEN nightly snapshots on this same kernel (krbd lock
+            # transitions during snapshot creation dropping in-flight writes,
+            # ~4 volumes a night), and the fleet-wide repair found 39 of 52
+            # volumes needing e2fsck. That is why it was reverted to
+            # layering-only. Nodes still run 6.18.46-talos, the same krbd.
+            # This time every existing image was converted while unmapped with
+            # `rbd status` showing zero watchers, which rules out one of the two
+            # failure modes but NOT the snapshot-lock one. If clone mounts start
+            # failing fsck or volsync backups fail, revert immediately — and
+            # note that a live `rbd feature disable` is equally destructive, so
+            # the revert must also be done offline.
             # deep-flatten is set here because it can only be chosen at image
             # creation, so it applies to new volumes only — images converted in
             # place carry the other three (rbd rejects deep-flatten with EINVAL
