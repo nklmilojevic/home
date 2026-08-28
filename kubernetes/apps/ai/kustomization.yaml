@@ -8,4 +8,5 @@ resources:
   - ./atuin-ai/ks.yaml
   - ./grafana-mcp/ks.yaml
   - ./ha-mcp/ks.yaml
+  - ./kubesearch-mcp/ks.yaml
   - ./hermes/ks.yaml

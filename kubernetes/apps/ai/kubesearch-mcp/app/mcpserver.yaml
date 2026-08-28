@@ -1,0 +1,66 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/toolhive.stacklok.dev/mcpserver_v1beta1.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServer
+metadata:
+  name: kubesearch-mcp
+spec:
+  groupRef:
+    name: mcp-tools
+  image: ghcr.io/perfectra1n/kubesearch-mcp:1.1.0@sha256:4b39b2e708a1e038f3d8b33393eb93327aa2f29643dd12decb421efe68d11459
+  transport: streamable-http
+  mcpPort: 3000
+  env:
+    # The image already defaults to the http transport on :3000 with the cache
+    # in /data; HOME is repointed because toolhive runs the container with a
+    # read-only root filesystem and git reads/writes under $HOME.
+    - name: HOME
+      value: /tmp
+    - name: KUBESEARCH_REFRESH_HOURS
+      value: "24"
+  # Applies to the toolhive proxy runner, not the MCP container (that one is
+  # sized in podTemplateSpec below).
+  resources:
+    requests:
+      cpu: 25m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+  podTemplateSpec:
+    spec:
+      containers:
+        - name: mcp
+          # /readyz stays 503 until the ~44MB of kubesearch SQLite databases are
+          # downloaded and loaded, so the pod is kept out of service during the
+          # first-start download rather than answering queries that would fail.
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 25m
+              memory: 256Mi
+            limits:
+              memory: 768Mi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: tmpfs
+              mountPath: /tmp
+      volumes:
+        - name: data
+          emptyDir:
+            sizeLimit: 2Gi
+        - name: tmpfs
+          emptyDir:
+            sizeLimit: 256Mi
