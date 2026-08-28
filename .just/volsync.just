@@ -23,16 +23,18 @@ unlock:
                 --type merge --patch "{\"spec\":{\"restic\":{\"unlock\":\"$(date +%s)\"}}}"
         done
 
-# Unlock one app's restic repo now [ns] [app] [remove_all=0]
-# Runs restic directly against the R2 repo instead of waiting for a sync.
-# The default removes only STALE locks and is safe to run any time. Pass
-# remove_all=1 to also remove locks held by a RUNNING mover — only do that
-# once you have confirmed no volsync-src/dst job for the app is alive.
+# Unlock one app's restic repo now [ns] [app] [repo=r2] [remove_all=0]
+# Runs restic directly against the repo instead of waiting for a sync.
+# repo picks which of the app's two repos to act on: r2 (offsite) or local
+# (the NFS-backed gateway). The default removes only STALE locks and is safe
+# to run any time. Pass remove_all=1 to also remove locks held by a RUNNING
+# mover — only do that once you have confirmed no volsync-src/dst job for the
+# app is alive.
 [doc('Unlock a single app restic repo now (remove_all=1 also drops live locks)')]
 [script]
-unlock-repo ns app remove_all='0':
-    export NS="{{ ns }}" APP="{{ app }}" REMOVE_ALL="{{ remove_all }}"
-    job="volsync-unlock-${APP}"
+unlock-repo ns app repo='r2' remove_all='0':
+    export NS="{{ ns }}" APP="{{ app }}" REPO="{{ repo }}" REMOVE_ALL="{{ remove_all }}"
+    job="volsync-unlock-${APP}-${REPO}"
     minijinja-cli "{{ resources }}/unlock.yaml.j2" | kubectl apply --server-side -f -
     until kubectl -n "${NS}" get "job/${job}" &>/dev/null; do sleep 5; done
     status=0
@@ -41,26 +43,26 @@ unlock-repo ns app remove_all='0':
     kubectl -n "${NS}" delete "job/${job}"
     exit "${status}"
 
-# List snapshots for an app [ns] [app]
-[doc('List VolSync snapshots for an app')]
+# List snapshots for an app [ns] [app] [repo=r2]
+[doc('List VolSync snapshots for an app (repo: r2 or local)')]
 [script]
-list ns app:
-    export NS="{{ ns }}" APP="{{ app }}"
-    job="list-snapshots-${APP}-r2"
+list ns app repo='r2':
+    export NS="{{ ns }}" APP="{{ app }}" REPO="{{ repo }}"
+    job="list-snapshots-${APP}-${REPO}"
     minijinja-cli "{{ resources }}/list-snapshots.yaml.j2" | kubectl apply --server-side -f -
     until kubectl -n "${NS}" get "job/${job}" &>/dev/null; do sleep 5; done
     kubectl -n "${NS}" wait "job/${job}" --for=condition=complete --timeout=5m
     stern -n "${NS}" "job/${job}" --no-follow
     kubectl -n "${NS}" delete "job/${job}"
 
-# Snapshot an app now [ns] [app]
-[doc('Trigger a VolSync snapshot for an app')]
+# Snapshot an app now [ns] [app] [repo=r2]
+[doc('Trigger a VolSync snapshot for an app (repo: r2 or local)')]
 [script]
-snapshot ns app:
-    kubectl -n "{{ ns }}" patch replicationsources "{{ app }}-r2" --type merge \
+snapshot ns app repo='r2':
+    kubectl -n "{{ ns }}" patch replicationsources "{{ app }}-{{ repo }}" --type merge \
         -p "{\"spec\":{\"trigger\":{\"manual\":\"$(date +%s)\"}}}"
-    until kubectl -n "{{ ns }}" get "job/volsync-src-{{ app }}-r2" &>/dev/null; do sleep 5; done
-    kubectl -n "{{ ns }}" wait "job/volsync-src-{{ app }}-r2" --for=condition=complete --timeout=120m
+    until kubectl -n "{{ ns }}" get "job/volsync-src-{{ app }}-{{ repo }}" &>/dev/null; do sleep 5; done
+    kubectl -n "{{ ns }}" wait "job/volsync-src-{{ app }}-{{ repo }}" --for=condition=complete --timeout=120m
 
 # Restore an app from VolSync [ns] [app] [previous=0]
 [confirm('This scales the app down and restores its PVC. Continue? [y/N]')]
