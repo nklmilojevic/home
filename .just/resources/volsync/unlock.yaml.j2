@@ -6,30 +6,53 @@ metadata:
   namespace: {{ ENV.NS }}
 spec:
   ttlSecondsAfterFinished: 3600
+  backoffLimit: 2
   template:
+    metadata:
+      labels:
+        app.kubernetes.io/created-by: volsync
     spec:
       automountServiceAccountToken: false
       restartPolicy: OnFailure
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
-        - name: minio
-          image: docker.io/restic/restic:latest
-          args: ["unlock", "--remove-all"]
+        - name: unlock
+          image: docker.io/restic/restic:0.19.1
+          args:
+            - unlock
+{% if ENV.REMOVE_ALL == "1" %}
+            - --remove-all
+{% endif %}
+          env:
+            # restic caches under $HOME; the image's default HOME is /root, which
+            # is not writable for an unprivileged uid on a read-only rootfs.
+            - name: HOME
+              value: /tmp
+          # RESTIC_REPOSITORY / RESTIC_PASSWORD / AWS_* — the four keys the
+          # volsync Component's ExternalSecret renders for the R2 repo.
           envFrom:
             - secretRef:
-                name: {{ ENV.APP }}-volsync-secret
+                name: {{ ENV.APP }}-volsync-r2
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
           volumeMounts:
-            - name: repository
-              mountPath: /repository
-          resources: {}
-        - name: r2
-          image: docker.io/restic/restic:latest
-          args: ["unlock", "--remove-all"]
-          envFrom:
-            - secretRef:
-                name: {{ ENV.APP }}-volsync-r2-secret
-          resources: {}
+            - name: tmp
+              mountPath: /tmp
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
       volumes:
-        - name: repository
-          nfs:
-            server: expanse.internal
-            path: /mnt/eros/Volsync
+        - name: tmp
+          emptyDir: {}
