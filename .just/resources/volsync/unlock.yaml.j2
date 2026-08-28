@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: volsync-unlock-{{ ENV.APP }}
+  name: volsync-unlock-{{ ENV.APP }}-{{ ENV.REPO }}
   namespace: {{ ENV.NS }}
 spec:
   ttlSecondsAfterFinished: 3600
@@ -37,7 +37,7 @@ spec:
           # volsync Component's ExternalSecret renders for the R2 repo.
           envFrom:
             - secretRef:
-                name: {{ ENV.APP }}-volsync-r2
+                name: {{ ENV.APP }}-volsync-{{ ENV.REPO }}
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

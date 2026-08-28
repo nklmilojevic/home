@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: list-snapshots-{{ ENV.APP }}-r2
+  name: list-snapshots-{{ ENV.APP }}-{{ ENV.REPO }}
   namespace: {{ ENV.NS }}
 spec:
   ttlSecondsAfterFinished: 3600
@@ -20,4 +20,4 @@ spec:
             - snapshots
           envFrom:
             - secretRef:
-                name: {{ ENV.APP }}-volsync-r2
+                name: {{ ENV.APP }}-volsync-{{ ENV.REPO }}
