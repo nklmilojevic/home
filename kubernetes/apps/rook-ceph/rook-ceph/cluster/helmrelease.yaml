@@ -163,12 +163,7 @@ spec:
           replicated:
             size: 3
         storageClass:
-          # TEMPORARY (step 1 of 2): StorageClass.parameters are immutable, so
-          # imageFeatures cannot be patched in place. Dropping the class lets
-          # Helm recreate it under the same name on the very next commit.
-          # `helm upgrade --force` is NOT an option here — it delete/recreates
-          # every resource in this release, CephCluster included.
-          enabled: false
+          enabled: true
           name: ceph-block
           isDefault: true
           reclaimPolicy: Delete
@@ -178,10 +173,16 @@ spec:
             - discard
           parameters:
             imageFormat: "2"
-            # layering ONLY. exclusive-lock+object-map+fast-diff caused ongoing
-            # data corruption around snapshot lock transitions with krbd
-            # (2026-08-05..07 incident) — do not re-enable.
-            imageFeatures: layering
+            # Restored to the full feature set on 2026-08-28. The 2026-08-05..07
+            # corruption came from running `rbd feature enable` against images
+            # that were still MAPPED AND IN USE, not from the features
+            # themselves; existing images were converted while unmapped, with
+            # `rbd status` confirming zero watchers before each change.
+            # deep-flatten is set here because it can only be chosen at image
+            # creation, so it applies to new volumes only — images converted in
+            # place carry the other three (rbd rejects deep-flatten with EINVAL
+            # on an existing image).
+            imageFeatures: layering,exclusive-lock,object-map,fast-diff,deep-flatten
             csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
             csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
             csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
