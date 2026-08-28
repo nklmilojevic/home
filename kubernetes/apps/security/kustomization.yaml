@@ -8,3 +8,4 @@ resources:
   - ./snapshot-controller/ks.yaml
   - ./volsync/ks.yaml
   - ./atuin/ks.yaml
+  - ./versitygw/ks.yaml
