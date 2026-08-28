@@ -64,21 +64,24 @@ snapshot ns app repo='r2':
     until kubectl -n "{{ ns }}" get "job/volsync-src-{{ app }}-{{ repo }}" &>/dev/null; do sleep 5; done
     kubectl -n "{{ ns }}" wait "job/volsync-src-{{ app }}-{{ repo }}" --for=condition=complete --timeout=120m
 
-# Restore an app from VolSync [ns] [app] [previous=0]
+# Restore an app from VolSync [ns] [app] [repo=r2] [previous=0]
+# repo picks the source: local (NFS gateway, LAN speed) or r2 (offsite).
+# Prefer local when it has a recent enough snapshot — check with
+# `just volsync list ns app local` first.
 [confirm('This scales the app down and restores its PVC. Continue? [y/N]')]
-[doc('Restore an app PVC from VolSync')]
+[doc('Restore an app PVC from VolSync (repo: r2 or local)')]
 [script]
-restore ns app previous='0':
-    export NS="{{ ns }}" APP="{{ app }}" PREVIOUS="{{ previous }}"
+restore ns app repo='r2' previous='0':
+    export NS="{{ ns }}" APP="{{ app }}" REPO="{{ repo }}" PREVIOUS="{{ previous }}"
     controller="$(kubectl -n "${NS}" get deployment "${APP}" &>/dev/null && echo deployment || echo statefulset)"
-    export CLAIM="$(kubectl -n "${NS}" get "replicationsources/${APP}-r2" -o=jsonpath='{.spec.sourcePVC}')"
+    export CLAIM="$(kubectl -n "${NS}" get "replicationsources/${APP}-${REPO}" -o=jsonpath='{.spec.sourcePVC}')"
     # accessModes comes from the target PVC: the volsync Component sets it on the
     # bootstrap ReplicationDestination, never on the ReplicationSource, so reading
     # it from the source renders `accessModes: null` and the CRD rejects the apply.
     export ACCESS_MODES="$(kubectl -n "${NS}" get "pvc/${CLAIM}" -o=jsonpath='{.spec.accessModes}')"
-    export STORAGE_CLASS_NAME="$(kubectl -n "${NS}" get "replicationsources/${APP}-r2" -o=jsonpath='{.spec.restic.storageClassName}')"
-    export PUID="$(kubectl -n "${NS}" get "replicationsources/${APP}-r2" -o=jsonpath='{.spec.restic.moverSecurityContext.runAsUser}')"
-    export PGID="$(kubectl -n "${NS}" get "replicationsources/${APP}-r2" -o=jsonpath='{.spec.restic.moverSecurityContext.runAsGroup}')"
+    export STORAGE_CLASS_NAME="$(kubectl -n "${NS}" get "replicationsources/${APP}-${REPO}" -o=jsonpath='{.spec.restic.storageClassName}')"
+    export PUID="$(kubectl -n "${NS}" get "replicationsources/${APP}-${REPO}" -o=jsonpath='{.spec.restic.moverSecurityContext.runAsUser}')"
+    export PGID="$(kubectl -n "${NS}" get "replicationsources/${APP}-${REPO}" -o=jsonpath='{.spec.restic.moverSecurityContext.runAsGroup}')"
     # Suspend (Kustomization now lives in the app namespace)
     flux -n "${NS}" suspend kustomization "${APP}"
     flux -n "${NS}" suspend helmrelease "${APP}"
@@ -86,9 +89,9 @@ restore ns app previous='0':
     kubectl -n "${NS}" wait pod --for=delete --selector="app.kubernetes.io/name=${APP}" --timeout=5m
     # Restore
     minijinja-cli "{{ resources }}/replicationdestination.yaml.j2" | kubectl apply --server-side -f -
-    until kubectl -n "${NS}" get "job/volsync-dst-${APP}-manual" &>/dev/null; do sleep 5; done
-    kubectl -n "${NS}" wait "job/volsync-dst-${APP}-manual" --for=condition=complete --timeout=120m
-    kubectl -n "${NS}" delete replicationdestination "${APP}-manual"
+    until kubectl -n "${NS}" get "job/volsync-dst-${APP}-manual-${REPO}" &>/dev/null; do sleep 5; done
+    kubectl -n "${NS}" wait "job/volsync-dst-${APP}-manual-${REPO}" --for=condition=complete --timeout=120m
+    kubectl -n "${NS}" delete replicationdestination "${APP}-manual-${REPO}"
     # Resume
     flux -n "${NS}" resume kustomization "${APP}"
     flux -n "${NS}" resume helmrelease "${APP}"
