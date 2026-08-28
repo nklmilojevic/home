@@ -163,7 +163,12 @@ spec:
           replicated:
             size: 3
         storageClass:
-          enabled: true
+          # TEMPORARY (step 1 of 2): StorageClass.parameters are immutable, so
+          # imageFeatures cannot be patched in place. Dropping the class lets
+          # Helm recreate it under the same name on the very next commit.
+          # `helm upgrade --force` is NOT an option here — it delete/recreates
+          # every resource in this release, CephCluster included.
+          enabled: false
           name: ceph-block
           isDefault: true
           reclaimPolicy: Delete
