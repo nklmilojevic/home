@@ -85,6 +85,11 @@ spec:
             port: *port
     route:
       app:
+        annotations:
+          # / is the S3 ListBuckets API and returns 403 to unauthenticated
+          # requests; probe the unauthenticated health endpoint instead.
+          gatus.home-operations.com/endpoint: |
+            url: https://s3.nikola.wtf/healthz
         hostnames:
           - s3.nikola.wtf
         parentRefs:
