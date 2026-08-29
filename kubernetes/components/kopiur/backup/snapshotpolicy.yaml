@@ -1,0 +1,66 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: "${APP}-local"
+spec:
+  # LAN copy on versitygw. This is the one the miroir cutover restores from,
+  # so it is seeded first and kept current.
+  compression:
+    compressor: zstd
+  mover:
+    cache:
+      capacity: "${VOLSYNC_CACHE_CAPACITY:-1Gi}"
+      mode: Persistent
+      storageClassName: "${VOLSYNC_CACHE_SNAPSHOTCLASS:-openebs-hostpath}"
+    securityContext:
+      runAsUser: ${APP_UID:-1000}
+      runAsGroup: ${APP_GID:-1000}
+  repository:
+    kind: ClusterRepository
+    name: local
+  retention:
+    keepLatest: 3
+    keepHourly: 24
+    keepDaily: 7
+  staging:
+    # Concurrent DRBD lockstep snapshots (or a post-reboot resync) can exceed
+    # the 10m default and fail the whole backup.
+    timeout: 30m
+  sources:
+    - pvc:
+        name: "${VOLSYNC_CLAIM:-${APP}}"
+  volumeSnapshotClassName: "${KOPIUR_SNAPSHOTCLASS:-csi-ceph-blockpool}"
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: "${APP}-r2"
+spec:
+  # Offsite copy. Independent repository — kopia does not replicate between
+  # them, each snapshot is uploaded twice.
+  compression:
+    compressor: zstd
+  mover:
+    cache:
+      capacity: "${VOLSYNC_CACHE_CAPACITY:-1Gi}"
+      mode: Persistent
+      storageClassName: "${VOLSYNC_CACHE_SNAPSHOTCLASS:-openebs-hostpath}"
+    securityContext:
+      runAsUser: ${APP_UID:-1000}
+      runAsGroup: ${APP_GID:-1000}
+  repository:
+    kind: ClusterRepository
+    name: r2
+  retention:
+    keepLatest: 3
+    keepHourly: 24
+    keepDaily: 7
+  staging:
+    timeout: 30m
+  sources:
+    - pvc:
+        name: "${VOLSYNC_CLAIM:-${APP}}"
+  volumeSnapshotClassName: "${KOPIUR_SNAPSHOTCLASS:-csi-ceph-blockpool}"

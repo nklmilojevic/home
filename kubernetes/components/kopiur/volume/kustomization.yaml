@@ -1,0 +1,10 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+# CUTOVER ONLY. Hands PVC ownership to kopiur: the claim is created with a
+# Restore populator dataSourceRef, which bootstraps it from the latest `local`
+# snapshot. Adding this while the volsync component still owns the same claim
+# will conflict — swap, do not stack.
+resources:
+  - ./pvc.yaml
+  - ./restore.yaml

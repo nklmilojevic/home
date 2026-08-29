@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/restore_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Restore
+metadata:
+  name: "${APP}-bootstrap"
+spec:
+  mover:
+    cache:
+      capacity: "${VOLSYNC_CACHE_CAPACITY:-1Gi}"
+      mode: Persistent
+      storageClassName: "${VOLSYNC_CACHE_SNAPSHOTCLASS:-openebs-hostpath}"
+    securityContext:
+      runAsUser: ${APP_UID:-1000}
+      runAsGroup: ${APP_GID:-1000}
+  policy:
+    onMissingSnapshot: Continue
+  source:
+    fromPolicy:
+      # Restore from the LAN repository — 91 GiB at ~200 MB/s rather than
+      # pulling it back from Cloudflare.
+      name: "${APP}-local"
+      offset: 0
+  target:
+    populator: {}
