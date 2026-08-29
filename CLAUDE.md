@@ -122,8 +122,22 @@ spec:
       APP: *app
       VOLSYNC_CLAIM: {app}-config
       VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_SCHEDULE: "{MM} 0 * * *"
+      VOLSYNC_LOCAL_SCHEDULE: "{MM} 3 * * *"
       APP_UID: "1000"
       APP_GID: "1000"
+```
+
+**Always set both schedules, and pick a minute that is not already crowded.**
+Every app backs up twice a night — to R2 (hour 0) and to the local versitygw
+repo (hour 3), both UTC. Leaving them at the default means yet another source
+firing on the hour, and when all of them fired at once the resulting
+snapshot/clone/mover burst pushed an OSD into BlueStore slow ops. Spread apps
+across `0,5,10,...,55`; use the same minute for both waves so an app's two runs
+stay 3h apart. Check what is already taken with:
+
+```bash
+grep -h "VOLSYNC_SCHEDULE:" kubernetes/apps/*/*/ks.yaml | sort | uniq -c
 ```
 
 1. Create `app/kustomization.yaml` (lists the app's own resources; the volsync resources come from the Component in `ks.yaml`, not here):
@@ -331,6 +345,9 @@ Available via `postBuild.substitute` in `ks.yaml` (consumed by the volsync Compo
 - `${APP}` - Application name
 - `${VOLSYNC_CLAIM}` - PVC name for backups
 - `${VOLSYNC_CAPACITY}` - Storage size
+- `${VOLSYNC_SCHEDULE}` / `${VOLSYNC_LOCAL_SCHEDULE}` - Cron for the R2 and local
+  backups (defaults `0 0 * * *` / `0 3 * * *`, UTC). Stagger these per app — see
+  "Adding a New Application"
 - `${APP_UID}` / `${APP_GID}` - User/group IDs (default: 1000)
 
 There are no global cluster variable ConfigMaps/Secrets in this repo; domains and network values are hardcoded per app (`*.nikola.wtf`, `10.40.0.x` LBs, `10.50.0.x` IoT).
