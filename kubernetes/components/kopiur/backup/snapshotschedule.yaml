@@ -8,9 +8,13 @@ spec:
   policyRef:
     name: "${APP}-local"
   schedule:
-    # `H` hash-spreads each app across the hour, so the schedule is itself the
-    # concurrency control — kopiur has no mover-concurrency knob. This is what
-    # volsync lacked, and why its 46 sources all firing on the hour drove an
-    # OSD into BlueStore slow ops on 2026-08-29.
-    cron: "H * * * *"
+    # Every app on the hour, unstaggered. Note that kopiur has no
+    # mover-concurrency cap: `moverDefaults.throttle` is a per-mover kopia I/O
+    # rate limit, `reconcileConcurrency` bounds reconciles rather than running
+    # mover Jobs, and `maxConcurrentDeleteJobs` covers only delete batches. So
+    # all sources fire their CSI snapshot + clone + mover cycle at once — the
+    # same burst that drove an OSD into BlueStore slow ops under volsync on
+    # 2026-08-29. Re-introduce `H * * * *` to hash-spread across the hour if
+    # that recurs.
+    cron: "0 * * * *"
     timezone: Europe/Belgrade
