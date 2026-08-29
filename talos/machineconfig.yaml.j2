@@ -53,6 +53,13 @@ machine:
   install:
     image: factory.talos.dev/installer/{{ ENV.SCHEMATIC }}:{{ ENV.TALOS_VERSION }}
     wipe: false
+  kernel:
+    modules:
+      - name: dm_thin_pool # miroir lvmthin backend
+      - name: drbd # miroir replication (from the siderolabs/drbd extension)
+        parameters:
+          - usermode_helper=disabled
+      - name: drbd_transport_tcp
   kubelet:
     defaultRuntimeSeccompProfileEnabled: true
     disableManifestsDirectory: true
@@ -194,3 +201,30 @@ cluster:
   serviceAccount:
     key: ref+op://homecluster/talos/CLUSTER_SERVICEACCOUNT_KEY
   {% endif %}
+
+# --- miroir raw volume (COMMENTED UNTIL THE CUTOVER) ---
+# Provisions partlabel `r-miroir` on the dedicated 1TB data NVMe, consumed by
+# the MiroirNodeGroup as /dev/disk/by-partlabel/r-miroir.
+#
+# DO NOT UNCOMMENT while rook-ceph still owns those disks: bluestore takes the
+# raw device with no GPT, and Talos volume provisioning must not race live OSD
+# data. Uncomment only after `talosctl wipe disk` in the cutover window, then
+# apply-config -- it provisions without a reboot.
+#
+# The selector is deliberately model-independent. The old
+# `disk.model == "RS1D0TSSD710"` match silently stopped matching icarus003 when
+# its dead NVMe was replaced with a KINGSTON OM8PGP41024Q-A0 -- the same
+# model-locked-filter bug that broke the rook devicePathFilter on 2026-08-29.
+# Verified against all three nodes: matches exactly the data NVMe on each and
+# excludes every system disk (icarus001 SNV3S1000G, icarus002 SNV2S1000G,
+# icarus003's SATA VK0300GDUQV). `system_disk` is the same boolean Talos uses
+# for its own EPHEMERAL volume.
+#
+# ---
+# apiVersion: v1alpha1
+# kind: RawVolumeConfig
+# name: miroir
+# provisioning:
+#   diskSelector:
+#     match: disk.transport == "nvme" && !system_disk
+#   minSize: 1TB
