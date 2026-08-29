@@ -23,8 +23,8 @@ spec:
       - ReadWriteOnce
     storageClassName: miroir
     dataSourceRef:
-      apiGroup: volsync.backube
-      kind: ReplicationDestination
+      apiGroup: kopiur.home-operations.com
+      kind: Restore
       name: vmsingle-health-bootstrap
     resources:
       requests:
@@ -40,3 +40,32 @@ spec:
       # cgroup limit — so the floor is set by partition count, not sample count.
       # delete_series reindexing is the peak.
       memory: 1Gi
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/restore_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Restore
+metadata:
+  name: vmsingle-health-bootstrap
+  namespace: o11y
+spec:
+  # The VMSingle operator creates this claim, so the kopiur volume Component
+  # never covers it -- without an explicit populator it comes back EMPTY and
+  # silently loses the 100y series (Apple Health back to 2019), which the
+  # 1-month cluster instance cannot re-ingest.
+  mover:
+    cache:
+      capacity: 2Gi
+      mode: Persistent
+      storageClassName: openebs-hostpath
+    podSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
+  policy:
+    onMissingSnapshot: Continue
+  source:
+    fromPolicy:
+      name: vmsingle-health-local
+      offset: 0
+  target:
+    populator: {}
