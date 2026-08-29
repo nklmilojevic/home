@@ -21,7 +21,7 @@ spec:
   storage:
     accessModes:
       - ReadWriteOnce
-    storageClassName: ceph-block
+    storageClassName: miroir
     dataSourceRef:
       apiGroup: volsync.backube
       kind: ReplicationDestination

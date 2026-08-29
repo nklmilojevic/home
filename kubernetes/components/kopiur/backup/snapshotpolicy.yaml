@@ -31,4 +31,4 @@ spec:
   sources:
     - pvc:
         name: "${VOLSYNC_CLAIM:-${APP}}"
-  volumeSnapshotClassName: "${KOPIUR_SNAPSHOTCLASS:-csi-ceph-blockpool}"
+  volumeSnapshotClassName: "${KOPIUR_SNAPSHOTCLASS:-miroir}"
