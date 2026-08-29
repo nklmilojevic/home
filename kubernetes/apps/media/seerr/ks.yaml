@@ -27,8 +27,6 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
-      VOLSYNC_SCHEDULE: "10 0 * * *"
-      VOLSYNC_LOCAL_SCHEDULE: "10 3 * * *"
       APP: *app
-      VOLSYNC_CLAIM: seerr-config
-      VOLSYNC_CAPACITY: 15Gi
+      KOPIUR_CLAIM: seerr-config
+      KOPIUR_CAPACITY: 15Gi

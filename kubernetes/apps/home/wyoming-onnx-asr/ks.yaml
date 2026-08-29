@@ -26,7 +26,5 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
-      VOLSYNC_SCHEDULE: "0 0 * * *"
-      VOLSYNC_LOCAL_SCHEDULE: "0 3 * * *"
       APP: *app
-      VOLSYNC_CAPACITY: 5Gi
+      KOPIUR_CAPACITY: 5Gi

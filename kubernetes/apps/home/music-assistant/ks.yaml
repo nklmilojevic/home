@@ -31,10 +31,8 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
-      VOLSYNC_SCHEDULE: "40 0 * * *"
-      VOLSYNC_LOCAL_SCHEDULE: "40 3 * * *"
       APP: *app
-      VOLSYNC_CLAIM: music-assistant-data
-      VOLSYNC_CAPACITY: 5Gi
+      KOPIUR_CLAIM: music-assistant-data
+      KOPIUR_CAPACITY: 5Gi
       APP_UID: "0"
       APP_GID: "0"

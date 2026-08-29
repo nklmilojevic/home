@@ -31,10 +31,8 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
-      VOLSYNC_SCHEDULE: "35 0 * * *"
-      VOLSYNC_LOCAL_SCHEDULE: "35 3 * * *"
       APP: *app
-      VOLSYNC_CLAIM: matter-server-data
-      VOLSYNC_CAPACITY: 1Gi
+      KOPIUR_CLAIM: matter-server-data
+      KOPIUR_CAPACITY: 1Gi
       APP_UID: "0"
       APP_GID: "0"

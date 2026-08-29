@@ -61,6 +61,14 @@ spec:
   bootstrap:
     recovery:
       source: &recoveryServer immich-pg-v1
+      # MUST be set explicitly. A recovery bootstrap does not inherit these
+      # from the initdb block it replaces -- CNPG defaults both to `app`, mints
+      # an immich-pg-app secret pointing at a database/user that do not exist in
+      # the restored cluster, and immich then fails with "permission denied to
+      # create extension" because it is connecting as an unprivileged `app`
+      # rather than the restored superuser `immich`.
+      database: immich
+      owner: immich
   externalClusters:
     - name: *recoveryServer
       plugin:

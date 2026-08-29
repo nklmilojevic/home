@@ -7,9 +7,9 @@ metadata:
 spec:
   mover:
     cache:
-      capacity: "${VOLSYNC_CACHE_CAPACITY:-1Gi}"
+      capacity: "${KOPIUR_CACHE_CAPACITY:-1Gi}"
       mode: Persistent
-      storageClassName: "${VOLSYNC_CACHE_SNAPSHOTCLASS:-openebs-hostpath}"
+      storageClassName: "${KOPIUR_CACHE_SNAPSHOTCLASS:-openebs-hostpath}"
     securityContext:
       runAsUser: ${APP_UID:-1000}
       runAsGroup: ${APP_GID:-1000}

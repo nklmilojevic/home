@@ -29,8 +29,6 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
-      VOLSYNC_SCHEDULE: "25 0 * * *"
-      VOLSYNC_LOCAL_SCHEDULE: "25 3 * * *"
       APP: *app
-      VOLSYNC_CLAIM: sonarr-config
-      VOLSYNC_CAPACITY: 10Gi
+      KOPIUR_CLAIM: sonarr-config
+      KOPIUR_CAPACITY: 10Gi

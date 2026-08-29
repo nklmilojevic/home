@@ -3,10 +3,11 @@
 apiVersion: kopiur.home-operations.com/v1alpha1
 kind: SnapshotPolicy
 metadata:
-  name: "${APP}-local"
+  name: "${APP}-r2"
 spec:
-  # LAN copy on versitygw. This is the one the miroir cutover restores from,
-  # so it is seeded first and kept current.
+  # Offsite copy on R2. `local` is the restore path; this is the copy that
+  # survives losing the UNAS. Deliberately a separate kopia repository rather
+  # than a replica of `local`, so corruption cannot propagate between them.
   compression:
     compressor: zstd
   mover:
@@ -19,7 +20,7 @@ spec:
       runAsGroup: ${APP_GID:-1000}
   repository:
     kind: ClusterRepository
-    name: local
+    name: r2
   retention:
     keepLatest: 3
     keepHourly: 24
