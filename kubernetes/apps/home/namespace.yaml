@@ -7,3 +7,7 @@ metadata:
     kustomize.toolkit.fluxcd.io/prune: disabled
   annotations:
     volsync.backube/privileged-movers: "true"
+    # otbr, matter-server and music-assistant back up as uid 0 (APP_UID "0"
+    # in their ks.yaml), and kopiur fails closed on an elevated mover until
+    # the namespace opts in — the volsync twin above.
+    kopiur.home-operations.com/privileged-movers: "true"
