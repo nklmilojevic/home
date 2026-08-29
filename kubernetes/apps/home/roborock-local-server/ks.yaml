@@ -31,10 +31,8 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
-      VOLSYNC_SCHEDULE: "55 0 * * *"
-      VOLSYNC_LOCAL_SCHEDULE: "55 3 * * *"
       APP: *app
-      VOLSYNC_CLAIM: roborock-local-server-data
-      VOLSYNC_CAPACITY: 2Gi
+      KOPIUR_CLAIM: roborock-local-server-data
+      KOPIUR_CAPACITY: 2Gi
       APP_UID: "1000"
       APP_GID: "1000"

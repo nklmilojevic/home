@@ -29,9 +29,7 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
-      VOLSYNC_SCHEDULE: "35 0 * * *"
-      VOLSYNC_LOCAL_SCHEDULE: "35 3 * * *"
       APP: *app
-      VOLSYNC_CLAIM: plex-config
-      VOLSYNC_CAPACITY: 50Gi
-      VOLSYNC_CACHE_CAPACITY: 10Gi
+      KOPIUR_CLAIM: plex-config
+      KOPIUR_CAPACITY: 50Gi
+      KOPIUR_CACHE_CAPACITY: 10Gi

@@ -29,8 +29,6 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
-      VOLSYNC_SCHEDULE: "20 0 * * *"
-      VOLSYNC_LOCAL_SCHEDULE: "20 3 * * *"
       APP: *app
-      VOLSYNC_CLAIM: hms-cpap-config
-      VOLSYNC_CAPACITY: 5Gi
+      KOPIUR_CLAIM: hms-cpap-config
+      KOPIUR_CAPACITY: 5Gi

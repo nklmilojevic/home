@@ -12,3 +12,5 @@ kind: Component
 resources:
   - ./snapshotpolicy.yaml
   - ./snapshotschedule.yaml
+  - ./snapshotpolicy-r2.yaml
+  - ./snapshotschedule-r2.yaml

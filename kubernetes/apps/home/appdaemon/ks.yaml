@@ -31,10 +31,8 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
-      VOLSYNC_SCHEDULE: "5 0 * * *"
-      VOLSYNC_LOCAL_SCHEDULE: "5 3 * * *"
       APP: *app
-      VOLSYNC_CLAIM: appdaemon-config
-      VOLSYNC_CAPACITY: 10Gi
+      KOPIUR_CLAIM: appdaemon-config
+      KOPIUR_CAPACITY: 10Gi
       APP_UID: "1000"
       APP_GID: "1000"

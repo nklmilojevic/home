@@ -9,10 +9,8 @@ spec:
   # deliberately not on Ceph, so it survives the storage layer being torn down.
   # This is the repository the miroir cutover restores from: ~200 MB/s on the
   # LAN versus pulling 91 GiB back from Cloudflare.
-  # The offsite copy stays on volsync/restic for the whole parallel phase —
-  # a kopiur R2 repository here would duplicate coverage that already exists
-  # while pushing 91 GiB to Cloudflare twice. It gets added at the cutover,
-  # when volsync stops backing anything up.
+  # Paired with the `r2` repository below, which took over the offsite copy at
+  # the 2026-08-29 cutover when volsync was removed.
   # Points at the Service, not s3.nikola.wtf: Envoy buffers request bodies and
   # kopia blobs are multi-MB, so backup traffic has no business crossing the
   # gateway.
@@ -37,6 +35,41 @@ spec:
   encryption:
     passwordSecretRef:
       name: kopiur-local-secret
+      namespace: kopiur-system
+      key: KOPIA_PASSWORD
+  scheduleDefaults:
+    timezone: Europe/Belgrade
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/clusterrepository_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: ClusterRepository
+metadata:
+  name: r2
+spec:
+  # The offsite copy, live since the 2026-08-29 cutover removed volsync. Same
+  # kopia password as `local` so there is one secret to keep safe, but a wholly
+  # independent repository — a bug that corrupts one cannot reach the other.
+  #
+  # `local` is the restore path (LAN, ~200 MB/s); this exists for the case where
+  # the UNAS is gone. The endpoint is kept out of this public repo and injected
+  # from the kopiur-endpoint Secret via postBuild.substituteFrom in ks.yaml.
+  allowedNamespaces:
+    all: true
+  backend:
+    s3:
+      auth:
+        secretRef:
+          name: kopiur-repository-secret
+          namespace: kopiur-system
+      bucket: kopiur
+      endpoint: ${R2_ENDPOINT}
+      # R2 ignores the region but requires a valid-looking value; `auto` is the
+      # Cloudflare convention. Do NOT copy us-east-1 from `local` — that value
+      # exists only because versitygw validates the SigV4 region header.
+      region: auto
+  encryption:
+    passwordSecretRef:
+      name: kopiur-repository-secret
       namespace: kopiur-system
       key: KOPIA_PASSWORD
   scheduleDefaults:

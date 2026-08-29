@@ -29,10 +29,8 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
-      VOLSYNC_SCHEDULE: "0 0 * * *"
-      VOLSYNC_LOCAL_SCHEDULE: "0 3 * * *"
       APP: *app
       APP_UID: "1000"
       APP_GID: "1000"
-      VOLSYNC_CLAIM: paperless-data
-      VOLSYNC_CAPACITY: 15Gi
+      KOPIUR_CLAIM: paperless-data
+      KOPIUR_CAPACITY: 15Gi
