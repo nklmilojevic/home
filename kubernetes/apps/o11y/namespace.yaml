@@ -9,3 +9,6 @@ metadata:
     resource.kubernetes.io/admin-access: "true"
   annotations:
     volsync.backube/privileged-movers: "true"
+    # vmsingle-health and vmsingle-vmetrics back up as uid 0, and kopiur
+    # fails closed on an elevated mover until the namespace opts in.
+    kopiur.home-operations.com/privileged-movers: "true"
