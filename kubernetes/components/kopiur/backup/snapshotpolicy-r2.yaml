@@ -26,6 +26,13 @@ spec:
     keepHourly: 24
     keepDaily: 7
   staging:
+    # The staged clone is ephemeral, read-only and discarded minutes later, so
+    # it does not need replication. At the default 3 replicas EVERY staging
+    # clone touches ALL THREE nodes, which means one degraded node fails every
+    # snapshot in the fleet -- exactly what happened on 2026-08-29 when the
+    # icarus003 agent OOMed and left LVs without device nodes. One replica also
+    # cuts the per-snapshot LVM/DRBD work by ~3x, which is what drove the OOM.
+    storageClassName: miroir-local
     # Concurrent DRBD lockstep snapshots (or a post-reboot resync) can exceed
     # the 10m default and fail the whole backup.
     timeout: 30m
