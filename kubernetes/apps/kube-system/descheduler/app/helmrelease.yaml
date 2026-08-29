@@ -30,6 +30,18 @@ spec:
                 # descheduler.alpha.kubernetes.io/prefer-no-eviction
                 # (stateful singletons like home-assistant).
                 noEvictionPolicy: Mandatory
+                # Never evict a kopiur mover. They are one-shot Jobs with
+                # backoffLimit 2, so a mid-flight eviction fails the whole
+                # Snapshot/Restore terminally -- LowNodeUtilization killed the
+                # plex restore repeatedly during the 2026-08-04 cutover and it
+                # could not finish until the descheduler was stopped. Matters
+                # most during the miroir cutover restore, but movers run
+                # nightly, so it is live protection now too.
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/managed-by
+                      operator: NotIn
+                      values: ["kopiur"]
                 podProtections:
                   defaultDisabled:
                     - FailedBarePods
