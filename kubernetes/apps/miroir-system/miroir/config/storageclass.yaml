@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/storage.k8s.io/storageclass_v1.json
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: miroir
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: miroir.home-operations.com
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+parameters:
+  miroir.home-operations.com/pool: nvme
+  # 3 replicas on a 3-node cluster: every node holds a leg, so a volume can
+  # never have a diskless primary -- the miroir#409 failure mode that silently
+  # hung 8/36 snapshots in the 2026-08-04 attempt cannot occur at all.
+  miroir.home-operations.com/replicas: "3"
+  miroir.home-operations.com/quorum: freeze
+  csi.storage.k8s.io/fstype: ext4
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/storage.k8s.io/storageclass_v1.json
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: miroir-local
+provisioner: miroir.home-operations.com
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+parameters:
+  miroir.home-operations.com/pool: nvme
+  miroir.home-operations.com/replicas: "1"
+  csi.storage.k8s.io/fstype: ext4

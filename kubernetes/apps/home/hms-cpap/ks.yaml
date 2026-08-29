@@ -6,17 +6,15 @@ metadata:
   name: &app hms-cpap
 spec:
   components:
-    - ../../../../components/volsync
+    - ../../../../components/kopiur/volume
     - ../../../../components/kopiur/backup
   targetNamespace: home
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-    - name: volsync
-      namespace: security
+    - name: miroir-config
+      namespace: miroir-system
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/home/hms-cpap/app

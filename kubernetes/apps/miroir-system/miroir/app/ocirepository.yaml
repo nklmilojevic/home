@@ -3,12 +3,13 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: rook-ceph
+  name: miroir
+  namespace: miroir-system
 spec:
   interval: 10m
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   ref:
-    tag: v1.20.6
-  url: oci://ghcr.io/rook/rook-ceph
+    tag: 0.11.24
+  url: oci://ghcr.io/home-operations/charts/miroir

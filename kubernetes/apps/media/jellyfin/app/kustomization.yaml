@@ -5,6 +5,4 @@ resources:
   - ./helmrelease.yaml
   - ./ocirepository.yaml
   - ./resourceclaimtemplate.yaml
-  - ./replicationsource.yaml
-  - ./replicationsource-local.yaml
   - ./snapshotpolicy-local.yaml

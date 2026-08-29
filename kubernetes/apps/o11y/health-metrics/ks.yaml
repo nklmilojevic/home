@@ -12,8 +12,6 @@ spec:
   dependsOn:
     - name: victoriametrics
       namespace: o11y
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/o11y/health-metrics/app
