@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotSchedule
+metadata:
+  name: "${APP}-local"
+spec:
+  policyRef:
+    name: "${APP}-local"
+  schedule:
+    # `H` hash-spreads each app across the hour, so the schedule is itself the
+    # concurrency control — kopiur has no mover-concurrency knob. This is what
+    # volsync lacked, and why its 46 sources all firing on the hour drove an
+    # OSD into BlueStore slow ops on 2026-08-29.
+    cron: "H * * * *"
+    timezone: Europe/Belgrade
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotSchedule
+metadata:
+  name: "${APP}-r2"
+spec:
+  policyRef:
+    name: "${APP}-r2"
+  schedule:
+    cron: "H * * * *"
+    timezone: Europe/Belgrade
