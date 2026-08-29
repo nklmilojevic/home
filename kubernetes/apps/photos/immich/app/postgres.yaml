@@ -26,7 +26,7 @@ spec:
   primaryUpdateStrategy: unsupervised
   storage:
     size: 10Gi
-    storageClass: ceph-block
+    storageClass: miroir
   enableSuperuserAccess: true
   superuserSecret:
     name: immich-pg-secret
@@ -49,28 +49,22 @@ spec:
       isWALArchiver: true
       parameters:
         barmanObjectName: immich-pg
-        serverName: immich-pg-v1
-  # When rebuilding the cluster from the R2 backup, replace the bootstrap
-  # block below with this recovery block and bump serverName above
-  # (e.g. immich-pg-v2) so the new WAL archive does not clash with the old one.
+        serverName: immich-pg-v2
+  # Rebuilt from the R2 barman backup at the 2026-08-29 miroir cutover: the
+  # ceph-block PVC that held this database was deleted with the rest of Ceph,
+  # and immich-pg is NOT covered by kopiur -- barman-cloud is its only backup.
+  # Recovers the immich-pg-v1 archive (base backup 03:00 + WAL) and writes its
+  # own archive as immich-pg-v2 so the two do not clash.
   #
-  # bootstrap:
-  #   recovery:
-  #     source: &recoveryServer immich-pg-v1
-  # externalClusters:
-  #   - name: *recoveryServer
-  #     plugin:
-  #       name: barman-cloud.cloudnative-pg.io
-  #       parameters:
-  #         barmanObjectName: immich-pg
-  #         serverName: *recoveryServer
-  #
+  # To rebuild again: bump serverName (v3), point source at the archive to
+  # recover from, and delete the Cluster + its PVC so CNPG bootstraps fresh.
   bootstrap:
-    initdb:
-      database: immich
-      owner: immich
-      postInitApplicationSQL:
-        - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
-        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
-        # Immich runs ALTER EXTENSION on upgrades, which needs superuser.
-        - ALTER USER immich WITH SUPERUSER;
+    recovery:
+      source: &recoveryServer immich-pg-v1
+  externalClusters:
+    - name: *recoveryServer
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: immich-pg
+          serverName: *recoveryServer
