@@ -151,9 +151,14 @@ spec:
       storage:
         useAllNodes: true
         useAllDevices: false
-        # Data disks are all the same model; match by stable by-id path since
-        # /dev/nvmeXnY enumeration shifts across reboots (icarus003 is nvme0n1)
-        devicePathFilter: "^/dev/disk/by-id/nvme-RS1D0TSSD710_.*"
+        # Match by stable by-id path: /dev/nvmeXnY enumeration shifts across
+        # reboots. Two models now — icarus003's RS1D0TSSD710 died on
+        # 2026-08-29 (NVMe controller stopped enumerating on the PCI bus
+        # entirely) and was replaced with a Kingston OM8PGP4. The alternation
+        # must keep matching the two surviving RS1D0TSSD710 drives, and it
+        # deliberately does NOT match any system disk: icarus001/002 boot from
+        # KINGSTON_SNV*, icarus003 from a SATA disk.
+        devicePathFilter: "^/dev/disk/by-id/nvme-(RS1D0TSSD710|KINGSTON_OM8PGP41024Q-A0)_.*"
         config:
           osdsPerDevice: "1"
     cephBlockPools:
