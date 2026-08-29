@@ -7,10 +7,9 @@ metadata:
 spec:
   sourcePVC: "${VOLSYNC_CLAIM:-${APP}}"
   trigger:
-    # Deliberately offset from the R2 source's midnight run. Both waves fire all
-    # apps at once, as the R2 one already does, so this doubles daily snapshot
-    # and clone churn without raising peak concurrency.
-    schedule: "0 3 * * *"
+    # Offset an hour from the R2 wave and staggered per app; see
+    # VOLSYNC_LOCAL_SCHEDULE in each ks.yaml.
+    schedule: "${VOLSYNC_LOCAL_SCHEDULE:-0 3 * * *}"
   restic:
     cacheAccessModes:
       - "${VOLSYNC_CACHE_ACCESSMODES:-ReadWriteOnce}"

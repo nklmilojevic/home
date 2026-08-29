@@ -7,7 +7,10 @@ metadata:
 spec:
   sourcePVC: "${VOLSYNC_CLAIM:-${APP}}"
   trigger:
-    schedule: "0 0 * * *"
+    # Staggered per app (VOLSYNC_SCHEDULE in each ks.yaml) so 46 sources do not
+    # all snapshot+clone at once — that burst is what pushed osd.2 into
+    # BlueStore slow ops on 2026-08-29.
+    schedule: "${VOLSYNC_SCHEDULE:-0 0 * * *}"
   restic:
     cacheAccessModes:
       - "${VOLSYNC_CACHE_ACCESSMODES:-ReadWriteOnce}"

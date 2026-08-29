@@ -30,6 +30,8 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
+      VOLSYNC_SCHEDULE: "50 0 * * *"
+      VOLSYNC_LOCAL_SCHEDULE: "50 3 * * *"
       APP: *app
       VOLSYNC_CLAIM: petkit-local-config
       VOLSYNC_CAPACITY: 2Gi

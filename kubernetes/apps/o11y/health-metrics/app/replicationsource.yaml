@@ -7,7 +7,7 @@ metadata:
 spec:
   sourcePVC: vmsingle-health
   trigger:
-    schedule: "0 0 * * *"
+    schedule: "35 0 * * *"
   restic:
     cacheCapacity: 2Gi
     cacheStorageClassName: openebs-hostpath

@@ -32,6 +32,8 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
+      VOLSYNC_SCHEDULE: "10 0 * * *"
+      VOLSYNC_LOCAL_SCHEDULE: "10 3 * * *"
       APP: *app
       VOLSYNC_CLAIM: esphome-config
       VOLSYNC_CAPACITY: 10Gi
