@@ -9,3 +9,4 @@ resources:
   - ./alertmanager-prometheusrule.yaml
   - ./hardware-temperature-prometheusrule.yaml
   - ./replicationsource.yaml
+  - ./replicationsource-local.yaml
