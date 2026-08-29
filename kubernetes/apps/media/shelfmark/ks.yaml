@@ -6,17 +6,15 @@ metadata:
   name: &app shelfmark
 spec:
   components:
-    - ../../../../components/volsync
+    - ../../../../components/kopiur/volume
     - ../../../../components/kopiur/backup
   targetNamespace: media
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: volsync
-      namespace: security
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: miroir-config
+      namespace: miroir-system
   path: ./kubernetes/apps/media/shelfmark/app
   prune: true
   sourceRef:

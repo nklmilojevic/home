@@ -6,17 +6,15 @@ metadata:
   name: &app appdaemon
 spec:
   components:
-    - ../../../../components/volsync
+    - ../../../../components/kopiur/volume
     - ../../../../components/kopiur/backup
   targetNamespace: home
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: volsync
-      namespace: security
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: miroir-config
+      namespace: miroir-system
     - name: home-assistant
       namespace: home
     - name: external-secrets-stores

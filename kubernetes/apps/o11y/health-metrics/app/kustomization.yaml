@@ -7,5 +7,3 @@ resources:
   - ./vmsingle.yaml
   - ./vmagent.yaml
   - ./httproute.yaml
-  - ./replicationsource.yaml
-  - ./replicationsource-local.yaml

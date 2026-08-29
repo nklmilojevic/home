@@ -7,29 +7,12 @@ spec:
   kubernetes:
     # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
     version: v1.37.0
-  # --- CUTOVER SWAP (do not uncomment until miroir is serving) ---
-  # These gates fail CLOSED: tuppr blocks the roll when a referenced kind is
-  # missing or unhealthy. So the ceph/volsync gates below must stay live while
-  # rook still owns the data, and these must stay commented until miroir and
-  # kopiur have replaced them. Swap them in the SAME commit that removes
-  # rook-ceph and volsync, or the next node upgrade hard-blocks on a
-  # CephCluster that no longer exists.
-  #
-  # healthChecks:
-  #   - apiVersion: kopiur.home-operations.com/v1alpha1
-  #     kind: Snapshot
-  #     expr: |-
-  #       !has(status.phase) || status.phase != 'Running'
-  #   - apiVersion: miroir.home-operations.com/v1alpha1
-  #     kind: MiroirNodeGroup
-  #     expr: |-
-  #       status.conditions.filter(c, c.type == 'Ready').all(c, c.status == 'True')
   healthChecks:
-    - apiVersion: volsync.backube/v1alpha1
-      kind: ReplicationSource
+    - apiVersion: kopiur.home-operations.com/v1alpha1
+      kind: Snapshot
       expr: |-
-        status.conditions.filter(c, c.type == "Synchronizing").all(c, c.status == "False")
-    - apiVersion: ceph.rook.io/v1
-      kind: CephCluster
+        !has(status.phase) || status.phase != 'Running'
+    - apiVersion: miroir.home-operations.com/v1alpha1
+      kind: MiroirNodeGroup
       expr: |-
-        status.ceph.health in ['HEALTH_OK']
+        status.conditions.filter(c, c.type == 'Ready').all(c, c.status == 'True')

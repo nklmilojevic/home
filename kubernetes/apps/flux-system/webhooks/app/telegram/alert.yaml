@@ -125,13 +125,13 @@ spec:
       namespace: renovate
     - kind: Kustomization
       name: "*"
-      namespace: rook-ceph
+      namespace: miroir-system
     - kind: HelmRelease
       name: "*"
-      namespace: rook-ceph
+      namespace: miroir-system
     - kind: OCIRepository
       name: "*"
-      namespace: rook-ceph
+      namespace: miroir-system
     - kind: Kustomization
       name: "*"
       namespace: security

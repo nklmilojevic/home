@@ -6,19 +6,17 @@ metadata:
   name: &app homebridge
 spec:
   components:
-    - ../../../../components/volsync
+    - ../../../../components/kopiur/volume
     - ../../../../components/kopiur/backup
   targetNamespace: home
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: miroir-config
+      namespace: miroir-system
     - name: multus-config
       namespace: network
-    - name: volsync
-      namespace: security
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
     - name: external-secrets-stores
       namespace: security
   path: ./kubernetes/apps/home/homebridge/app
