@@ -27,6 +27,21 @@ spec:
       # DRBD activity-log extents (default 1237): fewer hot-extent metadata
       # updates under scattered random writes, longer post-crash resync.
       alExtents: 6007
+    agent:
+      # Chart default is a 128Mi limit; steady state is already 72-75Mi, which
+      # left almost no headroom. icarus003's agent was OOMKilled (exit 137)
+      # mid-burst during the first unstaggered 46-volume snapshot wave on
+      # 2026-08-29, and the restart stranded LVs whose device nodes never
+      # materialised -- every later CSI clone on that node then failed with
+      # "unusable after vgmknodes ... No such file or directory". Because the
+      # StorageClass asks for 3 replicas, two healthy legs are not enough and
+      # the whole volume fails ResourceExhausted.
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 512Mi
     groupSnapshots:
       enabled: true
     monitoring:
