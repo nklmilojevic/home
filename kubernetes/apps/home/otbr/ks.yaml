@@ -32,6 +32,8 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
+      VOLSYNC_SCHEDULE: "45 0 * * *"
+      VOLSYNC_LOCAL_SCHEDULE: "45 3 * * *"
       APP: *app
       VOLSYNC_CLAIM: otbr-data
       VOLSYNC_CAPACITY: 1Gi

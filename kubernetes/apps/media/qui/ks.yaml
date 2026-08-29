@@ -30,6 +30,8 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
+      VOLSYNC_SCHEDULE: "55 0 * * *"
+      VOLSYNC_LOCAL_SCHEDULE: "55 3 * * *"
       APP: *app
       VOLSYNC_CLAIM: qui
       VOLSYNC_CAPACITY: 2Gi

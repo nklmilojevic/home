@@ -7,7 +7,7 @@ metadata:
 spec:
   sourcePVC: vmsingle-vmetrics-victoria-metrics-k8s-stack
   trigger:
-    schedule: "0 0 * * *"
+    schedule: "45 0 * * *"
   restic:
     cacheCapacity: 2Gi
     cacheStorageClassName: openebs-hostpath

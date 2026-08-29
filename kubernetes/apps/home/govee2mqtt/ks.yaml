@@ -30,5 +30,7 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
+      VOLSYNC_SCHEDULE: "15 0 * * *"
+      VOLSYNC_LOCAL_SCHEDULE: "15 3 * * *"
       APP: *app
       VOLSYNC_CLAIM: govee2mqtt-config

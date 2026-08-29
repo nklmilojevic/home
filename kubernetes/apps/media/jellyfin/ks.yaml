@@ -30,6 +30,8 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
+      VOLSYNC_SCHEDULE: "25 0 * * *"
+      VOLSYNC_LOCAL_SCHEDULE: "25 3 * * *"
       APP: *app
       VOLSYNC_CLAIM: jellyfin-config
       VOLSYNC_CAPACITY: 20Gi

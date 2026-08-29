@@ -32,5 +32,7 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
+      VOLSYNC_SCHEDULE: "5 0 * * *"
+      VOLSYNC_LOCAL_SCHEDULE: "5 3 * * *"
       APP: *app
       VOLSYNC_CLAIM: sabnzbd-config

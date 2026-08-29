@@ -30,6 +30,8 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
+      VOLSYNC_SCHEDULE: "20 0 * * *"
+      VOLSYNC_LOCAL_SCHEDULE: "20 3 * * *"
       APP: *app
       VOLSYNC_CLAIM: slskd-config
       VOLSYNC_CAPACITY: 1Gi

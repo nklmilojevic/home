@@ -32,6 +32,8 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
+      VOLSYNC_SCHEDULE: "30 0 * * *"
+      VOLSYNC_LOCAL_SCHEDULE: "30 3 * * *"
       APP: *app
       VOLSYNC_CLAIM: homebridge-config
       VOLSYNC_CAPACITY: 5Gi
