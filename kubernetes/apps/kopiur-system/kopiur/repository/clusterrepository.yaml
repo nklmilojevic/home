@@ -9,6 +9,10 @@ spec:
   # deliberately not on Ceph, so it survives the storage layer being torn down.
   # This is the repository the miroir cutover restores from: ~200 MB/s on the
   # LAN versus pulling 91 GiB back from Cloudflare.
+  # The offsite copy stays on volsync/restic for the whole parallel phase —
+  # a kopiur R2 repository here would duplicate coverage that already exists
+  # while pushing 91 GiB to Cloudflare twice. It gets added at the cutover,
+  # when volsync stops backing anything up.
   # Points at the Service, not s3.nikola.wtf: Envoy buffers request bodies and
   # kopia blobs are multi-MB, so backup traffic has no business crossing the
   # gateway.
@@ -22,7 +26,10 @@ spec:
           namespace: kopiur-system
       bucket: kopiur
       endpoint: versitygw.security.svc.cluster.local:7070
-      region: auto
+      # versitygw validates the SigV4 region in the authorization header and
+      # expects us-east-1; `auto` is an R2-ism and fails bootstrap with
+      # "The authorization header is malformed".
+      region: us-east-1
       tls:
         # versitygw serves plain HTTP in-cluster; TLS is terminated at the
         # gateway, which this path bypasses.
@@ -30,33 +37,6 @@ spec:
   encryption:
     passwordSecretRef:
       name: kopiur-local-secret
-      namespace: kopiur-system
-      key: KOPIA_PASSWORD
-  scheduleDefaults:
-    timezone: Europe/Belgrade
----
-# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/clusterrepository_v1alpha1.json
-apiVersion: kopiur.home-operations.com/v1alpha1
-kind: ClusterRepository
-metadata:
-  name: r2
-spec:
-  # The offsite copy. Same kopia password as `local` so there is one secret to
-  # keep safe, but a wholly independent repository.
-  allowedNamespaces:
-    all: true
-  backend:
-    s3:
-      auth:
-        secretRef:
-          name: kopiur-repository-secret
-          namespace: kopiur-system
-      bucket: kopiur
-      endpoint: ${R2_ENDPOINT}
-      region: auto
-  encryption:
-    passwordSecretRef:
-      name: kopiur-repository-secret
       namespace: kopiur-system
       key: KOPIA_PASSWORD
   scheduleDefaults:
