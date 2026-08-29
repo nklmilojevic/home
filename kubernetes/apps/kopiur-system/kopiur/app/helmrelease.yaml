@@ -15,6 +15,15 @@ spec:
     kind: OCIRepository
     name: kopiur
   values:
+    # `kopia=debug` surfaces kopia's own upload progress in mover logs; the
+    # movers' only alternative is `progressIntervalSecs`, which is a bare
+    # timestamp heartbeat and carries no byte/file counts. Scoped per-target so
+    # the kube_client/hyper/rustls firehose stays at info. The controller passes
+    # RUST_LOG + KOPIUR_LOG_FORMAT through to every mover Job, so this one value
+    # covers the fleet — including the controller, whose in-process kopia
+    # subprocesses are filtered back out in the vector aggregator.
+    logging:
+      level: "info,kopia=debug"
     monitoring:
       dashboards:
         enabled: true
