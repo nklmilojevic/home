@@ -6,6 +6,7 @@ resources:
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
   - ./snapshotpolicy-local.yaml
+  - ./snapshotpolicy-r2.yaml
 configMapGenerator:
   - name: gatus-configmap
     files:

@@ -9,3 +9,4 @@ resources:
   - ./alertmanager-prometheusrule.yaml
   - ./hardware-temperature-prometheusrule.yaml
   - ./snapshotpolicy-local.yaml
+  - ./snapshotpolicy-r2.yaml

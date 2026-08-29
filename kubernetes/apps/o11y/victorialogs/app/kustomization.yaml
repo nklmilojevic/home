@@ -6,3 +6,4 @@ resources:
   - ./helmrelease.yaml
   - ./httproute.yaml
   - ./snapshotpolicy-local.yaml
+  - ./snapshotpolicy-r2.yaml

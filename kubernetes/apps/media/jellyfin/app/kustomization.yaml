@@ -6,3 +6,4 @@ resources:
   - ./ocirepository.yaml
   - ./resourceclaimtemplate.yaml
   - ./snapshotpolicy-local.yaml
+  - ./snapshotpolicy-r2.yaml
