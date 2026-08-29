@@ -1,0 +1,94 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: vmsingle-health-r2
+spec:
+  # Offsite (r2) twin of the `vmsingle-health-local` ReplicationSource next to this file. This volume
+  # sits outside the volsync/kopiur Components (it is created by the VMSingle operator CRD), so it needs an
+  # explicit policy — the component only ever covers ${VOLSYNC_CLAIM}. This is
+  # the class of volume whose backup was missed in the 2026-08-04 cutover.
+  compression:
+    compressor: zstd
+  mover:
+    cache:
+      capacity: 2Gi
+      mode: Persistent
+      storageClassName: openebs-hostpath
+    podSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
+  repository:
+    kind: ClusterRepository
+    name: r2
+  retention:
+    keepLatest: 3
+    keepHourly: 24
+    keepDaily: 7
+  staging:
+    timeout: 30m
+  sources:
+    - pvc:
+        name: vmsingle-health
+  volumeSnapshotClassName: miroir
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotSchedule
+metadata:
+  name: vmsingle-health-r2
+spec:
+  policyRef:
+    name: vmsingle-health-r2
+  schedule:
+    cron: "0 3 * * *"
+    timezone: Europe/Belgrade
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: vmsingle-vmetrics-r2
+spec:
+  # Offsite (r2) twin of the `vmsingle-vmetrics-local` ReplicationSource next to this file. This volume
+  # sits outside the volsync/kopiur Components (it is created by the VMSingle operator CRD), so it needs an
+  # explicit policy — the component only ever covers ${VOLSYNC_CLAIM}. This is
+  # the class of volume whose backup was missed in the 2026-08-04 cutover.
+  compression:
+    compressor: zstd
+  mover:
+    cache:
+      capacity: 2Gi
+      mode: Persistent
+      storageClassName: openebs-hostpath
+    podSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
+  repository:
+    kind: ClusterRepository
+    name: r2
+  retention:
+    keepLatest: 3
+    keepHourly: 24
+    keepDaily: 7
+  staging:
+    timeout: 30m
+  sources:
+    - pvc:
+        name: vmsingle-vmetrics-victoria-metrics-k8s-stack
+  volumeSnapshotClassName: miroir
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotSchedule
+metadata:
+  name: vmsingle-vmetrics-r2
+spec:
+  policyRef:
+    name: vmsingle-vmetrics-r2
+  schedule:
+    cron: "0 3 * * *"
+    timezone: Europe/Belgrade
