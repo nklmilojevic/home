@@ -7,3 +7,4 @@ resources:
   - ./resourceclaimtemplate.yaml
   - ./replicationsource.yaml
   - ./replicationsource-local.yaml
+  - ./snapshotpolicy-local.yaml

@@ -10,3 +10,4 @@ resources:
   - ./hardware-temperature-prometheusrule.yaml
   - ./replicationsource.yaml
   - ./replicationsource-local.yaml
+  - ./snapshotpolicy-local.yaml
