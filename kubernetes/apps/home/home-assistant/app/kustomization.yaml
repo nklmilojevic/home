@@ -8,3 +8,4 @@ resources:
   - ./ocirepository.yaml
   - ./pvc.yaml
   - ./replicationsource.yaml
+  - ./replicationsource-local.yaml

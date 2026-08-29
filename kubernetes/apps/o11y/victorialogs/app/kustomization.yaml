@@ -6,3 +6,4 @@ resources:
   - ./helmrelease.yaml
   - ./httproute.yaml
   - ./replicationsource.yaml
+  - ./replicationsource-local.yaml

@@ -6,6 +6,7 @@ resources:
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
   - ./replicationsource.yaml
+  - ./replicationsource-local.yaml
 configMapGenerator:
   - name: gatus-configmap
     files:

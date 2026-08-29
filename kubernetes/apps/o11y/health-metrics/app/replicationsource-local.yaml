@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/volsync.backube/replicationsource_v1alpha1.json
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: vmsingle-health-local
+spec:
+  sourcePVC: vmsingle-health
+  trigger:
+    # Staggered, an hour after this volume's R2 run.
+    schedule: "35 3 * * *"
+  restic:
+    cacheCapacity: 2Gi
+    cacheStorageClassName: openebs-hostpath
+    copyMethod: Snapshot
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
+    pruneIntervalDays: 7
+    repository: vmsingle-health-volsync-local
+    retain:
+      daily: 7
+    storageClassName: ceph-block
+    volumeSnapshotClassName: csi-ceph-blockpool
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: vmsingle-health-volsync-local
+spec:
+  refreshInterval: 5m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: vmsingle-health-volsync-local
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        # Same bucket/prefix scheme as the volsync Component, pointed at the
+        # Service rather than s3.nikola.wtf so backup traffic skips Envoy.
+        RESTIC_REPOSITORY: "s3:http://versitygw.security.svc.cluster.local:7070/volsync/vmsingle-health"
+        RESTIC_PASSWORD: "{{ .RESTIC_PASSWORD }}"
+        AWS_ACCESS_KEY_ID: "{{ .AWS_ACCESS_KEY_ID }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .AWS_SECRET_ACCESS_KEY }}"
+  data:
+    - secretKey: RESTIC_PASSWORD
+      remoteRef:
+        key: volsync-r2-template
+        property: RESTIC_PASSWORD
+    - secretKey: AWS_ACCESS_KEY_ID
+      remoteRef:
+        key: versitygw
+        property: access_key_id
+    - secretKey: AWS_SECRET_ACCESS_KEY
+      remoteRef:
+        key: versitygw
+        property: secret_access_key

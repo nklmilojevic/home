@@ -8,3 +8,4 @@ resources:
   - ./vmagent.yaml
   - ./httproute.yaml
   - ./replicationsource.yaml
+  - ./replicationsource-local.yaml
