@@ -7,3 +7,4 @@ resources:
   - ./httproute.yaml
   - ./replicationsource.yaml
   - ./replicationsource-local.yaml
+  - ./snapshotpolicy-local.yaml

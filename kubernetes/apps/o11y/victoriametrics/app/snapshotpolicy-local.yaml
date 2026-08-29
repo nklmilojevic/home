@@ -1,0 +1,94 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: vmsingle-health-local
+spec:
+  # kopiur twin of the `vmsingle-health-local` ReplicationSource next to this file. This volume
+  # sits outside the volsync/kopiur Components (it is created by the VMSingle operator CRD), so it needs an
+  # explicit policy — the component only ever covers ${VOLSYNC_CLAIM}. This is
+  # the class of volume whose backup was missed in the 2026-08-04 cutover.
+  compression:
+    compressor: zstd
+  mover:
+    cache:
+      capacity: 2Gi
+      mode: Persistent
+      storageClassName: openebs-hostpath
+    podSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
+  repository:
+    kind: ClusterRepository
+    name: local
+  retention:
+    keepLatest: 3
+    keepHourly: 24
+    keepDaily: 7
+  staging:
+    timeout: 30m
+  sources:
+    - pvc:
+        name: vmsingle-health
+  volumeSnapshotClassName: csi-ceph-blockpool
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotSchedule
+metadata:
+  name: vmsingle-health-local
+spec:
+  policyRef:
+    name: vmsingle-health-local
+  schedule:
+    cron: "0 * * * *"
+    timezone: Europe/Belgrade
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: vmsingle-vmetrics-local
+spec:
+  # kopiur twin of the `vmsingle-vmetrics-local` ReplicationSource next to this file. This volume
+  # sits outside the volsync/kopiur Components (it is created by the VMSingle operator CRD), so it needs an
+  # explicit policy — the component only ever covers ${VOLSYNC_CLAIM}. This is
+  # the class of volume whose backup was missed in the 2026-08-04 cutover.
+  compression:
+    compressor: zstd
+  mover:
+    cache:
+      capacity: 2Gi
+      mode: Persistent
+      storageClassName: openebs-hostpath
+    podSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
+  repository:
+    kind: ClusterRepository
+    name: local
+  retention:
+    keepLatest: 3
+    keepHourly: 24
+    keepDaily: 7
+  staging:
+    timeout: 30m
+  sources:
+    - pvc:
+        name: vmsingle-vmetrics-victoria-metrics-k8s-stack
+  volumeSnapshotClassName: csi-ceph-blockpool
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotSchedule
+metadata:
+  name: vmsingle-vmetrics-local
+spec:
+  policyRef:
+    name: vmsingle-vmetrics-local
+  schedule:
+    cron: "0 * * * *"
+    timezone: Europe/Belgrade
