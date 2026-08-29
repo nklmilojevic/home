@@ -17,8 +17,8 @@ metadata:
   name: home-assistant-media
 spec:
   dataSourceRef:
-    apiGroup: volsync.backube
-    kind: ReplicationDestination
+    apiGroup: kopiur.home-operations.com
+    kind: Restore
     name: home-assistant-media-bootstrap
   accessModes:
     - ReadWriteOnce
@@ -26,3 +26,32 @@ spec:
     requests:
       storage: 5Gi
   storageClassName: miroir
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/restore_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Restore
+metadata:
+  name: home-assistant-media-bootstrap
+spec:
+  # This volume lives outside the kopiur volume Component (standalone pvc.yaml),
+  # so it needs its own populator -- the Component only ever covers
+  # ${VOLSYNC_CLAIM}. Rebuilt by hand at the 2026-08-29 cutover, where the
+  # stale volsync ReplicationDestination dataSourceRef would have left the claim
+  # Pending forever.
+  mover:
+    cache:
+      capacity: 2Gi
+      mode: Persistent
+      storageClassName: openebs-hostpath
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+  policy:
+    onMissingSnapshot: Continue
+  source:
+    fromPolicy:
+      name: home-assistant-media-local
+      offset: 0
+  target:
+    populator: {}
