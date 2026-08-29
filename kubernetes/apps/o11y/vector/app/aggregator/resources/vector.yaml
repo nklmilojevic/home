@@ -39,7 +39,17 @@ transforms:
       type: vrl
       source: |
         msg = string(.log) ?? ""
-        !(.kubernetes.pod_namespace == "rook-ceph" && (contains(msg, "response body:") || length(msg) > 100000))
+        ceph_flood = .kubernetes.pod_namespace == "rook-ceph" &&
+          (contains(msg, "response body:") || length(msg) > 100000)
+        # kopiur runs `logging.level: "info,kopia=debug"` so mover Jobs report
+        # kopia's upload progress. That directive is chart-wide, and the
+        # controller spawns its own in-process kopia subprocesses to connect and
+        # list every repository on each reconcile — pure chatter at 38 policies.
+        # Mover Jobs run in the WORKLOAD namespace, never kopiur-system, so
+        # dropping DEBUG inside kopiur-system alone keeps every progress line.
+        kopiur_debug = .kubernetes.pod_namespace == "kopiur-system" &&
+          contains(msg, " DEBUG ")
+        !ceph_flood && !kopiur_debug
 
 #
 # Sinks
