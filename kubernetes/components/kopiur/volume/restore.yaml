@@ -6,9 +6,17 @@ metadata:
   name: "${APP}-bootstrap"
 spec:
   mover:
+    # Ephemeral, NOT Persistent: a persistent cache is a node-local PVC that
+    # binds once and pins the mover to that node forever. That broke backups
+    # twice on 2026-08-30 -- 80 caches stranded when icarus003 went down, then
+    # hermes deadlocked with its cache on icarus003 and its staging clone on
+    # icarus001, so no node could satisfy both. Staging clones can only land on
+    # diskful nodes; caches can land anywhere, so the two drift apart.
+    # Costs a kopia metadata re-download per run; over the LAN that is cheap
+    # next to a backup that cannot schedule at all.
     cache:
       capacity: "${KOPIUR_CACHE_CAPACITY:-1Gi}"
-      mode: Persistent
+      mode: Ephemeral
       storageClassName: "${KOPIUR_CACHE_SNAPSHOTCLASS:-openebs-hostpath}"
     securityContext:
       runAsUser: ${APP_UID:-1000}
