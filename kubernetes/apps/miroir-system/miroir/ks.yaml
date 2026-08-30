@@ -38,6 +38,13 @@ spec:
       namespace: miroir-system
   path: ./kubernetes/apps/miroir-system/miroir/config
   prune: true
+  # StorageClass.parameters is immutable, so changing the replica count fails a
+  # plain apply with `field is immutable` and the class silently stays at its
+  # old value. force lets the controller delete and recreate it. Safe here: it
+  # only engages when a patch fails on an immutable field, and everything in
+  # this path (storage/snapshot classes, node group) is consulted at provision
+  # time -- recreating a class does not disturb volumes already bound.
+  force: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
