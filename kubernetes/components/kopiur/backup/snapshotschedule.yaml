@@ -8,7 +8,9 @@ spec:
   policyRef:
     name: "${APP}-local"
   schedule:
-    # Every app on the hour, unstaggered. Note that kopiur has no
+    # Every app at :30, unstaggered. Deliberately not :00 — the daily r2
+    # wave runs at 03:00, so a local wave on the hour collided with it
+    # once a night, doubling the burst exactly when nobody is watching. Note that kopiur has no
     # mover-concurrency cap: `moverDefaults.throttle` is a per-mover kopia I/O
     # rate limit, `reconcileConcurrency` bounds reconciles rather than running
     # mover Jobs, and `maxConcurrentDeleteJobs` covers only delete batches. So
@@ -16,5 +18,5 @@ spec:
     # same burst that drove an OSD into BlueStore slow ops under volsync on
     # 2026-08-29. Re-introduce `H * * * *` to hash-spread across the hour if
     # that recurs.
-    cron: "0 * * * *"
+    cron: "30 * * * *"
     timezone: Europe/Belgrade
