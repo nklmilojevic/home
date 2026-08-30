@@ -323,6 +323,16 @@ spec:
       # Chart default requests 500Mi but the working set sits at ~1.3-1.5Gi;
       # right-size so the scheduler accounts for what vmsingle actually uses.
       spec:
+        # NOTE: set via extraArgs, not a spec field — the VMSingle CRD has no
+        # maxQueryLen and the operator prunes unknown keys silently.
+        # The miroir "Resync progress" panel expands a template variable over
+        # every volume name, so its query grows with the volume count: at 57
+        # pvc-<uuid> names it is already 19234 bytes against the 16384 default
+        # and the panel just renders `400: too long query`. Raised with headroom
+        # rather than editing miroir's shipped dashboard, since the query is
+        # legitimate and will keep growing as volumes are added.
+        extraArgs:
+          search.maxQueryLen: "65536"
         resources:
           requests:
             cpu: 150m
