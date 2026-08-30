@@ -5,11 +5,55 @@ kind: MiroirNodeGroup
 metadata:
   name: default
 spec:
+  # The two nodes that actually carry data. Was every control-plane node, but
+  # icarus003 has no NVMe since 2026-08-30 and this template pointed its agent
+  # at a partition that no longer exists, so it crash-looped:
+  #   pvcreate /dev/disk/by-partlabel/r-miroir: No device found
+  #   every pool failed setup (pools: 1)
+  # A crash-looping agent also takes the CSI node plugin down on that node.
   nodeSelector:
     matchLabels:
       node-role.kubernetes.io/control-plane: ""
+    matchExpressions:
+      - key: kubernetes.io/hostname
+        operator: NotIn
+        values:
+          - icarus003
   template:
     pools:
       - name: nvme
         lvmthin:
           device: /dev/disk/by-partlabel/r-miroir
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/miroir.home-operations.com/miroirnodegroup_v1alpha1.json
+apiVersion: miroir.home-operations.com/v1alpha1
+kind: MiroirNodeGroup
+metadata:
+  name: tiebreak
+spec:
+  # icarus003 with its NVMe pulled. It must stay in the miroir topology even
+  # with no data disk, because the StorageClass runs 2 diskful replicas plus a
+  # DISKLESS tie-breaker leg here -- that third voter is what lets a volume
+  # survive losing one of icarus001/002 instead of losing quorum and freezing.
+  # `pools` is minItems:1 ("every node in the topology carries at least one"),
+  # so a pool-less node is not expressible; a loopfile pool is the cheapest way
+  # to satisfy that without a partition, a Talos change or a reboot.
+  #
+  # Named `tiebreak`, NOT `nvme`, on purpose: both StorageClasses request
+  # `pool: nvme`, so this pool can never be chosen for a real diskful replica.
+  # Diskless legs need no pool storage, so the tie-breaker is unaffected. That
+  # keeps data off this node's SATA boot SSD (/dev/sda4, where /var lives).
+  #
+  # baseDir must be reflink-capable (XFS reflink=1 or btrfs) or the agent
+  # refuses the pool; Talos formats /var as XFS.
+  nodeSelector:
+    matchExpressions:
+      - key: kubernetes.io/hostname
+        operator: In
+        values:
+          - icarus003
+  template:
+    pools:
+      - name: tiebreak
+        loopfile:
+          baseDir: /var/lib/miroir
