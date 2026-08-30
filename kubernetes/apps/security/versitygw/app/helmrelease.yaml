@@ -71,12 +71,19 @@ spec:
               capabilities:
                 drop:
                   - ALL
+            # OOMKilled (exit 137, x5) on 2026-08-30 under a fleet-wide kopiur
+            # run: this gateway fronts the `local` repository, so all 46 movers
+            # push multi-MB kopia blobs through it at once. When it dies every
+            # backup fails together with "connection refused" -- one cause that
+            # looks like 46 unrelated failures.
+            # 256Mi was sized before backups were unstaggered; the concurrent
+            # wave is now the sizing case, not steady state.
             resources:
               requests:
                 cpu: 50m
-                memory: 64Mi
-              limits:
                 memory: 256Mi
+              limits:
+                memory: 1Gi
     service:
       app:
         controller: versitygw
