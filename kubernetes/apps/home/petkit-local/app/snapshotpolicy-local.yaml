@@ -50,5 +50,5 @@ spec:
   policyRef:
     name: petkit-local-media-local
   schedule:
-    cron: "0 * * * *"
+    cron: "30 * * * *"
     timezone: Europe/Belgrade

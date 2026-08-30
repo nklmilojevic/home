@@ -50,5 +50,5 @@ spec:
   policyRef:
     name: mosquitto-local
   schedule:
-    cron: "0 * * * *"
+    cron: "30 * * * *"
     timezone: Europe/Belgrade

@@ -50,5 +50,5 @@ spec:
   policyRef:
     name: jellyfin-metadata-local
   schedule:
-    cron: "0 * * * *"
+    cron: "30 * * * *"
     timezone: Europe/Belgrade
