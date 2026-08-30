@@ -31,9 +31,11 @@ spec:
     # failed 8/36 of our backups on 0.11.19) was fixed by miroir#411 in
     # 0.11.20, which snapshots off the diskful legs instead. We run 0.12.0.
     #
+    # Empty string is the documented disable (the chart schema types this as a
+    # Go duration string; a bare 0 fails values-schema validation).
     # Re-enable once the M.2 fan is fitted and a staged resync holds below
     # 75°C, so the legs convert back to diskful on their own.
-    autoDiskfulAfter: 0
+    autoDiskfulAfter: ""
     drbd:
       # DRBD activity-log extents (default 1237): fewer hot-extent metadata
       # updates under scattered random writes, longer post-crash resync.
