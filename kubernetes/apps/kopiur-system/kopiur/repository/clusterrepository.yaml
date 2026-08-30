@@ -37,18 +37,6 @@ spec:
       name: kopiur-local-secret
       namespace: kopiur-system
       key: KOPIA_PASSWORD
-  moverDefaults:
-    sourceColocation:
-      # Required, not the default Auto. A mover needs two RWO volumes: the
-      # staging clone of the source, and its kopia cache. The staging clone can
-      # only be provisioned on a DISKFUL node, but the cache (openebs-hostpath,
-      # or an Ephemeral volume on it) can land anywhere. Under Auto the
-      # scheduler picks the emptiest node -- icarus003, the diskless
-      # tiebreaker -- binds the cache there, and only then discovers the
-      # staging PV's node affinity excludes it. The pod wedges Pending forever.
-      # Required pins the mover to the node its source is attached to, so the
-      # cache is provisioned on a node that can actually run the job.
-      mode: Required
   scheduleDefaults:
     timezone: Europe/Belgrade
 ---
@@ -84,17 +72,5 @@ spec:
       name: kopiur-repository-secret
       namespace: kopiur-system
       key: KOPIA_PASSWORD
-  moverDefaults:
-    sourceColocation:
-      # Required, not the default Auto. A mover needs two RWO volumes: the
-      # staging clone of the source, and its kopia cache. The staging clone can
-      # only be provisioned on a DISKFUL node, but the cache (openebs-hostpath,
-      # or an Ephemeral volume on it) can land anywhere. Under Auto the
-      # scheduler picks the emptiest node -- icarus003, the diskless
-      # tiebreaker -- binds the cache there, and only then discovers the
-      # staging PV's node affinity excludes it. The pod wedges Pending forever.
-      # Required pins the mover to the node its source is attached to, so the
-      # cache is provisioned on a node that can actually run the job.
-      mode: Required
   scheduleDefaults:
     timezone: Europe/Belgrade
