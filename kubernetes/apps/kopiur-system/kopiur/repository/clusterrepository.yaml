@@ -76,6 +76,18 @@ spec:
     # safe to leave on: kopiur is the only maintainer of these repositories, so
     # there is no competing owner whose lease could be wrongly seized.
     takeoverPolicy: Force
+    schedule:
+      quick:
+        cron: "0 */6 * * *"
+        jitter: 30m
+      full:
+        # Explicitly 05:00, not the chart default of 03:00. The r2 wave runs at
+        # 03:00 and full maintenance is the heaviest thing that touches the
+        # repository, so the default put blob rewriting directly under the one
+        # nightly burst that most needs the backend responsive -- the same kind
+        # of pile-up that OOMed versitygw.
+        cron: "0 5 * * *"
+        jitter: 1h
   parameters:
     epoch:
       # kopia's default 24h gate, with compaction trailing two epochs, means
@@ -151,5 +163,17 @@ spec:
     # never run. Its index blob count is still Healthy, so it gets no epoch
     # override -- one daily wave does not outrun the 24h default.
     takeoverPolicy: Force
+    schedule:
+      quick:
+        cron: "0 */6 * * *"
+        jitter: 30m
+      full:
+        # Explicitly 05:00, not the chart default of 03:00. The r2 wave runs at
+        # 03:00 and full maintenance is the heaviest thing that touches the
+        # repository, so the default put blob rewriting directly under the one
+        # nightly burst that most needs the backend responsive -- the same kind
+        # of pile-up that OOMed versitygw.
+        cron: "0 5 * * *"
+        jitter: 1h
   scheduleDefaults:
     timezone: Europe/Belgrade
