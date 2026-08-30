@@ -37,6 +37,33 @@ spec:
       name: kopiur-local-secret
       namespace: kopiur-system
       key: KOPIA_PASSWORD
+  moverDefaults:
+    affinity:
+      # TEMPORARY -- remove when icarus003 is restored to 3 replicas (it is
+      # waiting on an M.2 heatsink fan; see autoDiskfulAfter).
+      #
+      # A mover needs two RWO volumes on one node: the staging clone and its
+      # kopia cache. miroir honours the scheduler's selectedNode for the clone
+      # ONLY if a source replica already lives there; otherwise it silently
+      # places the clone on a node that has one and stamps the PV with that
+      # node's affinity. The cache (openebs-hostpath) meanwhile follows the
+      # scheduler. When those disagree the pod fails PreBind with
+      # "node affinity doesn't match", the cache is already bound, and nothing
+      # ever kills it -- SnapshotSchedule has no podStartupDeadlineSeconds, so
+      # the backup wedges Pending indefinitely. That is what stalled hermes.
+      #
+      # 55 of 56 volumes are 2/2 since icarus003 was drained, so icarus003
+      # holds no replica for almost every source and is the only node that can
+      # trigger the fallback. Keeping movers off it means the hint is always
+      # honourable and both volumes land together.
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: NotIn
+                  values:
+                    - icarus003
   scheduleDefaults:
     timezone: Europe/Belgrade
 ---
@@ -72,5 +99,32 @@ spec:
       name: kopiur-repository-secret
       namespace: kopiur-system
       key: KOPIA_PASSWORD
+  moverDefaults:
+    affinity:
+      # TEMPORARY -- remove when icarus003 is restored to 3 replicas (it is
+      # waiting on an M.2 heatsink fan; see autoDiskfulAfter).
+      #
+      # A mover needs two RWO volumes on one node: the staging clone and its
+      # kopia cache. miroir honours the scheduler's selectedNode for the clone
+      # ONLY if a source replica already lives there; otherwise it silently
+      # places the clone on a node that has one and stamps the PV with that
+      # node's affinity. The cache (openebs-hostpath) meanwhile follows the
+      # scheduler. When those disagree the pod fails PreBind with
+      # "node affinity doesn't match", the cache is already bound, and nothing
+      # ever kills it -- SnapshotSchedule has no podStartupDeadlineSeconds, so
+      # the backup wedges Pending indefinitely. That is what stalled hermes.
+      #
+      # 55 of 56 volumes are 2/2 since icarus003 was drained, so icarus003
+      # holds no replica for almost every source and is the only node that can
+      # trigger the fallback. Keeping movers off it means the hint is always
+      # honourable and both volumes land together.
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: NotIn
+                  values:
+                    - icarus003
   scheduleDefaults:
     timezone: Europe/Belgrade
