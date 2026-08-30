@@ -29,7 +29,14 @@ parameters:
   # disk is back. That also means autoDiskfulAfter must STAY disabled: enabling
   # it would promote the tie-breaker to a diskful leg and quietly restore 3.
   miroir.home-operations.com/replicas: "2"
-  miroir.home-operations.com/quorum: freeze
+  # last-man-standing, not freeze: a volume down to its final replica keeps
+  # serving instead of blocking I/O. With autoTieBreaker on there are three
+  # voters (2 diskful + a diskless tie-breaker), so freeze already survived a
+  # single node loss -- this additionally covers losing two, at the cost of
+  # letting the last copy accept writes with nothing to arbitrate against.
+  # Matches bjw-s-labs/home-ops; Diaoul/home-ops runs freeze. Both are in use
+  # upstream, so this is an availability-vs-safety preference, not a fix.
+  miroir.home-operations.com/quorum: last-man-standing
   csi.storage.k8s.io/fstype: ext4
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/storage.k8s.io/storageclass_v1.json
