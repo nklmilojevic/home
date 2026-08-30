@@ -325,14 +325,17 @@ spec:
       spec:
         # NOTE: set via extraArgs, not a spec field — the VMSingle CRD has no
         # maxQueryLen and the operator prunes unknown keys silently.
-        # The miroir "Resync progress" panel expands a template variable over
-        # every volume name, so its query grows with the volume count: at 57
-        # pvc-<uuid> names it is already 19234 bytes against the 16384 default
-        # and the panel just renders `400: too long query`. Raised with headroom
-        # rather than editing miroir's shipped dashboard, since the query is
-        # legitimate and will keep growing as volumes are added.
+        # Several miroir dashboard panels expand a template variable over every
+        # volume name, so their queries grow with the volume count and render
+        # `400: too long query` once they cross the limit. "Resync progress"
+        # hit 19234 bytes against the 16384 default; "Unhealthy legs" is bigger
+        # still at 74751 bytes, which blew through the 65536 this was first
+        # raised to. Fixed here rather than by editing miroir's shipped
+        # dashboards: the queries are legitimate and keep growing as volumes are
+        # added, so 256Ki buys roughly 3x headroom over the largest panel today
+        # instead of another round of this. The cost is only per-query parsing.
         extraArgs:
-          search.maxQueryLen: "65536"
+          search.maxQueryLen: "262144"
         resources:
           requests:
             cpu: 150m
