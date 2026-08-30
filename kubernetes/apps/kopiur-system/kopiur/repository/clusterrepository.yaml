@@ -64,6 +64,26 @@ spec:
                   operator: NotIn
                   values:
                     - icarus003
+  maintenance:
+    # Maintenance had never run once in the 25h since bootstrap: lastRun was
+    # empty and LeaseOwned sat False/WaitingForRepository, stamped 11:31 while
+    # the repository only went healthy at 11:44 after versitygw stopped OOMing.
+    # Nothing re-triggers a Maintenance reconcile when its target recovers, so
+    # the stale verdict stuck and index blobs climbed to 4048 (threshold 1000),
+    # slowing every mover's connect.
+    #
+    # Force is the documented recovery for a lease held by a dead owner. It is
+    # safe to leave on: kopiur is the only maintainer of these repositories, so
+    # there is no competing owner whose lease could be wrongly seized.
+    takeoverPolicy: Force
+  parameters:
+    epoch:
+      # kopia's default 24h gate, with compaction trailing two epochs, means
+      # blobs written now are not compacted for ~48h. This repository takes 46
+      # apps hourly (~1100 snapshots/day), which outruns that. 6h lets an epoch
+      # close and compact while the write rate is still ahead of it.
+      # Not applied to r2: it is daily and its IndexBlobHealth is Healthy.
+      minDuration: 6h
   scheduleDefaults:
     timezone: Europe/Belgrade
 ---
@@ -126,5 +146,10 @@ spec:
                   operator: NotIn
                   values:
                     - icarus003
+  maintenance:
+    # Same stale-lease recovery as `local` above; r2's Maintenance had likewise
+    # never run. Its index blob count is still Healthy, so it gets no epoch
+    # override -- one daily wave does not outrun the 24h default.
+    takeoverPolicy: Force
   scheduleDefaults:
     timezone: Europe/Belgrade
