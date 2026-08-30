@@ -33,8 +33,12 @@ spec:
     #
     # Empty string is the documented disable (the chart schema types this as a
     # Go duration string; a bare 0 fails values-schema validation).
-    # Re-enable once the M.2 fan is fitted and a staged resync holds below
-    # 75°C, so the legs convert back to diskful on their own.
+    #
+    # Now PERMANENT, not just while the NVMe is out. The StorageClass settled on
+    # 2 diskful replicas + a diskless tie-breaker as the intended steady state
+    # (2026-08-30), and this setting is precisely what would undo that: it
+    # promotes a diskless leg to diskful, silently turning every volume back
+    # into a 3-leg one. Do not re-enable when the M.2 fan is fitted.
     autoDiskfulAfter: ""
     drbd:
       # DRBD activity-log extents (default 1237): fewer hot-extent metadata
@@ -46,9 +50,11 @@ spec:
       # mid-burst during the first unstaggered 46-volume snapshot wave on
       # 2026-08-29, and the restart stranded LVs whose device nodes never
       # materialised -- every later CSI clone on that node then failed with
-      # "unusable after vgmknodes ... No such file or directory". Because the
-      # StorageClass asks for 3 replicas, two healthy legs are not enough and
-      # the whole volume fails ResourceExhausted.
+      # "unusable after vgmknodes ... No such file or directory". That blast
+      # radius came from the StorageClass then asking for 3 replicas, so two
+      # healthy legs were "not enough" and the whole volume failed
+      # ResourceExhausted; at 2 replicas one dead agent no longer condemns the
+      # volume, but the headroom below is still what stops the OOM itself.
       resources:
         requests:
           cpu: 10m

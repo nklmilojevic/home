@@ -11,10 +11,24 @@ volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
 parameters:
   miroir.home-operations.com/pool: nvme
-  # 3 replicas on a 3-node cluster: every node holds a leg, so a volume can
-  # never have a diskless primary -- the miroir#409 failure mode that silently
-  # hung 8/36 snapshots in the 2026-08-04 attempt cannot occur at all.
-  miroir.home-operations.com/replicas: "3"
+  # 2 DISKFUL replicas plus a diskless tie-breaker on the third node, which is
+  # what miroir provisions at this count. Three quorum voters, so a volume
+  # survives losing any one node, while only two nodes carry data.
+  #
+  # Was 3. That existed to guarantee a volume could never have a diskless
+  # primary (miroir#409, which silently hung 8/36 snapshots on 0.11.19), and is
+  # obsolete: #411 fixed it in 0.11.20 by snapshotting off the diskful legs and
+  # we run 0.12.0. Meanwhile asking for 3 actively hurt -- with all three legs
+  # required, two healthy legs are "not enough" and the whole volume fails
+  # ResourceExhausted the moment one agent dies, which is how a single OOMKilled
+  # agent took out a snapshot wave on 2026-08-29.
+  #
+  # The tie-breaker needs no storage, so this holds while icarus003 runs with
+  # its NVMe pulled (removed 2026-08-30; the NAB6 Lite passively-cooled M.2 slot
+  # cooked two drives at 81C). Deliberately permanent -- keep 2 even once that
+  # disk is back. That also means autoDiskfulAfter must STAY disabled: enabling
+  # it would promote the tie-breaker to a diskful leg and quietly restore 3.
+  miroir.home-operations.com/replicas: "2"
   miroir.home-operations.com/quorum: freeze
   csi.storage.k8s.io/fstype: ext4
 ---
