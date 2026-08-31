@@ -74,7 +74,14 @@ spec:
                   # logs volumes, jellyfin artwork and the HA/mosquitto/petkit
                   # media claims — has a volsync source today and must keep a
                   # kopiur policy, or it silently drops out at the cutover.
-                  value: "^database/|^o11y/grafana-pvc$|^media/seerr-cache$|^home/home-assistant-cache$|^photos/immich-ml-cache$"
+                  #
+                  # photos/immich-pg-1 is exempt because CloudNativePG owns its
+                  # backups: the barman-cloud plugin ships WAL + daily base
+                  # backups to R2 (ObjectStore immich-pg, ScheduledBackup
+                  # immich-pg-daily, verified completing daily). A kopiur
+                  # filesystem snapshot of a live Postgres data directory would
+                  # be crash-consistent at best and is not the recovery path.
+                  value: "^database/|^o11y/grafana-pvc$|^media/seerr-cache$|^home/home-assistant-cache$|^photos/immich-ml-cache$|^photos/immich-pg-1$"
               command:
                 - sh
                 - -c
