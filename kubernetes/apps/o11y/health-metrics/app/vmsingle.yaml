@@ -66,7 +66,5 @@ spec:
   source:
     fromPolicy:
       name: vmsingle-health-local
-      asOf: "2026-08-31T00:00:00Z"
-      offset: 0
   target:
     populator: {}
