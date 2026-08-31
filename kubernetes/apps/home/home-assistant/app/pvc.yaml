@@ -41,8 +41,8 @@ spec:
   mover:
     cache:
       capacity: 2Gi
-      mode: Persistent
-      storageClassName: openebs-hostpath
+      mode: Ephemeral
+      storageClassName: miroir-local
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000

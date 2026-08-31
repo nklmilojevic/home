@@ -17,7 +17,7 @@ spec:
     cache:
       capacity: "${KOPIUR_CACHE_CAPACITY:-1Gi}"
       mode: Ephemeral
-      storageClassName: "${KOPIUR_CACHE_SNAPSHOTCLASS:-openebs-hostpath}"
+      storageClassName: "${KOPIUR_CACHE_SNAPSHOTCLASS:-miroir-local}"
     securityContext:
       runAsUser: ${APP_UID:-1000}
       runAsGroup: ${APP_GID:-1000}
