@@ -11,5 +11,7 @@ spec:
     # Offsite runs daily, not hourly: R2 egress/PUT costs money and the LAN
     # copy already gives hourly granularity. 03:00 keeps it clear of the
     # top-of-hour local wave.
-    cron: "0 3 * * *"
+    # Hash-spread within the 03:00 hour for the same reason as the local
+    # schedule: all 46 firing on the hour is the burst that wedges a node.
+    cron: "H 3 * * *"
     timezone: Europe/Belgrade
