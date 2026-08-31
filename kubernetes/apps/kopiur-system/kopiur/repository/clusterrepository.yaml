@@ -51,25 +51,25 @@ spec:
     takeoverPolicy: Force
     schedule:
       quick:
-        # TEMPORARY 2026-08-31: every 20 minutes, no jitter, to force the first
-        # compaction. Maintenance has never once run, so the repository is at
-        # ~5900 content-index blobs against a threshold of 1000 and every mover
-        # pays for it on connect. Restore to `0 */6 * * *` with 30m jitter once
-        # IndexBlobHealth on the ClusterRepository goes True.
-        cron: "*/20 * * * *"
+        # Back to 6-hourly after the 2026-08-31 recovery. The one-off `*/20`
+        # burst did its job -- maintenance had never run at all, and the first
+        # full compaction took index blobs 5879 -> 3176 -- but frequent quick
+        # runs are the wrong tool: quick compacts a single epoch per run, so
+        # blobs actually crept back to 3189 under it while an hourly wave of ~46
+        # snapshots wrote new ones. It also piles I/O onto icarus002, whose etcd
+        # WAL p99 fsync went 8ms -> 164ms during the 15:18 full run and stayed
+        # at 40-70ms, with two leader elections. Index blobs are a performance
+        # annoyance; an etcd stall took the whole cluster out on 2026-08-10.
+        cron: "0 */6 * * *"
+        jitter: 30m
       full:
         # Explicitly 05:00, not the chart default of 03:00. The r2 wave runs at
         # 03:00 and full maintenance is the heaviest thing that touches the
         # repository, so the default put blob rewriting directly under the one
         # nightly burst that most needs the backend responsive -- the same kind
         # of pile-up that OOMed versitygw.
-        # TEMPORARY 2026-08-31: 16:05 UTC, jitter dropped, to land one full
-        # compaction in a quiet window instead of waiting for 05:00. Quick
-        # maintenance is losing ground on its own -- index blobs went 3176 ->
-        # 3189 while it ran, because an hourly wave of ~46 snapshots writes new
-        # index blobs faster than one-epoch-per-run compaction clears them.
-        # Restore to `0 5 * * *` with 1h jitter once IndexBlobHealth is True.
-        cron: "5 16 * * *"
+        cron: "0 5 * * *"
+        jitter: 1h
   parameters:
     epoch:
       # kopia's default 24h gate, with compaction trailing two epochs, means
