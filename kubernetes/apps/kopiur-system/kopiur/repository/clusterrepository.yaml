@@ -7,20 +7,27 @@ metadata:
 spec:
   moverDefaults:
     sourceColocation:
-      # Required, not the default Auto. A snapshot mover needs two RWO volumes:
-      # the staging clone of the source, and its kopia cache. Both land on
-      # single-replica miroir classes, so both PVs are pinned to one node -- and
-      # they are provisioned independently. kopiur creates the staging clone
-      # ahead of the Job and miroir places it where the source data lives, but
-      # at scheduling time it is not yet Bound, so the scheduler is free to pick
-      # a different node and provision the cache there. Once the clone binds
-      # elsewhere no node can satisfy both and the pod is unschedulable forever
-      # -- nothing times it out. Seen 2026-08-31: clone on icarus003, cache on
-      # icarus002. Same storage driver does NOT imply same node.
+      # Disabled, and NOT the default Auto or Required.
       #
-      # Required pins the mover to the source's node up front, so the cache is
-      # provisioned on that node instead of racing it.
-      mode: Required
+      # A snapshot mover mounts two RWO volumes: the staging clone of the source
+      # and its kopia cache. Both land on single-replica miroir classes, so both
+      # PVs are node-pinned, and they are provisioned independently. When they
+      # bind at different moments they can land on different nodes -- observed
+      # 2026-08-31 with clone on icarus003 and cache on icarus002 -- and the
+      # mover is then unschedulable forever with "3 node(s) didn't match
+      # PersistentVolume's node affinity". Nothing times it out, and the
+      # half-created VolumeSnapshot pins the source PVC in Terminating.
+      #
+      # Required cannot fix it: it resolves the node from the staging clone,
+      # which is WaitForFirstConsumer and therefore unbound until a consumer
+      # pod schedules, so the controller rejects every reconcile with "could
+      # not determine which node it is attached to ... (sourceColocation.mode is
+      # Required)" -- a circular wait. Tried twice on 2026-08-31.
+      #
+      # Disabled adds no node constraint, leaving both volumes unbound so the
+      # scheduler picks one node that satisfies both and provisions them there
+      # together. This is the resolution kopiur's own error message names.
+      mode: Disabled
   # The LAN copy, on the versitygw S3 gateway backed by the UNAS NFS share —
   # deliberately not on Ceph, so it survives the storage layer being torn down.
   # This is the repository the miroir cutover restores from: ~200 MB/s on the
@@ -96,20 +103,27 @@ metadata:
 spec:
   moverDefaults:
     sourceColocation:
-      # Required, not the default Auto. A snapshot mover needs two RWO volumes:
-      # the staging clone of the source, and its kopia cache. Both land on
-      # single-replica miroir classes, so both PVs are pinned to one node -- and
-      # they are provisioned independently. kopiur creates the staging clone
-      # ahead of the Job and miroir places it where the source data lives, but
-      # at scheduling time it is not yet Bound, so the scheduler is free to pick
-      # a different node and provision the cache there. Once the clone binds
-      # elsewhere no node can satisfy both and the pod is unschedulable forever
-      # -- nothing times it out. Seen 2026-08-31: clone on icarus003, cache on
-      # icarus002. Same storage driver does NOT imply same node.
+      # Disabled, and NOT the default Auto or Required.
       #
-      # Required pins the mover to the source's node up front, so the cache is
-      # provisioned on that node instead of racing it.
-      mode: Required
+      # A snapshot mover mounts two RWO volumes: the staging clone of the source
+      # and its kopia cache. Both land on single-replica miroir classes, so both
+      # PVs are node-pinned, and they are provisioned independently. When they
+      # bind at different moments they can land on different nodes -- observed
+      # 2026-08-31 with clone on icarus003 and cache on icarus002 -- and the
+      # mover is then unschedulable forever with "3 node(s) didn't match
+      # PersistentVolume's node affinity". Nothing times it out, and the
+      # half-created VolumeSnapshot pins the source PVC in Terminating.
+      #
+      # Required cannot fix it: it resolves the node from the staging clone,
+      # which is WaitForFirstConsumer and therefore unbound until a consumer
+      # pod schedules, so the controller rejects every reconcile with "could
+      # not determine which node it is attached to ... (sourceColocation.mode is
+      # Required)" -- a circular wait. Tried twice on 2026-08-31.
+      #
+      # Disabled adds no node constraint, leaving both volumes unbound so the
+      # scheduler picks one node that satisfies both and provisions them there
+      # together. This is the resolution kopiur's own error message names.
+      mode: Disabled
   # The offsite copy, live since the 2026-08-29 cutover removed volsync. Same
   # kopia password as `local` so there is one secret to keep safe, but a wholly
   # independent repository — a bug that corrupts one cannot reach the other.
