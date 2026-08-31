@@ -51,8 +51,12 @@ spec:
     takeoverPolicy: Force
     schedule:
       quick:
-        cron: "0 */6 * * *"
-        jitter: 30m
+        # TEMPORARY 2026-08-31: every 20 minutes, no jitter, to force the first
+        # compaction. Maintenance has never once run, so the repository is at
+        # ~5900 content-index blobs against a threshold of 1000 and every mover
+        # pays for it on connect. Restore to `0 */6 * * *` with 30m jitter once
+        # IndexBlobHealth on the ClusterRepository goes True.
+        cron: "*/20 * * * *"
       full:
         # Explicitly 05:00, not the chart default of 03:00. The r2 wave runs at
         # 03:00 and full maintenance is the heaviest thing that touches the
