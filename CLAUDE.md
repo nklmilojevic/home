@@ -60,7 +60,7 @@ Repo root also contains `bootstrap/` (helmfile + kustomize for pre-Flux bootstra
 - `miroir-system` - Distributed storage (miroir operator + agents, DRBD9 over lvmthin)
 - `kopiur-system` - Backups (kopiur operator, `local` + `r2` ClusterRepositories)
 - `ai` - AI tooling (toolhive, ha-mcp)
-- `misc` - Misc apps (paperless, forgejo, n8n, manyfold, stirling-pdf, invoicing)
+- `misc` - Misc apps (paperless, forgejo, n8n, stirling-pdf, invoicing)
 - `photos` - Immich (app-template) + its CloudNativePG cluster (barman-cloud plugin backups to R2); operators live in `database`
 - `cert-manager`, `kube-system`, `openebs-system`, `renovate`, `system-upgrade`, `flux-system` - cluster infrastructure
 

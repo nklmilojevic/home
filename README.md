@@ -17,7 +17,7 @@ Around 40 apps across ~15 namespaces. The parts I actually care about:
 - **home** - Home Assistant, Zigbee2MQTT, ESPHome, go2rtc, mosquitto - the whole home automation side
 - **media** - Plex, Sonarr, Radarr, SABnzbd, qBittorrent, the usual suspects
 - **o11y** - VictoriaMetrics, VictoriaLogs, Vector, Grafana, gatus
-- **misc** - Paperless, Forgejo, n8n, Manyfold, Stirling-PDF and a few others
+- **misc** - Paperless, Forgejo, n8n, Stirling-PDF and a few others
 
 Networking, storage, secrets and backups all run in-cluster too - see below.
 
