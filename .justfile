@@ -4,16 +4,18 @@ set unstable
 set quiet
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
-[group: 'Bootstrap']
+[group('Bootstrap')]
 mod bootstrap '.just/bootstrap.just'
-[group: 'Kube']
+[group('Kube')]
 mod kube '.just/kubernetes.just'
-[group: 'Talos']
+[group('Talos')]
 mod talos '.just/talos.just'
-[group: 'Rook']
+[group('Rook')]
 mod rook '.just/rook.just'
-[group: 'VolSync']
+[group('VolSync')]
 mod volsync '.just/volsync.just'
+[group('Miroir')]
+mod miroir '.just/miroir.just'
 
 [private]
 default:
