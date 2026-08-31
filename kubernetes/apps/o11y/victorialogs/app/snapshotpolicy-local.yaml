@@ -36,13 +36,21 @@ spec:
     keepHourly: 24
     keepDaily: 7
   staging:
-    # The staged clone is ephemeral, read-only and discarded minutes later, so
-    # it does not need replication. At the default 3 replicas EVERY staging
-    # clone touches ALL THREE nodes, which means one degraded node fails every
-    # snapshot in the fleet -- exactly what happened on 2026-08-29 when the
-    # icarus003 agent OOMed and left LVs without device nodes. One replica also
-    # cuts the per-snapshot LVM/DRBD work by ~3x, which is what drove the OOM.
-    storageClassName: miroir-local
+    # miroir, NOT miroir-local. A single-replica clone is pinned to one node and
+    # only usable there, so the mover -- which needs the clone and its kopia
+    # cache on ONE node -- is unschedulable whenever the two land apart:
+    # "3 node(s) didn't match PersistentVolume's node affinity", forever, with
+    # nothing to time it out. The component policies were moved to the
+    # replicated class on 2026-08-31; these hand-written ones were missed, which
+    # is why gatus, victorialogs, jellyfin-metadata, home-assistant-media and
+    # vmsingle-health kept failing after the fleet-wide fix appeared to work.
+    #
+    # This reverses the note that staging needs no replication: that was about
+    # the chart default of 3 replicas, where every clone touched all three nodes
+    # so one degraded agent failed the whole fleet and the per-snapshot LVM/DRBD
+    # work drove the 2026-08-29 OOM. 2 replicas keeps a spare leg without
+    # putting every clone on every node.
+    storageClassName: miroir
     timeout: 30m
   sources:
     - pvc:
