@@ -34,17 +34,5 @@ spec:
       # Restore from the LAN repository — 91 GiB at ~200 MB/s rather than
       # pulling it back from Cloudflare.
       name: "${APP}-local"
-      # Point-in-time, not "latest". Every snapshot taken on 2026-08-31 was
-      # taken while the cluster was being torn down -- movers killed mid-upload
-      # left kopia manifests pointing at content blobs that never finished
-      # uploading, so restoring one dies terminally with `content <id> not
-      # found` (class NotFound, never retried). 37 of 41 apps failed that way.
-      # Offsets do not fix it: how many of an app's newest snapshots are
-      # truncated depends on when its own mover was killed, so it varies per
-      # app. A cutoff does, and costs only a day the cluster was down anyway.
-      # All 41 apps have a snapshot before this instant (37 from 2026-08-30T23).
-      # Remove both lines once a full backup wave has completed cleanly.
-      asOf: "${KOPIUR_RESTORE_ASOF:-2026-08-31T00:00:00Z}"
-      offset: ${KOPIUR_RESTORE_OFFSET:-0}
   target:
     populator: {}

@@ -52,7 +52,5 @@ spec:
   source:
     fromPolicy:
       name: home-assistant-media-local
-      asOf: "2026-08-31T00:00:00Z"
-      offset: 0
   target:
     populator: {}
