@@ -11,8 +11,6 @@ mod kube '.just/kubernetes.just'
 [group('Talos')]
 mod talos '.just/talos.just'
 [group('Miroir')]
-[group('Rook')]
-[group('VolSync')]
 mod miroir '.just/miroir.just'
 
 [private]
