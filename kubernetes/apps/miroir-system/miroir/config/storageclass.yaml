@@ -37,6 +37,25 @@ parameters:
   # Matches bjw-s-labs/home-ops; Diaoul/home-ops runs freeze. Both are in use
   # upstream, so this is an availability-vs-safety preference, not a fix.
   miroir.home-operations.com/quorum: last-man-standing
+  # The PV carries NO node affinity, and a pod on a node without a replica gets
+  # an ephemeral diskless client leg instead. This is the one property rook-ceph
+  # had that miroir does not by default: RBD was network-attached, so any node
+  # could open any volume and "which node did the scheduler pick" never mattered.
+  #
+  # Without it, a volume is only usable where a replica lives, which is what
+  # wedged backups all through 2026-08-31: a mover needs its staging clone and
+  # its kopia cache on ONE node, the two are provisioned independently, and when
+  # they landed on different nodes the pod was unschedulable forever with
+  # "3 node(s) didn't match PersistentVolume's node affinity". Going 1 -> 2
+  # replicas only improved the odds to 2-in-3 (24 of 25 snapshots), it did not
+  # fix it -- home-assistant-media still wedged at 15:12.
+  #
+  # Preferred over replicas: 3, which reaches the same any-node result by
+  # brute force but reintroduces the 2026-08-29 outage: with three legs
+  # required, provisioning fails ResourceExhausted the moment one agent dies,
+  # so a single OOMKilled agent takes out the whole snapshot wave. Ceph
+  # tolerated that (size 3, min_size 2); miroir at 3 does not.
+  miroir.home-operations.com/allowRemoteVolumeAccess: "true"
   csi.storage.k8s.io/fstype: ext4
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/storage.k8s.io/storageclass_v1.json
