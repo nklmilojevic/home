@@ -19,9 +19,21 @@ spec:
     # Costs a kopia metadata re-download per run; over the LAN that is cheap
     # next to a backup that cannot schedule at all.
     cache:
-      capacity: "${KOPIUR_CACHE_CAPACITY:-1Gi}"
+      # miroir-local, NOT openebs-hostpath. A mover needs its kopia cache and
+      # its staging clone on ONE node. Both are RWO and WaitForFirstConsumer,
+      # but they were provisioned by different drivers: miroir places the clone
+      # where the source data lives, while an openebs-hostpath cache follows
+      # whatever node the scheduler picked. When those disagree the pod is
+      # unschedulable and the snapshot fails after the 300s startup deadline:
+      #   0/3 nodes are available: 3 node(s) didn't match PersistentVolume's
+      #   node affinity
+      # Putting the cache on the same driver as the staging clone makes the two
+      # placements coherent by construction, which is why the upstream repos
+      # running kopiur (e.g. Diaoul/home-ops) need no mover nodeSelector,
+      # affinity or sourceColocation at all.
+      capacity: "${KOPIUR_CACHE_CAPACITY:-5Gi}"
       mode: Ephemeral
-      storageClassName: "${KOPIUR_CACHE_SNAPSHOTCLASS:-openebs-hostpath}"
+      storageClassName: "${KOPIUR_CACHE_SNAPSHOTCLASS:-miroir-local}"
     securityContext:
       runAsUser: ${APP_UID:-1000}
       runAsGroup: ${APP_GID:-1000}
@@ -32,6 +44,7 @@ spec:
     keepLatest: 3
     keepHourly: 24
     keepDaily: 7
+    keepWeekly: 4
   staging:
     # The staged clone is ephemeral, read-only and discarded minutes later, so
     # it does not need replication. At the default 3 replicas EVERY staging
@@ -43,6 +56,18 @@ spec:
     # Concurrent DRBD lockstep snapshots (or a post-reboot resync) can exceed
     # the 10m default and fail the whole backup.
     timeout: 30m
+  # Kopia only notices a corrupt or missing blob when something reads it, so
+  # without this a bad backup stays silently "Succeeded" until a restore needs
+  # it. quick re-checks metadata daily; deep re-reads content monthly.
+  verification:
+    quick:
+      schedule:
+        cron: H 4 * * *
+    deep:
+      capacity: "${KOPIUR_CACHE_CAPACITY:-5Gi}"
+      storageClassName: miroir-local
+      schedule:
+        cron: H 5 1 * *
   sources:
     - pvc:
         name: "${KOPIUR_CLAIM:-${APP}}"

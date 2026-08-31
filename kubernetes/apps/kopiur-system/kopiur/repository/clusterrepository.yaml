@@ -37,24 +37,6 @@ spec:
       name: kopiur-local-secret
       namespace: kopiur-system
       key: KOPIA_PASSWORD
-  moverDefaults:
-    nodeSelector:
-      # Pin movers to icarus002. A mover needs its staging clone and its kopia
-      # cache on ONE node: miroir places the clone where the source data lives,
-      # while the cache (openebs-hostpath) follows the scheduler, and when they
-      # disagree the pod is unschedulable and the snapshot fails after the 300s
-      # startup deadline:
-      #   0/3 nodes are available: 3 node(s) didn't match PersistentVolume's
-      #   node affinity
-      # That killed mosquitto, z2mqtt and vmsingle-health on 2026-08-30 once
-      # their legs moved to icarus002+003 -- the cache landed on icarus001.
-      #
-      # icarus002 currently holds a diskful leg for ALL 56 volumes, so it is the
-      # one node where every clone can be placed locally and the hint is always
-      # honourable. TEMPORARY and load-concentrating: revisit once legs are
-      # spread across all three pairings, at which point no single node holds
-      # everything and this stops being correct.
-      kubernetes.io/hostname: icarus002
   maintenance:
     # Maintenance had never run once in the 25h since bootstrap: lastRun was
     # empty and LeaseOwned sat False/WaitingForRepository, stamped 11:31 while
@@ -122,12 +104,6 @@ spec:
       name: kopiur-repository-secret
       namespace: kopiur-system
       key: KOPIA_PASSWORD
-  moverDefaults:
-    nodeSelector:
-      # Same pinning as `local` above, and for the same reason: icarus002 is
-      # the only node holding a diskful leg for every volume, so it is the one
-      # place a staging clone and its kopia cache are guaranteed to co-locate.
-      kubernetes.io/hostname: icarus002
   maintenance:
     # Same stale-lease recovery as `local` above; r2's Maintenance had likewise
     # never run. Its index blob count is still Healthy, so it gets no epoch
