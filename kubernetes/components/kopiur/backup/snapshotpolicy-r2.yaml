@@ -57,3 +57,7 @@ spec:
     # Concurrent DRBD lockstep snapshots (or a post-reboot resync) can exceed
     # the 10m default and fail the whole backup.
     timeout: 30m
+  sources:
+    - pvc:
+        name: "${KOPIUR_CLAIM:-${APP}}"
+  volumeSnapshotClassName: "${KOPIUR_SNAPSHOTCLASS:-miroir}"
