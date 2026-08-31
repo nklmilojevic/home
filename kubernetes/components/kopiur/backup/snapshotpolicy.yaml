@@ -56,19 +56,3 @@ spec:
     # Concurrent DRBD lockstep snapshots (or a post-reboot resync) can exceed
     # the 10m default and fail the whole backup.
     timeout: 30m
-  # Kopia only notices a corrupt or missing blob when something reads it, so
-  # without this a bad backup stays silently "Succeeded" until a restore needs
-  # it. quick re-checks metadata daily; deep re-reads content monthly.
-  verification:
-    quick:
-      schedule:
-        cron: H 4 * * *
-    deep:
-      capacity: "${KOPIUR_CACHE_CAPACITY:-5Gi}"
-      storageClassName: miroir-local
-      schedule:
-        cron: H 5 1 * *
-  sources:
-    - pvc:
-        name: "${KOPIUR_CLAIM:-${APP}}"
-  volumeSnapshotClassName: "${KOPIUR_SNAPSHOTCLASS:-miroir}"
