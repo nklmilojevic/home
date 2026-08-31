@@ -10,11 +10,9 @@ mod bootstrap '.just/bootstrap.just'
 mod kube '.just/kubernetes.just'
 [group('Talos')]
 mod talos '.just/talos.just'
-[group('Rook')]
-mod rook '.just/rook.just'
-[group('VolSync')]
-mod volsync '.just/volsync.just'
 [group('Miroir')]
+[group('Rook')]
+[group('VolSync')]
 mod miroir '.just/miroir.just'
 
 [private]

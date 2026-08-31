@@ -126,17 +126,12 @@ spec:
       APP_GID: "1000"
 ```
 
-**Always set both schedules, and pick a minute that is not already crowded.**
-Every app backs up twice a night — to R2 (hour 0) and to the local versitygw
-repo (hour 3), both UTC. Leaving them at the default means yet another source
-firing on the hour, and when all of them fired at once the resulting
-snapshot/clone/mover burst pushed an OSD into BlueStore slow ops. Spread apps
-across `0,5,10,...,55`; use the same minute for both waves so an app's two runs
-stay 3h apart. Check what is already taken with:
-
-```bash
-grep -h "VOLSYNC_SCHEDULE:" kubernetes/apps/*/*/ks.yaml | sort | uniq -c
-```
+**Do not set per-app backup schedules.** The kopiur backup Component owns both
+crons and spreads them itself: `H * * * *` for the hourly local repo and
+`H 3 * * *` for the nightly R2 wave, where `H` is a per-schedule hash of the
+object's identity. That gives every app a stable, distinct minute without
+hand-picking one, which is what the old per-app schedule vars were for — all of
+them firing on the hour once pushed an OSD into BlueStore slow ops.
 
 1. Create `app/kustomization.yaml` (lists the app's own resources; the kopiur resources come from the Components in `ks.yaml`, not here):
 
@@ -338,15 +333,18 @@ controllers:
 
 ## Template Variables
 
-Available via `postBuild.substitute` in `ks.yaml` (consumed by the volsync Component):
+Available via `postBuild.substitute` in `ks.yaml` (consumed by the kopiur Components):
 
 - `${APP}` - Application name
-- `${VOLSYNC_CLAIM}` - PVC name for backups
-- `${VOLSYNC_CAPACITY}` - Storage size
-- `${VOLSYNC_SCHEDULE}` / `${VOLSYNC_LOCAL_SCHEDULE}` - Cron for the R2 and local
-  backups (defaults `0 0 * * *` / `0 3 * * *`, UTC). Stagger these per app — see
-  "Adding a New Application"
+- `${KOPIUR_CLAIM}` - PVC name for backups
+- `${KOPIUR_CAPACITY}` - Storage size
+- `${KOPIUR_CACHE_CAPACITY}` - Mover kopia cache size (default `10Gi` for
+  restores, `5Gi` for snapshots); a restore streams every content blob it
+  touches through this cache, so undersizing it fails mid-transfer
 - `${APP_UID}` / `${APP_GID}` - User/group IDs (default: 1000)
+
+There are no schedule variables — the Component's `H` crons place each app on
+its own minute (see "Adding a New Application").
 
 There are no global cluster variable ConfigMaps/Secrets in this repo; domains and network values are hardcoded per app (`*.nikola.wtf`, `10.40.0.x` LBs, `10.50.0.x` IoT).
 
