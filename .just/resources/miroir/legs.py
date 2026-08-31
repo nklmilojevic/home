@@ -355,6 +355,49 @@ def orphans(node, delete=False):
 # this is meant to avoid. One leg at a time, each waited to UpToDate, and it
 # holds off while a kopiur mover is running so a backup never races a resync.
 # Idempotent -- rerun it to continue where it stopped.
+# etcd's WAL shares the same NVMe as the miroir pool, so a resync lands directly
+# on top of it: widening pushed icarus002's p99 fsync from 8ms to 164ms on
+# 2026-08-31, which produced two leader elections and a kustomization status
+# write failing with "etcdserver: request timed out". The k8s-stack ships
+# etcdHighFsyncDurations but its threshold sits above that, so nothing fired.
+# Gate each volume on the real number instead of trusting the alert.
+ETCD_FSYNC_LIMIT_MS = 50.0
+VM_URL = "https://vm.nikola.wtf/prometheus/api/v1/query"
+FSYNC_Q = ("histogram_quantile(0.99, sum(rate("
+           "etcd_disk_wal_fsync_duration_seconds_bucket[2m])) by (instance,le))")
+
+
+def _etcd_fsync_max():
+    """Worst p99 WAL fsync across members, in ms. None if VM is unreachable --
+    the guard is advisory, a monitoring outage must not block a migration."""
+    r = subprocess.run(["curl", "-sS", "--max-time", "10", "-G", VM_URL,
+                        "--data-urlencode", f"query={FSYNC_Q}"],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        return None
+    try:
+        res = json.loads(r.stdout).get("data", {}).get("result", [])
+    except json.JSONDecodeError:
+        return None
+    vals = []
+    for x in res:
+        try:
+            vals.append(float(x["value"][1]) * 1000.0)
+        except (KeyError, ValueError, TypeError):
+            continue
+    return max(vals) if vals else None
+
+
+def _wait_for_etcd(polls=45):
+    for _ in range(polls):
+        ms = _etcd_fsync_max()
+        if ms is None or ms <= ETCD_FSYNC_LIMIT_MS:
+            return ms
+        print(f"   waiting: etcd p99 fsync {ms:.0f}ms > {ETCD_FSYNC_LIMIT_MS:.0f}ms")
+        time.sleep(20)
+    return _etcd_fsync_max()
+
+
 SKIP_CLAIM = ("-src", "kopia-cache", "-populate-", "prime-")
 
 
@@ -398,6 +441,9 @@ def widen(limit=5):
                 break
             print("   waiting: kopiur movers running")
             time.sleep(20)
+        ms = _wait_for_etcd()
+        if ms is not None:
+            print(f"   etcd p99 fsync {ms:.0f}ms")
         d = kget(f"miroirvolume {name}")
         reps = [dict(r) for r in d["spec"]["replicas"]]
         if any(r["node"] == dst and not r.get("diskless") for r in reps):
