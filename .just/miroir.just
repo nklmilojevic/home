@@ -56,3 +56,16 @@ drain from to n='5':
     python3 {{ legs }} promote {{ from }} {{ to }} {{ n }}
     echo "-- wait for syncs, then: just miroir demote {{ from }}"
     python3 {{ legs }} status
+
+# Ceph replicated to all three OSDs, so a snapshot clone always seeded locally.
+# At two legs a clone gets one leg on a node without the source data and DRBD
+# fills it over the network first -- a full copy of every volume on every
+# backup, which drove icarus002's etcd WAL fsync from 8ms to 164ms on
+# 2026-08-31. A third leg removes the copy.
+#
+# Serialized and mover-aware on purpose: 57 simultaneous resyncs is the burst
+# this exists to avoid. Idempotent -- rerun to continue where it stopped.
+#
+# Widen two-leg volumes to a third diskful leg, one at a time
+widen n='5':
+    @python3 {{ legs }} widen {{ n }}

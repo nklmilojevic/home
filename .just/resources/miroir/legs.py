@@ -18,6 +18,8 @@ Subcommands:
                              demote, then reconnect peers that gave up
   relink A B                 re-establish stuck A<->B connections
   orphans NODE [--delete]    LVs on NODE that no volume claims as diskful
+  widen [N]                  give up to N two-leg volumes a third diskful leg,
+                             one at a time, waiting for each resync to finish
 
 Every replica this script adds gets an explicit nodeID. Omitting it defaults to
 0, which collides with an existing implicit-0 replica; because drbdadm parses
@@ -341,6 +343,102 @@ def orphans(node, delete=False):
     print(f"  removed {ok} of {len(pvc_orphans) + len(snap_orphans)}")
 
 
+
+# Ceph replicated every volume to all three OSDs, so a pod on any node read
+# locally and a snapshot clone seeded locally. miroir at 2 legs does not: a
+# clone always gets one leg on a node without the source data, which DRBD then
+# fills over the network before the mover can mount it. That is a full copy of
+# every volume, every backup, and it is what drove icarus002's etcd WAL p99
+# fsync from 8ms to 164ms on 2026-08-31. A third leg removes the copy entirely.
+#
+# Serialized deliberately: 57 volumes resyncing at once is precisely the burst
+# this is meant to avoid. One leg at a time, each waited to UpToDate, and it
+# holds off while a kopiur mover is running so a backup never races a resync.
+# Idempotent -- rerun it to continue where it stopped.
+SKIP_CLAIM = ("-src", "kopia-cache", "-populate-", "prime-")
+
+
+def _movers_running():
+    out = sh("kubectl get pods -A -l app.kubernetes.io/managed-by=kopiur "
+             "--no-headers 2>/dev/null || true").stdout
+    return sum(1 for l in out.splitlines()
+               if l.strip() and (" Running " in l or " Pending " in l))
+
+
+def widen(limit=5):
+    vols = volumes()
+    addr = addresses(vols)
+    cl = claims()
+    todo = []
+    for d in vols:
+        reps = d["spec"]["replicas"]
+        df = [r["node"] for r in reps if not r.get("diskless")]
+        if len(df) != 2:
+            continue                      # 1 leg = miroir-local; 3 = already done
+        if d.get("status", {}).get("phase") != "Ready":
+            continue
+        st = disk_states(d)
+        if [v for v in st.values() if v != "UpToDate"]:
+            continue                      # never widen a volume that is not clean
+        label = "/".join(cl.get(d["metadata"]["name"], ("", d["metadata"]["name"])))
+        if any(k in label for k in SKIP_CLAIM):
+            continue                      # ephemeral staging clones and caches
+        missing = [n for n in NODES if n not in df]
+        if len(missing) != 1:
+            continue
+        todo.append((d["metadata"]["name"], label, missing[0]))
+
+    print(f"  two-leg volumes eligible: {len(todo)}  (widening up to {limit})")
+    done = 0
+    for name, label, dst in todo:
+        if done >= int(limit):
+            break
+        for _ in range(60):
+            if _movers_running() == 0:
+                break
+            print("   waiting: kopiur movers running")
+            time.sleep(20)
+        d = kget(f"miroirvolume {name}")
+        reps = [dict(r) for r in d["spec"]["replicas"]]
+        if any(r["node"] == dst and not r.get("diskless") for r in reps):
+            continue
+        existing = [r for r in reps if r["node"] == dst]
+        if existing:
+            for r in reps:
+                if r["node"] == dst:
+                    r.pop("diskless", None)
+                    r["backend"] = "lvmthin"
+                    r["pool"] = "nvme"
+                    r["fullSync"] = True
+                    if r.get("nodeID") is None:
+                        r["nodeID"] = free_node_id([x for x in reps if x["node"] != dst])
+        else:
+            reps.append({
+                "address": addr.get(dst), "node": dst, "backend": "lvmthin",
+                "pool": "nvme", "fullSync": True, "nodeID": free_node_id(reps),
+            })
+        ok = patch(name, reps)
+        print(f"   widen {label[:44]:44} +{dst}: {'ok' if ok else 'FAIL'}")
+        if not ok:
+            continue
+        done += 1
+        # wait for the new leg to catch up before touching the next volume
+        for _ in range(180):
+            time.sleep(10)
+            st = disk_states(kget(f"miroirvolume {name}"))
+            good = [k for k, v in st.items() if v == "UpToDate"]
+            if len(good) >= 3:
+                print(f"     synced: {st}")
+                break
+            bad = {k: v for k, v in st.items() if v != "UpToDate"}
+            if bad:
+                print(f"     syncing: {bad}")
+        else:
+            print("     TIMEOUT waiting for UpToDate -- stopping here")
+            break
+    print(f"  widened: {done}")
+
+
 def main():
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
@@ -357,6 +455,8 @@ def main():
         relink(args[0], args[1])
     elif cmd == "orphans":
         orphans(args[0], "--delete" in args)
+    elif cmd == "widen":
+        widen(args[0] if args else 5)
     else:
         raise SystemExit(__doc__)
 
