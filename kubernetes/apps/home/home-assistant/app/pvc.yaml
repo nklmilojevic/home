@@ -52,6 +52,6 @@ spec:
   source:
     fromPolicy:
       name: home-assistant-media-local
-      offset: 0
+      offset: 1
   target:
     populator: {}

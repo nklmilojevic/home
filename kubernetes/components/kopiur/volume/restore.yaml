@@ -28,6 +28,14 @@ spec:
       # Restore from the LAN repository — 91 GiB at ~200 MB/s rather than
       # pulling it back from Cloudflare.
       name: "${APP}-local"
-      offset: 0
+      # 1, not 0. The newest snapshots in this repository are truncated: movers
+      # that were mid-upload when the nodes wedged on 2026-08-31 left kopia
+      # manifests pointing at content blobs that never finished uploading, so a
+      # restore dies terminally with `content <id> not found` (class NotFound,
+      # never retried). The previous snapshot restores clean -- verified
+      # end-to-end against security/atuin. Bump per app via the var below if an
+      # app's second-newest is bad too; drop back to 0 once a full backup wave
+      # has completed on the rebuilt cluster.
+      offset: ${KOPIUR_RESTORE_OFFSET:-1}
   target:
     populator: {}
