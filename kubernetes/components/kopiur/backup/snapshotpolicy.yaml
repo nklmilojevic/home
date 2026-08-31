@@ -46,13 +46,30 @@ spec:
     keepDaily: 7
     keepWeekly: 4
   staging:
-    # The staged clone is ephemeral, read-only and discarded minutes later, so
-    # it does not need replication. At the default 3 replicas EVERY staging
-    # clone touches ALL THREE nodes, which means one degraded node fails every
-    # snapshot in the fleet -- exactly what happened on 2026-08-29 when the
-    # icarus003 agent OOMed and left LVs without device nodes. One replica also
-    # cuts the per-snapshot LVM/DRBD work by ~3x, which is what drove the OOM.
-    storageClassName: miroir-local
+    # miroir (2 replicas), NOT miroir-local (1). A single-replica staging clone
+    # is pinned to exactly one node and usable only while that one replica is
+    # UpToDate, which broke every backup on 2026-08-31 two different ways:
+    #
+    #   - the clone and the mover's kopia cache are provisioned independently
+    #     and landed on different nodes (clone icarus003, cache icarus002), so
+    #     no node satisfied both and the mover was unschedulable forever with
+    #     "3 node(s) didn't match PersistentVolume's node affinity"
+    #   - the one mover that did schedule failed to mount with "volume ... is
+    #     Inconsistent on node icarus002 (want UpToDate)", the clone's only
+    #     replica not yet synced
+    #
+    # Neither is a kopiur scheduling problem: sourceColocation Required cannot
+    # resolve a WaitForFirstConsumer clone's node, Disabled changed nothing, and
+    # miroir does honour WaitForFirstConsumer. Two legs give the mover two
+    # candidate nodes and a second UpToDate replica to attach.
+    #
+    # This reverses the note added on 2026-08-29 arguing staging needs no
+    # replication. That note was about the chart default of 3 replicas, where
+    # every clone touched all three nodes so one degraded node failed the whole
+    # fleet, and the per-snapshot LVM/DRBD work drove the icarus003 agent OOM.
+    # 2 replicas keeps a spare leg without putting every clone on every node --
+    # watch agent memory on the first few nightly waves.
+    storageClassName: miroir
     # Concurrent DRBD lockstep snapshots (or a post-reboot resync) can exceed
     # the 10m default and fail the whole backup.
     timeout: 30m
