@@ -32,3 +32,11 @@ spec:
       APP: *app
       KOPIUR_CLAIM: jellyfin-config
       KOPIUR_CAPACITY: 20Gi
+      # jellyfin is the one app the fleet-wide 2026-08-31T00:00Z cutoff does not
+      # work for. asOf resolves against kopia directly, not the catalog, and the
+      # repository holds a snapshot pinned 2026-08-29T12:11 that has no Snapshot
+      # CR and whose content blobs are gone -- resolution picked that one and
+      # failed with `content 9075e82f... not found`, even though the catalogued
+      # 2026-08-30T23:37 snapshot is newer and inside the cutoff. Narrowing the
+      # window to just after that snapshot lands on it instead.
+      KOPIUR_RESTORE_ASOF: "2026-08-30T23:40:00Z"
