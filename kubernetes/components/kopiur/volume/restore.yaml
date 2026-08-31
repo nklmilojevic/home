@@ -15,7 +15,13 @@ spec:
     # Costs a kopia metadata re-download per run; over the LAN that is cheap
     # next to a backup that cannot schedule at all.
     cache:
-      capacity: "${KOPIUR_CACHE_CAPACITY:-1Gi}"
+      # 10Gi, not 1Gi. A restore streams every content blob it touches through
+      # this cache, so 1Gi fills partway into any multi-GB volume and kopia then
+      # spams `PutBlobInPath ... no space left on device` per blob, retrying each
+      # one twice. It limps to completion on small volumes and wastes the whole
+      # transfer on large ones. Ephemeral and on miroir-local, so this costs
+      # nothing once the mover exits.
+      capacity: "${KOPIUR_CACHE_CAPACITY:-10Gi}"
       mode: Ephemeral
       storageClassName: "${KOPIUR_CACHE_SNAPSHOTCLASS:-miroir-local}"
     securityContext:
