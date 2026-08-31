@@ -58,5 +58,6 @@ spec:
   policyRef:
     name: victorialogs-r2
   schedule:
-    cron: "0 3 * * *"
+    # Hash-spread; see components/kopiur/backup/snapshotschedule.yaml
+    cron: "H 3 * * *"
     timezone: Europe/Belgrade

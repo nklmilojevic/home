@@ -58,7 +58,8 @@ spec:
   policyRef:
     name: vmsingle-health-r2
   schedule:
-    cron: "0 3 * * *"
+    # Hash-spread; see components/kopiur/backup/snapshotschedule.yaml
+    cron: "H 3 * * *"
     timezone: Europe/Belgrade
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
@@ -105,5 +106,6 @@ spec:
   policyRef:
     name: vmsingle-vmetrics-r2
   schedule:
-    cron: "0 3 * * *"
+    # Hash-spread; see components/kopiur/backup/snapshotschedule.yaml
+    cron: "H 3 * * *"
     timezone: Europe/Belgrade
