@@ -53,30 +53,29 @@ spec:
     keepDaily: 7
     keepWeekly: 4
   staging:
-    # miroir (2 replicas), NOT miroir-local (1). A single-replica staging clone
-    # is pinned to exactly one node and usable only while that one replica is
-    # UpToDate, which broke every backup on 2026-08-31 two different ways:
+    # miroir-local (1 replica), NOT the replicated class. kopiur otherwise
+    # inherits a class whose clone needs a second leg, and DRBD fills that leg
+    # over the network before the mover can use it -- churn on every backup for
+    # a volume discarded two minutes later. Worse, kopiur tears the clone down
+    # while that resync is still running, and on 2026-09-01 `drbdsetup down`
+    # hit the LINBIT/drbd#137 put_ldev refcount underflow doing exactly that:
+    # icarus003's storage stack froze, the agent stopped probing for six hours,
+    # every CSI CreateSnapshot hung, 314 backups failed.
     #
-    #   - the clone and the mover's kopia cache are provisioned independently
-    #     and landed on different nodes (clone icarus003, cache icarus002), so
-    #     no node satisfied both and the mover was unschedulable forever with
-    #     "3 node(s) didn't match PersistentVolume's node affinity"
-    #   - the one mover that did schedule failed to mount with "volume ... is
-    #     Inconsistent on node icarus002 (want UpToDate)", the clone's only
-    #     replica not yet synced
+    # A single-leg clone is placed by shrinkPin on the node the scheduler
+    # selected, provided that node holds a complete snapshot leg -- and since
+    # the app volumes carry a leg on all three nodes, every node qualifies. So
+    # the clone lands wherever the mover does, seeds locally from the snapshot,
+    # and comes up UpToDate with no network copy and nothing to resync.
+    # Verified 2026-09-01: single-leg test clone bound and the mover ran in ~40s
+    # with no FailedMount and no Inconsistent state.
     #
-    # Neither is a kopiur scheduling problem: sourceColocation Required cannot
-    # resolve a WaitForFirstConsumer clone's node, Disabled changed nothing, and
-    # miroir does honour WaitForFirstConsumer. Two legs give the mover two
-    # candidate nodes and a second UpToDate replica to attach.
-    #
-    # This reverses the note added on 2026-08-29 arguing staging needs no
-    # replication. That note was about the chart default of 3 replicas, where
-    # every clone touched all three nodes so one degraded node failed the whole
-    # fleet, and the per-snapshot LVM/DRBD work drove the icarus003 agent OOM.
-    # 2 replicas keeps a spare leg without putting every clone on every node --
-    # watch agent memory on the first few nightly waves.
-    storageClassName: miroir
+    # This reverts b7af1397a/442208d82, which moved staging to the replicated
+    # class to escape the placement wedge of 08-31. That wedge is now handled by
+    # the app volumes having three legs, not by replicating the clone.
+    # eleboucher/homelab -- the only public repo running miroir with kopiur --
+    # stages on miroir-local for the same reason.
+    storageClassName: miroir-local
     # Concurrent DRBD lockstep snapshots (or a post-reboot resync) can exceed
     # the 10m default and fail the whole backup.
     timeout: 30m
