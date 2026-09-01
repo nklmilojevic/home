@@ -38,7 +38,7 @@ spec:
               # jellyfin-ffmpeg included for QSV via the plugin's
               # videoProcessor option (containers repo).
               repository: quay.io/nklmilojevic/homebridge
-              tag: 2.4.0@sha256:df29d103ae51cb9a4c96e338ea9943a3ee41e9c216f9c1a473f60ff9281e48ca
+              tag: 2.4.0@sha256:ef3f07524524f42c1fde97382ef09cb52dba4d4b1cbc7a0463ee8540bbd1468b
             env:
               TZ: Europe/Belgrade
             securityContext:
