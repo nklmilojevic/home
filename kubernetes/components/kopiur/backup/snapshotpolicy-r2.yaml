@@ -20,21 +20,27 @@ spec:
     # Costs a kopia metadata re-download per run; over the LAN that is cheap
     # next to a backup that cannot schedule at all.
     cache:
-      # miroir-local, NOT openebs-hostpath. A mover needs its kopia cache and
-      # its staging clone on ONE node. Both are RWO and WaitForFirstConsumer,
-      # but they were provisioned by different drivers: miroir places the clone
-      # where the source data lives, while an openebs-hostpath cache follows
-      # whatever node the scheduler picked. When those disagree the pod is
-      # unschedulable and the snapshot fails after the 300s startup deadline:
-      #   0/3 nodes are available: 3 node(s) didn't match PersistentVolume's
-      #   node affinity
-      # Putting the cache on the same driver as the staging clone makes the two
-      # placements coherent by construction, which is why the upstream repos
-      # running kopiur (e.g. Diaoul/home-ops) need no mover nodeSelector,
-      # affinity or sourceColocation at all.
+      # openebs-hostpath, NOT a miroir class: the cache must not be a DRBD
+      # volume. It is per-run scratch that exactly one mover pod reads, so
+      # replication buys nothing, and every DRBD volume created here is one more
+      # that has to be torn down an hour later. Teardown is what wedged icarus003
+      # on 2026-09-01: `drbdsetup down` hit the LINBIT/drbd#137 put_ldev refcount
+      # underflow while tearing down a staging clone, the node's storage stack
+      # froze, and every CSI CreateSnapshot hung for six hours (314 failed
+      # backups). Keeping caches off DRBD halves the create/teardown cycles per
+      # backup, and with them the exposure.
+      #
+      # The note that used to be here argued the opposite -- that the cache had
+      # to sit on the same driver as the staging clone, or the two would land on
+      # different nodes and the mover would be unschedulable. That held while
+      # clones were pinned to their replicas' nodes. It stopped being true when
+      # clones moved to the replicated class: allowRemoteVolumeAccess defaults on
+      # for replicas > 1, so a clone's PV carries no node affinity and a mover on
+      # a node without a leg attaches a diskless client leg instead. The cache
+      # can land anywhere and the clone follows it.
       capacity: "${KOPIUR_CACHE_CAPACITY:-5Gi}"
       mode: Ephemeral
-      storageClassName: "${KOPIUR_CACHE_SNAPSHOTCLASS:-miroir-local}"
+      storageClassName: "${KOPIUR_CACHE_SNAPSHOTCLASS:-openebs-hostpath}"
     securityContext:
       runAsUser: ${APP_UID:-1000}
       runAsGroup: ${APP_GID:-1000}
