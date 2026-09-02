@@ -31,10 +31,12 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/bastion
-              tag: 0.1.6@sha256:e24210bb7c3684678d11eaeac93323ce6971a67058544ffba99a0057eb16251e
+              tag: 0.1.7@sha256:f3b132aabd99f6e0555c4494d108907e0cf09b3677d68f1f84f05e223585e3f5
             env:
               TZ: Europe/Belgrade
-              PUBLIC_KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrYywYsK/kocVOa48LjaOR2X10g7lwsB1PtkyBJX800 id_ed25519"
+              PUBLIC_KEY: |
+                ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrYywYsK/kocVOa48LjaOR2X10g7lwsB1PtkyBJX800 id_ed25519
+                ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFbLrFIWqtPcLJkQ4KCkTWHQxSh0TyCJJrDA8Lktch7V bastion-mobile
               GIT_CLONE_URL: https://github.com/nklmilojevic/home.git
               GIT_USER_NAME: Nikola Milojević
               GIT_USER_EMAIL: nikola@milojevic.me
