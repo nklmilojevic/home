@@ -63,15 +63,21 @@ spec:
         cron: "0 */6 * * *"
         jitter: 30m
       full:
-        # TEMPORARY 2026-09-02: one-off 16:10 run to compact the 3968-blob
+        # TEMPORARY 2026-09-02: one-off 19:00 run to compact the 3968-blob
         # backlog under the new 2h epoch gate. REVERT to `0 5 * * *` / 1h after.
+        #
+        # 19:00 rather than sooner because the Maintenance reconciler only wakes
+        # on its own requeue -- it has no short resync and does not act on spec
+        # changes (it sat at observedGeneration 4 behind generation 5). Its next
+        # wake is the 18:00 quick slot (+30m jitter), so any slot before ~18:30
+        # is silently missed.
         #
         # Normally explicitly 05:00, not the chart default of 03:00. The r2 wave
         # runs at 03:00 and full maintenance is the heaviest thing that touches
         # the repository, so the default put blob rewriting directly under the
         # one nightly burst that most needs the backend responsive -- the same
         # kind of pile-up that OOMed versitygw.
-        cron: "10 16 * * *"
+        cron: "0 19 * * *"
         jitter: 1m
   parameters:
     epoch:
