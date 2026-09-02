@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/bastion
-              tag: 0.1.3@sha256:9499c25ec1d9ede70e8af5a5a3773197062408af7ef3f47b059270efd7b97ebb
+              tag: 0.1.6@sha256:e24210bb7c3684678d11eaeac93323ce6971a67058544ffba99a0057eb16251e
             env:
               TZ: Europe/Belgrade
               PUBLIC_KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrYywYsK/kocVOa48LjaOR2X10g7lwsB1PtkyBJX800 id_ed25519"
