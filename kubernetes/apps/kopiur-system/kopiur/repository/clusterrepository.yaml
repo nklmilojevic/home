@@ -5,15 +5,6 @@ kind: ClusterRepository
 metadata:
   name: local
 spec:
-  # The LAN copy, on the versitygw S3 gateway backed by the UNAS NFS share —
-  # deliberately not on Ceph, so it survives the storage layer being torn down.
-  # This is the repository the miroir cutover restores from: ~200 MB/s on the
-  # LAN versus pulling 91 GiB back from Cloudflare.
-  # Paired with the `r2` repository below, which took over the offsite copy at
-  # the 2026-08-29 cutover when volsync was removed.
-  # Points at the Service, not s3.nikola.wtf: Envoy buffers request bodies and
-  # kopia blobs are multi-MB, so backup traffic has no business crossing the
-  # gateway.
   allowedNamespaces:
     all: true
   backend:
@@ -24,13 +15,8 @@ spec:
           namespace: kopiur-system
       bucket: kopiur
       endpoint: versitygw.security.svc.cluster.local:7070
-      # versitygw validates the SigV4 region in the authorization header and
-      # expects us-east-1; `auto` is an R2-ism and fails bootstrap with
-      # "The authorization header is malformed".
       region: us-east-1
       tls:
-        # versitygw serves plain HTTP in-cluster; TLS is terminated at the
-        # gateway, which this path bypasses.
         disableTls: true
   encryption:
     passwordSecretRef:
@@ -38,32 +24,13 @@ spec:
       namespace: kopiur-system
       key: KOPIA_PASSWORD
   maintenance:
-    # Maintenance had never run once in the 25h since bootstrap: lastRun was
-    # empty and LeaseOwned sat False/WaitingForRepository, stamped 11:31 while
-    # the repository only went healthy at 11:44 after versitygw stopped OOMing.
-    # Nothing re-triggers a Maintenance reconcile when its target recovers, so
-    # the stale verdict stuck and index blobs climbed to 4048 (threshold 1000),
-    # slowing every mover's connect.
-    #
-    # Force is the documented recovery for a lease held by a dead owner. It is
-    # safe to leave on: kopiur is the only maintainer of these repositories, so
-    # there is no competing owner whose lease could be wrongly seized.
     takeoverPolicy: Force
     schedule:
       quick:
-        # Back to 6-hourly after the 2026-08-31 recovery. The one-off `*/20`
-        # burst did its job -- maintenance had never run at all, and the first
-        # full compaction took index blobs 5879 -> 3176 -- but frequent quick
-        # runs are the wrong tool: quick compacts a single epoch per run, so
-        # blobs actually crept back to 3189 under it while an hourly wave of ~46
-        # snapshots wrote new ones. It also piles I/O onto icarus002, whose etcd
-        # WAL p99 fsync went 8ms -> 164ms during the 15:18 full run and stayed
-        # at 40-70ms, with two leader elections. Index blobs are a performance
-        # annoyance; an etcd stall took the whole cluster out on 2026-08-10.
         cron: "0 */6 * * *"
         jitter: 30m
       full:
-        cron: "0 19 * * *"
+        cron: "20 16 * * *"
         jitter: 1m
   parameters:
     epoch:
@@ -77,13 +44,6 @@ kind: ClusterRepository
 metadata:
   name: r2
 spec:
-  # The offsite copy, live since the 2026-08-29 cutover removed volsync. Same
-  # kopia password as `local` so there is one secret to keep safe, but a wholly
-  # independent repository — a bug that corrupts one cannot reach the other.
-  #
-  # `local` is the restore path (LAN, ~200 MB/s); this exists for the case where
-  # the UNAS is gone. The endpoint is kept out of this public repo and injected
-  # from the kopiur-endpoint Secret via postBuild.substituteFrom in ks.yaml.
   allowedNamespaces:
     all: true
   backend:
@@ -94,9 +54,6 @@ spec:
           namespace: kopiur-system
       bucket: kopiur
       endpoint: ${R2_ENDPOINT}
-      # R2 ignores the region but requires a valid-looking value; `auto` is the
-      # Cloudflare convention. Do NOT copy us-east-1 from `local` — that value
-      # exists only because versitygw validates the SigV4 region header.
       region: auto
   encryption:
     passwordSecretRef:
@@ -104,20 +61,12 @@ spec:
       namespace: kopiur-system
       key: KOPIA_PASSWORD
   maintenance:
-    # Same stale-lease recovery as `local` above; r2's Maintenance had likewise
-    # never run. Its index blob count is still Healthy, so it gets no epoch
-    # override -- one daily wave does not outrun the 24h default.
     takeoverPolicy: Force
     schedule:
       quick:
         cron: "0 */6 * * *"
         jitter: 30m
       full:
-        # Explicitly 05:00, not the chart default of 03:00. The r2 wave runs at
-        # 03:00 and full maintenance is the heaviest thing that touches the
-        # repository, so the default put blob rewriting directly under the one
-        # nightly burst that most needs the backend responsive -- the same kind
-        # of pile-up that OOMed versitygw.
         cron: "0 5 * * *"
         jitter: 1h
   scheduleDefaults:
