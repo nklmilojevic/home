@@ -11,50 +11,8 @@ volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
 parameters:
   miroir.home-operations.com/pool: nvme
-  # 2 DISKFUL replicas plus a diskless tie-breaker on the third node, which is
-  # what miroir provisions at this count. Three quorum voters, so a volume
-  # survives losing any one node, while only two nodes carry data.
-  #
-  # Was 3. That existed to guarantee a volume could never have a diskless
-  # primary (miroir#409, which silently hung 8/36 snapshots on 0.11.19), and is
-  # obsolete: #411 fixed it in 0.11.20 by snapshotting off the diskful legs and
-  # we run 0.12.0. Meanwhile asking for 3 actively hurt -- with all three legs
-  # required, two healthy legs are "not enough" and the whole volume fails
-  # ResourceExhausted the moment one agent dies, which is how a single OOMKilled
-  # agent took out a snapshot wave on 2026-08-29.
-  #
-  # The tie-breaker needs no storage, so this holds while icarus003 runs with
-  # its NVMe pulled (removed 2026-08-30; the NAB6 Lite passively-cooled M.2 slot
-  # cooked two drives at 81C). Deliberately permanent -- keep 2 even once that
-  # disk is back. That also means autoDiskfulAfter must STAY disabled: enabling
-  # it would promote the tie-breaker to a diskful leg and quietly restore 3.
   miroir.home-operations.com/replicas: "2"
-  # last-man-standing, not freeze: a volume down to its final replica keeps
-  # serving instead of blocking I/O. With autoTieBreaker on there are three
-  # voters (2 diskful + a diskless tie-breaker), so freeze already survived a
-  # single node loss -- this additionally covers losing two, at the cost of
-  # letting the last copy accept writes with nothing to arbitrate against.
-  # Matches bjw-s-labs/home-ops; Diaoul/home-ops runs freeze. Both are in use
-  # upstream, so this is an availability-vs-safety preference, not a fix.
   miroir.home-operations.com/quorum: last-man-standing
-  # The PV carries NO node affinity, and a pod on a node without a replica gets
-  # an ephemeral diskless client leg instead. This is the one property rook-ceph
-  # had that miroir does not by default: RBD was network-attached, so any node
-  # could open any volume and "which node did the scheduler pick" never mattered.
-  #
-  # Without it, a volume is only usable where a replica lives, which is what
-  # wedged backups all through 2026-08-31: a mover needs its staging clone and
-  # its kopia cache on ONE node, the two are provisioned independently, and when
-  # they landed on different nodes the pod was unschedulable forever with
-  # "3 node(s) didn't match PersistentVolume's node affinity". Going 1 -> 2
-  # replicas only improved the odds to 2-in-3 (24 of 25 snapshots), it did not
-  # fix it -- home-assistant-media still wedged at 15:12.
-  #
-  # Preferred over replicas: 3, which reaches the same any-node result by
-  # brute force but reintroduces the 2026-08-29 outage: with three legs
-  # required, provisioning fails ResourceExhausted the moment one agent dies,
-  # so a single OOMKilled agent takes out the whole snapshot wave. Ceph
-  # tolerated that (size 3, min_size 2); miroir at 3 does not.
   miroir.home-operations.com/allowRemoteVolumeAccess: "true"
   csi.storage.k8s.io/fstype: ext4
 ---

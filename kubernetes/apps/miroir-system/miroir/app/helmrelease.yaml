@@ -18,28 +18,7 @@ spec:
     # Rebuild a dead node's replica legs on the spare node after 1h
     # (safety-gated: single dead node, clean survivors, no snapshot pins).
     autoEvictAfter: 1h
-    # DISABLED 2026-08-30 while icarus003's NVMe has no active cooler: the
-    # NAB6 Lite ships its M.2 fan only with the SSD-equipped SKU, so that slot
-    # is passively cooled and has already cooked two drives (81°C vs 54-58°C on
-    # its peers). icarus003 is a diskless tie-breaker for every volume; leaving
-    # this on would silently re-attach that NVMe 15m after any pod settled
-    # there and full-resync onto it.
-    #
-    # Only the network-I/O half of this setting still matters. Its other
-    # purpose -- making a volume snapshottable -- is obsolete: miroir#409
-    # ("snapshot staging hangs silently when the primary is diskless", which
-    # failed 8/36 of our backups on 0.11.19) was fixed by miroir#411 in
-    # 0.11.20, which snapshots off the diskful legs instead. We run 0.12.0.
-    #
-    # Empty string is the documented disable (the chart schema types this as a
-    # Go duration string; a bare 0 fails values-schema validation).
-    #
-    # Now PERMANENT, not just while the NVMe is out. The StorageClass settled on
-    # 2 diskful replicas + a diskless tie-breaker as the intended steady state
-    # (2026-08-30), and this setting is precisely what would undo that: it
-    # promotes a diskless leg to diskful, silently turning every volume back
-    # into a 3-leg one. Do not re-enable when the M.2 fan is fitted.
-    autoDiskfulAfter: ""
+    autoDiskfulAfter: 30m
     drbd:
       # DRBD activity-log extents (default 1237): fewer hot-extent metadata
       # updates under scattered random writes, longer post-crash resync.
