@@ -30,8 +30,8 @@ spec:
         cron: "0 */6 * * *"
         jitter: 30m
       full:
-        cron: "*/15 * * * *"
-        jitter: 1m
+        cron: "0 5 * * *"
+        jitter: 1h
   parameters:
     epoch:
       minDuration: 2h
