@@ -1,0 +1,102 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app bastion
+  namespace: misc
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: bastion
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    controllers:
+      bastion:
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        serviceAccount:
+          identifier: bastion
+        pod:
+          automountServiceAccountToken: true
+        containers:
+          app:
+            image:
+              repository: ghcr.io/nklmilojevic/bastion
+              tag: 0.1.1@sha256:76f939c5536b6bac6cd4a83a7dc3c8ab56ea1654e3675f1062c6aaeae2e3e4b0
+            env:
+              TZ: Europe/Belgrade
+              PUBLIC_KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrYywYsK/kocVOa48LjaOR2X10g7lwsB1PtkyBJX800 id_ed25519"
+              GIT_CLONE_URL: https://github.com/nklmilojevic/home.git
+              GIT_USER_NAME: Nikola Milojević
+              GIT_USER_EMAIL: nikola@milojevic.me
+              TALOSCONFIG: /run/secrets/bastion/talosconfig
+              CLAUDE_WORKDIR: /config/home
+              CLAUDE_PERMISSION_MODE: auto
+              TELEGRAM_ALLOW_FROM: "104243855"
+            envFrom:
+              - secretRef:
+                  name: bastion-secret
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 4Gi
+    serviceAccount:
+      bastion:
+        enabled: true
+    service:
+      app:
+        controller: *app
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: "10.40.0.17"
+        ports:
+          ssh:
+            port: 22
+            targetPort: 2222
+          mosh-1:
+            port: 60001
+            protocol: UDP
+          mosh-2:
+            port: 60002
+            protocol: UDP
+          mosh-3:
+            port: 60003
+            protocol: UDP
+          mosh-4:
+            port: 60004
+            protocol: UDP
+          mosh-5:
+            port: 60005
+            protocol: UDP
+    persistence:
+      config:
+        existingClaim: bastion-config
+        globalMounts:
+          - path: /config
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+      talosconfig:
+        type: secret
+        name: bastion-talosconfig
+        globalMounts:
+          - path: /run/secrets/bastion
+            readOnly: true

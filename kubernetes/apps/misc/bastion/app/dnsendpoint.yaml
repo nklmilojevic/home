@@ -1,0 +1,14 @@
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: bastion-ssh
+spec:
+  endpoints:
+    - dnsName: "bastion.nikola.wtf"
+      recordType: A
+      targets:
+        - "10.40.0.17"
+      providerSpecific:
+        - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+          value: "false"
