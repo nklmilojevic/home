@@ -36,7 +36,7 @@ spec:
               TZ: Europe/Belgrade
               PUBLIC_KEY: |
                 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrYywYsK/kocVOa48LjaOR2X10g7lwsB1PtkyBJX800 id_ed25519
-                ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFbLrFIWqtPcLJkQ4KCkTWHQxSh0TyCJJrDA8Lktch7V bastion-mobile
+                ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBFcGtHu69jq9L1FbD01b/oO7i8ohDvC21Hg8WoVtCoA hoshi-iphone
               GIT_CLONE_URL: https://github.com/nklmilojevic/home.git
               GIT_USER_NAME: Nikola Milojević
               GIT_USER_EMAIL: nikola@milojevic.me
