@@ -30,7 +30,7 @@ spec:
         cron: "0 */6 * * *"
         jitter: 30m
       full:
-        cron: "20 16 * * *"
+        cron: "25 16 * * *"
         jitter: 1m
   parameters:
     epoch:
