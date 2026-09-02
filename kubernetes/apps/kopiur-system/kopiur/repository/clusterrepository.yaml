@@ -63,21 +63,27 @@ spec:
         cron: "0 */6 * * *"
         jitter: 30m
       full:
-        # Explicitly 05:00, not the chart default of 03:00. The r2 wave runs at
-        # 03:00 and full maintenance is the heaviest thing that touches the
-        # repository, so the default put blob rewriting directly under the one
-        # nightly burst that most needs the backend responsive -- the same kind
-        # of pile-up that OOMed versitygw.
-        cron: "0 5 * * *"
-        jitter: 1h
+        # TEMPORARY 2026-09-02: one-off 16:10 run to compact the 3968-blob
+        # backlog under the new 2h epoch gate. REVERT to `0 5 * * *` / 1h after.
+        #
+        # Normally explicitly 05:00, not the chart default of 03:00. The r2 wave
+        # runs at 03:00 and full maintenance is the heaviest thing that touches
+        # the repository, so the default put blob rewriting directly under the
+        # one nightly burst that most needs the backend responsive -- the same
+        # kind of pile-up that OOMed versitygw.
+        cron: "10 16 * * *"
+        jitter: 1m
   parameters:
     epoch:
       # kopia's default 24h gate, with compaction trailing two epochs, means
       # blobs written now are not compacted for ~48h. This repository takes 46
-      # apps hourly (~1100 snapshots/day), which outruns that. 6h lets an epoch
-      # close and compact while the write rate is still ahead of it.
+      # apps hourly (~1100 snapshots/day), which outruns that.
+      # 6h was not enough either: index blobs sat at 3968 against the threshold
+      # of 1000 two days after it was set, so epochs were still closing slower
+      # than the hourly wave fills them. 2h gives compaction ~4h of trailing
+      # lag instead of ~12h.
       # Not applied to r2: it is daily and its IndexBlobHealth is Healthy.
-      minDuration: 6h
+      minDuration: 2h
   scheduleDefaults:
     timezone: Europe/Belgrade
 ---
