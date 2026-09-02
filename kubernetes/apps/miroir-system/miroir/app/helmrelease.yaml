@@ -15,31 +15,13 @@ spec:
     kind: OCIRepository
     name: miroir
   values:
-    # Rebuild a dead node's replica legs on the spare node after 1h
-    # (safety-gated: single dead node, clean survivors, no snapshot pins).
     autoEvictAfter: 1h
-    autoDiskfulAfter: 30m
+    autoDiskfulAfter: 1h
     drbd:
-      # DRBD activity-log extents (default 1237): fewer hot-extent metadata
-      # updates under scattered random writes, longer post-crash resync.
       alExtents: 6007
     agent:
-      # icarus003's tie-breaker pool is a loopfile (it has no NVMe since
-      # 2026-08-30). The agent refuses a baseDir that is not a host mount --
-      # "volumes created here would vanish with the pod" -- and points at this
-      # value, which is what makes the kubelet bind-mount it in.
       loopfileBaseDirs:
         - /var/lib/miroir
-      # Chart default is a 128Mi limit; steady state is already 72-75Mi, which
-      # left almost no headroom. icarus003's agent was OOMKilled (exit 137)
-      # mid-burst during the first unstaggered 46-volume snapshot wave on
-      # 2026-08-29, and the restart stranded LVs whose device nodes never
-      # materialised -- every later CSI clone on that node then failed with
-      # "unusable after vgmknodes ... No such file or directory". That blast
-      # radius came from the StorageClass then asking for 3 replicas, so two
-      # healthy legs were "not enough" and the whole volume failed
-      # ResourceExhausted; at 2 replicas one dead agent no longer condemns the
-      # volume, but the headroom below is still what stops the OOM itself.
       resources:
         requests:
           cpu: 10m
