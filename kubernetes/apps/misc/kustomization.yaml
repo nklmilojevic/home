@@ -12,3 +12,4 @@ resources:
   - ./invoicing/ks.yaml
   - ./stirling-pdf/ks.yaml
   - ./searxng/ks.yaml
+  - ./bastion/ks.yaml
