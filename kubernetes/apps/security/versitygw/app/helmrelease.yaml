@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: ghcr.io/versity/versitygw
-              tag: v1.7.0@sha256:c4cbd9d9cb8dedbb055ac788dbd02635651b9b1cebac95b095b3217231aa87ad
+              tag: v1.8.0@sha256:30292fc2eeacc67a36993b01f7a7a5e3361a19cced0e80c1d71cfa2a4b0a2499
             # Stateless POSIX gateway: buckets are directories under /data and
             # objects are plain files on the NFS share, so nothing but the share
             # itself has to survive. Deliberately not Garage, which would need a
