@@ -1,15 +1,15 @@
 # Claude Code Guidelines
 
-This is a Kubernetes homelab repository using Flux CD for GitOps, managing ~40 applications across 15 namespaces.
+This is a Kubernetes homelab repository using Flux CD for GitOps. Every app lives under `kubernetes/apps/{namespace}/{app}/`.
 
 ## Tech Stack
 
 - **Kubernetes**: Talos Linux
 - **GitOps**: Flux v2 (Flux Operator + FluxInstance, not the legacy `flux-system` bootstrap)
-- **Helm Charts**: bjw-s app-template (v5.0.1) for most apps, declared per-app via `OCIRepository`
+- **Helm Charts**: bjw-s app-template for most apps, declared per-app via `OCIRepository` (Renovate keeps the tag current; copy it from any existing `ocirepository.yaml`)
 - **Secrets**: External Secrets + 1Password Connect (runtime app secrets); bootstrap secrets injected via `vals` from `ref+op://` 1Password service-account refs (no SOPS)
-- **Storage**: Rook-Ceph (distributed), OpenEBS (local), NFS (shared media)
-- **Backups**: VolSync with R2 backend, wired in via a shared Kustomize Component
+- **Storage**: miroir (DRBD9 replicated volumes; default StorageClass `miroir`), OpenEBS hostpath (local scratch and mover caches), NFS (shared media)
+- **Backups**: kopiur (kopia) to a `local` and an `r2` ClusterRepository, wired in via the shared Kustomize Components under `kubernetes/components/kopiur/`
 - **Automation**: `just` (recipe runner; modules under `.just/`), Renovate (Mend app + `.renovate/` config)
 - **Dev shell**: Nix flake (`flake.nix`); pre-commit via `lefthook.yml` (yamlfmt + yamllint)
 
@@ -18,6 +18,7 @@ This is a Kubernetes homelab repository using Flux CD for GitOps, managing ~40 a
 - All persistent cluster changes MUST be made in this repository, committed, pushed, and reconciled by Flux.
 - NEVER use `kubectl apply`, `kubectl create`, `kubectl delete`, `kubectl edit`, `kubectl patch`, `kubectl replace`, or `kubectl rollout restart`.
 - NEVER apply locally rendered manifests or imperatively create Flux resources. `kubectl` is read-only for inspection and verification.
+- The one sanctioned imperative write is creating an ad-hoc kopiur `Snapshot` (see "Useful Commands"): it is a one-shot object that nothing in Git owns, so there is no drift for Flux to fight.
 - After pushing desired state, use `just kube reconcile` to request reconciliation through Flux.
 
 ## Directory Structure
@@ -38,11 +39,9 @@ kubernetes/
 │   │           └── pvc.yaml             # (optional, extra PVCs beyond the kopiur one)
 ├── components/
 │   └── kopiur/              # Reusable Kustomize Components (kind: Component), wired via ks.yaml `components:`
-│       ├── kustomization.yaml
-│       ├── externalsecret.yaml
-│       ├── pvc.yaml
-│       ├── replicationdestination.yaml
-│       └── replicationsource.yaml
+│       ├── backup/          # SnapshotPolicy + SnapshotSchedule for the local and r2 repos (hashed `H` crons)
+│       ├── secret/          # ExternalSecret with the repository credentials
+│       └── volume/          # the app PVC + a ReplicationDestination-style restore from the latest snapshot
 └── flux/
     └── apps.yaml            # Root Flux Kustomization `cluster-apps`; injects HelmRelease defaults (see below)
 ```
@@ -56,10 +55,10 @@ Repo root also contains `bootstrap/` (helmfile + kustomize for pre-Flux bootstra
 - `o11y` - Observability (VictoriaMetrics, VictoriaLogs, Vector, Grafana operator, gatus, NUT)
 - `network` - Networking (Cilium, Envoy Gateway, external-dns, cloudflared, multus)
 - `security` - Secrets and backups (external-secrets, onepassword-connect, versitygw, snapshot-controller, atuin)
-- `database` - Redis (redis-operator + per-app instances)
+- `database` - Data operators: redis-operator (+ per-app Redis instances), CloudNativePG, barman-cloud plugin
 - `miroir-system` - Distributed storage (miroir operator + agents, DRBD9 over lvmthin)
 - `kopiur-system` - Backups (kopiur operator, `local` + `r2` ClusterRepositories)
-- `ai` - AI tooling (toolhive, ha-mcp)
+- `ai` - AI tooling (toolhive vMCP gateway, ha-mcp, grafana-mcp, kubesearch-mcp, hermes, atuin-ai)
 - `misc` - Misc apps (paperless, forgejo, n8n, stirling-pdf, invoicing)
 - `photos` - Immich (app-template) + its CloudNativePG cluster (barman-cloud plugin backups to R2); operators live in `database`
 - `cert-manager`, `kube-system`, `openebs-system`, `renovate`, `system-upgrade`, `flux-system` - cluster infrastructure
@@ -129,9 +128,9 @@ spec:
 **Do not set per-app backup schedules.** The kopiur backup Component owns both
 crons and spreads them itself: `H * * * *` for the hourly local repo and
 `H 3 * * *` for the nightly R2 wave, where `H` is a per-schedule hash of the
-object's identity. That gives every app a stable, distinct minute without
-hand-picking one, which is what the old per-app schedule vars were for — all of
-them firing on the hour once pushed an OSD into BlueStore slow ops.
+object's identity. That gives every app a stable, distinct minute, so the
+snapshots never all fire at once; a simultaneous snapshot storm has overloaded
+the storage backend before.
 
 1. Create `app/kustomization.yaml` (lists the app's own resources; the kopiur resources come from the Components in `ks.yaml`, not here):
 
@@ -163,7 +162,7 @@ spec:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   ref:
-    tag: 5.0.1
+    tag: 5.1.0 # copy the current tag from any existing ocirepository.yaml
   url: oci://ghcr.io/bjw-s-labs/helm/app-template
 ```
 
@@ -365,9 +364,13 @@ There are no global cluster variable ConfigMaps/Secrets in this repo; domains an
 - Timezone is `Europe/Belgrade`
 - Standard dependencies: `miroir-config` (ns `miroir-system`), `external-secrets-stores` (ns `security`)
 
-## Home Assistant Automations
+## Home Assistant
 
-- In `telegram_bot.*` actions, never put `target:` inside `data:` — it is deprecated and removed in HA 2026.9.0. Use `data.chat_id: 104243855` (or an action-level `target.entity_id: notify.telegram_bot_...` notify entity, as the P1S `send_photo` automations do). All existing automations were migrated 2026-08-17.
+- HA runs in the `home` namespace as a plain container image (no Supervisor, so there is no `ha core ...` CLI and no `homeassistant.local`); UI at `hass.nikola.wtf`, config on the `home-assistant-config` PVC.
+- Always use the ha-mcp tools (behind the toolhive gateway) for every Home Assistant task — reading state, searching for consumers of an entity, dashboards, automations, blueprints, entity-registry changes. They take effect live. Never use `hass-cli`, and do not fall back to SSH/`grep` over `/config` or `.storage`: `ha_search`, `ha_config_get_dashboard(mode="search")` and `ha_get_blueprint` cover the same ground, and `ha_call_service(ws_command=...)` is the escape hatch for anything that is a WebSocket command rather than a service (e.g. `blueprint/delete`, `repairs/list_issues`).
+- Editing files under `/config` through the rootless sshd sidecar at `10.40.0.16` (user `me`) is a last resort, only when a change genuinely cannot be made through the API.
+- Ask before restarting Home Assistant. Almost everything reloads without a restart, and a restart interrupts the household.
+- In `telegram_bot.*` actions, never put `target:` inside `data:` — it is deprecated and removed in HA 2026.9.0. Use `data.chat_id: 104243855` (or an action-level `target.entity_id: notify.telegram_bot_...` notify entity, as the P1S `send_photo` automations do).
 
 ## Useful Commands
 
