@@ -38,6 +38,10 @@ spec:
               WEB_PORT: &port 8893
               MQTT_BROKER: "mosquitto.home.svc.cluster.local"
               MQTT_PORT: "1883"
+              ML_ENABLED: "true"
+              ML_SCHEDULE: "weekly"
+              ML_MODEL_DIR: "/config/models"
+              ML_MIN_DAYS: "30"
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
