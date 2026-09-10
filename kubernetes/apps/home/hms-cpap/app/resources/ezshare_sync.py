@@ -64,7 +64,7 @@ def check_upstream(status, body):
 
 
 def exists(path):
-    status, body = fetch(path, "bytes=0-0")
+    status, body = fetch(path, "bytes=1-1")
     check_upstream(status, body)
     if status == 206:
         return True
