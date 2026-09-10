@@ -54,16 +54,27 @@ def is_placeholder(body):
     return b"REDIRECTFORM" in head or b"<title>Success" in head or b"<html" in head[:64].lower()
 
 
+class UpstreamError(Exception):
+    pass
+
+
+def check_upstream(status, body):
+    if status not in (200, 206):
+        raise UpstreamError(f"HTTP {status} from {BASE}: {body[:120]!r}")
+
+
 def exists(path):
     status, body = fetch(path, "bytes=0-0")
+    check_upstream(status, body)
     if status == 206:
         return True
-    return status == 200 and len(body) > 0 and not is_placeholder(body)
+    return len(body) > 0 and not is_placeholder(body)
 
 
 def download(path, dest):
     status, body = fetch(path)
-    if status != 200 or not body or is_placeholder(body):
+    check_upstream(status, body)
+    if not body or is_placeholder(body):
         return False
     if path.lower().endswith(".edf") and body[:8].strip() != b"0":
         log(f"  bad EDF header for {path}, not saving")
@@ -137,7 +148,8 @@ def sync_root():
     for name in ROOT_FILES:
         dest = os.path.join(OUT, name)
         status, body = fetch(name)
-        if status != 200 or not body or is_placeholder(body):
+        check_upstream(status, body)
+        if not body or is_placeholder(body):
             continue
         if name.lower().endswith(".edf") and body[:8].strip() != b"0":
             continue
