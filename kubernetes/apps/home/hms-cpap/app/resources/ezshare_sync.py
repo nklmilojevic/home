@@ -21,7 +21,7 @@ RUN_ONCE = os.environ.get("EZ_RUN_ONCE", "") == "1"
 ROOT_FILES = ["STR.edf", "STR.crc", "Identification.tgt", "Identification.crc", "journal.dat", "journal.jnl"]
 LATE = ["BRP", "PLD", "SAD"]
 EARLY = ["EVE", "CSL"]
-STATE_PATH = os.path.join(OUT, ".ezshare-sync.json")
+STATE_PATH = os.environ.get("EZ_STATE", os.path.join(OUT, ".ezshare-sync.json"))
 
 
 def log(msg):
