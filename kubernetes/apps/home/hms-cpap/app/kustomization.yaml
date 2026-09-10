@@ -5,3 +5,11 @@ namespace: home
 resources:
   - ./helmrelease.yaml
   - ./ocirepository.yaml
+configMapGenerator:
+  - name: hms-cpap-ezshare-sync
+    files:
+      - ./resources/ezshare_sync.py
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

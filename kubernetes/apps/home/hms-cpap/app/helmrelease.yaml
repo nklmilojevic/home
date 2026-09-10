@@ -42,8 +42,38 @@ spec:
               ML_SCHEDULE: "weekly"
               ML_MODEL_DIR: "/config/models"
               ML_MIN_DAYS: "30"
+              CPAP_TRANSPORT: local
+              CPAP_FORMAT: resmed
+              CPAP_LOCAL_DIR: /data/ezshare-card
             securityContext:
               allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+          ezshare-sync:
+            image:
+              repository: docker.io/library/python
+              tag: 3.13-alpine
+            command:
+              - python3
+              - -u
+              - /app/ezshare_sync.py
+            env:
+              TZ: "Europe/Belgrade"
+              EZ_BASE: http://10.50.0.22
+              EZ_MODE: mule
+              EZ_OUT: /data/ezshare-card
+              EZ_DAYS: "7"
+              EZ_INTERVAL: "900"
+            resources:
+              requests:
+                cpu: 5m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
               capabilities:
                 drop:
                   - ALL
@@ -73,3 +103,12 @@ spec:
             subPath: config
           - path: /data
             subPath: data
+      ezshare-sync:
+        type: configMap
+        name: hms-cpap-ezshare-sync
+        advancedMounts:
+          hms-cpap:
+            ezshare-sync:
+              - path: /app/ezshare_sync.py
+                subPath: ezshare_sync.py
+                readOnly: true
