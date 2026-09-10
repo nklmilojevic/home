@@ -20,6 +20,8 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     controllers:
       hms-cpap:
+        annotations:
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             resources:

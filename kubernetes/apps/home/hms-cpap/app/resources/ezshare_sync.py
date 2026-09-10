@@ -178,10 +178,9 @@ def sync_datalog(sessions, state):
         entry = state.setdefault(key, {"files": {}, "missing": []})
         if entry.get("done"):
             continue
-        if "BRP" not in entry["files"] and "BRP" not in entry["missing"]:
+        if "BRP" not in entry["files"]:
             ss = find_seconds(s["rec"], fdate, hhmm, "BRP")
             if ss is None:
-                entry["missing"].append("BRP")
                 entry["attempts"] = entry.get("attempts", 0) + 1
                 log(f"  {key}: BRP not found (attempt {entry['attempts']})")
                 if entry["attempts"] >= 3:
