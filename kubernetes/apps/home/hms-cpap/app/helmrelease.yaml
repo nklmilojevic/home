@@ -68,6 +68,7 @@ spec:
               EZ_STATE: /data/ezshare-sync-state.json
               EZ_DAYS: "7"
               EZ_INTERVAL: "900"
+              EZ_SKIP_TYPES: SAD
             resources:
               requests:
                 cpu: 5m

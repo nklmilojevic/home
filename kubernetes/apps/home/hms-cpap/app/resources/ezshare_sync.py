@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import http.client
 import json
 import os
 import struct
@@ -17,10 +18,13 @@ INTERVAL = int(os.environ.get("EZ_INTERVAL", "900"))
 TIMEOUT = int(os.environ.get("EZ_TIMEOUT", "90"))
 PAUSE = float(os.environ.get("EZ_PAUSE", "0.1"))
 RUN_ONCE = os.environ.get("EZ_RUN_ONCE", "") == "1"
+CHUNK = int(os.environ.get("EZ_CHUNK", str(256 * 1024)))
+RETRIES = int(os.environ.get("EZ_RETRIES", "4"))
+SKIP_TYPES = {t for t in os.environ.get("EZ_SKIP_TYPES", "").upper().split(",") if t}
 
 ROOT_FILES = ["STR.edf", "STR.crc", "Identification.tgt", "Identification.crc", "journal.dat", "journal.jnl"]
-LATE = ["BRP", "PLD", "SAD"]
-EARLY = ["EVE", "CSL"]
+LATE = [t for t in ["BRP", "PLD", "SAD"] if t not in SKIP_TYPES]
+EARLY = [t for t in ["EVE", "CSL"] if t not in SKIP_TYPES]
 STATE_PATH = os.environ.get("EZ_STATE", os.path.join(OUT, ".ezshare-sync.json"))
 
 
@@ -71,18 +75,79 @@ def exists(path):
     return len(body) > 0 and not is_placeholder(body)
 
 
-def download(path, dest):
-    status, body = fetch(path)
-    check_upstream(status, body)
-    if not body or is_placeholder(body):
+def edf_expected_size(head):
+    try:
+        header_bytes = int(head[184:192])
+        nrec = int(head[236:244])
+        ns = int(head[252:256])
+        spr_off = 256 + ns * (16 + 80 + 8 + 8 + 8 + 8 + 8)
+        spr = [int(head[spr_off + i * 8:spr_off + (i + 1) * 8]) for i in range(ns)]
+    except ValueError:
+        return None
+    if nrec < 0 or len(head) < spr_off + ns * 8:
+        return None
+    return header_bytes + nrec * sum(spr) * 2
+
+
+def stream_into(path, data, start):
+    req = urllib.request.Request(url_for(path), headers={"User-Agent": "hms-cpap-ezshare-sync"})
+    if start:
+        req.add_header("Range", f"bytes={start}-")
+    try:
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+            if start and r.status == 200:
+                del data[:]
+            check_upstream(r.status, b"")
+            while True:
+                piece = r.read(65536)
+                if not piece:
+                    return True
+                data += piece
+    except urllib.error.HTTPError as e:
+        check_upstream(e.code, e.read())
+        return True
+    except http.client.IncompleteRead as e:
+        data += e.partial
         return False
-    if path.lower().endswith(".edf") and body[:8].strip() != b"0":
-        log(f"  bad EDF header for {path}, not saving")
+    finally:
+        time.sleep(PAUSE)
+
+
+def download(path, dest):
+    data = bytearray()
+    expected = None
+    is_edf = path.lower().endswith(".edf")
+    for attempt in range(RETRIES):
+        start = len(data)
+        try:
+            complete = stream_into(path, data, start)
+        except UpstreamError:
+            raise
+        except Exception as e:
+            complete = False
+            log(f"  {path}: read failed at {len(data)} bytes ({e!r}), retry {attempt + 1}/{RETRIES}")
+        if start == 0 and (not data or is_placeholder(bytes(data[:512]))):
+            return False
+        if is_edf and expected is None and len(data) >= 256:
+            if data[:8].strip() != b"0":
+                log(f"  bad EDF header for {path}, not saving")
+                return False
+            expected = edf_expected_size(bytes(data[:65536]))
+        if expected is not None and len(data) >= expected:
+            del data[expected:]
+            break
+        if complete:
+            if expected is None:
+                break
+            log(f"  {path}: stream ended at {len(data)} of {expected} bytes, retry {attempt + 1}/{RETRIES}")
+        time.sleep(2 * (attempt + 1))
+    if expected is not None and len(data) != expected:
+        log(f"  {path}: got {len(data)} bytes, EDF header says {expected}, not saving")
         return False
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     tmp = dest + ".part"
     with open(tmp, "wb") as f:
-        f.write(body)
+        f.write(data)
     os.replace(tmp, dest)
     return True
 
