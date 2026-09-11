@@ -21,6 +21,7 @@ RUN_ONCE = os.environ.get("EZ_RUN_ONCE", "") == "1"
 CHUNK = int(os.environ.get("EZ_CHUNK", str(256 * 1024)))
 RETRIES = int(os.environ.get("EZ_RETRIES", "4"))
 SKIP_TYPES = {t for t in os.environ.get("EZ_SKIP_TYPES", "").upper().split(",") if t}
+SETTLE_HOUR = int(os.environ.get("EZ_SETTLE_HOUR", "13"))
 
 ROOT_FILES = ["STR.edf", "STR.crc", "Identification.tgt", "Identification.crc", "journal.dat", "journal.jnl"]
 LATE = [t for t in ["BRP", "PLD", "SAD"] if t not in SKIP_TYPES]
@@ -233,35 +234,75 @@ def sync_root():
     return got
 
 
+def settled(rec):
+    return datetime.now() >= datetime.strptime(rec, "%Y%m%d") + timedelta(days=1, hours=SETTLE_HOUR)
+
+
+def remote_expected_size(rel):
+    status, head = fetch(rel, "bytes=0-255")
+    check_upstream(status, head)
+    if len(head) < 256 or is_placeholder(head) or head[:8].strip() != b"0":
+        return None
+    try:
+        header_bytes = int(head[184:192])
+    except ValueError:
+        return None
+    if header_bytes > 256:
+        status, rest = fetch(rel, f"bytes=256-{header_bytes - 1}")
+        check_upstream(status, rest)
+        head = head + rest
+    return edf_expected_size(bytes(head))
+
+
 def sync_datalog(sessions, state):
     cutoff = (datetime.now() - timedelta(days=DAYS)).strftime("%Y%m%d")
     todo = [s for s in sessions if s["rec"] >= cutoff]
-    downloaded = probes_before = 0
+    downloaded = 0
     for s in todo:
         fdate, hhmm = s["start"].strftime("%Y%m%d"), s["start"].strftime("%H%M")
         key = f"{s['rec']}/{fdate}_{hhmm}"
         entry = state.setdefault(key, {"files": {}, "missing": []})
-        if entry.get("done"):
+        live = not settled(s["rec"])
+        if entry.get("done") and not live:
             continue
         if "BRP" not in entry["files"]:
             ss = find_seconds(s["rec"], fdate, hhmm, "BRP")
             if ss is None:
                 entry["attempts"] = entry.get("attempts", 0) + 1
                 log(f"  {key}: BRP not found (attempt {entry['attempts']})")
-                if entry["attempts"] >= 3:
+                if entry["attempts"] >= 3 and not live:
                     entry["done"] = True
                 save_state(state)
                 continue
             entry["files"]["BRP"] = ss
         brp_ss = entry["files"].get("BRP")
+        grew = False
+        if live:
+            for ftype, ss in list(entry["files"].items()):
+                rel = f"DATALOG/{s['rec']}/{fdate}_{hhmm}{ss}_{ftype}.edf"
+                dest = os.path.join(OUT, rel)
+                expected = remote_expected_size(rel)
+                if expected is None or (os.path.exists(dest) and os.path.getsize(dest) == expected):
+                    continue
+                if download(rel, dest):
+                    downloaded += 1
+                    grew = True
+                    log(f"  refreshed {rel} ({os.path.getsize(dest)} bytes)")
+                else:
+                    log(f"  failed refresh {rel}")
         for ftype in LATE + EARLY:
-            if ftype == "BRP" or ftype in entry["files"] or ftype in entry["missing"]:
+            if ftype == "BRP" or ftype in entry["files"]:
+                continue
+            if ftype in entry["missing"] and not grew:
                 continue
             ss = find_seconds(s["rec"], fdate, hhmm, ftype, near=brp_ss)
             if ss is None:
-                entry["missing"].append(ftype)
+                if ftype not in entry["missing"]:
+                    entry["missing"].append(ftype)
             else:
                 entry["files"][ftype] = ss
+                if ftype in entry["missing"]:
+                    entry["missing"].remove(ftype)
         all_ok = True
         for ftype, ss in entry["files"].items():
             rel = f"DATALOG/{s['rec']}/{fdate}_{hhmm}{ss}_{ftype}.edf"
@@ -274,8 +315,7 @@ def sync_datalog(sessions, state):
             else:
                 all_ok = False
                 log(f"  failed {rel}")
-        if all_ok:
-            entry["done"] = True
+        entry["done"] = all_ok and not live
         save_state(state)
     return downloaded
 
