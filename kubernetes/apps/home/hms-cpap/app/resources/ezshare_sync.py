@@ -81,7 +81,7 @@ def edf_expected_size(head):
         header_bytes = int(head[184:192])
         nrec = int(head[236:244])
         ns = int(head[252:256])
-        spr_off = 256 + ns * (16 + 80 + 8 + 8 + 8 + 8 + 8)
+        spr_off = 256 + ns * (16 + 80 + 8 + 8 + 8 + 8 + 8 + 80)
         spr = [int(head[spr_off + i * 8:spr_off + (i + 1) * 8]) for i in range(ns)]
     except ValueError:
         return None
