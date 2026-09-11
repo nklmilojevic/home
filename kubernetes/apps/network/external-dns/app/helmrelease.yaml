@@ -30,7 +30,6 @@ spec:
       - --zone-id-filter=01b2d7b9da413cc1d735fe22c719a73f
     triggerLoopOnEvent: true
     policy: sync
-    annotationPrefix: external-dns.alpha.kubernetes.io/
     sources:
       - crd
       - ingress
