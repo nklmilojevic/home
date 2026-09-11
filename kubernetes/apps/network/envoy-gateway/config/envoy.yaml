@@ -53,6 +53,7 @@ metadata:
   name: internal
   annotations:
     external-dns.alpha.kubernetes.io/target: &hostname ingress-int.nikola.wtf
+    external-dns.kubernetes.io/target: *hostname
     gatus.home-operations.com/endpoint: |-
       group: internal
 spec:
@@ -60,6 +61,7 @@ spec:
   infrastructure:
     annotations:
       external-dns.alpha.kubernetes.io/hostname: *hostname
+      external-dns.kubernetes.io/hostname: *hostname
       lbipam.cilium.io/ips: 10.40.0.51
   listeners:
     - name: http
@@ -86,6 +88,7 @@ metadata:
   name: external
   annotations:
     external-dns.alpha.kubernetes.io/target: &hostname ingress-ext.nikola.wtf
+    external-dns.kubernetes.io/target: *hostname
     gatus.home-operations.com/endpoint: |-
       group: external
   labels:
@@ -95,6 +98,7 @@ spec:
   infrastructure:
     annotations:
       external-dns.alpha.kubernetes.io/hostname: *hostname
+      external-dns.kubernetes.io/hostname: *hostname
       lbipam.cilium.io/ips: 10.40.0.50
   listeners:
     - name: http
@@ -173,6 +177,7 @@ metadata:
   name: https-redirect
   annotations:
     external-dns.alpha.kubernetes.io/controller: none
+    external-dns.kubernetes.io/controller: none
 spec:
   parentRefs:
     - name: external

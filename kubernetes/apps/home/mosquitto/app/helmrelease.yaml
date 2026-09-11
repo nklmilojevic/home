@@ -55,6 +55,7 @@ spec:
         annotations:
           lbipam.cilium.io/ips: "10.40.0.8"
           external-dns.alpha.kubernetes.io/hostname: mqtt.nikola.wtf
+          external-dns.kubernetes.io/hostname: mqtt.nikola.wtf
         ports:
           http:
             port: 1883
