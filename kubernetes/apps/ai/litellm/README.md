@@ -8,9 +8,10 @@ API authentication.
 
 - External API base: `https://litellm.nikola.wtf/v1` (internal gateway only).
 - Cluster API base: `http://litellm.ai.svc.cluster.local:4000/v1`.
-- Models: `chatgpt/gpt-5.6-sol` (ChatGPT subscription), `claude/fable-5-1`,
-  `claude/opus-5`, `claude/sonnet-5` and `claude/haiku-4-5` (Claude Max
-  subscription through the `meridian` bridge in this namespace, see below).
+- Models: `chatgpt/gpt-5.6-sol` and `chatgpt/gpt-6-astra` (ChatGPT
+  subscription), `claude/fable-5-1`, `claude/opus-5`, `claude/sonnet-5` and
+  `claude/haiku-4-5` (Claude Max subscription through the `meridian` bridge in
+  this namespace, see below).
 - Authentication: the master key from 1Password item `litellm`, field `master_key`.
   Create a strong random `sk-` prefixed value before deploying. This protects the
   proxy; it is **not** an OpenAI API key. Do not commit it.
