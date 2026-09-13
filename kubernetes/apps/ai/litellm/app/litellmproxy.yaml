@@ -1,0 +1,108 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmproxy_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMProxy
+metadata:
+  name: litellm
+spec:
+  # renovate: datasource=docker depName=ghcr.io/berriai/litellm
+  image: ghcr.io/berriai/litellm:v1.100.1@sha256:a3715fa7ad8387941ab697259bd2881d68931657247a41984f90fae6d11c62bf
+  # One replica owns the subscription's refresh tokens; do not scale this out.
+  replicas: 1
+  applyMode: file
+  generalSettings:
+    master_key: os.environ/LITELLM_MASTER_KEY
+  routerSettings:
+    routing_strategy: simple-shuffle
+    redis_host: os.environ/REDIS_HOST
+    redis_port: os.environ/REDIS_PORT
+    num_retries: 0
+    timeout: 600
+  litellmSettings:
+    success_callback:
+      - prometheus
+    prometheus_adapter: true
+    cache: true
+    cache_params:
+      type: redis
+      host: os.environ/REDIS_HOST
+      port: os.environ/REDIS_PORT
+      ttl: 3600
+    drop_params: true
+    set_verbose: false
+  env:
+    - name: TZ
+      value: Europe/Belgrade
+    - name: HOME
+      value: /tmp
+    - name: LITELLM_LOG
+      value: INFO
+    - name: LITELLM_MODE
+      value: PRODUCTION
+    - name: CHATGPT_TOKEN_DIR
+      value: /var/lib/litellm/chatgpt
+    - name: REDIS_HOST
+      value: redis-litellm.database.svc.cluster.local
+    - name: REDIS_PORT
+      value: "6379"
+    - name: LITELLM_MASTER_KEY
+      valueFrom:
+        secretKeyRef:
+          name: litellm
+          key: LITELLM_MASTER_KEY
+  automountServiceAccountToken: false
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+  # The operator uses RollingUpdate without a strategy override. Keep the surge
+  # pod on the existing pod's node so the RWO token PVC cannot deadlock a rollout.
+  # Self-affinity permits the first pod to schedule when no matching pod exists.
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: litellm
+              app.kubernetes.io/instance: litellm
+          topologyKey: kubernetes.io/hostname
+  livenessProbe:
+    httpGet:
+      path: /health/liveliness
+      port: 4000
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 12
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 2Gi
+  service:
+    type: ClusterIP
+    port: 4000
+  route:
+    hostnames:
+      - litellm.nikola.wtf
+    parentRefs:
+      - name: internal
+        namespace: network
+        sectionName: https
+  volumes:
+    - name: chatgpt-tokens
+      persistentVolumeClaim:
+        claimName: litellm-chatgpt
+  volumeMounts:
+    - name: chatgpt-tokens
+      mountPath: /var/lib/litellm

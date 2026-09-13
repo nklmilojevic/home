@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: redis-litellm
+  namespace: database
+spec:
+  interval: 30m
+  timeout: 60s
+  url: oci://ghcr.io/ot-container-kit/charts/redis
+  ref:
+    tag: 0.16.10
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy

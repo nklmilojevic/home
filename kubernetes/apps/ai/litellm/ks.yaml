@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app litellm
+spec:
+  components:
+    - ../../../../components/kopiur/volume
+    - ../../../../components/kopiur/backup
+  targetNamespace: ai
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: litellm-operator
+      namespace: ai
+    - name: redis-litellm
+      namespace: database
+    - name: miroir-config
+      namespace: miroir-system
+    - name: external-secrets-stores
+      namespace: security
+  path: ./kubernetes/apps/ai/litellm/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+    namespace: flux-system
+  wait: false
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  postBuild:
+    substitute:
+      APP: *app
+      KOPIUR_CLAIM: litellm-chatgpt
+      KOPIUR_CAPACITY: 1Gi
+      APP_UID: "1000"
+      APP_GID: "1000"

@@ -1,0 +1,41 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: redis-litellm
+  namespace: database
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: redis-litellm
+  values:
+    redisStandalone:
+      resources:
+        requests:
+          cpu: 25m
+          memory: 64Mi
+        limits:
+          memory: 256Mi
+    # Disposable response cache, not application data. Null removes the chart's
+    # default PVC rather than merging its volumeClaimTemplate into an empty map.
+    storageSpec: null
+    externalConfig:
+      enabled: true
+      data: |
+        maxmemory 192mb
+        maxmemory-policy allkeys-lru
+        save ""
+        appendonly no
+    redisExporter:
+      enabled: true
+      image: quay.io/oliver006/redis_exporter
+      # renovate: datasource=docker depName=quay.io/oliver006/redis_exporter
+      tag: v1.91.1
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          memory: 64Mi

@@ -12,3 +12,5 @@ resources:
   - ./ha-mcp/ks.yaml
   - ./kubesearch-mcp/ks.yaml
   - ./hermes/ks.yaml
+  - ./litellm-operator/ks.yaml
+  - ./litellm/ks.yaml

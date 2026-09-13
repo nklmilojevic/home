@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: litellm-operator
+  namespace: ai
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: litellm-operator
+  # Remediation is injected centrally; CRDs must also track chart upgrades.
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
+  values:
+    controller:
+      leaderElection:
+        enabled: true
+    webhook:
+      enabled: true
+    # No LLMKube installation in this cluster.
+    llmkube:
+      autoRegister: false
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 128Mi
