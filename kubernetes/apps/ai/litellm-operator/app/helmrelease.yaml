@@ -24,9 +24,13 @@ spec:
     # No LLMKube installation in this cluster.
     llmkube:
       autoRegister: false
+    # The reference's 128Mi limit OOMs while warming this cluster's caches.
+    env:
+      - name: GOMEMLIMIT
+        value: 384MiB
     resources:
       requests:
         cpu: 10m
-        memory: 64Mi
-      limits:
         memory: 128Mi
+      limits:
+        memory: 512Mi
