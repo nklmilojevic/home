@@ -23,4 +23,3 @@ resources:
   - ./appdaemon/ks.yaml
   - ./asterisk/ks.yaml
   - ./hms-cpap/ks.yaml
-  - ./bambuddy/ks.yaml
