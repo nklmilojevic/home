@@ -2,7 +2,10 @@
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
 # Claude on the Max subscription, via the Meridian Agent SDK bridge in this
 # namespace. Meridian speaks the Anthropic Messages API, so LiteLLM treats it as
-# an `anthropic/` upstream with a private base URL.
+# an `anthropic/` upstream with a private base URL. The x-meridian-agent header
+# is required: Meridian's LiteLLM user-agent heuristic outranks
+# MERIDIAN_DEFAULT_AGENT, and only the pi adapter resumes sessions from the
+# {"session_id": ...} envelope bastion stamps into metadata.user_id.
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
@@ -14,6 +17,9 @@ spec:
     model: anthropic/claude-opus-5
     apiBase: http://meridian.ai.svc.cluster.local:3456
     apiKey: os.environ/MERIDIAN_API_KEY
+    additional:
+      extra_headers:
+        x-meridian-agent: pi
   info:
     mode: chat
     maxInputTokens: 1000000
@@ -34,6 +40,9 @@ spec:
     model: anthropic/claude-fable-5-1
     apiBase: http://meridian.ai.svc.cluster.local:3456
     apiKey: os.environ/MERIDIAN_API_KEY
+    additional:
+      extra_headers:
+        x-meridian-agent: pi
   info:
     mode: chat
     # Fable 1M is included on Max, like Opus.
@@ -55,6 +64,9 @@ spec:
     model: anthropic/claude-sonnet-5
     apiBase: http://meridian.ai.svc.cluster.local:3456
     apiKey: os.environ/MERIDIAN_API_KEY
+    additional:
+      extra_headers:
+        x-meridian-agent: pi
   info:
     mode: chat
     # Sonnet 1M needs Extra Usage on every plan; Meridian serves it at 200k.
@@ -76,6 +88,9 @@ spec:
     model: anthropic/claude-haiku-4-5-20251001
     apiBase: http://meridian.ai.svc.cluster.local:3456
     apiKey: os.environ/MERIDIAN_API_KEY
+    additional:
+      extra_headers:
+        x-meridian-agent: pi
   info:
     mode: chat
     maxInputTokens: 200000

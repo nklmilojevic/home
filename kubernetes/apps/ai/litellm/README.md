@@ -83,7 +83,9 @@ models are ordinary `anthropic/` entries with that `apiBase`.
 - Proxy-to-bridge auth: the 1Password item `litellm`, field `meridian_api_key`.
   Generate a strong random value; LiteLLM sends it as the Anthropic API key and
   Meridian requires it on every request.
-- Meridian runs the `pi` adapter in passthrough mode, so tool calls come back
+- Every `claude/*` model sends `x-meridian-agent: pi`, because Meridian's
+  LiteLLM user-agent heuristic would otherwise pick its generic passthrough
+  adapter. The `pi` adapter runs in passthrough mode, so tool calls come back
   to the client and are executed there. Bastion stamps each request's OpenAI
   `user` field with `{"session_id": <pi session>}`; LiteLLM maps that onto
   Anthropic `metadata.user_id`, which Meridian uses to resume the SDK session
