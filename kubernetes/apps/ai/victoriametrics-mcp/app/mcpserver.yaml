@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/toolhive.stacklok.dev/mcpserver_v1beta1.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServer
+metadata:
+  name: victoriametrics-mcp
+spec:
+  groupRef:
+    name: mcp-tools
+  image: ghcr.io/victoriametrics/mcp-victoriametrics:v1.20.2@sha256:bcbf84f945d6efb03fb8b2d2ccc3294420dccdc0b445752dce96f02619416dfe
+  transport: streamable-http
+  mcpPort: 8080
+  env:
+    - name: VM_INSTANCE_ENTRYPOINT
+      value: http://vmsingle-vmetrics-victoria-metrics-k8s-stack.o11y.svc.cluster.local:8428
+    - name: VM_INSTANCE_TYPE
+      value: single
+    - name: MCP_SERVER_MODE
+      value: http
+    - name: MCP_LISTEN_ADDR
+      value: 0.0.0.0:8080
+    - name: MCP_LOG_FORMAT
+      value: json
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      memory: 192Mi
+  podTemplateSpec:
+    spec:
+      containers:
+        - name: mcp
+          volumeMounts:
+            - name: tmpfs
+              mountPath: /tmp
+      volumes:
+        - name: tmpfs
+          emptyDir:
+            sizeLimit: 64Mi
