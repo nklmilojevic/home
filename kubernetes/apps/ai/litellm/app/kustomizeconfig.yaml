@@ -1,0 +1,10 @@
+---
+# Make Kustomize rewrite the generated ConfigMap name in the operator CR too.
+nameReference:
+  - kind: ConfigMap
+    version: v1
+    fieldSpecs:
+      - group: litellm.home-operations.com
+        version: v1alpha1
+        kind: LiteLLMProxy
+        path: spec/volumes/configMap/name

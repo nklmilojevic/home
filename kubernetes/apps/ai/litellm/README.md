@@ -1,8 +1,10 @@
 # LiteLLM — ChatGPT subscription
 
-LiteLLM is managed by `litellm-operator` in `ai`, with a disposable Redis cache
-in `database`. Models are `LiteLLMModel` resources in `app/models/`; no PostgreSQL,
+LiteLLM is managed by `litellm-operator` in `ai`, with disposable Redis router
+state in `database`. Models are `LiteLLMModel` resources in `app/models/`; no PostgreSQL,
 API-billed OpenAI fallback, virtual keys, or DB-backed usage tracking is configured.
+The database-backed admin UI cannot log in in this mode; the master key is for
+API authentication.
 
 - External API base: `https://litellm.nikola.wtf/v1` (internal gateway only).
 - Cluster API base: `http://litellm.ai.svc.cluster.local:4000/v1`.
@@ -31,9 +33,9 @@ describes the supported device flow.
    read -rsp 'LiteLLM master key: ' LITELLM_MASTER_KEY; echo
    printf 'header = "Authorization: Bearer %s"\n' "$LITELLM_MASTER_KEY" |
      curl --config - --fail-with-body --max-time 950 \
-       https://litellm.nikola.wtf/v1/responses \
+       https://litellm.nikola.wtf/v1/chat/completions \
        -H 'Content-Type: application/json' \
-       -d '{"model":"chatgpt/gpt-5.6-sol","input":"Reply with OK only."}'
+       -d '{"model":"chatgpt/gpt-5.6-sol","messages":[{"role":"user","content":"Reply with OK only."}],"stream":false}'
    unset LITELLM_MASTER_KEY
    ```
 
@@ -53,9 +55,17 @@ describes the supported device flow.
    request. Do not send concurrent first-login requests or automatically retry
    failed logins: they can start competing device flows.
 
-Responses API is preferred; supported models also accept `/v1/chat/completions`
-through LiteLLM's Responses bridge. Subscription models do not accept token-limit
-fields; LiteLLM strips them. `/v1/models` proves configuration, not account access.
+Use `/v1/chat/completions` for clients such as hms-cpap; the compatibility patch
+below repairs its non-streaming Responses bridge. Native `/v1/responses` requests
+must use an `input` **list**, not a string, with this ChatGPT backend; prefer
+`stream: true` there because this patch does not fix the native non-streaming SDK
+contract. Subscription models do not accept token-limit fields; LiteLLM strips
+them. `/v1/models` proves configuration, not successful inference.
+
+For hms-cpap's OpenAI-compatible provider, set Endpoint to
+`http://litellm.ai.svc.cluster.local:4000` **without** `/v1` or a trailing slash
+(the client appends `/v1/chat/completions`), Model to `chatgpt/gpt-5.6-sol`, and
+API Key to the master key.
 
 ## Persistence and maintenance
 
@@ -72,9 +82,11 @@ same node to avoid RWO multi-attach deadlocks, but the old and new processes can
 briefly overlap. Avoid rollouts during initial login; simultaneous token refresh
 is an upstream limitation, not solved by the single steady-state replica.
 
-Redis contains only response-cache/router state and needs no PVC or backups.
-Responses expire after one hour. Authenticated Prometheus metrics are scraped by
-the ServiceMonitor; VictoriaMetrics converts these automatically.
+Redis contains only disposable router state and needs no PVC or backups.
+Response caching is disabled: the ChatGPT provider returns a streaming iterator
+internally, which LiteLLM's response cache cannot serialize. Authenticated
+Prometheus metrics are scraped by the ServiceMonitor; VictoriaMetrics converts
+these automatically.
 
 Provider/model changes belong in Git. Commit, push and run `just kube reconcile`.
 The operator renders models into the proxy config and rolls the deployment on

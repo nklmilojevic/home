@@ -7,3 +7,9 @@ resources:
   - ./litellmproxy.yaml
   - ./servicemonitor.yaml
   - ./models
+configMapGenerator:
+  - name: litellm-chatgpt-patch
+    files:
+      - transformation.py=./patches/chatgpt-transformation.py.txt
+configurations:
+  - ./kustomizeconfig.yaml

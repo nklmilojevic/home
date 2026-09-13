@@ -1,0 +1,128 @@
+"""Executed via run.sh inside the pinned LiteLLM image; no files are changed there."""
+import asyncio
+import copy
+import hashlib
+import sys
+import types
+import unittest
+from unittest.mock import MagicMock
+
+import litellm
+from litellm.llms.openai.responses.transformation import OpenAIResponsesAPIConfig
+
+# PATCH_SOURCE is supplied over stdin by run.sh, never downloaded by the pod.
+assert hashlib.sha256(PATCH_SOURCE.encode()).hexdigest() == "fd9a9511e18820bc0b594286446e401f8653d8c5997a304dc110dcae5d8028af"
+module = types.ModuleType("litellm.llms.chatgpt.responses._regression_patch")
+module.__package__ = "litellm.llms.chatgpt.responses"
+exec(compile(PATCH_SOURCE, "upstream-chatgpt-transformation.py", "exec"), module.__dict__)
+PatchedConfig = module.ChatGPTResponsesAPIConfig
+MODEL = "chatgpt/gpt-5.6-sol"
+
+
+def logger():
+    result = MagicMock()
+    result.model_call_details = {}
+    return result
+
+
+def item(text="OK"):
+    return {"id": "msg_fixture", "type": "message", "role": "assistant", "status": "completed", "phase": "final_answer", "content": [{"type": "output_text", "text": text, "annotations": [], "logprobs": []}]}
+
+
+def done(text="OK", index=0):
+    return {"type": "response.output_item.done", "output_index": index, "item": item(text)}
+
+
+def terminal(event_type="response.completed", output=None):
+    return {"type": event_type, "response": {"id": "resp_fixture", "object": "response", "created_at": 1700000000, "status": event_type.split(".")[1], "model": "gpt-5.6-sol", "output": [] if output is None else output}}
+
+
+def feed(config, log, event):
+    return config.transform_streaming_response(model=MODEL, parsed_chunk=copy.deepcopy(event), logging_obj=log)
+
+
+def output_text(event):
+    output = event.model_dump()["response"]["output"]
+    return "".join(c["text"] for i in output for c in i.get("content", []) if c["type"] == "output_text")
+
+
+class RecoveryTests(unittest.TestCase):
+    def setUp(self):
+        self.config = PatchedConfig()
+        self.log = logger()
+
+    def test_stock_behavior_loses_output(self):
+        # Exercise the exact inherited method used before PR #38719, even after
+        # the mounted patch is deployed. This is the negative control.
+        self.config.transform_streaming_response = types.MethodType(OpenAIResponsesAPIConfig.transform_streaming_response, self.config)
+        feed(self.config, self.log, done())
+        self.assertEqual(output_text(feed(self.config, self.log, terminal())), "")
+
+    def test_patch_recovers_real_codex_item_shape(self):
+        feed(self.config, self.log, done())
+        self.assertEqual(output_text(feed(self.config, self.log, terminal())), "OK")
+        self.assertFalse(any(k.startswith("_chatgpt_") for k in self.log.model_call_details))
+
+    def test_existing_terminal_output_wins(self):
+        feed(self.config, self.log, done("partial"))
+        self.assertEqual(output_text(feed(self.config, self.log, terminal(output=[item("authoritative")]))), "authoritative")
+
+    def test_interleaved_requests_do_not_leak(self):
+        other = logger()
+        feed(self.config, self.log, done("A"))
+        feed(self.config, other, done("B"))
+        self.assertEqual(output_text(feed(self.config, other, terminal())), "B")
+        self.assertEqual(output_text(feed(self.config, self.log, terminal())), "A")
+        self.assertEqual(output_text(feed(self.config, logger(), terminal())), "")
+
+    def test_failure_and_incomplete_clean_up_without_recovery(self):
+        for kind in ["response.failed", "response.incomplete"]:
+            with self.subTest(kind=kind):
+                log = logger()
+                feed(self.config, log, done("partial"))
+                self.assertEqual(output_text(feed(self.config, log, terminal(kind))), "")
+                self.assertFalse(any(k.startswith("_chatgpt_") for k in log.model_call_details))
+
+    def test_text_only_recovery(self):
+        feed(self.config, self.log, {"type": "response.output_text.done", "output_index": 0, "content_index": 0, "item_id": "msg_fixture", "text": "text-only"})
+        self.assertEqual(output_text(feed(self.config, self.log, terminal())), "text-only")
+
+    def test_output_items_override_text_fallback(self):
+        feed(self.config, self.log, {"type": "response.output_text.done", "output_index": 0, "content_index": 0, "item_id": "msg_fixture", "text": "fallback"})
+        feed(self.config, self.log, done("item"))
+        self.assertEqual(output_text(feed(self.config, self.log, terminal())), "item")
+
+    def test_output_indexes_are_sorted(self):
+        feed(self.config, self.log, done("B", 1))
+        feed(self.config, self.log, done("A", 0))
+        self.assertEqual(output_text(feed(self.config, self.log, terminal())), "AB")
+
+
+async def live_tests():
+    # Only this test process uses the patched class. The running proxy and its
+    # installed module are untouched. OAuth is reused, never printed.
+    litellm.ChatGPTResponsesAPIConfig = PatchedConfig
+    litellm.drop_params = True
+    litellm.cache = None
+    litellm.success_callback = []
+    messages = [{"role": "user", "content": "Connectivity test. Reply with OK only."}]
+    for label, kwargs in [("default non-streaming", {}), ("hms-cpap non-streaming", {"stream": False, "temperature": 0.3, "max_completion_tokens": 2048})]:
+        response = await litellm.acompletion(model=MODEL, messages=messages, timeout=60, **kwargs)
+        text = response.choices[0].message.content
+        assert text and "OK" in text, (label, text)
+        print("PASS live", label, repr(text), flush=True)
+    stream = await litellm.acompletion(model=MODEL, messages=messages, stream=True, timeout=60)
+    text = ""
+    async for chunk in stream:
+        if chunk.choices:
+            text += chunk.choices[0].delta.content or ""
+    assert "OK" in text, text
+    print("PASS live streaming", repr(text), flush=True)
+
+
+suite = unittest.defaultTestLoader.loadTestsFromTestCase(RecoveryTests)
+result = unittest.TextTestRunner(verbosity=2).run(suite)
+if not result.wasSuccessful():
+    raise SystemExit(1)
+if "--live" in sys.argv:
+    asyncio.run(live_tests())

@@ -5,6 +5,8 @@ kind: LiteLLMProxy
 metadata:
   name: litellm
 spec:
+  # Held by .renovate/allowedVersions.json5 while the v1.100.1-specific module
+  # below is mounted. Remove the override and hold together after upstream fixes.
   # renovate: datasource=docker depName=ghcr.io/berriai/litellm
   image: ghcr.io/berriai/litellm:v1.100.1@sha256:a3715fa7ad8387941ab697259bd2881d68931657247a41984f90fae6d11c62bf
   # One replica owns the subscription's refresh tokens; do not scale this out.
@@ -22,12 +24,9 @@ spec:
     success_callback:
       - prometheus
     prometheus_adapter: true
-    cache: true
-    cache_params:
-      type: redis
-      host: os.environ/REDIS_HOST
-      port: os.environ/REDIS_PORT
-      ttl: 3600
+    # ChatGPT returns a streaming iterator internally even for non-streaming
+    # requests; the response cache cannot JSON-serialize it. Router Redis stays.
+    cache: false
     drop_params: true
     set_verbose: false
   env:
@@ -100,9 +99,18 @@ spec:
         namespace: network
         sectionName: https
   volumes:
+    - name: chatgpt-patch
+      configMap:
+        name: litellm-chatgpt-patch
     - name: chatgpt-tokens
       persistentVolumeClaim:
         claimName: litellm-chatgpt
   volumeMounts:
+    # Upstream PR #38719; exact module for the pinned Python 3.13 image.
+    # Hashed ConfigMap names trigger a rollout whenever the patch changes.
+    - name: chatgpt-patch
+      mountPath: /app/.venv/lib/python3.13/site-packages/litellm/llms/chatgpt/responses/transformation.py
+      subPath: transformation.py
+      readOnly: true
     - name: chatgpt-tokens
       mountPath: /var/lib/litellm
