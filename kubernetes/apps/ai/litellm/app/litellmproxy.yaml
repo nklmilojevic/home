@@ -49,11 +49,6 @@ spec:
         secretKeyRef:
           name: litellm
           key: LITELLM_MASTER_KEY
-    - name: MERIDIAN_API_KEY
-      valueFrom:
-        secretKeyRef:
-          name: litellm
-          key: MERIDIAN_API_KEY
   automountServiceAccountToken: false
   podSecurityContext:
     runAsNonRoot: true

@@ -9,9 +9,7 @@ API authentication.
 - External API base: `https://litellm.nikola.wtf/v1` (internal gateway only).
 - Cluster API base: `http://litellm.ai.svc.cluster.local:4000/v1`.
 - Models: `chatgpt/gpt-5.6-sol` and `chatgpt/gpt-6-astra` (ChatGPT
-  subscription), `claude/fable-5-1`, `claude/opus-5`, `claude/sonnet-5` and
-  `claude/haiku-4-5` (Claude Max subscription through the `meridian` bridge in
-  this namespace, see below).
+  subscription). Claude is not served here; see "Claude through Meridian".
 - Authentication: the master key from 1Password item `litellm`, field `master_key`.
   Create a strong random `sk-` prefixed value before deploying. This protects the
   proxy; it is **not** an OpenAI API key. Do not commit it.
@@ -75,26 +73,29 @@ API Key to the master key.
 LiteLLM has no provider for a Claude subscription; issues BerriAI/litellm#30508
 and #39758 are open. The `meridian` app (`kubernetes/apps/ai/meridian/`) fills
 the gap: it runs the official Claude Agent SDK and exposes it as an Anthropic
-Messages endpoint at `http://meridian.ai.svc.cluster.local:3456`. The `claude/*`
-models are ordinary `anthropic/` entries with that `apiBase`.
+Messages endpoint at `http://meridian.ai.svc.cluster.local:3456`.
+
+Clients talk to Meridian directly rather than through this proxy. Routing
+Claude through LiteLLM was tried and dropped: the OpenAI-to-Anthropic
+translation loses thinking blocks and Fable's adaptive-thinking constraints,
+and Meridian's Pi support (adapter detection, session affinity, prompt
+scrubbing) assumes Pi as the direct client. Bastion uses
+`pi-meridian-extension`, which registers a `meridian/*` provider in Pi.
 
 - Credential: the long-lived `claude setup-token` value in the 1Password item
   `bastion`, field `CLAUDE_CODE_OAUTH_TOKEN`. Meridian passes it to the SDK; no
   browser login and no credential volume in the cluster.
-- Proxy-to-bridge auth: the 1Password item `litellm`, field `meridian_api_key`.
-  Generate a strong random value; LiteLLM sends it as the Anthropic API key and
-  Meridian requires it on every request.
-- Every `claude/*` model sends `x-meridian-agent: pi`, because Meridian's
-  LiteLLM user-agent heuristic would otherwise pick its generic passthrough
-  adapter. The `pi` adapter runs in passthrough mode, so tool calls come back
-  to the client and are executed there. Bastion stamps each request's OpenAI
-  `user` field with `{"session_id": <pi session>}`; LiteLLM maps that onto
-  Anthropic `metadata.user_id`, which Meridian uses to resume the SDK session
-  across turns instead of replaying history. The session store is an emptyDir,
-  so a Meridian restart costs one replay per live conversation.
-- Anthropic may meter third-party harness traffic on Pro/Max as Extra Usage.
-  Meridian's adapters are built to stay within the Agent SDK allowance; a
-  `400 You're out of extra usage` response means that classification changed.
+- Client auth: the 1Password item `litellm`, field `meridian_api_key`, sent by
+  clients as `MERIDIAN_API_KEY`. Not an Anthropic key.
+- Anthropic meters third-party harness traffic on Pro/Max as Extra Usage, and
+  Pi's default system prompt trips that classifier on tool-bearing requests
+  (`400 Third-party apps now draw from your extra usage`). Two idempotent
+  layers rewrite Pi's identity line: `pi-meridian-extension` on the client and
+  `@rynfar/meridian-plugin-pi-scrub`, loaded on Meridian via `MERIDIAN_PLUGINS`.
+  If the error returns, check `GET /plugins` on Meridian shows `pi-scrub`
+  active, then re-measure before assuming the prompt is fine.
+- Meridian's session store is an emptyDir, so a restart costs one history
+  replay per live conversation.
   Opus 1M is included on Max; Sonnet is served at 200k because its 1M tier is
   Extra Usage on every plan.
 

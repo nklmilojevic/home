@@ -39,13 +39,18 @@ spec:
               MERIDIAN_HOST: 0.0.0.0
               MERIDIAN_PORT: &port 3456
               MERIDIAN_DEFAULT_PROFILE: nikola
-              # Pi is the real client behind LiteLLM. The pi adapter runs in
-              # passthrough (tool_use goes back to Pi) and resumes sessions from
-              # the {"session_id": ...} envelope bastion stamps into metadata.user_id.
+              # Bastion's Pi talks to Meridian directly through pi-meridian-extension,
+              # which tags requests x-meridian-agent: pi and carries the session id.
+              # The pi adapter runs in passthrough, so tool_use goes back to Pi.
               MERIDIAN_DEFAULT_AGENT: pi
               MERIDIAN_PASSTHROUGH: "1"
               MERIDIAN_WORKDIR: /tmp
               MERIDIAN_NO_UPDATE_CHECK: "1"
+              # Pi's default prompt identifies itself as a coding-agent harness and
+              # Anthropic meters that as Extra Usage. The official scrub plugin
+              # replaces the identity line before the SDK sees it. Installed by
+              # the image entrypoint into the emptyDir home on every start.
+              MERIDIAN_PLUGINS: "@rynfar/meridian-plugin-pi-scrub@0.2.0"
             envFrom:
               - secretRef:
                   name: meridian
