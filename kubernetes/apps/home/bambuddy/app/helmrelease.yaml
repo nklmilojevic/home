@@ -27,10 +27,10 @@ spec:
           annotations:
             k8s.v1.cni.cncf.io/networks: |
               [{
-                "name":"multus-iot",
+                "name":"multus-host",
                 "namespace": "network",
-                "ips": ["10.50.0.243/24"],
-                "mac": "02:50:00:00:00:f3"
+                "ips": ["10.5.0.243/24"],
+                "mac": "02:05:00:00:00:f3"
               }]
         containers:
           app:

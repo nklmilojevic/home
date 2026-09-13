@@ -1,7 +1,7 @@
 # Bambuddy + headless Bambu Studio
 
 - UI: <https://bambuddy.nikola.wtf> (internal gateway).
-- Bambuddy IoT interface: `10.50.0.243/24`, MAC `02:50:00:00:00:f3`.
+- Bambuddy LAN interface: `multus-host`, `10.5.0.243/24`, MAC `02:05:00:00:00:f3`.
 - Bambu Studio API: `http://bambuddy-slicer.home.svc.cluster.local:3000`.
   ClusterIP only; deliberately no HTTPRoute or LoadBalancer for the slicer.
 - Both images are pinned to the matching stable Bambuddy 1.2.5.5 release.
@@ -46,8 +46,9 @@ can interrupt an active slice. Slicer scratch is capped at 10Gi; its memory
 limit is 4Gi, which may need increasing for particularly complex models.
 
 Automatic discovery/virtual-printer emulation is not required for the
-browser-to-printer workflow. Add the P1S by IP. The dedicated IoT interface
-provides direct printer access; the slicer needs no IoT interface.
+browser-to-printer workflow. Add the P1S by IP. The printer is on the
+`10.5.0.0/24` LAN, not the IoT network. The `multus-host` attachment provides
+LAN access without Kubernetes `hostNetwork`; the slicer stays on pod networking.
 
 Upstream main-branch documentation can describe features newer than the
 pinned stable release. Keep the application and slicer images compatible
