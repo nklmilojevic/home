@@ -8,7 +8,9 @@ API authentication.
 
 - External API base: `https://litellm.nikola.wtf/v1` (internal gateway only).
 - Cluster API base: `http://litellm.ai.svc.cluster.local:4000/v1`.
-- Model: `chatgpt/gpt-5.6-sol`.
+- Models: `chatgpt/gpt-5.6-sol` (ChatGPT subscription), `claude/fable-5-1`,
+  `claude/opus-5`, `claude/sonnet-5` and `claude/haiku-4-5` (Claude Max
+  subscription through the `meridian` bridge in this namespace, see below).
 - Authentication: the master key from 1Password item `litellm`, field `master_key`.
   Create a strong random `sk-` prefixed value before deploying. This protects the
   proxy; it is **not** an OpenAI API key. Do not commit it.
@@ -66,6 +68,32 @@ For hms-cpap's OpenAI-compatible provider, set Endpoint to
 `http://litellm.ai.svc.cluster.local:4000` **without** `/v1` or a trailing slash
 (the client appends `/v1/chat/completions`), Model to `chatgpt/gpt-5.6-sol`, and
 API Key to the master key.
+
+## Claude through Meridian
+
+LiteLLM has no provider for a Claude subscription; issues BerriAI/litellm#30508
+and #39758 are open. The `meridian` app (`kubernetes/apps/ai/meridian/`) fills
+the gap: it runs the official Claude Agent SDK and exposes it as an Anthropic
+Messages endpoint at `http://meridian.ai.svc.cluster.local:3456`. The `claude/*`
+models are ordinary `anthropic/` entries with that `apiBase`.
+
+- Credential: the long-lived `claude setup-token` value in the 1Password item
+  `bastion`, field `CLAUDE_CODE_OAUTH_TOKEN`. Meridian passes it to the SDK; no
+  browser login and no credential volume in the cluster.
+- Proxy-to-bridge auth: the 1Password item `litellm`, field `meridian_api_key`.
+  Generate a strong random value; LiteLLM sends it as the Anthropic API key and
+  Meridian requires it on every request.
+- Meridian runs the `pi` adapter in passthrough mode, so tool calls come back
+  to the client and are executed there. Bastion stamps each request's OpenAI
+  `user` field with `{"session_id": <pi session>}`; LiteLLM maps that onto
+  Anthropic `metadata.user_id`, which Meridian uses to resume the SDK session
+  across turns instead of replaying history. The session store is an emptyDir,
+  so a Meridian restart costs one replay per live conversation.
+- Anthropic may meter third-party harness traffic on Pro/Max as Extra Usage.
+  Meridian's adapters are built to stay within the Agent SDK allowance; a
+  `400 You're out of extra usage` response means that classification changed.
+  Opus 1M is included on Max; Sonnet is served at 200k because its 1M tier is
+  Extra Usage on every plan.
 
 ## Persistence and maintenance
 

@@ -14,3 +14,4 @@ resources:
   - ./hermes/ks.yaml
   - ./litellm-operator/ks.yaml
   - ./litellm/ks.yaml
+  - ./meridian/ks.yaml

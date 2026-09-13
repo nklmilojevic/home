@@ -1,0 +1,85 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
+# Claude on the Max subscription, via the Meridian Agent SDK bridge in this
+# namespace. Meridian speaks the Anthropic Messages API, so LiteLLM treats it as
+# an `anthropic/` upstream with a private base URL.
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: claude-opus-5
+spec:
+  proxyRef: litellm
+  modelName: claude/opus-5
+  params:
+    model: anthropic/claude-opus-5
+    apiBase: http://meridian.ai.svc.cluster.local:3456
+    apiKey: os.environ/MERIDIAN_API_KEY
+  info:
+    mode: chat
+    maxInputTokens: 1000000
+    maxOutputTokens: 64000
+    supportsFunctionCalling: true
+    supportsVision: true
+    supportsPromptCaching: true
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: claude-fable-5-1
+spec:
+  proxyRef: litellm
+  modelName: claude/fable-5-1
+  params:
+    model: anthropic/claude-fable-5-1
+    apiBase: http://meridian.ai.svc.cluster.local:3456
+    apiKey: os.environ/MERIDIAN_API_KEY
+  info:
+    mode: chat
+    # Fable 1M is included on Max, like Opus.
+    maxInputTokens: 1000000
+    maxOutputTokens: 64000
+    supportsFunctionCalling: true
+    supportsVision: true
+    supportsPromptCaching: true
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: claude-sonnet-5
+spec:
+  proxyRef: litellm
+  modelName: claude/sonnet-5
+  params:
+    model: anthropic/claude-sonnet-5
+    apiBase: http://meridian.ai.svc.cluster.local:3456
+    apiKey: os.environ/MERIDIAN_API_KEY
+  info:
+    mode: chat
+    # Sonnet 1M needs Extra Usage on every plan; Meridian serves it at 200k.
+    maxInputTokens: 200000
+    maxOutputTokens: 64000
+    supportsFunctionCalling: true
+    supportsVision: true
+    supportsPromptCaching: true
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: claude-haiku-4-5
+spec:
+  proxyRef: litellm
+  modelName: claude/haiku-4-5
+  params:
+    model: anthropic/claude-haiku-4-5-20251001
+    apiBase: http://meridian.ai.svc.cluster.local:3456
+    apiKey: os.environ/MERIDIAN_API_KEY
+  info:
+    mode: chat
+    maxInputTokens: 200000
+    maxOutputTokens: 16384
+    supportsFunctionCalling: true
+    supportsVision: true
+    supportsPromptCaching: true

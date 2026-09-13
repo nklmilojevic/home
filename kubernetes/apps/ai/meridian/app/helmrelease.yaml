@@ -1,0 +1,93 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app meridian
+  namespace: ai
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: meridian
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+    controllers:
+      meridian:
+        # One replica: the Agent SDK refreshes the subscription token in-process,
+        # and two concurrent refreshers race each other.
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          automountServiceAccountToken: false
+        containers:
+          app:
+            image:
+              repository: ghcr.io/rynfar/meridian
+              tag: 1.71.1@sha256:6c9f69d000a030838619ab26d270f2491361bd30bcac34d60c95d2e7ebb78fda
+            env:
+              TZ: Europe/Belgrade
+              MERIDIAN_HOST: 0.0.0.0
+              MERIDIAN_PORT: &port 3456
+              MERIDIAN_DEFAULT_PROFILE: nikola
+              # Pi is the real client behind LiteLLM. The pi adapter runs in
+              # passthrough (tool_use goes back to Pi) and resumes sessions from
+              # the {"session_id": ...} envelope bastion stamps into metadata.user_id.
+              MERIDIAN_DEFAULT_AGENT: pi
+              MERIDIAN_PASSTHROUGH: "1"
+              MERIDIAN_WORKDIR: /tmp
+              MERIDIAN_NO_UPDATE_CHECK: "1"
+            envFrom:
+              - secretRef:
+                  name: meridian
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  initialDelaySeconds: 20
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 6
+              readiness: *probe
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    persistence:
+      # Sessions, SDK state and the isolated CLAUDE_CONFIG_DIR are all disposable;
+      # the credential itself arrives through the environment.
+      home:
+        type: emptyDir
+        globalMounts:
+          - path: /home/claude
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
