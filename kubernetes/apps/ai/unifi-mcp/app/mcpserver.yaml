@@ -30,11 +30,6 @@ spec:
       value: "3000"
     - name: UNIFI_MCP_ENABLE_DNS_REBINDING_PROTECTION
       value: "false"
-  secrets:
-    - name: unifi-mcp-secret
-      key: UNIFI_NETWORK_USERNAME
-    - name: unifi-mcp-secret
-      key: UNIFI_NETWORK_PASSWORD
   resources:
     requests:
       cpu: 10m
@@ -45,6 +40,11 @@ spec:
     spec:
       containers:
         - name: mcp
+          # spec.secrets is a list keyed by secret name, so it cannot pull two
+          # keys from the same Secret; envFrom injects both.
+          envFrom:
+            - secretRef:
+                name: unifi-mcp-secret
           volumeMounts:
             - name: tmpfs
               mountPath: /tmp
