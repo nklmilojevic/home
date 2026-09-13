@@ -11,6 +11,7 @@ resources:
   - ./grafana-mcp/ks.yaml
   - ./ha-mcp/ks.yaml
   - ./kubesearch-mcp/ks.yaml
+  - ./unifi-mcp/ks.yaml
   - ./victorialogs-mcp/ks.yaml
   - ./victoriametrics-mcp/ks.yaml
   - ./hermes/ks.yaml

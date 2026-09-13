@@ -29,6 +29,8 @@ wiki
 # Claude Code
 .claude/settings.json
 .claude/settings.local.json
+# pi agent
+.pi/
 oura-models-enc/
 
 # local scratch (Oura work, not part of the cluster repo)
