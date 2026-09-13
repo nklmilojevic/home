@@ -72,6 +72,10 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities:
+                # The image's Python binary carries this file capability.
+                # It must remain in the bounding set or exec fails with EPERM.
+                add:
+                  - NET_BIND_SERVICE
                 drop:
                   - ALL
       slicer:
