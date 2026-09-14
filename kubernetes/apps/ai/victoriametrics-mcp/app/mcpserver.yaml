@@ -21,6 +21,11 @@ spec:
       value: 0.0.0.0:8080
     - name: MCP_LOG_FORMAT
       value: json
+    - name: MCP_LOG_LEVEL
+      value: warn
+    # Keep documentation searchable without advertising thousands of sections.
+    - name: MCP_DISABLE_RESOURCES
+      value: "true"
   resources:
     requests:
       cpu: 10m

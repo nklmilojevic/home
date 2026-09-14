@@ -19,6 +19,12 @@ spec:
       value: 0.0.0.0:8081
     - name: MCP_LOG_FORMAT
       value: json
+    # Avoid logging complete MCP responses, which can exceed VictoriaLogs' line limit.
+    - name: MCP_LOG_LEVEL
+      value: warn
+    # v1.9.0 cannot disable resources; avoid loading its documentation search index.
+    - name: MCP_DISABLED_TOOLS
+      value: documentation
   resources:
     requests:
       cpu: 10m
