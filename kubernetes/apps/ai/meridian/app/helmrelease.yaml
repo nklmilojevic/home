@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/rynfar/meridian
-              tag: 1.73.0@sha256:55a93445d747a9635215b04155a808b82ca8f825d90e129aa7831c76bc82a7fc
+              tag: 1.74.0@sha256:3870dc862f6eb56fd6615c0047ece0984d4938bfb5a632136d4574c6f1a27b1b
             env:
               TZ: Europe/Belgrade
               MERIDIAN_HOST: 0.0.0.0
