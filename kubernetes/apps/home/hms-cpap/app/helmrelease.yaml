@@ -62,8 +62,8 @@ spec:
               - /app/ezshare_sync.py
             env:
               TZ: "Europe/Belgrade"
-              EZ_BASE: http://10.50.0.22
-              EZ_MODE: mule
+              EZ_BASE: http://10.50.0.24
+              EZ_MODE: direct
               EZ_OUT: /data/sdcard
               EZ_STATE: /data/ezshare-sync-state.json
               EZ_DAYS: "7"
