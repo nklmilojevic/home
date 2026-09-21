@@ -17,9 +17,17 @@ This is a Kubernetes homelab repository using Flux CD for GitOps. Every app live
 
 - All persistent cluster changes MUST be made in this repository, committed, pushed, and reconciled by Flux.
 - NEVER use `kubectl apply`, `kubectl create`, `kubectl delete`, `kubectl edit`, `kubectl patch`, `kubectl replace`, or `kubectl rollout restart`.
-- NEVER apply locally rendered manifests or imperatively create Flux resources. `kubectl` is read-only for inspection and verification.
-- The one sanctioned imperative write is creating an ad-hoc kopiur `Snapshot` (see "Useful Commands"): it is a one-shot object that nothing in Git owns, so there is no drift for Flux to fight.
+- NEVER apply locally rendered manifests or imperatively create Flux resources. `kubectl` is read-only for inspection and verification except for the explicitly sanctioned operations below.
+- Creating an ad-hoc kopiur `Snapshot` (see "Useful Commands") is sanctioned: it is a one-shot object that nothing in Git owns, so there is no drift for Flux to fight.
 - After pushing desired state, use `just kube reconcile` to request reconciliation through Flux.
+
+### Maintainer-Approved DRBD Recovery Exception
+
+- With explicit maintainer approval for the incident, `kubectl exec` into a miroir agent may be used for a narrowly scoped DRBD peer disconnect/reconnect to recover a stranded out-of-sync bitmap. This exception does not authorize Kubernetes resource mutations, persistent configuration changes, agent restarts, or unrelated recovery operations.
+- Before acting, capture status on every replica, identify the exact resource and peer node ID, confirm quorum and healthy disks, and check for active resync, verify findings, or split-brain. Preserve diagnostic evidence without exposing shared secrets.
+- Explain the intended connection cycle and its risks before executing it. Cycle only the affected peer connection; preserve healthy Primary connections. Secondary/Secondary pairs require a documented safety assessment of resync direction and topology; approval alone is not evidence that the operation is safe.
+- Do not use forced promotion, invalidation, discard-my-data, bitmap clearing, or metadata recreation under this exception. If a peer cycle is unsafe or fails, stop and present a separate recovery plan rather than escalating automatically.
+- After the cycle, verify all replica roles, connectivity, disk states, quorum, out-of-sync counts, and application health. Report the commands and outcomes; a cleared alert alone is not proof of data integrity.
 
 ## Directory Structure
 
