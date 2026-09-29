@@ -19,7 +19,7 @@ spec:
       tag: main
       digest: sha256:1059c086c4e17a0494c5390ba6b11da815d2354ca3810b03b55eab3c48d79735
     runner:
-      image: ghcr.io/home-operations/kritik:main-tools@sha256:f3e94bc175bd58ffdc3c3eb1d985c2a4758f91e627e383b324e49a5150ba8d52
+      image: ghcr.io/home-operations/kritik:main-tools@sha256:8ca071625873a9c475f6b940c70259ff5baa1390ceff142dcca6f8d61b523285
       runtimeClassName: gvisor
     deploymentAnnotations:
       reloader.stakater.com/auto: "true"
