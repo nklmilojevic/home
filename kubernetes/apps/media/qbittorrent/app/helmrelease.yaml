@@ -20,7 +20,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/qbittorrent
-              tag: 5.2.3@sha256:2215b15ffffbf5400d0e414b7f127bc2b846817b573b17a236932c0469a1fe56
+              tag: 5.2.3@sha256:acc812f65f85b3cd7841e27b8f226fcc39bf8f60c70a30017e788659cfd82563
 
             env:
               TZ: "Europe/Belgrade"
