@@ -43,14 +43,15 @@ spec:
                     want=$1; name=$2; shift 2
                     "$@" >/dev/null 2>&1; rc=$?
                     case "$want:$rc" in
-                      ok:0 | blocked:[!0]* | denied:56) echo "PASS $name (rc=$rc)" ;;
+                      ok:0 | blocked:[!0]*) echo "PASS $name (rc=$rc)" ;;
                       *) echo "FAIL $name: want $want, rc=$rc"; fail=1 ;;
                     esac
                   }
                   expect ok dns nslookup kritik-pg-rw.kritik.svc.cluster.local
                   expect ok postgres nc -z -w 5 kritik-pg-rw.kritik.svc.cluster.local 5432
                   expect ok gateway-reachable nc -z -w 5 kritik-gateway.kritik.svc.cluster.local 8082
-                  expect denied gateway-denies-unlisted-host curl -sS -m 10 -x "$gw" -o /dev/null https://example.com
+                  code=$(curl -s -m 10 -x "$gw" -o /dev/null -w '%{http_connect}' https://example.com)
+                  if [ "$code" = 403 ]; then echo "PASS gateway-denies-unlisted-host (403)"; else echo "FAIL gateway-denies-unlisted-host: want 403, got $code"; fail=1; fi
                   expect blocked direct-internet curl -sS --noproxy '*' --connect-timeout 5 -m 8 -o /dev/null https://github.com
                   expect blocked direct-ip nc -z -w 5 1.1.1.1 443
                   expect blocked kube-apiserver nc -z -w 5 kubernetes.default.svc.cluster.local 443
