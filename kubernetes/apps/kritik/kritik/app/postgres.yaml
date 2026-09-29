@@ -1,0 +1,51 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/postgresql.cnpg.io/cluster_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: kritik-pg
+  namespace: kritik
+spec:
+  instances: 1
+  enablePDB: false
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:18.6-1.1.1@sha256:c7672bc011351a587cc292a94aac7eeebb593ed2e120077bd9c9944c9467db93
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 5Gi
+    storageClass: miroir
+  enableSuperuserAccess: false
+  postgresql:
+    shared_preload_libraries:
+      - vchord.so
+  bootstrap:
+    initdb:
+      database: kritik
+      owner: kritik
+      secret:
+        name: kritik-db-owner
+  managed:
+    roles:
+      - name: kritik_app
+        ensure: present
+        login: true
+        passwordSecret:
+          name: kritik-db-app
+      - name: kritik_runner
+        ensure: present
+        login: true
+        passwordSecret:
+          name: kritik-db-runner
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 1Gi
+  monitoring:
+    enablePodMonitor: true
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: kritik-pg
+        serverName: kritik-pg-v1

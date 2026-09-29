@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/gitrepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: kritik
+  namespace: kritik
+spec:
+  interval: 1h
+  url: https://github.com/home-operations/kritik
+  ref:
+    commit: fcfd666ef0ab1833be6987478738e95da8938628
+  ignore: |-
+    /*
+    !/charts/kritik

@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/postgresql.cnpg.io/database_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: kritik
+  namespace: kritik
+spec:
+  name: kritik
+  owner: kritik
+  cluster:
+    name: kritik-pg
+  extensions:
+    - name: vector
+      ensure: present
+    - name: vchord
+      ensure: present

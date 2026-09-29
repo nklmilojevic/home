@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/barmancloud.cnpg.io/objectstore_v1.json
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: kritik-pg
+  namespace: kritik
+spec:
+  retentionPolicy: 30d
+  instanceSidecarConfiguration:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+  configuration:
+    destinationPath: s3://kritik
+    endpointURL: http://versitygw.security.svc.cluster.local:7070
+    s3Credentials:
+      accessKeyId:
+        name: kritik-pg-s3
+        key: aws-access-key-id
+      secretAccessKey:
+        name: kritik-pg-s3
+        key: aws-secret-access-key
+      region:
+        name: kritik-pg-s3
+        key: aws-region
+    wal:
+      compression: zstd
+    data:
+      compression: gzip
