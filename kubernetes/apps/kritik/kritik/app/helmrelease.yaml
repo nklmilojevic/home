@@ -43,6 +43,9 @@ spec:
         existingSecret: kritik-db-runner
     httpRoute:
       enabled: true
+      annotations:
+        gatus.home-operations.com/endpoint: |-
+          path: ""
       parentRefs:
         - name: internal
           namespace: network
