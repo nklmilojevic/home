@@ -11,7 +11,7 @@ bandwidthManager:
   enabled: true
   bbr: true
 bpf:
-  datapathMode: netkit
+  datapathMode: veth
   masquerade: true
   preallocateMaps: true
 bpfClockProbe: true
@@ -101,3 +101,7 @@ hubble:
   ui:
     enabled: true
     rollOutPods: true
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
