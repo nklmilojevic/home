@@ -13,3 +13,4 @@ resources:
   - ./intel-gpu-resource-driver/ks.yaml
   - ./generic-device-plugin/ks.yaml
   - ./node-feature-discovery/ks.yaml
+  - ./gvisor/ks.yaml
