@@ -20,6 +20,7 @@ spec:
       digest: sha256:1059c086c4e17a0494c5390ba6b11da815d2354ca3810b03b55eab3c48d79735
     runner:
       image: ghcr.io/home-operations/kritik:main-tools@sha256:fb37c15fab5df67c9a4fa0d9434100f8b7db53f288c321dc5467c73fd57ed834
+      runtimeClassName: gvisor
     deploymentAnnotations:
       reloader.stakater.com/auto: "true"
     web:
@@ -46,6 +47,8 @@ spec:
         - name: internal
           namespace: network
           sectionName: https
+    networkPolicy:
+      enabled: true
     monitoring:
       serviceMonitor:
         enabled: true

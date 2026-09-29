@@ -18,6 +18,8 @@ spec:
       namespace: database
     - name: versitygw
       namespace: security
+    - name: gvisor
+      namespace: kube-system
   path: ./kubernetes/apps/kritik/kritik/app
   prune: true
   sourceRef:
