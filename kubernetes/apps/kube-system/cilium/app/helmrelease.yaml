@@ -13,7 +13,7 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: cilium-helm-values
-  timeout: 60m
+  timeout: 15m
   install:
     remediation:
       retries: 3
