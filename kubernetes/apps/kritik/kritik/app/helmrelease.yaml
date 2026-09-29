@@ -46,8 +46,6 @@ spec:
         - name: internal
           namespace: network
           sectionName: https
-    networkPolicy:
-      enabled: true
     monitoring:
       serviceMonitor:
         enabled: true
