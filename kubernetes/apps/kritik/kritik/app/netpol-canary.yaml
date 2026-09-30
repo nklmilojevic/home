@@ -32,7 +32,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: canary
-              image: ghcr.io/home-operations/kritik:main-tools@sha256:ff1928e68f015b45c51c6acaf994611696e0adf9c8afc43f976314e8d95c2c4c
+              image: ghcr.io/home-operations/kritik:main-tools@sha256:e9d6a9d8186ce74fa6bf1bd60484e18ebf6a2d6e9c4ad9667543585a308ace8f
               command:
                 - /bin/sh
                 - -c
