@@ -6,9 +6,10 @@
 
 - Source: `litellm/llms/chatgpt/responses/transformation.py`.
 - SHA-256: `fd9a9511e18820bc0b594286446e401f8653d8c5997a304dc110dcae5d8028af`.
-- Base image: LiteLLM `v1.100.1`, Python 3.13, pinned by digest in `litellmproxy.yaml`.
+- Base image: LiteLLM `v1.103.2`, Python 3.13, pinned by digest in `litellmproxy.yaml`.
 - Original v1.100.1 module SHA-256:
-  `cb474993f56e1dec8a458b1852dad28d0f7a2afc93a737bd0b917259f5c0498c`.
+  `cb474993f56e1dec8a458b1852dad28d0f7a2afc93a737bd0b917259f5c0498c`. The upstream
+  source is unchanged through v1.103.2 (git blob `b96e06be3d8a`).
 - License: MIT, retained in `LICENSE.litellm.txt`.
 
 The `.txt` suffix preserves vendored bytes: this is an asset for the container,
