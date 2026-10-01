@@ -121,7 +121,7 @@ spec:
                         BEGIN;
                         SELECT pg_advisory_xact_lock(hashtext('kritik-reset'));
                         SELECT set_config('kritik.image', :'image', true);
-                        DO $$
+                        DO $reset$
                         BEGIN
                           IF to_regclass('kritik_reset.marker') IS NOT NULL THEN
                             IF EXISTS (SELECT 1 FROM kritik_reset.marker WHERE image = current_setting('kritik.image')) THEN
@@ -138,7 +138,7 @@ spec:
                           CREATE TABLE kritik_reset.marker (image text PRIMARY KEY);
                           INSERT INTO kritik_reset.marker VALUES (current_setting('kritik.image'));
                         END
-                        $$;
+                        $reset$;
                         COMMIT;
                         SQL
                     env:
