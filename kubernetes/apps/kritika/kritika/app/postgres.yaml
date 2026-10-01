@@ -3,8 +3,8 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: kritik-pg
-  namespace: kritik
+  name: kritika-pg
+  namespace: kritika
 spec:
   instances: 1
   enablePDB: false
@@ -19,22 +19,22 @@ spec:
       - vchord.so
   bootstrap:
     initdb:
-      database: kritik
-      owner: kritik
+      database: kritika
+      owner: kritika
       secret:
-        name: kritik-db-owner
+        name: kritika-db-owner
   managed:
     roles:
-      - name: kritik_app
+      - name: kritika_app
         ensure: present
         login: true
         passwordSecret:
-          name: kritik-db-app
-      - name: kritik_runner
+          name: kritika-db-app
+      - name: kritika_runner
         ensure: present
         login: true
         passwordSecret:
-          name: kritik-db-runner
+          name: kritika-db-runner
   resources:
     requests:
       cpu: 100m
@@ -47,5 +47,5 @@ spec:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true
       parameters:
-        barmanObjectName: kritik-pg
-        serverName: kritik-pg-v1
+        barmanObjectName: kritika-pg
+        serverName: kritika-pg-v1

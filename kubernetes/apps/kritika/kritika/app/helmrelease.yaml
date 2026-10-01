@@ -3,34 +3,34 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: kritik
-  namespace: kritik
+  name: kritika
+  namespace: kritika
 spec:
   interval: 30m
   chart:
     spec:
-      chart: ./charts/kritik
+      chart: ./charts/kritika
       reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
-        name: kritik
+        name: kritika
   values:
     image:
-      repository: ghcr.io/home-operations/kritik
-      tag: &image main@sha256:a8458265ae8ab3a9a8242380afac69c760ee43da96b94f13b82b92871e0de8a9
+      repository: ghcr.io/home-operations/kritika
+      tag: &image main@sha256:cd1070abdb484cf2f1c14e2ff555afbf159be75ac7c253e21081c6f0ebfd3bb7
     runner:
-      image: ghcr.io/home-operations/kritik:main-tools@sha256:d0b73d5648612e4ffdd4f09525122c12b462b730d25dbf371b0b18980b01949f
+      image: ghcr.io/home-operations/kritika:main-tools@sha256:e6f453522bb419c0b7e0400c7f26fe10c5a2e90ff9bacdc29da8d1466d8f6934
       runtimeClassName: gvisor
     deploymentAnnotations:
       reloader.stakater.com/auto: "true"
     podAnnotations:
-      kritik.nikola.wtf/image: *image
+      kritika.nikola.wtf/image: *image
     web:
-      url: https://kritik.nikola.wtf
+      url: https://kritika.nikola.wtf
     auth:
       admin:
         passwordSecret:
-          name: kritik-secret
+          name: kritika-secret
           key: ADMIN_PASSWORD
     config:
       file:
@@ -62,27 +62,27 @@ spec:
             review: litellm/chatgpt/gpt-6-sol
     secretEnv:
       - name: GITHUB_APP_CLIENT_ID
-        secretName: kritik-secret
+        secretName: kritika-secret
         key: GITHUB_APP_CLIENT_ID
       - name: GITHUB_APP_PRIVATE_KEY
-        secretName: kritik-secret
+        secretName: kritika-secret
         key: GITHUB_APP_PRIVATE_KEY
       - name: GITHUB_APP_WEBHOOK_SECRET
-        secretName: kritik-secret
+        secretName: kritika-secret
         key: GITHUB_APP_WEBHOOK_SECRET
       - name: LITELLM_API_KEY
-        secretName: kritik-secret
+        secretName: kritika-secret
         key: LITELLM_API_KEY
       - name: OPENROUTER_API_KEY
-        secretName: kritik-secret
+        secretName: kritika-secret
         key: OPENROUTER_API_KEY
     database:
       owner:
-        existingSecret: kritik-db-owner
+        existingSecret: kritika-db-owner
       app:
-        existingSecret: kritik-db-app
+        existingSecret: kritika-db-app
       runner:
-        existingSecret: kritik-db-runner
+        existingSecret: kritika-db-runner
     httpRoute:
       enabled: true
       annotations:
@@ -105,7 +105,7 @@ spec:
         patches:
           - target:
               kind: Deployment
-              name: kritik
+              name: kritika
             patch: |
               - op: add
                 path: /spec/template/spec/initContainers
@@ -119,24 +119,24 @@ spec:
                         exec psql "$OWNER_URI" -v ON_ERROR_STOP=1 -v image="$IMAGE" <<'SQL'
                         SET lock_timeout = '60s';
                         BEGIN;
-                        SELECT pg_advisory_xact_lock(hashtext('kritik-reset'));
-                        SELECT set_config('kritik.image', :'image', true);
+                        SELECT pg_advisory_xact_lock(hashtext('kritika-reset'));
+                        SELECT set_config('kritika.image', :'image', true);
                         DO $reset$
                         BEGIN
-                          IF to_regclass('kritik_reset.marker') IS NOT NULL THEN
-                            IF EXISTS (SELECT 1 FROM kritik_reset.marker WHERE image = current_setting('kritik.image')) THEN
-                              RAISE NOTICE 'schema already built for %', current_setting('kritik.image');
+                          IF to_regclass('kritika_reset.marker') IS NOT NULL THEN
+                            IF EXISTS (SELECT 1 FROM kritika_reset.marker WHERE image = current_setting('kritika.image')) THEN
+                              RAISE NOTICE 'schema already built for %', current_setting('kritika.image');
                               RETURN;
                             END IF;
                           END IF;
-                          RAISE NOTICE 'resetting schema for %', current_setting('kritik.image');
+                          RAISE NOTICE 'resetting schema for %', current_setting('kritika.image');
                           IF (SELECT nspowner FROM pg_namespace WHERE nspname = 'public') = (SELECT oid FROM pg_roles WHERE rolname = current_user) THEN
                             ALTER SCHEMA public OWNER TO pg_database_owner;
                           END IF;
                           DROP OWNED BY CURRENT_USER;
-                          CREATE SCHEMA kritik_reset;
-                          CREATE TABLE kritik_reset.marker (image text PRIMARY KEY);
-                          INSERT INTO kritik_reset.marker VALUES (current_setting('kritik.image'));
+                          CREATE SCHEMA kritika_reset;
+                          CREATE TABLE kritika_reset.marker (image text PRIMARY KEY);
+                          INSERT INTO kritika_reset.marker VALUES (current_setting('kritika.image'));
                         END
                         $reset$;
                         COMMIT;
@@ -145,13 +145,13 @@ spec:
                       - name: IMAGE
                         valueFrom:
                           fieldRef:
-                            fieldPath: metadata.annotations['kritik.nikola.wtf/image']
+                            fieldPath: metadata.annotations['kritika.nikola.wtf/image']
                       - name: HOME
                         value: /tmp
                       - name: OWNER_URI
                         valueFrom:
                           secretKeyRef:
-                            name: kritik-db-owner
+                            name: kritika-db-owner
                             key: uri
                     resources:
                       requests:

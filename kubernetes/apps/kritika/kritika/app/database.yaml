@@ -3,13 +3,13 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: kritik
-  namespace: kritik
+  name: kritika
+  namespace: kritika
 spec:
-  name: kritik
-  owner: kritik
+  name: kritika
+  owner: kritika
   cluster:
-    name: kritik-pg
+    name: kritika-pg
   extensions:
     - name: vector
       ensure: present

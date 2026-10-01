@@ -37,12 +37,12 @@
       },
     },
     {
-      description: "kritik chart and images",
-      groupName: "kritik",
+      description: "kritika chart and images",
+      groupName: "kritika",
       matchPackageNames: [
-        "ghcr.io/home-operations/kritik",
-        "https://github.com/home-operations/kritik",
-        "kritik",
+        "ghcr.io/home-operations/kritika",
+        "https://github.com/home-operations/kritika",
+        "kritika",
       ],
       matchDatasources: ["docker", "git-refs"],
       group: {

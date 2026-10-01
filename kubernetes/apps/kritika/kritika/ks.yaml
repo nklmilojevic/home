@@ -3,9 +3,9 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app kritik
+  name: &app kritika
 spec:
-  targetNamespace: kritik
+  targetNamespace: kritika
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -20,7 +20,7 @@ spec:
       namespace: security
     - name: gvisor
       namespace: kube-system
-  path: ./kubernetes/apps/kritik/kritik/app
+  path: ./kubernetes/apps/kritika/kritika/app
   prune: true
   sourceRef:
     kind: GitRepository

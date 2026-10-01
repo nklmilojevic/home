@@ -3,8 +3,8 @@
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
-  name: kritik-pg
-  namespace: kritik
+  name: kritika-pg
+  namespace: kritika
 spec:
   retentionPolicy: 30d
   instanceSidecarConfiguration:
@@ -19,13 +19,13 @@ spec:
     endpointURL: http://versitygw.security.svc.cluster.local:7070
     s3Credentials:
       accessKeyId:
-        name: kritik-pg-s3
+        name: kritika-pg-s3
         key: aws-access-key-id
       secretAccessKey:
-        name: kritik-pg-s3
+        name: kritika-pg-s3
         key: aws-secret-access-key
       region:
-        name: kritik-pg-s3
+        name: kritika-pg-s3
         key: aws-region
     wal:
       compression: zstd

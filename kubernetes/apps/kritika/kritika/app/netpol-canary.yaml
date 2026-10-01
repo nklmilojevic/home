@@ -2,8 +2,8 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: kritik-netpol-canary
-  namespace: kritik
+  name: kritika-netpol-canary
+  namespace: kritika
 spec:
   schedule: "23 * * * *"
   concurrencyPolicy: Forbid
@@ -17,12 +17,12 @@ spec:
       template:
         metadata:
           labels:
-            app.kubernetes.io/name: kritik
+            app.kubernetes.io/name: kritika
             app.kubernetes.io/component: runner
-            kritik.home-operations.com/role: runner
+            kritika.home-operations.com/role: runner
         spec:
           restartPolicy: Never
-          serviceAccountName: kritik-runner
+          serviceAccountName: kritika-runner
           automountServiceAccountToken: false
           securityContext:
             runAsNonRoot: true
@@ -32,13 +32,13 @@ spec:
               type: RuntimeDefault
           containers:
             - name: canary
-              image: ghcr.io/home-operations/kritik:main-tools@sha256:d0b73d5648612e4ffdd4f09525122c12b462b730d25dbf371b0b18980b01949f
+              image: ghcr.io/home-operations/kritika:main-tools@sha256:e6f453522bb419c0b7e0400c7f26fe10c5a2e90ff9bacdc29da8d1466d8f6934
               command:
                 - /bin/sh
                 - -c
                 - |
                   fail=0
-                  gw=http://kritik-gateway.kritik.svc.cluster.local:8082
+                  gw=http://kritika-gateway.kritika.svc.cluster.local:8082
                   expect() {
                     want=$1; name=$2; shift 2
                     "$@" >/dev/null 2>&1; rc=$?
@@ -47,9 +47,9 @@ spec:
                       *) echo "FAIL $name: want $want, rc=$rc"; fail=1 ;;
                     esac
                   }
-                  expect ok dns nslookup kritik-pg-rw.kritik.svc.cluster.local
-                  expect ok postgres nc -z -w 5 kritik-pg-rw.kritik.svc.cluster.local 5432
-                  expect ok gateway-reachable nc -z -w 5 kritik-gateway.kritik.svc.cluster.local 8082
+                  expect ok dns nslookup kritika-pg-rw.kritika.svc.cluster.local
+                  expect ok postgres nc -z -w 5 kritika-pg-rw.kritika.svc.cluster.local 5432
+                  expect ok gateway-reachable nc -z -w 5 kritika-gateway.kritika.svc.cluster.local 8082
                   code=$(curl -s -m 10 -x "$gw" -o /dev/null -w '%{http_connect}' https://example.com)
                   if [ "$code" = 403 ]; then echo "PASS gateway-denies-unlisted-host (403)"; else echo "FAIL gateway-denies-unlisted-host: want 403, got $code"; fail=1; fi
                   expect blocked direct-internet curl -sS --noproxy '*' --connect-timeout 5 -m 8 -o /dev/null https://github.com
