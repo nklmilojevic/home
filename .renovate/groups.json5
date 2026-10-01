@@ -37,6 +37,20 @@
       },
     },
     {
+      description: "kritik chart and images",
+      groupName: "kritik",
+      matchPackageNames: [
+        "ghcr.io/home-operations/kritik",
+        "https://github.com/home-operations/kritik",
+        "kritik",
+      ],
+      matchDatasources: ["docker", "git-refs"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+        commitMessageSuffix: "",
+      },
+    },
+    {
       description: "Actions Runner Controller charts",
       groupName: "ARC",
       matchPackageNames: [
