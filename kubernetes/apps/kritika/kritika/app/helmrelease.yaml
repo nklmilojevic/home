@@ -17,9 +17,9 @@ spec:
   values:
     image:
       repository: ghcr.io/home-operations/kritika
-      tag: &image main@sha256:d3fe28133ff992bb2b2699c93a6805b3b686f7c9745d322dead390a6b009de77
+      tag: &image main@sha256:3f6845b3e59fef4490683842159ddbe02e8c7e5db6195bad9a13047182d9b4ae
     runner:
-      image: ghcr.io/home-operations/kritika:main-tools@sha256:7a29ad9c7071091d7e2745b5eaec8d00785fab88173b342f9942df1c06db11f5
+      image: ghcr.io/home-operations/kritika:main-tools@sha256:2b592cd96a78406ac3128bb807b557c03169c26f5e4e5088d020dbb11ac41eb0
     deploymentAnnotations:
       reloader.stakater.com/auto: "true"
     podAnnotations:
@@ -86,7 +86,6 @@ spec:
             name: kritika-secret
             key: OPENROUTER_API_KEY
     database:
-      host: kritika-pg-rw.kritika.svc.cluster.local
       owner:
         existingSecret: kritika-db-owner
       app:
