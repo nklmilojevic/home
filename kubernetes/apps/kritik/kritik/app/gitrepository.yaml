@@ -9,7 +9,7 @@ spec:
   interval: 1h
   url: https://github.com/home-operations/kritik
   ref:
-    commit: 8c11b644874a679475fcab563010c33d8b39467c
+    commit: 4a1c3206434ac137be6dd34844062f0dd0be68e3
   ignore: |-
     /*
     !/charts/kritik
