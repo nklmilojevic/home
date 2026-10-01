@@ -20,63 +20,73 @@ spec:
       tag: &image main@sha256:d3fe28133ff992bb2b2699c93a6805b3b686f7c9745d322dead390a6b009de77
     runner:
       image: ghcr.io/home-operations/kritika:main-tools@sha256:7a29ad9c7071091d7e2745b5eaec8d00785fab88173b342f9942df1c06db11f5
-      runtimeClassName: gvisor
     deploymentAnnotations:
       reloader.stakater.com/auto: "true"
     podAnnotations:
       kritika.nikola.wtf/image: *image
     web:
       url: https://kritika.nikola.wtf
-    auth:
-      admin:
-        passwordSecret:
-          name: kritika-secret
-          key: ADMIN_PASSWORD
     config:
-      file:
-        apps:
-          - name: github
-            accounts:
-              - nklmilojevic
-            clientId:
-              env: GITHUB_APP_CLIENT_ID
-            privateKey:
-              env: GITHUB_APP_PRIVATE_KEY
-            webhookSecret:
-              env: GITHUB_APP_WEBHOOK_SECRET
-        providers:
-          litellm:
-            type: openai
-            baseUrl: http://litellm.ai.svc.cluster.local:4000/v1
-            apiKey:
-              env: LITELLM_API_KEY
-          openrouter:
-            type: openrouter
-            apiKey:
-              env: OPENROUTER_API_KEY
-        embedding:
-          model: openrouter/voyageai/voyage-code-4
-          dims: 1024
-        defaults:
-          models:
-            review: litellm/chatgpt/gpt-6-sol
-    secretEnv:
-      - name: GITHUB_APP_CLIENT_ID
-        secretName: kritika-secret
-        key: GITHUB_APP_CLIENT_ID
-      - name: GITHUB_APP_PRIVATE_KEY
-        secretName: kritika-secret
-        key: GITHUB_APP_PRIVATE_KEY
-      - name: GITHUB_APP_WEBHOOK_SECRET
-        secretName: kritika-secret
-        key: GITHUB_APP_WEBHOOK_SECRET
-      - name: LITELLM_API_KEY
-        secretName: kritika-secret
-        key: LITELLM_API_KEY
-      - name: OPENROUTER_API_KEY
-        secretName: kritika-secret
-        key: OPENROUTER_API_KEY
+      apps:
+        github:
+          accounts:
+            - nklmilojevic
+          clientId:
+            env: GITHUB_APP_CLIENT_ID
+          privateKey:
+            env: GITHUB_APP_PRIVATE_KEY
+          webhookSecret:
+            env: GITHUB_APP_WEBHOOK_SECRET
+      providers:
+        litellm:
+          type: openai
+          baseUrl: http://litellm.ai.svc.cluster.local:4000/v1
+          apiKey:
+            env: LITELLM_API_KEY
+        openrouter:
+          type: openrouter
+          apiKey:
+            env: OPENROUTER_API_KEY
+      embedding:
+        model: openrouter/voyageai/voyage-code-4
+        dims: 1024
+      defaults:
+        models:
+          review: litellm/chatgpt/gpt-6-sol
+    env:
+      KRITIKA_RUNNER_RUNTIME_CLASS: gvisor
+      KRITIKA_AUTH_ADMIN_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: kritika-secret
+            key: ADMIN_PASSWORD
+      GITHUB_APP_CLIENT_ID:
+        valueFrom:
+          secretKeyRef:
+            name: kritika-secret
+            key: GITHUB_APP_CLIENT_ID
+      GITHUB_APP_PRIVATE_KEY:
+        valueFrom:
+          secretKeyRef:
+            name: kritika-secret
+            key: GITHUB_APP_PRIVATE_KEY
+      GITHUB_APP_WEBHOOK_SECRET:
+        valueFrom:
+          secretKeyRef:
+            name: kritika-secret
+            key: GITHUB_APP_WEBHOOK_SECRET
+      LITELLM_API_KEY:
+        valueFrom:
+          secretKeyRef:
+            name: kritika-secret
+            key: LITELLM_API_KEY
+      OPENROUTER_API_KEY:
+        valueFrom:
+          secretKeyRef:
+            name: kritika-secret
+            key: OPENROUTER_API_KEY
     database:
+      host: kritika-pg-rw.kritika.svc.cluster.local
       owner:
         existingSecret: kritika-db-owner
       app:
