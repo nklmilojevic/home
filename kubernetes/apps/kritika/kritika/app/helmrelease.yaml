@@ -17,9 +17,9 @@ spec:
   values:
     image:
       repository: ghcr.io/home-operations/kritika
-      tag: &image main@sha256:12bc23230742ba13308328bbd44fac8a0df3114f25896893981b625c1ba6b1ff
+      tag: &image main@sha256:d3fe28133ff992bb2b2699c93a6805b3b686f7c9745d322dead390a6b009de77
     runner:
-      image: ghcr.io/home-operations/kritika:main-tools@sha256:209cf08f627f2e7ebe595a852c0751e8fed1c751fde2c097293b1f44e200e1a4
+      image: ghcr.io/home-operations/kritika:main-tools@sha256:7a29ad9c7071091d7e2745b5eaec8d00785fab88173b342f9942df1c06db11f5
       runtimeClassName: gvisor
     deploymentAnnotations:
       reloader.stakater.com/auto: "true"
