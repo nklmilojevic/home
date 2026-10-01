@@ -2,7 +2,7 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     {
-      description: "LiteLLM v1.100.1 has a mounted ChatGPT compatibility module (PR #38719); upgrade image and remove/retest patch together",
+      description: "LiteLLM v1.103.2 has a mounted ChatGPT compatibility module (PR #38719); upgrade image and remove/retest patch together",
       matchPackageNames: ["ghcr.io/berriai/litellm"],
       matchFileNames: ["kubernetes/apps/ai/litellm/app/litellmproxy.yaml"],
       enabled: false,
