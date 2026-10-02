@@ -17,9 +17,9 @@ spec:
   values:
     image:
       repository: ghcr.io/home-operations/kritika
-      tag: &image main@sha256:3f6845b3e59fef4490683842159ddbe02e8c7e5db6195bad9a13047182d9b4ae
+      tag: &image main@sha256:c37b169e1509a6f6c5ad0e6b2269dfb089f24601b08287f0d981f5963528025b
     runner:
-      image: ghcr.io/home-operations/kritika:main-tools@sha256:2b592cd96a78406ac3128bb807b557c03169c26f5e4e5088d020dbb11ac41eb0
+      image: ghcr.io/home-operations/kritika:main-tools@sha256:5d053c7e270297e7299ed9ed82c0784d8df3ef8336e08ec193129449ca4d6a68
     deploymentAnnotations:
       reloader.stakater.com/auto: "true"
     podAnnotations:
