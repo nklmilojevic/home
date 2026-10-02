@@ -11,4 +11,3 @@ resources:
   - ./ocirepository.yaml
   - ./helmrelease.yaml
   - ./httproute.yaml
-  - ./netpol-canary.yaml
