@@ -8,7 +8,7 @@ resources:
   - ./postgres.yaml
   - ./database.yaml
   - ./scheduledbackup.yaml
-  - ./gitrepository.yaml
+  - ./ocirepository.yaml
   - ./helmrelease.yaml
   - ./httproute.yaml
   - ./netpol-canary.yaml
