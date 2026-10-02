@@ -28,10 +28,39 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/invoicing
-              tag: latest@sha256:a99e63f8136297127bee5b0d565c76fb245efdb9b60060dca66d3c823dfedaac
+              tag: sha-976dece@sha256:96115330ad7a0a1222e68d3e8549ee5b4ee2b0d575c915c106739d5af1b7dac3
             env:
               TZ: "Europe/Belgrade"
               DATABASE_URL: "file:/app/data/invoicing.db"
+            envFrom:
+              - secretRef:
+                  name: invoicing-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: 3000
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              # First start backs up the database and checks migrations
+              # before serving; give it up to 150s before liveness applies.
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: 3000
+                  initialDelaySeconds: 0
+                  periodSeconds: 5
+                  timeoutSeconds: 1
+                  failureThreshold: 30
             resources:
               requests:
                 cpu: 10m
