@@ -80,15 +80,15 @@ spec:
         - module: icmp
           name: jetkvm-icmp
           url: 10.5.0.51
-        # TrueNAS
+        # UNAS
         - module: http_2xx
-          name: truenas-http
+          name: unas-http
           url: "http://10.5.0.10"
         - module: icmp
-          name: truenas-icmp
+          name: unas-icmp
           url: 10.5.0.10
         - module: tcp_connect
-          name: truenas-nfs
+          name: unas-nfs
           url: 10.5.0.10:2049
         # Other devices
         - module: icmp

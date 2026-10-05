@@ -18,7 +18,7 @@ spec:
           name: probe_success
           selector:
             matchLabels:
-              target: ${ZEROSCALER_PROBE:=truenas-nfs}
+              target: ${ZEROSCALER_PROBE:=unas-nfs}
         target:
           type: Value
           value: "1"
