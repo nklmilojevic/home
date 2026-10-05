@@ -8,6 +8,7 @@ spec:
   components:
     - ../../../../components/kopiur/volume
     - ../../../../components/kopiur/backup
+    - ../../../../components/zeroscaler
   targetNamespace: misc
   commonMetadata:
     labels:
