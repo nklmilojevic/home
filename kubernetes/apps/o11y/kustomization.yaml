@@ -19,4 +19,5 @@ resources:
   - ./drm-exporter/ks.yaml
   - ./exporters/
   - ./silence-operator/ks.yaml
+  - ./prometheus-adapter/ks.yaml
   - ./unpoller/ks.yaml

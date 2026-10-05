@@ -150,3 +150,30 @@ spec:
     - kind: OCIRepository
       name: "*"
       namespace: system-upgrade
+    - kind: Kustomization
+      name: "*"
+      namespace: kopiur-system
+    - kind: HelmRelease
+      name: "*"
+      namespace: kopiur-system
+    - kind: OCIRepository
+      name: "*"
+      namespace: kopiur-system
+    - kind: Kustomization
+      name: "*"
+      namespace: kritika
+    - kind: HelmRelease
+      name: "*"
+      namespace: kritika
+    - kind: OCIRepository
+      name: "*"
+      namespace: kritika
+    - kind: Kustomization
+      name: "*"
+      namespace: photos
+    - kind: HelmRelease
+      name: "*"
+      namespace: photos
+    - kind: OCIRepository
+      name: "*"
+      namespace: photos

@@ -1,0 +1,65 @@
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+metadata:
+  name: github-status
+  namespace: flux-system
+spec:
+  providerRef:
+    name: github-status
+  eventSeverity: info
+  eventSources:
+    - kind: Kustomization
+      name: "*"
+      namespace: ai
+    - kind: Kustomization
+      name: "*"
+      namespace: cert-manager
+    - kind: Kustomization
+      name: "*"
+      namespace: database
+    - kind: Kustomization
+      name: "*"
+      namespace: flux-system
+    - kind: Kustomization
+      name: "*"
+      namespace: home
+    - kind: Kustomization
+      name: "*"
+      namespace: kopiur-system
+    - kind: Kustomization
+      name: "*"
+      namespace: kritika
+    - kind: Kustomization
+      name: "*"
+      namespace: kube-system
+    - kind: Kustomization
+      name: "*"
+      namespace: media
+    - kind: Kustomization
+      name: "*"
+      namespace: miroir-system
+    - kind: Kustomization
+      name: "*"
+      namespace: misc
+    - kind: Kustomization
+      name: "*"
+      namespace: network
+    - kind: Kustomization
+      name: "*"
+      namespace: o11y
+    - kind: Kustomization
+      name: "*"
+      namespace: openebs-system
+    - kind: Kustomization
+      name: "*"
+      namespace: photos
+    - kind: Kustomization
+      name: "*"
+      namespace: renovate
+    - kind: Kustomization
+      name: "*"
+      namespace: security
+    - kind: Kustomization
+      name: "*"
+      namespace: system-upgrade

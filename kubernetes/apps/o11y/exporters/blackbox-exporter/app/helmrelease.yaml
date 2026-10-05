@@ -36,6 +36,11 @@ spec:
           timeout: 30s
           icmp:
             preferred_ip_protocol: "ip4"
+        tcp_connect:
+          prober: tcp
+          timeout: 5s
+          tcp:
+            preferred_ip_protocol: "ip4"
 
     prometheusRule:
       enabled: true
@@ -82,6 +87,9 @@ spec:
         - module: icmp
           name: truenas-icmp
           url: 10.5.0.10
+        - module: tcp_connect
+          name: truenas-nfs
+          url: 10.5.0.10:2049
         # Other devices
         - module: icmp
           name: zigbee-controller-icmp
