@@ -39,3 +39,13 @@ spec:
     - name: recording
       value: count:up0
       isRegex: false
+---
+apiVersion: monitoring.giantswarm.io/v1alpha1
+kind: Silence
+metadata:
+  name: hpa-maxed-out
+spec:
+  matchers:
+    - name: alertname
+      value: KubeHpaMaxedOut
+      isRegex: false
