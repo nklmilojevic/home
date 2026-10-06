@@ -47,6 +47,7 @@ spec:
         dims: 1536
       review:
         model: litellm/chatgpt/gpt-6-sol
+        diagram: true
       confidence:
         model: litellm/chatgpt/gpt-6-sol
         threshold: 4
