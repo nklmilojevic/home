@@ -18,13 +18,13 @@ sinks:
     type: vector
     compression: gzip
     version: "2"
-    address: vector-aggregator.o11y.svc.cluster.local:6000
+    address: http://vector-aggregator.o11y.svc.cluster.local:6000
     inputs: ["mikrotik_source"]
   k8s:
     type: vector
     compression: gzip
     version: "2"
-    address: vector-aggregator.o11y.svc.cluster.local:6001
+    address: http://vector-aggregator.o11y.svc.cluster.local:6001
     inputs: ["k8s_source"]
   prometheus_exporter:
     type: prometheus_exporter
