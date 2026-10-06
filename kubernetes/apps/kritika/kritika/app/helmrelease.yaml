@@ -43,8 +43,8 @@ spec:
           apiKey:
             env: OPENROUTER_API_KEY
       embedding:
-        model: openrouter/voyageai/voyage-code-4
-        dims: 1024
+        model: openrouter/openai/text-embedding-3-small
+        dims: 1536
       review:
         model: litellm/chatgpt/gpt-6-sol
     env:
