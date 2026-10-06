@@ -52,6 +52,9 @@ spec:
         model: litellm/chatgpt/gpt-6-sol
         threshold: 4
         risk: medium
+      agent:
+        prompt: 200000
+        tokens: 16000000
     env:
       GITHUB_APP_CLIENT_ID:
         valueFrom:
