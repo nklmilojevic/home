@@ -81,6 +81,15 @@ spec:
             - port: http-metrics
               scheme: http
 
+    kubelet:
+      vmScrape:
+        spec:
+          relabelConfigs:
+            - sourceLabels: [__metrics_path__]
+              targetLabel: metrics_path
+            - targetLabel: job
+              replacement: kubelet
+
     grafana:
       enabled: false
 
@@ -346,13 +355,15 @@ spec:
         # kubelet MemoryPressure evictions, 2026-08-19..25) tripled daily series
         # (466k -> 1.2M) and pushed usage to 81% (DiskRunsOutOfSpace). The bloated
         # index ages out only with the 1-month retention, so grow the volume for
-        # merge headroom. ceph-block allows in-place expansion.
+        # merge headroom. miroir allows in-place expansion. 30Gi hit 80% again on
+        # 2026-10-06 (~0.7GB/day): monthly partitions drop only once wholly past
+        # retention, so steady state holds up to two months of data.
         storage:
           accessModes:
             - ReadWriteOnce
           resources:
             requests:
-              storage: 30Gi
+              storage: 50Gi
     vmagent:
       enabled: true
       route:
