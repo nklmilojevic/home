@@ -16,13 +16,13 @@ sources:
 sinks:
   mikrotik:
     type: vector
-    compression: true
+    compression: gzip
     version: "2"
     address: vector-aggregator.o11y.svc.cluster.local:6000
     inputs: ["mikrotik_source"]
   k8s:
     type: vector
-    compression: true
+    compression: gzip
     version: "2"
     address: vector-aggregator.o11y.svc.cluster.local:6001
     inputs: ["k8s_source"]
