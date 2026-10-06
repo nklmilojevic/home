@@ -45,9 +45,8 @@ spec:
       embedding:
         model: openrouter/voyageai/voyage-code-4
         dims: 1024
-      defaults:
-        models:
-          review: litellm/chatgpt/gpt-6-sol
+      review:
+        model: litellm/chatgpt/gpt-6-sol
     env:
       GITHUB_APP_CLIENT_ID:
         valueFrom:
