@@ -47,6 +47,10 @@ spec:
         dims: 1536
       review:
         model: litellm/chatgpt/gpt-6-sol
+      confidence:
+        model: litellm/chatgpt/gpt-6-sol
+        threshold: 4
+        risk: medium
     env:
       GITHUB_APP_CLIENT_ID:
         valueFrom:
