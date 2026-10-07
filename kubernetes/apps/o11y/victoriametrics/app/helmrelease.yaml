@@ -202,13 +202,7 @@ spec:
       enabled: true
       annotations: {}
       route:
-        enabled: true
-        parentRefs: &route-parent
-          - name: internal
-            namespace: network
-            sectionName: https
-        hostnames:
-          - alertmanager.nikola.wtf
+        enabled: false
       # spec for VMAlertmanager crd
       # https://github.com/VictoriaMetrics/operator/blob/master/docs/api.MD#vmalertmanagerspec
       spec:
@@ -311,7 +305,10 @@ spec:
       remoteWriteVMAgent: false
       route:
         enabled: true
-        parentRefs: *route-parent
+        parentRefs: &route-parent
+          - name: internal
+            namespace: network
+            sectionName: https
         hostnames:
           - vmalert.nikola.wtf
       # spec for VMAlert crd

@@ -6,6 +6,7 @@ resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
   - ./vmalertmanager.yaml
+  - ./httproute-alertmanager.yaml
   - ./alertmanager-prometheusrule.yaml
   - ./hardware-temperature-prometheusrule.yaml
   - ./snapshotpolicy-local.yaml
