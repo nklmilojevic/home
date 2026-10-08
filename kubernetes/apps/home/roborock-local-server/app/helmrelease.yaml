@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/python-roborock/local_roborock_server
-              tag: 1.2.0@sha256:3441a7cbde8119388d49392aac5e8c21523b25f71e226fbaf637a505d1ac8b6e
+              tag: 1.2.1@sha256:0f3d0dd05f14315273df5622d43008b2665c24b2fed79277822d4c9184eab158
             probes:
               liveness: &probes
                 enabled: true
