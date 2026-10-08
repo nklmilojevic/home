@@ -13,3 +13,4 @@ resources:
   - ./stirling-pdf/ks.yaml
   - ./searxng/ks.yaml
   - ./bastion/ks.yaml
+  - ./runwall/ks.yaml
