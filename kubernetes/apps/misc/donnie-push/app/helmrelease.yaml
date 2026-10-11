@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/donnie-push
-              tag: sha-93fb705@sha256:59613ba7243d1f9ac84fdf89484af63bb0cfd4b33badfa3dc252913e5490b784
+              tag: sha-5064087@sha256:8b43e6b4459787c0e02ddf889adf3225c00c93eb50fdb2583785815fb3f66964
             env:
               TZ: "Europe/Belgrade"
               LISTEN_ADDR: :8080
@@ -39,6 +39,9 @@ spec:
               DB_PATH: /data/donnie.db
               # Public OAuth client id of the DonnieCalendarko apps (not a secret).
               GOOGLE_CLIENT_ID: 455254741888-mi762p0oidhcc6itos47i0bpjj5t402r.apps.googleusercontent.com
+              # Public Zoom client id (public-client OAuth, not a secret): the relay
+              # holds the account's one Zoom sign-in for all its devices.
+              ZOOM_CLIENT_ID: mzKBrjOpTs6VYpcDOtj5Ng
             envFrom:
               - secretRef:
                   name: donnie-push-secret
