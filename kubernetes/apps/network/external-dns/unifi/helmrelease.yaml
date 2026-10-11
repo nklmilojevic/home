@@ -53,6 +53,7 @@ spec:
       - "service"
     txtOwnerId: main
     txtPrefix: k8s.main.
+    annotationFilter: external-dns.home/unifi!=skip
     domainFilters:
       - "nikola.wtf"
     serviceMonitor:
