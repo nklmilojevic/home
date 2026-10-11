@@ -1,0 +1,102 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: donnie-push
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: donnie-push
+  values:
+    controllers:
+      donnie-push:
+        # SQLite on a ReadWriteOnce volume: exactly one pod, never two at once.
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        pod:
+          imagePullSecrets:
+            - name: donnie-push-ghcr-credentials
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/nklmilojevic/donnie-push
+              tag: sha-ae526cb@sha256:80d734833bb47d68fb7e173941cab8816d35464e1c6132420872cade573e915c
+            env:
+              TZ: "Europe/Belgrade"
+              LISTEN_ADDR: :8080
+              BASE_URL: https://donnie.milojevic.dev
+              DB_PATH: /data/donnie.db
+              # Public OAuth client id of the DonnieCalendarko apps (not a secret).
+              GOOGLE_CLIENT_ID: 455254741888-mi762p0oidhcc6itos47i0bpjj5t402r.apps.googleusercontent.com
+            envFrom:
+              - secretRef:
+                  name: donnie-push-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: &port 8080
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+
+    service:
+      app:
+        controller: donnie-push
+        ports:
+          http:
+            port: *port
+
+    route:
+      # Public: the apps register here, Google posts calendar changes to
+      # /v1/google/notify, Zoom redirects to /zoom/callback. Every request is
+      # authenticated (Google token, installation secret or signed channel token).
+      app:
+        annotations:
+          gatus.home-operations.com/endpoint: |
+            url: https://donnie.milojevic.dev/healthz
+        hostnames:
+          - donnie.milojevic.dev
+        parentRefs:
+          - name: external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: donnie-push
+                port: *port
+
+    persistence:
+      data:
+        existingClaim: donnie-push
+        advancedMounts:
+          donnie-push:
+            app:
+              - path: /data

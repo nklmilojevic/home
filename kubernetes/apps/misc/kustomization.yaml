@@ -14,3 +14,4 @@ resources:
   - ./searxng/ks.yaml
   - ./bastion/ks.yaml
   - ./runwall/ks.yaml
+  - ./donnie-push/ks.yaml
