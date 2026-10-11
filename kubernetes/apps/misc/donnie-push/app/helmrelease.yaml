@@ -78,6 +78,7 @@ spec:
       # Public: the apps register here, Google posts calendar changes to
       # /v1/google/notify, Zoom redirects to /zoom/callback. Every request is
       # authenticated (Google token, installation secret or signed channel token).
+      # /metrics is deliberately not routed: in-cluster only.
       app:
         annotations:
           gatus.home-operations.com/endpoint: |
@@ -89,7 +90,15 @@ spec:
             namespace: network
             sectionName: https
         rules:
-          - backendRefs:
+          - matches:
+              - path:
+                  value: /v1/
+              - path:
+                  value: /zoom/callback
+              - path:
+                  type: Exact
+                  value: /healthz
+            backendRefs:
               - name: donnie-push
                 port: *port
 
