@@ -16,6 +16,14 @@
     "kubernetes/apps/misc/invoicing/**",
     "kubernetes/apps/security/kyverno/policies/policies.yaml",
   ],
+  packageRules: [
+    {
+      description: "Private GHCR image; tag and digest are bumped by donnie-push's own CI",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/nklmilojevic/donnie-push"],
+      enabled: false,
+    },
+  ],
   flux: {
     managerFilePatterns: ["/^kubernetes/.+\\.ya?ml$/"],
   },
