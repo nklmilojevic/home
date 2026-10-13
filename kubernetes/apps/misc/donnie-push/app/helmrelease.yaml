@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/donnie-push
-              tag: sha-b05e9f9@sha256:2fb96a0c943a06da7a2a37c237232a61bddee45eccbabbdc6db1dc76f3cee96f
+              tag: sha-fc32571@sha256:44bcf229bc2f1c960834ea7ed87aaf6502424b7046320c7a7f2635697c4deed5
             env:
               TZ: "Europe/Belgrade"
               LISTEN_ADDR: :8080
@@ -98,6 +98,10 @@ spec:
                   value: /v1/
               - path:
                   value: /zoom/callback
+              - path:
+                  value: /p/
+              - path:
+                  value: /o/
               - path:
                   type: Exact
                   value: /healthz
