@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/donnie-push
-              tag: sha-8d9b03e@sha256:7f77173edae0dfc9077f5ec01836affdc3105d5d39d71584157e552350002f7a
+              tag: sha-73f28ac@sha256:54b34227f1c8b1f7e4034b8816fb7addabfed0ed52ec1300a96464f60de7404d
             env:
               TZ: "Europe/Belgrade"
               LISTEN_ADDR: :8080
