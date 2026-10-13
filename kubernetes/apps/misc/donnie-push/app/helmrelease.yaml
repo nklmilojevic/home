@@ -105,6 +105,12 @@ spec:
               - path:
                   type: Exact
                   value: /healthz
+              - path:
+                  type: Exact
+                  value: /privacy
+              - path:
+                  type: Exact
+                  value: /terms
             backendRefs:
               - name: donnie-push
                 port: *port
