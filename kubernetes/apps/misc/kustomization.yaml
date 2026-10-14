@@ -15,3 +15,4 @@ resources:
   - ./bastion/ks.yaml
   - ./runwall/ks.yaml
   - ./donnie-push/ks.yaml
+  - ./thurm-push-relay/ks.yaml
