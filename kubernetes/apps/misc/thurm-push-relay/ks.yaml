@@ -30,5 +30,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      APP_UID: "65532"
+      APP_GID: "65532"
       KOPIUR_CLAIM: thurm-push-relay
       KOPIUR_CAPACITY: 1Gi
