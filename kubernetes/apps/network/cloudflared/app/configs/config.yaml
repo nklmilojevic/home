@@ -9,4 +9,6 @@ ingress:
     service: *svc
   - hostname: donnie.milojevic.dev
     service: *svc
+  - hostname: thurm-push.milojevic.dev
+    service: *svc
   - service: http_status:404
