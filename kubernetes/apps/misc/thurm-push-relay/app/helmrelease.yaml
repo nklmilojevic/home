@@ -1,0 +1,105 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: thurm-push-relay
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: thurm-push-relay
+  values:
+    controllers:
+      thurm-push-relay:
+        # devices.json on a ReadWriteOnce volume: exactly one pod, never two at once.
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        pod:
+          imagePullSecrets:
+            - name: thurm-push-relay-ghcr-credentials
+          securityContext:
+            # distroless "nonroot"
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            fsGroup: 65532
+            fsGroupChangePolicy: OnRootMismatch
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/nklmilojevic/thurm-push-relay
+              tag: sha-69a4e90@sha256:c53b995b64e376f00b3c8974566825b2e091b7af40eedd80b0db031cd4562ebb
+            env:
+              TZ: "Europe/Belgrade"
+              THURM_RELAY_LISTEN: 0.0.0.0:8080
+              THURM_RELAY_DATA: /data
+              APNS_TOPIC: com.thurm.ios
+            envFrom:
+              - secretRef:
+                  name: thurm-push-relay-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: &port 8080
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+
+    service:
+      app:
+        controller: thurm-push-relay
+        ports:
+          http:
+            port: *port
+
+    route:
+      # Public: device registration and signed notices; every request is authenticated.
+      app:
+        annotations:
+          gatus.home-operations.com/endpoint: |
+            url: https://thurm-push.milojevic.dev/healthz
+        hostnames:
+          - thurm-push.milojevic.dev
+        parentRefs:
+          - name: external
+            namespace: network
+            sectionName: https
+        rules:
+          - matches:
+              - path:
+                  value: /v1/
+              - path:
+                  type: Exact
+                  value: /healthz
+            backendRefs:
+              - name: thurm-push-relay
+                port: *port
+
+    persistence:
+      data:
+        existingClaim: thurm-push-relay
+        advancedMounts:
+          thurm-push-relay:
+            app:
+              - path: /data
