@@ -7,7 +7,7 @@ metadata:
 spec:
   groupRef:
     name: mcp-tools
-  image: ghcr.io/sirkirby/unifi-network-mcp:0.38.2@sha256:54fd144dd1331a07751a547652082a944aba2c5c5cda5e58cbf1d9ab2d2c7c6c
+  image: ghcr.io/sirkirby/unifi-network-mcp:0.38.3@sha256:f872b0e26ceb40d144d857854a92d37d7a4f71f567f9a757a450d20301062855
   transport: streamable-http
   mcpPort: 3000
   env:
