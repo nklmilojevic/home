@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/thurm-push-relay
-              tag: sha-c102776@sha256:cd0bdf774ba08409859e6d6ea7b87b854d9bc2a9991ea36a2794a651251f2e90
+              tag: sha-484f7ab@sha256:6cb3a19e5a83e04e63939db674092c3dcea5290989034a32a75f6d36baed757b
             env:
               TZ: "Europe/Belgrade"
               THURM_RELAY_LISTEN: 0.0.0.0:8080
