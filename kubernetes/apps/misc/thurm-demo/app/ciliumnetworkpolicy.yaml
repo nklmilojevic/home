@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: thurm-demo
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: thurm-demo
+  ingress:
+    - fromEntities:
+        - all
+      toPorts:
+        - ports:
+            - port: "2222"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchName: thurm-push.milojevic.dev
+    - toFQDNs:
+        - matchName: thurm-push.milojevic.dev
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
