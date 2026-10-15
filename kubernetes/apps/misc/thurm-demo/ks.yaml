@@ -17,6 +17,8 @@ spec:
       namespace: miroir-system
     - name: external-secrets-stores
       namespace: security
+    - name: gvisor
+      namespace: kube-system
   path: ./kubernetes/apps/misc/thurm-demo/app
   prune: true
   sourceRef:
