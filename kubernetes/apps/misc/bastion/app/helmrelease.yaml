@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/bastion
-              tag: 0.4.3@sha256:7e28a54d810f3dfc1d95b643495ef94505b1f63ab0c81d2c108ba99677b4381d
+              tag: 0.6.0@sha256:5661bb3c2786d898ec97f598272b793c7afb8d450ad292df0443a5b031e23510
             env:
               TZ: Europe/Belgrade
               PUBLIC_KEY: |
@@ -43,6 +43,8 @@ spec:
               TALOSCONFIG: /run/secrets/bastion/talosconfig
               BASTION_WORKDIR: /config/home
               TELEGRAM_ALLOWED_USER_ID: "104243855"
+              BASTION_THURM_TAILSCALE: "true"
+              THURM_TAILSCALE_AUTH_KEY_FILE: /run/secrets/thurm/authkey
             envFrom:
               - secretRef:
                   name: bastion-secret
@@ -100,4 +102,10 @@ spec:
         name: bastion-talosconfig
         globalMounts:
           - path: /run/secrets/bastion
+            readOnly: true
+      thurm-tailscale:
+        type: secret
+        name: bastion-thurm-tailscale
+        globalMounts:
+          - path: /run/secrets/thurm
             readOnly: true
