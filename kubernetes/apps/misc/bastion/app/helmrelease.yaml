@@ -43,6 +43,8 @@ spec:
               TALOSCONFIG: /run/secrets/bastion/talosconfig
               BASTION_WORKDIR: /config/home
               TELEGRAM_ALLOWED_USER_ID: "104243855"
+              BASTION_THURM_TAILSCALE: "true"
+              THURM_TAILSCALE_AUTH_KEY_FILE: /run/secrets/thurm/authkey
             envFrom:
               - secretRef:
                   name: bastion-secret
@@ -100,4 +102,10 @@ spec:
         name: bastion-talosconfig
         globalMounts:
           - path: /run/secrets/bastion
+            readOnly: true
+      thurm-tailscale:
+        type: secret
+        name: bastion-thurm-tailscale
+        globalMounts:
+          - path: /run/secrets/thurm
             readOnly: true
