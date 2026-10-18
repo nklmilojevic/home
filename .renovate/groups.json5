@@ -54,8 +54,8 @@
       description: "Actions Runner Controller charts",
       groupName: "ARC",
       matchPackageNames: [
-        "actions-runner-controller-charts/gha-runner-scale-set-controller",
-        "actions-runner-controller-charts/gha-runner-scale-set",
+        "ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller",
+        "ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set",
       ],
       matchDatasources: ["helm", "docker"],
       group: {
