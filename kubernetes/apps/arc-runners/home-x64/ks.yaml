@@ -14,6 +14,8 @@ spec:
       namespace: arc-systems
     - name: external-secrets-stores
       namespace: security
+    - name: home-x64-jobs
+      namespace: arc-jobs
   path: ./kubernetes/apps/arc-runners/home-x64/app
   prune: true
   sourceRef:

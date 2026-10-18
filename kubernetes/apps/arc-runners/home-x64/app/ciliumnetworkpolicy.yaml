@@ -27,8 +27,6 @@ spec:
             - 169.254.0.0/16
       toPorts:
         - ports:
-            - port: "80"
-              protocol: TCP
             - port: "443"
               protocol: TCP
 ---
