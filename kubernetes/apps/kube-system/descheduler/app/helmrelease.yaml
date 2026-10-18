@@ -19,8 +19,6 @@ spec:
         memory: 256Mi
     deschedulerPolicyAPIVersion: descheduler/v1alpha2
     deschedulerPolicy:
-      metricsProviders:
-        - source: KubernetesMetrics
       profiles:
         - name: Default
           pluginConfig:
@@ -49,29 +47,40 @@ spec:
                     - SystemCriticalPods
             - name: LowNodeUtilization
               args:
-                metricsUtilization:
-                  source: KubernetesMetrics
-                # A node is "underutilized" only when ALL resources are below
-                # thresholds. On a 3-node cluster the old 20/20/20 was
-                # unreachable (every node runs >22 pods and >30% memory), so
-                # the plugin never found an eviction target and did nothing.
-                # targetThresholds must sit well above steady-state actual
-                # usage: kube-scheduler places pods by requests, so a tight
-                # target makes evicted pods land back on the same node and
-                # loop forever (evicted HA & co every 5m, 2026-08-08).
-                # 2026-08-25: raised memory 75 -> 85. The qwen3 model servers
-                # lifted icarus001/002 steady-state to ~77-81% actual memory,
-                # which re-armed the loop on 2026-08-19 (~40-690 evictions/day
-                # for 6 days, ~1200 churned pod names/day) and tripled
-                # VictoriaMetrics daily series, filling the vmsingle disk.
+                # Measured by requests, NOT actual usage, and relative to the
+                # cluster mean, NOT absolute.
+                #
+                # Requests because that is what kube-scheduler places by. The
+                # old metrics-based config looped twice (2026-08-08, and
+                # 2026-08-19 when the qwen3 servers lifted actual memory):
+                # a node "overutilized" by actual usage still had the lowest
+                # requests, so every evicted pod was scheduled straight back
+                # onto it. With both sides counting requests, an evicted pod
+                # always lands on the underutilized node.
+                #
+                # Deviation because absolute targets high enough to dodge that
+                # loop (70/85/80) were never reached, so the plugin stopped
+                # acting at all. After the Talos 1.14.3/1.14.4 rolling reboots
+                # (2026-10-16/17) icarus002 came back with 33 pods against ~85
+                # on its peers and stayed that way. Least-allocated scoring
+                # then sent nearly every new pod there, including all ~70
+                # hourly kopiur movers, whose kopia caches on openebs-hostpath
+                # share the system disk with etcd: WAL fsync p99 went from
+                # ~2ms to 0.4s and etcdHighCommitDurations fired.
+                #
+                # Underutilized = below mean - thresholds on every resource;
+                # overutilized = above mean + targetThresholds on any. The
+                # >=15-point gap between the two bands is what keeps it from
+                # oscillating once the nodes are level.
+                useDeviationThresholds: true
                 thresholds:
-                  cpu: 30
-                  memory: 45
-                  pods: 60
+                  cpu: 5
+                  memory: 10
+                  pods: 10
                 targetThresholds:
-                  cpu: 70
-                  memory: 85
-                  pods: 80
+                  cpu: 10
+                  memory: 10
+                  pods: 10
                 evictionLimits:
                   node: 3
             - name: RemoveFailedPods
