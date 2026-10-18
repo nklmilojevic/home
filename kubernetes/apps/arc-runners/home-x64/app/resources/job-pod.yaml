@@ -1,0 +1,36 @@
+---
+metadata:
+  labels:
+    arc.home/role: job
+spec:
+  automountServiceAccountToken: false
+  enableServiceLinks: false
+  priorityClassName: arc-runner
+  securityContext:
+    fsGroup: 1001
+    seccompProfile:
+      type: RuntimeDefault
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchLabels:
+                arc.home/role: job
+  containers:
+    - name: $job
+      securityContext:
+        capabilities:
+          drop:
+            - NET_RAW
+      resources:
+        requests:
+          cpu: "2"
+          memory: 6Gi
+          ephemeral-storage: 10Gi
+        limits:
+          cpu: "8"
+          memory: 16Gi
+          ephemeral-storage: 60Gi

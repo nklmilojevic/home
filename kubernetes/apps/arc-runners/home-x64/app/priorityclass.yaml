@@ -1,0 +1,9 @@
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: arc-runner
+value: -100
+preemptionPolicy: Never
+globalDefault: false
+description: GitHub Actions runner and job pods; yield to every other workload.
