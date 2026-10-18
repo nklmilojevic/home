@@ -63,7 +63,7 @@ spec:
               allowPrivilegeEscalation: false
             image:
               repository: quay.io/nklmilojevic/home-assistant
-              tag: 2026.10.1@sha256:e33d5a4d64f8a97899e263d131dbdfe15fd8e7bab17982b77d48d9a9bd66cae4
+              tag: 2026.10.2@sha256:5289011de9be7d8ecfd6bdc2e15b8215bb20efc5678ab6841314906359d2618c
             env:
               TZ: "Europe/Belgrade"
             envFrom:
