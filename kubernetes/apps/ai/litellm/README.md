@@ -8,7 +8,8 @@ API authentication.
 
 - External API base: `https://litellm.nikola.wtf/v1` (internal gateway only).
 - Cluster API base: `http://litellm.ai.svc.cluster.local:4000/v1`.
-- Models: `chatgpt/gpt-5.6-sol` and `chatgpt/gpt-6-astra` (ChatGPT
+- Models: `chatgpt/gpt-5.6-sol`, `chatgpt/gpt-6-astra`, `chatgpt/gpt-6-sol` and
+  `chatgpt/gpt-6.1-sol` (ChatGPT
   subscription). Claude is not served here; see "Claude through Meridian".
 - Authentication: the master key from 1Password item `litellm`, field `master_key`.
   Create a strong random `sk-` prefixed value before deploying. This protects the
