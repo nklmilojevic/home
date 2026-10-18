@@ -6,6 +6,9 @@ metadata:
   name: home-x64-jobs
 spec:
   endpointSelector: {}
+  enableDefaultDeny:
+    ingress: true
+    egress: true
   ingress:
     - {}
   egress:
