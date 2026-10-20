@@ -19,6 +19,9 @@ spec:
       value: "false"
     - name: RENOVATE_REQUIRE_CONFIG
       value: required
+    # postUpgradeTasks commands repos may run; anything else is refused.
+    - name: RENOVATE_ALLOWED_COMMANDS
+      value: '["^go tool templ generate( -path [\\w/.-]+)?$"]'
   image: ghcr.io/renovatebot/renovate:44.172.1
   parallelism: 3
   provider:
