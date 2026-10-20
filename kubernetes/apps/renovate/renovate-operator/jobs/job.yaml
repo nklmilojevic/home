@@ -8,9 +8,12 @@ metadata:
 spec:
   discoveryFilters:
     - nklmilojevic/*
+  # Repos opt in with the `renovate` topic, so discovery never schedules a pod
+  # for the rest. A tagged repo without a config is skipped quietly instead of
+  # getting an onboarding PR.
+  discoverTopics:
+    - renovate
   skipForks: true
-  # Repos opt in with their own renovate config; the rest are skipped quietly
-  # instead of getting an onboarding PR.
   extraEnv:
     - name: RENOVATE_ONBOARDING
       value: "false"
