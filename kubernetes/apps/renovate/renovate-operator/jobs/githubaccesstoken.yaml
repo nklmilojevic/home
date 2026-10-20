@@ -1,7 +1,8 @@
 ---
 # Mints a short-lived (~1h) GitHub App installation token, the in-cluster
 # equivalent of actions/create-github-app-token. Reuses your existing Renovate
-# GitHub App. appID / installID are NOT secret; fill them in below.
+# GitHub App. appID / installID are NOT secret. No repositories list: the token
+# covers every repo the installation can reach, so no repo is named here.
 apiVersion: generators.external-secrets.io/v1alpha1
 kind: GithubAccessToken
 metadata:
@@ -9,8 +10,6 @@ metadata:
 spec:
   appID: "1092196"
   installID: "59325396"
-  repositories:
-    - home
   permissions:
     contents: write
     pull_requests: write
