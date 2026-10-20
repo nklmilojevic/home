@@ -19,7 +19,7 @@ spec:
       value: "false"
     - name: RENOVATE_REQUIRE_CONFIG
       value: required
-  image: ghcr.io/renovatebot/renovate:44.172.0
+  image: ghcr.io/renovatebot/renovate:44.172.1
   parallelism: 3
   provider:
     name: github
