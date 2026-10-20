@@ -31,7 +31,7 @@ spec:
               repository: ghcr.io/nklmilojevic/petkit-local
               # The digest is not decoration: spegel serves the cached layers
               # for an unchanged tag forever.
-              tag: 2.1.3@sha256:dae913519e7e74de1c6df60da1b0f5ac345d5dfbf5b5417fe4b5195359521662
+              tag: 2.1.4@sha256:86dc2275cc9227e779bb8169f691ce7e658963f3f5cb64f89a35386a87f76874
             args:
               # The device is handed only the api-url host for MQTT and media
               # uploads, on firmware-fixed ports (443/9000) — so this must stay
