@@ -8,6 +8,14 @@ metadata:
 spec:
   discoveryFilters:
     - nklmilojevic/*
+  skipForks: true
+  # Repos opt in with their own renovate config; the rest are skipped quietly
+  # instead of getting an onboarding PR.
+  extraEnv:
+    - name: RENOVATE_ONBOARDING
+      value: "false"
+    - name: RENOVATE_REQUIRE_CONFIG
+      value: required
   image: ghcr.io/renovatebot/renovate:44.172.0
   parallelism: 3
   provider:
@@ -15,7 +23,9 @@ spec:
   resources:
     requests:
       cpu: 100m
-      memory: 128Mi
+      memory: 512Mi
+    limits:
+      memory: 2Gi
   schedule: 0 * * * *
   secretRef: renovate-secret
   webhook:
