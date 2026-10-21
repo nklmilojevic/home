@@ -22,7 +22,7 @@ spec:
     # postUpgradeTasks commands repos may run; anything else is refused.
     - name: RENOVATE_ALLOWED_COMMANDS
       value: '["^go tool templ generate( -path [\\w/.-]+)?$"]'
-  image: ghcr.io/renovatebot/renovate:44.173.1
+  image: ghcr.io/renovatebot/renovate:44.174.0
   parallelism: 3
   provider:
     name: github
