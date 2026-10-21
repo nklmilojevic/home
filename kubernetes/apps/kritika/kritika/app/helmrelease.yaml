@@ -30,11 +30,11 @@ spec:
           webhookSecret:
             env: GITHUB_APP_WEBHOOK_SECRET
       providers:
-        litellm:
+        cliproxyapi:
           type: openai
-          baseUrl: http://litellm.ai.svc.cluster.local:4000/v1
+          baseUrl: http://cliproxyapi.ai.svc.cluster.local:8317/v1
           apiKey:
-            env: LITELLM_API_KEY
+            env: CLIPROXYAPI_API_KEY
         openrouter:
           type: openrouter
           apiKey:
@@ -43,10 +43,10 @@ spec:
         model: openrouter/openai/text-embedding-3-small
         dims: 1536
       review:
-        model: litellm/chatgpt/gpt-6-sol
+        model: cliproxyapi/gpt-6-sol
         diagram: true
       confidence:
-        model: litellm/chatgpt/gpt-6-sol
+        model: cliproxyapi/gpt-6-sol
         threshold: 4
         risk: medium
       agent:
@@ -73,11 +73,11 @@ spec:
           secretKeyRef:
             name: kritika-secret
             key: GITHUB_APP_WEBHOOK_SECRET
-      LITELLM_API_KEY:
+      CLIPROXYAPI_API_KEY:
         valueFrom:
           secretKeyRef:
             name: kritika-secret
-            key: LITELLM_API_KEY
+            key: CLIPROXYAPI_API_KEY
       OPENROUTER_API_KEY:
         valueFrom:
           secretKeyRef:

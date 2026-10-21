@@ -1,0 +1,125 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app cliproxyapi
+  namespace: ai
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: cliproxyapi
+  values:
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+    controllers:
+      cliproxyapi:
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          seed:
+            image: &image
+              repository: docker.io/eceasy/cli-proxy-api
+              tag: v8.0.36@sha256:bc25ea627f675e4e3714f48d3b1dd22643e45464dcc1c3c7c5688f51bc6b49fb
+            command:
+              - sh
+              - -c
+              - |
+                mkdir -p /data/auths
+                ls /data/auths/*.json >/dev/null 2>&1 && exit 0
+                cp /seed/codex.json /data/auths/codex.json
+                chmod 600 /data/auths/codex.json
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+        containers:
+          app:
+            image: *image
+            command:
+              - /CLIProxyAPI/CLIProxyAPI
+            args:
+              - --config
+              - /config/config.yaml
+              - --local-model
+            env:
+              TZ: Europe/Belgrade
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: &port 8317
+                  initialDelaySeconds: 5
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 6
+              readiness: *probe
+            securityContext: *securityContext
+            resources:
+              requests:
+                cpu: 25m
+                memory: 64Mi
+              limits:
+                memory: 512Mi
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - cliproxyapi.nikola.wtf
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
+    persistence:
+      data:
+        existingClaim: cliproxyapi
+        globalMounts:
+          - path: /data
+      config:
+        type: secret
+        name: cliproxyapi
+        advancedMounts:
+          cliproxyapi:
+            app:
+              - path: /config
+                readOnly: true
+      seed:
+        type: secret
+        name: cliproxyapi-seed
+        advancedMounts:
+          cliproxyapi:
+            seed:
+              - path: /seed
+                readOnly: true
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
