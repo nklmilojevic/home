@@ -18,3 +18,4 @@ resources:
   - ./litellm-operator/ks.yaml
   - ./litellm/ks.yaml
   - ./meridian/ks.yaml
+  - ./cliproxyapi/ks.yaml

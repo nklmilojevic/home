@@ -23,6 +23,13 @@
       matchPackageNames: ["ghcr.io/nklmilojevic/donnie-push"],
       enabled: false,
     },
+    {
+      description: "CLIProxyAPI ships several releases a day and holds the ChatGPT subscription; only take releases that survived 3 days",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["docker.io/eceasy/cli-proxy-api"],
+      minimumReleaseAge: "3 days",
+      internalChecksFilter: "strict",
+    },
   ],
   flux: {
     managerFilePatterns: ["/^kubernetes/.+\\.ya?ml$/"],

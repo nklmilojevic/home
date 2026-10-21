@@ -42,7 +42,8 @@ spec:
               GIT_USER_EMAIL: nikola@milojevic.me
               TALOSCONFIG: /run/secrets/bastion/talosconfig
               BASTION_WORKDIR: /config/home
-              BASTION_MODEL: litellm/chatgpt/gpt-6.1-sol
+              BASTION_MODEL: litellm/gpt-6.1-sol
+              LITELLM_BASE_URL: http://cliproxyapi.ai.svc.cluster.local:8317
               TELEGRAM_ALLOWED_USER_ID: "104243855"
               BASTION_THURM_TAILSCALE: "true"
               THURM_TAILSCALE_AUTH_KEY_FILE: /run/secrets/thurm/authkey
