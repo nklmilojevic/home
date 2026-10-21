@@ -15,7 +15,5 @@ resources:
   - ./victorialogs-mcp/ks.yaml
   - ./victoriametrics-mcp/ks.yaml
   - ./hermes/ks.yaml
-  - ./litellm-operator/ks.yaml
-  - ./litellm/ks.yaml
   - ./meridian/ks.yaml
   - ./cliproxyapi/ks.yaml
