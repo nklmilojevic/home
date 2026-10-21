@@ -13,4 +13,3 @@ resources:
   - ./isponsorblocktv/ks.yaml
   - ./openspeedtest/ks.yaml
   - ./privado-socks/ks.yaml
-  - ./tailscale/ks.yaml
