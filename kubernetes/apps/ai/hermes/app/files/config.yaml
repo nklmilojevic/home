@@ -3,20 +3,24 @@
 # /opt/data/config.yaml (this file wins on conflicting keys), so the values below
 # stay enforced while anything you set interactively with `hermes model`
 # (e.g. model.default) is preserved on the PVC.
+providers:
+  cliproxyapi:
+    api: http://cliproxyapi.ai.svc.cluster.local:8317/v1
+    key_env: CLIPROXYAPI_API_KEY
+    transport: codex_responses
+    default_model: gpt-6.1-sol
+
 model:
-  # OpenAI Codex — authenticates via device-code OAuth using your ChatGPT/Codex
-  # subscription. There is NO API key. Complete a one-time OAuth login from a
-  # headless pod (writes /opt/data/auth.json on the VolSync PVC, then auto-refreshes):
-  #   kubectl exec -n ai deploy/hermes -it -- hermes auth add openai-codex --type oauth --no-browser --manual-paste
-  #   kubectl exec -n ai deploy/hermes -it -- hermes model   # pick OpenAI Codex, set default model
-  #
-  # Local-LLM trial (2026-07): LM Studio on the Windows PC (10.50.0.81, RTX 5080),
-  # reached via LM_BASE_URL in the HelmRelease env. Also loaded there:
-  # google/gemma-4-26b-a4b and google/gemma-4-e4b — switch with `hermes model`
-  # (reverts to the pinned default on pod restart). To go back to hosted:
-  # provider: opencode-go, default: minimax-m3.
-  provider: opencode-go
-  default: minimax-m3
+  # ChatGPT subscription through the in-cluster CLIProxyAPI (ai/cliproxyapi),
+  # spoken over the Responses API. Switch models with `hermes model`; the pinned
+  # default returns on pod restart.
+  provider: custom:cliproxyapi
+  default: gpt-6.1-sol
+  base_url: http://cliproxyapi.ai.svc.cluster.local:8317/v1
+
+fallback_providers:
+  - provider: opencode-go
+    model: minimax-m3
 
 toolsets:
   - hermes-cli
