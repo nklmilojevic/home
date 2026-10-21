@@ -107,7 +107,7 @@ spec:
       enabled: true
       egressPorts:
         - 443
-        - 4000
+        - 8317
     monitoring:
       serviceMonitor:
         enabled: true
