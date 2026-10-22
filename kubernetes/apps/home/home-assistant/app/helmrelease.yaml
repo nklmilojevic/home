@@ -86,7 +86,7 @@ spec:
           openssh:
             image:
               repository: quay.io/nklmilojevic/openssh
-              tag: 3.24.2@sha256:aac2bcd38a4005e8c562f5cc7061a9a5f4e86495e617b9144bee1b335da9f43c
+              tag: 3.24.3@sha256:50305d10620c69e06bfa9205297b2f80e04292d334927856c50fe06176ca2a3d
             env:
               TZ: "Europe/Belgrade"
               PUBLIC_KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrYywYsK/kocVOa48LjaOR2X10g7lwsB1PtkyBJX800 id_ed25519"
