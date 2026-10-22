@@ -7,7 +7,7 @@ metadata:
 spec:
   groupRef:
     name: mcp-tools
-  image: ghcr.io/perfectra1n/kubesearch-mcp:1.1.0@sha256:4b39b2e708a1e038f3d8b33393eb93327aa2f29643dd12decb421efe68d11459
+  image: ghcr.io/perfectra1n/kubesearch-mcp:1.2.0@sha256:6454a6272e52c524d7a77ff82797776fd3e817b2741d652a451d5f37bd94ce29
   transport: streamable-http
   mcpPort: 3000
   env:
