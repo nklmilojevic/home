@@ -19,11 +19,13 @@ stage_fixed = true
 
 [pre-commit.commands.format-json]
 glob = ["*.json", "*.json5", "*.jsonc"]
+exclude = [".agents/skills/**"]
 run = "oxfmt {staged_files}"
 stage_fixed = true
 
 [pre-commit.commands.format-markdown]
 glob = ["*.md", "*.markdown", "*.mdx"]
+exclude = [".agents/skills/**"]
 run = "oxfmt {staged_files}"
 stage_fixed = true
 

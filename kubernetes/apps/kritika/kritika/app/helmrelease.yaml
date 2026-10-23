@@ -45,6 +45,19 @@ spec:
       review:
         model: cliproxyapi/gpt-6-sol
         diagram: true
+        agents:
+          - name: security
+            categories:
+              - security
+            effort: high
+            instructions: |-
+              Review the change as an application security engineer, following the security-audit skill in guidance mode only: never start its full audit workflow, write audit artifacts or run target code.
+              Report only findings with a concrete trust boundary, an affected principal or resource, and a reachable source path in this change. Treat anything you could not confirm from source as needing validation and say what would confirm it.
+              For infrastructure and GitOps changes, weigh exposed routes and LoadBalancers, NetworkPolicy gaps, privileged or root containers, host mounts, RBAC widening, secret handling and unpinned images or actions.
+            skills:
+              scope:
+                security-audit:
+                  load: true
       confidence:
         model: cliproxyapi/gpt-6-sol
         threshold: 4
