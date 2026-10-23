@@ -232,7 +232,7 @@ Immediately after each hunter wave, spend the reserved invocation on one fresh `
       "attack_class": "...",
       "starting_paths": ["repo/relative/path"],
       "selected_companion_blocks": ["FILE.md#section"],
-      "excluded_blocks": [{ "block": "FILE.md#section", "reason": "..." }],
+      "excluded_blocks": [{"block": "FILE.md#section", "reason": "..."}],
       "reason": "source-backed coverage gap"
     }
   ],
