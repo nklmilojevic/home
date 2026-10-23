@@ -79,12 +79,14 @@ spec:
                 set -e
                 mkdir -p /opt/data/.local/bin /opt/data/.local/go
 
-                if [ ! -f /opt/data/.local/bin/gh ]; then
+                # renovate: datasource=github-releases depName=cli/cli
+                GH_VERSION=v2.103.1
+                if [ "$$(/opt/data/.local/bin/gh --version 2>/dev/null | head -n1 | cut -d' ' -f3)" != "$${GH_VERSION#v}" ]; then
                   cd /tmp
-                  curl -fsSL https://github.com/cli/cli/releases/download/v2.103.0/gh_2.96.0_linux_amd64.tar.gz -o gh.tar.gz
+                  curl -fsSL "https://github.com/cli/cli/releases/download/$${GH_VERSION}/gh_$${GH_VERSION#v}_linux_amd64.tar.gz" -o gh.tar.gz
                   tar xzf gh.tar.gz
-                  cp gh_2.61.0_linux_amd64/bin/gh /opt/data/.local/bin/
-                  rm -rf gh.tar.gz gh_2.96.0_linux_amd64
+                  cp "gh_$${GH_VERSION#v}_linux_amd64/bin/gh" /opt/data/.local/bin/
+                  rm -rf gh.tar.gz "gh_$${GH_VERSION#v}_linux_amd64"
                 fi
 
                 if [ ! -f /opt/data/.local/go/bin/go ]; then
