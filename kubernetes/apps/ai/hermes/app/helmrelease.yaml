@@ -80,7 +80,7 @@ spec:
                 mkdir -p /opt/data/.local/bin /opt/data/.local/go
 
                 # renovate: datasource=github-releases depName=cli/cli
-                GH_VERSION=v2.103.1
+                GH_VERSION=v2.103.2
                 if [ "$$(/opt/data/.local/bin/gh --version 2>/dev/null | head -n1 | cut -d' ' -f3)" != "$${GH_VERSION#v}" ]; then
                   cd /tmp
                   curl -fsSL "https://github.com/cli/cli/releases/download/$${GH_VERSION}/gh_$${GH_VERSION#v}_linux_amd64.tar.gz" -o gh.tar.gz
