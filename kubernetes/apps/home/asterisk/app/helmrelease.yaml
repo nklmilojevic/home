@@ -38,7 +38,7 @@ spec:
               allowPrivilegeEscalation: false
             image:
               repository: ghcr.io/tech7fox/asterisk-hass-addon
-              tag: latest@sha256:04be26037ed184610076c94b7b6c447824a1faf922f58506b707dc1068d808b8
+              tag: latest@sha256:0a7bc9e15c43d087ae15072e01dfd32db78c2095fccd5f5ffa246b31046ad6ae
             env:
               HA_URL: "https://hass.nikola.wtf"
             envFrom:
