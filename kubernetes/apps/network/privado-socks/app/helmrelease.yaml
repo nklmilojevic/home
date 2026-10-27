@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: docker.io/gogost/gost
-              tag: 3.3.1@sha256:c3f849542469bc6027cd38d9a7ef86e8efbcc1176551a3ace8df85ef90a9c5b9
+              tag: 3.3.2@sha256:25648f4aeb4f3a0511e941449229f815802e38ba14394bc5f644629cce0f7a3c
             args:
               - -C
               - /etc/gost/gost.yaml
