@@ -30,7 +30,7 @@ spec:
           seed:
             image: &image
               repository: docker.io/eceasy/cli-proxy-api
-              tag: v8.0.40@sha256:0a0ed62b20fa48ad9a5321cef1fbe98a6c02237827b04ee30ecceb8fb39b36e0
+              tag: v8.0.42@sha256:93889c10effb81c354ab5121076c2552e9892730850c862929cbecff06817beb
             command:
               - sh
               - -c
