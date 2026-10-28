@@ -20,7 +20,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/sonarr
-              tag: 5.0.0.2800@sha256:2c12127bb7d5f92b68e6a2f73a898c96603c1ebc90813df58c00fd5265a6c95b
+              tag: 5.0.0.2838@sha256:30303811fa1f064208752d89d7b081da370f4cf636ecabe7a1b70a8307aa67f2
 
             env:
               TZ: "Europe/Belgrade"
