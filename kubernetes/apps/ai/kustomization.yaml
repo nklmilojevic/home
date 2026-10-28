@@ -17,3 +17,4 @@ resources:
   - ./hermes/ks.yaml
   - ./meridian/ks.yaml
   - ./cliproxyapi/ks.yaml
+  - ./open-webui/ks.yaml
