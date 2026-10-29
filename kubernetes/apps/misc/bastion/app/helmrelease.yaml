@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/bastion
-              tag: 0.8.0@sha256:530596943c779e46dc05a061ab8098a459a33f926f12a708f645819820a75a93
+              tag: 0.8.1@sha256:59ef96d887721343a33dc1a71308cc6fec3920f524f07b909ed779f5ae2ea3bd
             env:
               TZ: Europe/Belgrade
               PUBLIC_KEY: |
