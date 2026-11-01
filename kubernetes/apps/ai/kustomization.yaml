@@ -18,3 +18,4 @@ resources:
   - ./meridian/ks.yaml
   - ./cliproxyapi/ks.yaml
   - ./open-webui/ks.yaml
+  - ./vikunja/ks.yaml

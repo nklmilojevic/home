@@ -1,0 +1,112 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app vikunja
+  namespace: ai
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: vikunja
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    controllers:
+      vikunja:
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          # Vikunja refuses to start when files.basepath does not exist yet.
+          01-files-dir:
+            image:
+              repository: docker.io/library/busybox
+              tag: 1.38.0@sha256:a46257e06c82ad85242d0d38077d0a52d9896389ca60a1a59d3463db586e5fa4
+            command:
+              - mkdir
+              - -p
+              - /data/files
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 32Mi
+        containers:
+          app:
+            image:
+              repository: docker.io/vikunja/vikunja
+              tag: 2.7.1@sha256:f7dc8428d10aef17f3075886d3c1c022f566ec456f88985f02c137f4fc534576
+            env:
+              TZ: Europe/Belgrade
+              VIKUNJA_SERVICE_PUBLICURL: https://vikunja.nikola.wtf/
+              VIKUNJA_SERVICE_TIMEZONE: Europe/Belgrade
+              VIKUNJA_SERVICE_ROOTPATH: /data
+              # Accounts are created with `vikunja user create`; the board is
+              # reachable from everything that can reach the internal gateway.
+              VIKUNJA_SERVICE_ENABLEREGISTRATION: "false"
+              VIKUNJA_SERVICE_ENABLEUSERDELETION: "false"
+              VIKUNJA_DATABASE_TYPE: sqlite
+              VIKUNJA_DATABASE_PATH: /data/vikunja.db
+              VIKUNJA_FILES_BASEPATH: /data/files
+            envFrom:
+              - secretRef:
+                  name: vikunja-secret
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 3456
+                  periodSeconds: 10
+                  failureThreshold: 3
+              readiness: *probe
+            securityContext: *securityContext
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 512Mi
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.nikola.wtf"
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
+    persistence:
+      config:
+        existingClaim: vikunja-config
+        globalMounts:
+          - path: /data
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
