@@ -16,3 +16,4 @@ resources:
   - ./runwall/ks.yaml
   - ./donnie-push/ks.yaml
   - ./thurm-push-relay/ks.yaml
+  - ./kanzo/ks.yaml

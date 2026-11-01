@@ -1,0 +1,108 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app kanzo
+  namespace: misc
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: kanzo
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    controllers:
+      kanzo:
+        strategy: Recreate
+        initContainers:
+          # Kanzo ships only release binaries, no container image. Fetch the
+          # pinned static musl build and check it against the release checksum.
+          # Then force `listen = "0.0.0.0"`: Kanzo's own default keeps the board
+          # on loopback, and listening on the network is what makes it a shared
+          # board that laptops `kanzo join`.
+          01-install:
+            image: &image
+              repository: docker.io/library/alpine
+              tag: 3.24.3@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a
+            env:
+              # renovate: datasource=github-releases depName=emanuele-em/kanzo
+              KANZO_VERSION: v0.2.1
+            command:
+              - /bin/sh
+              - -ec
+              - |
+                asset=kanzo-x86_64-unknown-linux-musl.tar.xz
+                url="https://github.com/emanuele-em/kanzo/releases/download/$${KANZO_VERSION}/$${asset}"
+                cd /tmp
+                wget -q -O "$${asset}" "$${url}"
+                wget -q -O "$${asset}.sha256" "$${url}.sha256"
+                echo "$$(cut -d' ' -f1 "$${asset}.sha256")  $${asset}" | sha256sum -c -
+                tar -xJf "$${asset}"
+                cp "$$(find . -type f -name kanzo | head -n1)" /opt/kanzo/kanzo
+                chmod 0755 /opt/kanzo/kanzo
+                cd /data
+                [ -f config.toml ] || printf 'port = 4242\nlisten = "0.0.0.0"\nmcp_http = true\n' > config.toml
+                sed -i 's/^listen *=.*/listen = "0.0.0.0"/' config.toml
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+        containers:
+          app:
+            image: *image
+            command:
+              - /opt/kanzo/kanzo
+              - --no-open
+            env:
+              TZ: Europe/Belgrade
+              KANZO_HOME: /data
+              HOME: /tmp
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            securityContext: *securityContext
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 128Mi
+    service:
+      app:
+        controller: *app
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: "10.40.0.35"
+        ports:
+          http:
+            port: 4242
+    persistence:
+      config:
+        existingClaim: kanzo-config
+        globalMounts:
+          - path: /data
+      bin:
+        type: emptyDir
+        globalMounts:
+          - path: /opt/kanzo
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
