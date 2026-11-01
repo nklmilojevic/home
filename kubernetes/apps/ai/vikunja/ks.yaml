@@ -13,6 +13,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: toolhive-operator-crds
+      namespace: ai
     - name: miroir-config
       namespace: miroir-system
     - name: external-secrets-stores

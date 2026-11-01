@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/toolhive.stacklok.dev/mcpserverentry_v1beta1.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServerEntry
+metadata:
+  name: vikunja
+spec:
+  groupRef:
+    name: mcp-tools
+  # Vikunja serves MCP itself, so the gateway calls it directly; no proxy pod.
+  remoteUrl: http://vikunja.ai.svc.cluster.local:3456/api/v2/mcp
+  transport: streamable-http
+  allowPrivateEndpoint: true
+  headerForward:
+    addHeadersFromSecret:
+      - headerName: Authorization
+        valueSecretRef:
+          name: vikunja-mcp-secret
+          key: AUTHORIZATION
