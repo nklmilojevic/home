@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: quay.io/nklmilojevic/cobalt-web
-              tag: 11.7.1@sha256:9497cb8be12436cc8ad434453f491d8e8931c395f3d0f4f59a40675a1534286a
+              tag: 11.7.1@sha256:9d2b3ddbb634c89784d40c29d2f65cf0170c00329bee1f7c08657b04b7c7135b
             env:
               TZ: "Europe/Belgrade"
             probes:
