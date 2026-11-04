@@ -8,7 +8,7 @@ spec:
   env:
     - name: HOSTNAME
       value: "::"
-  image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest@sha256:86da7b7687bbe8886120383bf1f463bc596c278849b6c816d0c200bd0733a12b
+  image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest@sha256:487b85edd882948e97a6668c3b893536cd72414cc786d02407ceab93ce6facab
   model: sentence-transformers/all-MiniLM-L6-v2
   resources:
     requests:
