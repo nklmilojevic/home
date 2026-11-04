@@ -2,6 +2,20 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     {
+      description: [
+        "Own container images: one branch for all digest bumps",
+        "Renovate restarts a repo run only once after an automerge, so separate digest branches land two per run. A containers rebuild bumps every image at once; grouping lands them in one automerge.",
+      ],
+      groupName: "nklmilojevic containers",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/^quay\\.io/nklmilojevic//"],
+      matchUpdateTypes: ["digest"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} digests",
+        commitMessageSuffix: "",
+      },
+    },
+    {
       description: "Rook-Ceph image and chart",
       groupName: "Rook Ceph",
       matchPackagePatterns: ["rook.ceph"],
