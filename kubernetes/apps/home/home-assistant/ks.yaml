@@ -33,6 +33,6 @@ spec:
     substitute:
       APP: *app
       KOPIUR_CLAIM: home-assistant-config
-      KOPIUR_CAPACITY: 30Gi
+      KOPIUR_CAPACITY: 60Gi
       APP_UID: "1000"
       APP_GID: "1000"
