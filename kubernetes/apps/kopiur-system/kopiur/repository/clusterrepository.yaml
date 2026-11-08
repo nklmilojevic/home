@@ -35,6 +35,11 @@ spec:
   parameters:
     epoch:
       minDuration: 2h
+  moverDefaults:
+    cache:
+      capacity: 20Gi
+      mode: Persistent
+      storageClassName: miroir
   scheduleDefaults:
     timezone: Europe/Belgrade
 ---
@@ -69,5 +74,10 @@ spec:
       full:
         cron: "0 5 * * *"
         jitter: 1h
+  moverDefaults:
+    cache:
+      capacity: 20Gi
+      mode: Persistent
+      storageClassName: miroir
   scheduleDefaults:
     timezone: Europe/Belgrade
