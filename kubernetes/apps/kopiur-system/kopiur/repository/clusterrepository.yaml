@@ -39,7 +39,7 @@ spec:
     cache:
       capacity: 20Gi
       mode: Persistent
-      storageClassName: miroir
+      storageClassName: miroir-cache
   scheduleDefaults:
     timezone: Europe/Belgrade
 ---
@@ -78,6 +78,6 @@ spec:
     cache:
       capacity: 20Gi
       mode: Persistent
-      storageClassName: miroir
+      storageClassName: miroir-cache
   scheduleDefaults:
     timezone: Europe/Belgrade
