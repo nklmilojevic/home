@@ -36,6 +36,7 @@ spec:
               EXECUTIONS_DATA_PRUNE_MAX_COUNT: 50000
               GENERIC_TIMEZONE: "Europe/Belgrade"
               N8N_DIAGNOSTICS_ENABLED: false
+              N8N_EDITOR_BASE_URL: "https://n8n.nikola.wtf"
               N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: false
               N8N_PROTOCOL: "https"
               N8N_PROXY_HOPS: 1
