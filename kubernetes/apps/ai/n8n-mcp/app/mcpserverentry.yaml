@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/toolhive.stacklok.dev/mcpserverentry_v1beta1.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServerEntry
+metadata:
+  name: n8n
+spec:
+  groupRef:
+    name: mcp-tools
+  remoteUrl: http://n8n.misc.svc.cluster.local:8080/mcp-server/http
+  transport: streamable-http
+  allowPrivateEndpoint: true
+  headerForward:
+    addHeadersFromSecret:
+      - headerName: Authorization
+        valueSecretRef:
+          name: n8n-mcp-secret
+          key: AUTHORIZATION
