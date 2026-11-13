@@ -7,6 +7,8 @@ metadata:
 spec:
   allowedNamespaces:
     all: true
+  concurrency:
+    maxConcurrentJobs: 6
   backend:
     s3:
       auth:

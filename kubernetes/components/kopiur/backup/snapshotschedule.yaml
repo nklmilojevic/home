@@ -12,11 +12,8 @@ spec:
     # schedule gets a stable minute derived from its own identity and the 46
     # apps land ~1/minute instead of all at :30.
     #
-    # kopiur has no mover-concurrency cap — `moverDefaults.throttle` is a
-    # per-mover kopia I/O rate limit, `reconcileConcurrency` bounds reconciles
-    # rather than running mover Jobs, and `maxConcurrentDeleteJobs` covers only
-    # delete batches — so an unstaggered cron really does fire all 46 CSI
-    # snapshot + clone + mover cycles at once. That burst drove an OSD into
+    # An unstaggered cron fires all 46 CSI snapshot + clone + mover cycles at
+    # once. That burst drove an OSD into
     # BlueStore slow ops under volsync on 2026-08-29, and on 2026-08-31 it
     # stranded enough host commands in uninterruptible sleep to trip
     # MiroirNodeStorageWedged on icarus002 (42 concurrent movers, all pinned
