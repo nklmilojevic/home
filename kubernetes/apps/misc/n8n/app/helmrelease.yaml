@@ -28,7 +28,7 @@ spec:
               allowPrivilegeEscalation: false
             image:
               repository: ghcr.io/n8n-io/n8n
-              tag: 3.2.0@sha256:9e67c2627d3c30dbb0d51f5da83d4499ac7913f6b4f358a900a58026a832ba12
+              tag: 3.2.1@sha256:cccc08d6a4ceea5bbb9790df1501c71ab1e0a37c22302b1396b42bde03c031bd
             env:
               DB_SQLITE_VACUUM_ON_STARTUP: true
               EXECUTIONS_DATA_PRUNE: true
