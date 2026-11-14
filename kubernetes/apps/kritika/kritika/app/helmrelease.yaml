@@ -15,6 +15,7 @@ spec:
       reloader.stakater.com/auto: "true"
     config:
       webUrl: https://kritika.nikola.wtf
+      reviewWorkers: 10
       auth:
         admin:
           password:
@@ -33,6 +34,7 @@ spec:
         cliproxyapi:
           type: openai
           baseUrl: http://cliproxyapi.ai.svc.cluster.local:8317/v1
+          concurrency: 10
           apiKey:
             env: CLIPROXYAPI_API_KEY
         openrouter:
