@@ -20,6 +20,5 @@ resources:
   - ./mosquitto/ks.yaml
   - ./petkit-local/ks.yaml
   - ./roborock-local-server/ks.yaml
-  - ./appdaemon/ks.yaml
   - ./asterisk/ks.yaml
   - ./hms-cpap/ks.yaml
