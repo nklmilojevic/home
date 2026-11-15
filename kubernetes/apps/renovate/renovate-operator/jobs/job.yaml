@@ -20,8 +20,10 @@ spec:
     - name: RENOVATE_REQUIRE_CONFIG
       value: required
     # postUpgradeTasks commands repos may run (templ codegen, go-vendor-hash); anything else is refused.
+    # go-vendor-hash is pinned to a renovate-config commit: bumping the helper means bumping the sha
+    # both here and in renovate-config's go-vendor-hash.json.
     - name: RENOVATE_ALLOWED_COMMANDS
-      value: '["^go tool templ generate( -path [\\w/.-]+)?$", "^nix --extra-experimental-features nix-command --extra-experimental-features flakes run git\\+https://github\\.com/nklmilojevic/renovate-config#go-vendor-hash$"]'
+      value: '["^go tool templ generate( -path [\\w/.-]+)?$", "^nix --extra-experimental-features nix-command --extra-experimental-features flakes run git\\+https://github\\.com/nklmilojevic/renovate-config\\?rev=a9bc15568eefbf2950a51e4b2d9feb059f88063c#go-vendor-hash$"]'
   image: ghcr.io/renovatebot/renovate:44.239.1
   parallelism: 3
   provider:
