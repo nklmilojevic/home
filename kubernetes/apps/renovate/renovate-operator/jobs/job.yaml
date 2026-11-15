@@ -21,10 +21,20 @@ spec:
       value: required
     # postUpgradeTasks commands repos may run (templ codegen, go-vendor-hash); anything else is refused.
     # go-vendor-hash is pinned to a renovate-config commit: bumping the helper means bumping the sha
-    # both here and in renovate-config's go-vendor-hash.json. a9bc155 stays allowed until every repo
-    # runs 95f0da7; repos with the hash outside package.nix pass "-- <file> <attr>" (thurm).
+    # both here and in renovate-config's go-vendor-hash.json. 95f0da7 stays allowed until every repo
+    # runs 2ccac4d; repos with the hash outside package.nix pass "-- <file> <attr>" (thurm).
     - name: RENOVATE_ALLOWED_COMMANDS
-      value: '["^go tool templ generate( -path [\\w/.-]+)?$", "^nix --extra-experimental-features nix-command --extra-experimental-features flakes run git\\+https://github\\.com/nklmilojevic/renovate-config\\?rev=(a9bc15568eefbf2950a51e4b2d9feb059f88063c|95f0da7f2c8530b813606dcbcea0f416ade15d5f)#go-vendor-hash( -- [\\w.#/-]+ [\\w.#/-]+)?$"]'
+      value: '["^go tool templ generate( -path [\\w/.-]+)?$", "^nix --extra-experimental-features nix-command --extra-experimental-features flakes run git\\+https://github\\.com/nklmilojevic/renovate-config\\?rev=(95f0da7f2c8530b813606dcbcea0f416ade15d5f|2ccac4df935f18066002b388984c33a5c5d11d45)#go-vendor-hash( -- [\\w.#/-]+ [\\w.#/-]+)?$"]'
+  # containerbase's nix keeps its store below /tmp/containerbase, which binary caches can't serve.
+  # go-vendor-hash builds against /nix/store on this volume instead, so it substitutes from
+  # cache.nixos.org rather than bootstrapping the toolchain from source.
+  extraVolumes:
+    - name: nix
+      emptyDir:
+        sizeLimit: 8Gi
+  extraVolumeMounts:
+    - name: nix
+      mountPath: /nix
   image: ghcr.io/renovatebot/renovate:44.239.1
   parallelism: 3
   provider:
