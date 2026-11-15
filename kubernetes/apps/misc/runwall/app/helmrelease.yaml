@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/runwall
-              tag: 0.1.0@sha256:1eb1bdcdc92f21b87400cd6972a354693f9d3fbea873300a92819c3f163f627d
+              tag: 0.2.0@sha256:4272e84e5275ce5fc36688779d9209d403a9a0a6c1f2df3c30e83a5104afc066
             env:
               TZ: "Europe/Belgrade"
               LISTEN_ADDR: :8080
