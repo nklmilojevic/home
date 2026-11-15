@@ -19,9 +19,9 @@ spec:
       value: "false"
     - name: RENOVATE_REQUIRE_CONFIG
       value: required
-    # postUpgradeTasks commands repos may run; anything else is refused.
+    # postUpgradeTasks commands repos may run (templ codegen, go-vendor-hash); anything else is refused.
     - name: RENOVATE_ALLOWED_COMMANDS
-      value: '["^go tool templ generate( -path [\\w/.-]+)?$"]'
+      value: '["^go tool templ generate( -path [\\w/.-]+)?$", "^nix --extra-experimental-features nix-command --extra-experimental-features flakes run git\\+https://github\\.com/nklmilojevic/renovate-config#go-vendor-hash$"]'
   image: ghcr.io/renovatebot/renovate:44.239.1
   parallelism: 3
   provider:
