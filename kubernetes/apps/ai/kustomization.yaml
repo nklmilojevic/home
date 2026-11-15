@@ -20,3 +20,4 @@ resources:
   - ./open-webui/ks.yaml
   - ./vikunja/ks.yaml
   - ./n8n-mcp/ks.yaml
+  - ./runwall-mcp/ks.yaml

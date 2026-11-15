@@ -1,5 +1,5 @@
-set unstable := true
-set quiet := true
+set unstable
+set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 

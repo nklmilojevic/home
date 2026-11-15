@@ -6,9 +6,7 @@
     "talos-factory": {
       defaultRegistryUrlTemplate: "https://factory.talos.dev/versions",
       format: "json",
-      transformTemplates: [
-        '{ "releases": $map($, function($v) { { "version": $v } }) }',
-      ],
+      transformTemplates: ['{ "releases": $map($, function($v) { { "version": $v } }) }'],
     },
   },
 }
