@@ -35,7 +35,7 @@ spec:
   extraVolumeMounts:
     - name: nix
       mountPath: /nix
-  image: ghcr.io/renovatebot/renovate:44.240.0
+  image: ghcr.io/renovatebot/renovate:44.241.0
   parallelism: 3
   provider:
     name: github
