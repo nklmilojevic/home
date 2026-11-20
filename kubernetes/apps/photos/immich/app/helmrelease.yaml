@@ -42,6 +42,8 @@ spec:
                     name: immich-pg-app
                     key: uri
               REDIS_HOSTNAME: redis-immich.database.svc.cluster.local
+              # Workaround for immich-app/immich#33466 (fixed in #33488): default "::" breaks OTel PrometheusExporter URL parsing in v3.4.2
+              IMMICH_HOST: "0.0.0.0"
               IMMICH_TELEMETRY_INCLUDE: all
             securityContext:
               allowPrivilegeEscalation: false
