@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: ghcr.io/nklmilojevic/invoicing
-              tag: sha-976dece@sha256:96115330ad7a0a1222e68d3e8549ee5b4ee2b0d575c915c106739d5af1b7dac3
+              tag: sha-a4c8492@sha256:a08dd57d10d894121384aaef468b092409b1371a414ec2c53e5635127c3ff919
             env:
               TZ: "Europe/Belgrade"
               DATABASE_URL: "file:/app/data/invoicing.db"
