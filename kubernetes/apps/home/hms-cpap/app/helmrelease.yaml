@@ -34,7 +34,7 @@ spec:
               # sleep-day lookup — everything the quay.io/nklmilojevic fork
               # existed for.
               repository: ghcr.io/hms-homelab/hms-cpap
-              tag: 7.0.2
+              tag: 7.1.1
             env:
               TZ: "Europe/Belgrade"
               WEB_PORT: &port 8893
