@@ -69,7 +69,7 @@ spec:
                     node_hwmon_temp_celsius{chip=~"platform_coretemp.*|nvme.*|target.*"}
                   or
                     node_hwmon_temp_celsius{chip=~"platform_nct6775.*",sensor="temp2"}
-                ) * on (instance) group_left(nodename) node_uname_info
+                ) * on (instance) group_left(nodename) max by (instance, nodename) (node_uname_info)
               )
             )[2d:5m])
         # `> 0` drops the empty NAS bays, the DAC-cabled SFP ports and the
@@ -81,7 +81,7 @@ spec:
             quantile_over_time(0.05, (
               avg by (nodename,chip,sensor) (
                 node_hwmon_temp_celsius{chip=~"platform_coretemp.*|nvme.*",sensor="temp1"}
-                  * on (instance) group_left(nodename) node_uname_info
+                  * on (instance) group_left(nodename) max by (instance, nodename) (node_uname_info)
               )
             )[2d:5m])
         - record: unifi:device_temp_celsius:p95_2d
@@ -117,7 +117,7 @@ spec:
             (
               avg by (nodename,chip,sensor) (
                 avg_over_time(node_hwmon_temp_celsius{chip=~"platform_coretemp.*",sensor="temp1"}[30m])
-                  * on (instance) group_left(nodename) node_uname_info
+                  * on (instance) group_left(nodename) max by (instance, nodename) (node_uname_info)
               )
             )
             -
@@ -135,7 +135,7 @@ spec:
             (
               avg by (nodename,chip,sensor) (
                 avg_over_time(node_hwmon_temp_celsius{chip=~"nvme.*",sensor="temp1"}[15m])
-                  * on (instance) group_left(nodename) node_uname_info
+                  * on (instance) group_left(nodename) max by (instance, nodename) (node_uname_info)
               )
             )
             -
@@ -153,7 +153,7 @@ spec:
             (
               avg by (nodename,chip,sensor) (
                 avg_over_time(node_hwmon_temp_celsius{chip=~"target.*"}[15m])
-                  * on (instance) group_left(nodename) node_uname_info
+                  * on (instance) group_left(nodename) max by (instance, nodename) (node_uname_info)
               )
             )
             -
@@ -171,7 +171,7 @@ spec:
             (
               avg by (nodename,chip,sensor) (
                 avg_over_time(node_hwmon_temp_celsius{chip=~"platform_nct6775.*",sensor="temp2"}[15m])
-                  * on (instance) group_left(nodename) node_uname_info
+                  * on (instance) group_left(nodename) max by (instance, nodename) (node_uname_info)
               )
             )
             -
@@ -195,14 +195,14 @@ spec:
             (
               avg by (nodename,chip,sensor) (
                 avg_over_time(node_hwmon_temp_celsius{chip=~"platform_coretemp.*|nvme.*"}[10m])
-                  * on (instance) group_left(nodename) node_uname_info
+                  * on (instance) group_left(nodename) max by (instance, nodename) (node_uname_info)
               )
             )
             >
             (
               avg by (nodename,chip,sensor) (
                 (node_hwmon_temp_crit_celsius{chip=~"platform_coretemp.*|nvme.*"} - 5)
-                  * on (instance) group_left(nodename) node_uname_info
+                  * on (instance) group_left(nodename) max by (instance, nodename) (node_uname_info)
               )
             )
           for: 10m

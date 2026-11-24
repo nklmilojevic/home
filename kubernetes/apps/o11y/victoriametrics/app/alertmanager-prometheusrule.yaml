@@ -22,9 +22,13 @@ spec:
             severity: critical
         - alert: AlertmanagerFailedToSendAlerts
           expr: |-
-            rate(alertmanager_notifications_failed_total{job="vmalertmanager-vmetrics-victoria-metrics-k8s-stack"}[5m])
+            sum by (integration) (
+              rate(alertmanager_notifications_failed_total{job="vmalertmanager-vmetrics-victoria-metrics-k8s-stack"}[5m])
+            )
             /
-            rate(alertmanager_notifications_total{job="vmalertmanager-vmetrics-victoria-metrics-k8s-stack"}[5m])
+            sum by (integration) (
+              rate(alertmanager_notifications_total{job="vmalertmanager-vmetrics-victoria-metrics-k8s-stack"}[5m])
+            )
             > 0.01
           for: 5m
           annotations:

@@ -185,17 +185,31 @@ spec:
           create: false
         StreamAggrDedupFlushTimeout:
           create: false
+        # The zeroscaler component creates 0..1 HPAs (minReplicas=0, maxReplicas=1)
+        # that sit at 1 replica whenever NFS is healthy, so all 16 fire
+        # KubeHpaMaxedOut permanently (and page whenever Alertmanager restarts on
+        # emptyDir before silence-operator re-syncs). Restrict to real autoscaling
+        # HPAs (maxReplicas > 1).
+        KubeHpaMaxedOut:
+          spec:
+            expr: >-
+              (kube_horizontalpodautoscaler_status_current_replicas{job="kube-state-metrics",namespace=~".*"}
+              == kube_horizontalpodautoscaler_spec_max_replicas{job="kube-state-metrics",namespace=~".*"})
+              and on(namespace,horizontalpodautoscaler,cluster)
+              (kube_horizontalpodautoscaler_spec_max_replicas{job="kube-state-metrics",namespace=~".*"}
+              != kube_horizontalpodautoscaler_spec_min_replicas{job="kube-state-metrics",namespace=~".*"})
+              and on(namespace,horizontalpodautoscaler,cluster)
+              (kube_horizontalpodautoscaler_spec_max_replicas{job="kube-state-metrics",namespace=~".*"} > 1)
 
       # kube-scheduler.rules are histogram-quantile recordings that yield 0 samples
       # whenever the cluster is idle (no pod scheduling), repeatedly tripping
       # RecordingRulesNoData. They only feed the kube-scheduler Grafana dashboard.
       groups:
-        kubeScheduler:
+        kube-scheduler.rules:
           enabled: false
-        # Vendored kube-prometheus rules hardcode job="alertmanager-main",
-        # namespace="monitoring" — can never match our vmalertmanager in o11y.
-        # Replaced by alertmanager-prometheusrule.yaml with correct selectors.
-        alertmanager:
+        # Replaced by alertmanager-prometheusrule.yaml (single-replica rules
+        # without the AlertmanagerCluster* rules that don't apply here).
+        alertmanager.rules:
           enabled: false
 
     alertmanager:
