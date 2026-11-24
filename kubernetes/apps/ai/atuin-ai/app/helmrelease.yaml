@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/atuinsh/atuin-ai-server
-              tag: latest@sha256:3d11028588ebfddb0685169e35cbc7121d3577b6eee3831e845fbe5c28e48d92
+              tag: latest@sha256:4bc7c47b2fd932f11727697a6480ca4af7efc2b6ff68ed135e554fbb974adfe8
             env:
               TZ: "Europe/Belgrade"
               CHAT_CONFIG: /etc/atuin-ai/config.toml
