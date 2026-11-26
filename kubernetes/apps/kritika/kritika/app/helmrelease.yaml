@@ -16,6 +16,10 @@ spec:
     config:
       webUrl: https://kritika.nikola.wtf
       reviewWorkers: 10
+      egress:
+        allow:
+          - ghcr.io
+          - pkg-containers.githubusercontent.com
       auth:
         admin:
           password:
