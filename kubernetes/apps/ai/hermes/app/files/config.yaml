@@ -8,14 +8,14 @@ providers:
     api: http://cliproxyapi.ai.svc.cluster.local:8317/v1
     key_env: CLIPROXYAPI_API_KEY
     transport: codex_responses
-    default_model: gpt-6.1-sol
+    default_model: gpt-6.2-sol
 
 model:
   # ChatGPT subscription through the in-cluster CLIProxyAPI (ai/cliproxyapi),
   # spoken over the Responses API. Switch models with `hermes model`; the pinned
   # default returns on pod restart.
   provider: custom:cliproxyapi
-  default: gpt-6.1-sol
+  default: gpt-6.2-sol
   base_url: http://cliproxyapi.ai.svc.cluster.local:8317/v1
 
 fallback_providers:

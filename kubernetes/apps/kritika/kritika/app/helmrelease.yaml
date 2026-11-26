@@ -45,7 +45,7 @@ spec:
         model: openrouter/openai/text-embedding-3-small
         dims: 1536
       review:
-        model: cliproxyapi/gpt-6-sol
+        model: cliproxyapi/gpt-6.2-sol
         diagram: true
         agents:
           - name: security
@@ -61,7 +61,7 @@ spec:
                 security-audit:
                   load: true
       confidence:
-        model: cliproxyapi/gpt-6-sol
+        model: cliproxyapi/gpt-6.2-sol
         threshold: 4
         risk: medium
       agent:
