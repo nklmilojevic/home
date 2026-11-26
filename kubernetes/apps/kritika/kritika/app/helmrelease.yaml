@@ -34,7 +34,7 @@ spec:
         cliproxyapi:
           type: openai
           baseUrl: http://cliproxyapi.ai.svc.cluster.local:8317/v1
-          concurrency: 50
+          concurrency: 10
           apiKey:
             env: CLIPROXYAPI_API_KEY
         openrouter:
