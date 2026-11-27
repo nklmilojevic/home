@@ -41,6 +41,17 @@ spec:
           concurrency: 10
           apiKey:
             env: CLIPROXYAPI_API_KEY
+        omlx:
+          type: openai
+          baseUrl: http://10.5.0.253:8000/v1
+          concurrency: 2
+          timeout: 15m
+          apiKey:
+            env: OMLX_API_KEY
+          pricing:
+            Inkling-2-Mini-oQ4e-mtp:
+              input: 0
+              output: 0
         openrouter:
           type: openrouter
           apiKey:
@@ -49,10 +60,10 @@ spec:
         model: openrouter/openai/text-embedding-3-small
         dims: 1536
       review:
-        model: cliproxyapi/gpt-6.2-sol
+        model: omlx/Inkling-2-Mini-oQ4e-mtp
         diagram: true
       confidence:
-        model: cliproxyapi/gpt-6.2-sol
+        model: omlx/Inkling-2-Mini-oQ4e-mtp
         threshold: 4
         risk: medium
       agent:
@@ -84,6 +95,7 @@ spec:
           secretKeyRef:
             name: kritika-secret
             key: CLIPROXYAPI_API_KEY
+      OMLX_API_KEY: unused
       OPENROUTER_API_KEY:
         valueFrom:
           secretKeyRef:
@@ -114,6 +126,13 @@ spec:
       egressPorts:
         - 443
         - 8317
+      extraEgress:
+        - to:
+            - ipBlock:
+                cidr: 10.5.0.253/32
+          ports:
+            - port: 8000
+              protocol: TCP
     monitoring:
       serviceMonitor:
         enabled: true
