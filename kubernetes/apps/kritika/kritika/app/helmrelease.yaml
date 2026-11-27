@@ -61,13 +61,16 @@ spec:
         dims: 1536
       review:
         model: omlx/Inkling-2-Mini-oQ4e-mtp
+        effort: medium
         diagram: true
       confidence:
         model: omlx/Inkling-2-Mini-oQ4e-mtp
+        effort: low
         threshold: 4
         risk: medium
       agent:
-        prompt: 64000
+        steps: 25
+        prompt: 120000
         tokens: 16000000
     env:
       ADMIN_PASSWORD:
