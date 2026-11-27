@@ -100,7 +100,7 @@ spec:
         volumeSpec:
           nfs:
             server: "10.5.0.10"
-            path: "/var/nfs/shared/media"
+            path: "/media"
         advancedMounts:
           bookboss:
             app:

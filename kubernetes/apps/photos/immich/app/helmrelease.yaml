@@ -206,7 +206,7 @@ spec:
       library:
         type: nfs
         server: 10.5.0.10
-        path: /var/nfs/shared/photos
+        path: /photos
         advancedMounts:
           immich:
             app:

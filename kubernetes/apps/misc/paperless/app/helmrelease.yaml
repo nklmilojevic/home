@@ -108,7 +108,7 @@ spec:
       nas:
         type: nfs
         server: 10.5.0.10
-        path: /var/nfs/shared/paperless
+        path: /paperless
         advancedMounts:
           paperless:
             app:

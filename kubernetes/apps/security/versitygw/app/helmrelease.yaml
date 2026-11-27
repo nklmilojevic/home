@@ -116,13 +116,13 @@ spec:
       data:
         type: nfs
         server: "10.5.0.10"
-        path: "/var/nfs/shared/garage/data"
+        path: "/garage/data"
         globalMounts:
           - path: /data
       meta:
         type: nfs
         server: "10.5.0.10"
-        path: "/var/nfs/shared/garage/meta"
+        path: "/garage/meta"
         globalMounts:
           - path: /meta
       tmp:
