@@ -64,7 +64,7 @@ spec:
         effort: low
         diagram: true
       confidence:
-        model: omlx/Inkling-2-Mini-oQ4e-mtp
+        model: cliproxyapi/gpt-6-luna
         effort: low
         threshold: 4
         risk: medium
