@@ -35,24 +35,25 @@ spec:
           webhookSecret:
             env: GITHUB_APP_WEBHOOK_SECRET
       providers:
+        meridian:
+          type: anthropic
+          baseUrl: http://meridian.ai.svc.cluster.local:3456
+          concurrency: 3
+          apiKey:
+            env: MERIDIAN_API_KEY
         cliproxyapi:
           type: openai
           baseUrl: http://cliproxyapi.ai.svc.cluster.local:8317/v1
           concurrency: 10
           apiKey:
             env: CLIPROXYAPI_API_KEY
-        openrouter:
-          type: openrouter
-          apiKey:
-            env: OPENROUTER_API_KEY
-      embedding:
-        model: openrouter/openai/text-embedding-3-small
-        dims: 1536
       review:
-        model: cliproxyapi/gpt-6-luna
+        model: meridian/claude-sonnet-5-5
+        fallback: cliproxyapi/gpt-6-luna
         diagram: true
       confidence:
-        model: cliproxyapi/gpt-6-luna
+        model: meridian/claude-sonnet-5-5
+        fallback: cliproxyapi/gpt-6-luna
         effort: low
         threshold: 4
         risk: medium
@@ -80,16 +81,16 @@ spec:
           secretKeyRef:
             name: kritika-secret
             key: GITHUB_APP_WEBHOOK_SECRET
+      MERIDIAN_API_KEY:
+        valueFrom:
+          secretKeyRef:
+            name: kritika-secret
+            key: MERIDIAN_API_KEY
       CLIPROXYAPI_API_KEY:
         valueFrom:
           secretKeyRef:
             name: kritika-secret
             key: CLIPROXYAPI_API_KEY
-      OPENROUTER_API_KEY:
-        valueFrom:
-          secretKeyRef:
-            name: kritika-secret
-            key: OPENROUTER_API_KEY
     runner:
       runtimeClass: gvisor
     database:
@@ -115,6 +116,7 @@ spec:
       egressPorts:
         - 443
         - 8317
+        - 3456
     monitoring:
       serviceMonitor:
         enabled: true
