@@ -30,25 +30,6 @@ machine:
     {% endif %}
     rbac: true
     stableHostname: true
-  files:
-    - op: create
-      path: /etc/cri/conf.d/20-customization.part
-      content: |-
-        [plugins."io.containerd.cri.v1.images"]
-          discard_unpacked_layers = false
-    - op: overwrite
-      path: /etc/nfsmount.conf
-      permissions: 0o644
-      content: |
-        [ NFSMount_Global_Options ]
-        nfsvers=4.1
-        hard=True
-        async=True
-        noatime=True
-        nodiratime=True
-        nconnect=16
-        rsize=1048576
-        wsize=1048576
   install:
     image: factory.talos.dev/installer/{{ ENV.SCHEMATIC }}:{{ ENV.TALOS_VERSION }}
     wipe: false
@@ -203,6 +184,32 @@ cluster:
   serviceAccount:
     key: ref+op://homecluster/talos/CLUSTER_SERVICEACCOUNT_KEY
   {% endif %}
+
+# --- /etc files and CRI customization ---
+# Talos 1.14 deprecated .machine.files in favour of these typed documents
+# (the deprecated field and its replacement are mutually exclusive).
+---
+apiVersion: v1alpha1
+kind: EtcFileConfig
+name: nfsmount.conf
+mode: 0o644
+contents: |
+  [ NFSMount_Global_Options ]
+  nfsvers=4.1
+  hard=True
+  async=True
+  noatime=True
+  nodiratime=True
+  nconnect=16
+  rsize=1048576
+  wsize=1048576
+---
+apiVersion: v1alpha1
+kind: CRICustomizationConfig
+name: containerd
+content: |
+  [plugins."io.containerd.cri.v1.images"]
+    discard_unpacked_layers = false
 
 # --- miroir raw volume ---
 # Provisions partlabel `r-miroir` on the dedicated 1TB data NVMe, consumed by
