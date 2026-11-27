@@ -44,7 +44,7 @@ spec:
         omlx:
           type: openai
           baseUrl: http://10.5.0.253:8000/v1
-          concurrency: 2
+          concurrency: 1
           timeout: 15m
           apiKey:
             env: OMLX_API_KEY
@@ -61,7 +61,7 @@ spec:
         dims: 1536
       review:
         model: omlx/Inkling-2-Mini-oQ4e-mtp
-        effort: medium
+        effort: low
         diagram: true
       confidence:
         model: omlx/Inkling-2-Mini-oQ4e-mtp
@@ -69,7 +69,8 @@ spec:
         threshold: 4
         risk: medium
       agent:
-        steps: 25
+        steps: 15
+        parts: 1
         prompt: 120000
         tokens: 16000000
     env:
